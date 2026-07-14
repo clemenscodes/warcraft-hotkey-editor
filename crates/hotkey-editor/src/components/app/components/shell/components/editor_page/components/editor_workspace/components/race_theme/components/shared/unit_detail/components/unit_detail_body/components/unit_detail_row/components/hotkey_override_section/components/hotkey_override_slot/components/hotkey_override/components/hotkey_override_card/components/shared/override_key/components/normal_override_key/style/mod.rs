@@ -1,10 +1,4 @@
 use tw_macro::tw;
-// The single-letter override key's host button: the square, focusable box around the
-// shared `EditableKeycap`. It owns only the box — the square size, the font size the cap
-// inherits, focus suppression, and the soft focus glow. The gold cap look and the
-// capture pulse live on the nested `EditableKeycap`; the `group/editable-keycap` marker
-// lets that cap reflect this button's keyboard focus. Class `.normal-override-key` is
-// load-bearing (keyboard navigation).
 classes! {
     base: tw![
         "group/editable-keycap",

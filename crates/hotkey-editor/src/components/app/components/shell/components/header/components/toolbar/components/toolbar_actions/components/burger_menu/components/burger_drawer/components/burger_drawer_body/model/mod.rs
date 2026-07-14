@@ -1,8 +1,6 @@
 use super::view::BurgerDrawerBodyView;
 use dioxus::prelude::*;
 
-/// The drawer body's only input: the drawer's close handler, passed through to the file-action
-/// menu's non-dialog rows that dismiss the drawer.
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerDrawerBodyModel {
     pub on_close: EventHandler<MouseEvent>,

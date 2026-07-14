@@ -1,6 +1,5 @@
 use warcraft_api::ManaRegen;
 
-/// The published `View` contract mirroring [`ManaRegenGainModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ManaRegenGainView {
     pub value: ManaRegen,

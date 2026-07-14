@@ -15,9 +15,6 @@ pub use state::MatchupStrength;
 pub use subject::MatchupSubject;
 use tw_macro::assert_component;
 
-/// One matchup cell. A dispatcher: from the matchup strength it renders the strong,
-/// weak, or neutral cell — each owns its own tint and publishes the `--matchup-color`
-/// its value reads, so there is no `data-matchup` attribute.
 #[component]
 pub fn Matchup(props: MatchupModel) -> Element {
     let subject = props.subject;

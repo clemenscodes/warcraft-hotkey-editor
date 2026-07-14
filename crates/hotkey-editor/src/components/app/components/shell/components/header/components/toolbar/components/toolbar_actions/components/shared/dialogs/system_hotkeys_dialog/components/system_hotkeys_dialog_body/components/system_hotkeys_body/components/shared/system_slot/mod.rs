@@ -13,12 +13,6 @@ use model::SystemSlotModel;
 pub use state::SystemSlotState;
 use tw_macro::assert_component;
 
-/// The framed WC3 slot cell shared by the inventory grid and the hero/control-group
-/// layouts. A pure dispatcher: from the slot's glow state it renders the matching
-/// look — `IdleSlot` xor `HighlightedSlot` xor `ConflictSlot`. Each look owns its
-/// own framed root and glow; this dispatcher only forwards the shared slot data to
-/// the one the state selects. Purely presentational — the host owns the outer
-/// interactive element, size, and behaviour.
 #[component]
 pub fn SystemSlot(props: SystemSlotModel) -> Element {
     match props.state {

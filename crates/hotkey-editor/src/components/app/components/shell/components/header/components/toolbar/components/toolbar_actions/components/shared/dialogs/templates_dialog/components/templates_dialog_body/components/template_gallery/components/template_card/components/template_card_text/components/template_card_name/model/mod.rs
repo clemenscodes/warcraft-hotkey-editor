@@ -1,7 +1,6 @@
 use super::view::TemplateCardNameView;
 use dioxus::prelude::*;
 
-/// The name heading's only input: the template name.
 #[derive(Props, Clone, PartialEq)]
 pub struct TemplateCardNameModel {
     #[props(into)]

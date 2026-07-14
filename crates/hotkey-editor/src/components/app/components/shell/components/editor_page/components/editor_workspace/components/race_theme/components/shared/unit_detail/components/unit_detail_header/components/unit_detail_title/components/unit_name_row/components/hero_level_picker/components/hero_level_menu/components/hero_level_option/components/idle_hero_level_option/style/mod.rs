@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The idle level option: the shared option chrome values, transparent, lighting gold on
-// hover. Shared values with the active sibling.
 classes! {
     base: tw![
         "block",

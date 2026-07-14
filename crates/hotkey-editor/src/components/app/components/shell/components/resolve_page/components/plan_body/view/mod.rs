@@ -6,10 +6,6 @@ use crate::components::app::components::shell::components::resolve_page::present
 use browser_kit::frame::Render;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`PlanBodyModel`], threaded to this component as
-/// data. It is also the resolve page frame's body region: it `impl Render` and renders the
-/// `PlanBody` once, so the page places the published `View` directly, with no ad-hoc region
-/// type.
 #[derive(Clone, PartialEq, Default)]
 pub struct PlanBodyView {
     pub section: Option<MoveSection>,

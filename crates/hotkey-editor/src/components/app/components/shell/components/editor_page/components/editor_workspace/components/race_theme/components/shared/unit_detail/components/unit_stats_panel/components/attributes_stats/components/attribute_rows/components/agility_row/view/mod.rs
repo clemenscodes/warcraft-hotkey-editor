@@ -1,6 +1,5 @@
 use warcraft_api::AttributeStatistic;
 
-/// The published `View` contract mirroring [`AgilityRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct AgilityRowView {
     pub statistic: AttributeStatistic,

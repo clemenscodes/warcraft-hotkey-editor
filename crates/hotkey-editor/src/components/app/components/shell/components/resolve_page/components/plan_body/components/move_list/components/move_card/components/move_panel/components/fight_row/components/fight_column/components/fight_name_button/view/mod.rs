@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The published `View` contract mirroring [`FightNameButtonModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct FightNameButtonView {
     pub name: String,

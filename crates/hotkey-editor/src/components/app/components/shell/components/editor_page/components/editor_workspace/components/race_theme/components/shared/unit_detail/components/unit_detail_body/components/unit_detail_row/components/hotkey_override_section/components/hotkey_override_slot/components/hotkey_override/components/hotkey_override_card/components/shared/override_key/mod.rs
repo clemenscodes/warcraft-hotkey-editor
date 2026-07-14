@@ -11,11 +11,6 @@ use dioxus::prelude::*;
 use model::OverrideKeyModel;
 use tw_macro::assert_component;
 
-/// The hotkey-capture button shown in the hotkey-override section header (and the alt/upgrade
-/// sections). A thin dispatcher: a multi-character special token (Esc, Mouse4) needs a
-/// wider box than a single letter, so it renders `SpecialOverrideKey` xor
-/// `NormalOverrideKey`. Each variant owns its own classed button root and calls
-/// `on_activate` on click.
 #[component]
 pub fn OverrideKey(props: OverrideKeyModel) -> Element {
     let OverrideKeyModel {

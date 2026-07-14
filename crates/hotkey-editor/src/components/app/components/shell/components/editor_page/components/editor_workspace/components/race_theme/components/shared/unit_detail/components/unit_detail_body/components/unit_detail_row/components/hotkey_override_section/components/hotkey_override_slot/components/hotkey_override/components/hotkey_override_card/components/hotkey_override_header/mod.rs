@@ -14,7 +14,6 @@ use tw_macro::assert_component;
 
 use model::HotkeyOverrideHeaderModel;
 
-/// The header row of the hotkey-override section: the name/id column and the hotkey slot.
 #[component]
 pub fn HotkeyOverrideHeader(props: HotkeyOverrideHeaderModel) -> Element {
     let HotkeyOverrideHeaderModel {

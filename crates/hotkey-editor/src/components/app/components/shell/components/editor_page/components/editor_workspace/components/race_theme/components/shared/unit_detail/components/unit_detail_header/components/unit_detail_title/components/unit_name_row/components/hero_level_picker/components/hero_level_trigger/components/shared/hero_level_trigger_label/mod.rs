@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The static "Level" caption at the left of the hero-level trigger.
 #[component]
 pub fn HeroLevelTriggerLabel() -> Element {
     rsx! {

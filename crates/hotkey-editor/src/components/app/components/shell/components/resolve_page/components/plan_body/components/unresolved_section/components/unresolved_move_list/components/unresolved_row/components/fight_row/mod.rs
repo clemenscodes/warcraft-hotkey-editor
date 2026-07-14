@@ -11,7 +11,6 @@ use model::FightRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The stuck ability's row: it centers the ability's column.
 #[component]
 pub fn FightRow(props: FightRowModel) -> Element {
     let unresolved_view = props.unresolved_view;

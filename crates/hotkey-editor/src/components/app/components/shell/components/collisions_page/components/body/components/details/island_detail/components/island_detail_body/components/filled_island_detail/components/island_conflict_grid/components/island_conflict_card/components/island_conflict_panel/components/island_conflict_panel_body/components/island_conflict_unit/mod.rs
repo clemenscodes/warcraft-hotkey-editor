@@ -15,9 +15,6 @@ use model::IslandConflictUnitModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The affected unit heading a conflict card: a clickable icon over the name and
-/// object id, all deep-linking into the editor focused on that unit through the
-/// navigation read from context.
 #[component]
 pub fn IslandConflictUnit(props: IslandConflictUnitModel) -> Element {
     let model = use_island_conflict_unit(&props);

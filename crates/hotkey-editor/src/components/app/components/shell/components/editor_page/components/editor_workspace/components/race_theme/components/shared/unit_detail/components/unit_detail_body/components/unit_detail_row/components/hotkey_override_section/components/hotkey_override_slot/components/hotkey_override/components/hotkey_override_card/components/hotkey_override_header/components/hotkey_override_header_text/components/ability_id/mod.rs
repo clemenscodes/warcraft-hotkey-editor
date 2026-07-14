@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::AbilityIdModel;
 
-/// The object id shown under the name in the hotkey-override section.
 #[component]
 pub fn AbilityId(props: AbilityIdModel) -> Element {
     rsx! {

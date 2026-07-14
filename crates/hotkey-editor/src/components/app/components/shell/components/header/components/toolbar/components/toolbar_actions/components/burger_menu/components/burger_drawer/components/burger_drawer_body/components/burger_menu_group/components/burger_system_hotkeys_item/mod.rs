@@ -9,10 +9,6 @@ use presentation::{BurgerSystemHotkeysItemPresentation, use_burger_system_hotkey
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout system-hotkeys action: the drawer row that opens the system-hotkeys editor,
-/// and the editor dialog it owns, mounted beneath it. It owns the editor's open signal locally, so
-/// the dialog is part of the row and travels with it. Tapping it leaves the drawer open (closing
-/// the drawer would unmount this row and its dialog), so the editor opens over the drawer.
 #[component]
 pub fn BurgerSystemHotkeysItem() -> Element {
     let BurgerSystemHotkeysItemPresentation {

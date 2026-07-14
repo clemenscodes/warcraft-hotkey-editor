@@ -1,7 +1,6 @@
 use super::view::UnitCategoryHeadingView;
 use dioxus::prelude::*;
 
-/// A category heading: its label, collapsed state, and the toggle handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCategoryHeadingModel {
     #[props(into)]

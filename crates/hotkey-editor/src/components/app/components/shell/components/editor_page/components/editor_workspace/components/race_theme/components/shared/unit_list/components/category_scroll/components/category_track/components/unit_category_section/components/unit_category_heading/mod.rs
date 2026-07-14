@@ -11,7 +11,6 @@ use model::UnitCategoryHeadingModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The clickable heading for a unit category in the sidebar list.
 #[component]
 pub fn UnitCategoryHeading(props: UnitCategoryHeadingModel) -> Element {
     let is_collapsed = props.is_collapsed;

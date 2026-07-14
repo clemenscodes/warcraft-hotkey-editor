@@ -4,9 +4,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 };
 use dioxus::prelude::*;
 
-/// A free, pickable key. Its button attributes and children are shared with the other
-/// looks (they arrive as named fields from the dispatcher); this look adds only the
-/// available color styling in its own `style.rs`.
 #[derive(Props, Clone, PartialEq)]
 pub struct AvailableKeyModel {
     pub label: String,

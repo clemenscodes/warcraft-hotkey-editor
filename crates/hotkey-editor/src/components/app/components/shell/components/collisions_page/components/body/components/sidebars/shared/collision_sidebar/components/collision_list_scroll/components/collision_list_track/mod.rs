@@ -11,7 +11,6 @@ use model::CollisionListTrackModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inner track that lays out the collision cards.
 #[component]
 pub fn CollisionListTrack(props: CollisionListTrackModel) -> Element {
     let cards = props.cards;

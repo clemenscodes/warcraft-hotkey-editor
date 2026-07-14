@@ -10,8 +10,6 @@ use model::TileBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hotkey badge's placement inside a tile: pinned to the top-right corner.
-/// Shared by both the filled and empty tiles.
 #[component]
 pub fn TileBadge(props: TileBadgeModel) -> Element {
     let letter = props.letter;

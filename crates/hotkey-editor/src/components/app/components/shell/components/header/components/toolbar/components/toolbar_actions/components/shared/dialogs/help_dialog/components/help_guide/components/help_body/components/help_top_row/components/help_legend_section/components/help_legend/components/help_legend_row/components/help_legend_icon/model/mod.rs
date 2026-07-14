@@ -1,7 +1,6 @@
 use super::view::HelpLegendIconView;
 use dioxus::prelude::*;
 
-/// The legend icon's only input: the inline SVG markup to draw.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpLegendIconModel {
     pub icon: &'static str,

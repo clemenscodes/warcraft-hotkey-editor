@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The selected card surface: shared chrome values on the blue surface, wearing the
-// generic `--race-color` accent (border, text, glow) and publishing `--name-color:white`
-// so its name reads white on the mobile/tablet tile. Shared values with the idle sibling.
 classes! {
     base: tw![
         "flex",

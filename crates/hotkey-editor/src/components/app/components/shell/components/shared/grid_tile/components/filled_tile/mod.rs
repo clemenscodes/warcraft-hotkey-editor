@@ -19,11 +19,6 @@ use presentation::FilledTilePresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// An occupied command tile. Purely presentational: it draws the ability icon (or its
-/// text fallback) over a per-kind background fill, themes its accent from the owning
-/// unit's race, and — when selected — mounts the `SelectionRing` whose presence turns
-/// the tile's own border gold. It knows nothing of hotkeys, focus, or dragging;
-/// `GridEditorTile` layers all interaction on top of this base tile.
 #[component]
 pub fn FilledTile(props: FilledTileModel) -> Element {
     let FilledTilePresentation {

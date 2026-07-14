@@ -2,8 +2,6 @@ use crate::components::app::components::shell::components::resolve_page::present
 use crate::services::carriers::InspectedAbility;
 use warcraft_api::WarcraftObjectId;
 
-/// The stuck column's shaped state: the name-plate fields and the ability-icon fields. A
-/// stuck ability never wins a cell, so its icon is not ringed.
 pub(super) struct FightColumnPresentation {
     pub(super) name: String,
     pub(super) object_id: WarcraftObjectId,

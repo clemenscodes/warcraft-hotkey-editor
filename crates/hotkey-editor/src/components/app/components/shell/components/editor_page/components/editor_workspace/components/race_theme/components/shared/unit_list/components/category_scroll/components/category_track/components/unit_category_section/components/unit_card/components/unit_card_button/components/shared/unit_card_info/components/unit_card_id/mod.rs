@@ -12,10 +12,6 @@ use model::UnitCardIdModel;
 use state::UnitCardIdState;
 use tw_macro::assert_component;
 
-/// The unit's database id inside a card. A pure dispatcher: from the card's selected
-/// flag it renders the muted `NormalUnitCardId` xor the race-accented
-/// `SelectedUnitCardId`. Each look owns its own classed `code` root; this dispatcher
-/// only forwards the unit id to the one the state selects.
 #[component]
 pub fn UnitCardId(props: UnitCardIdModel) -> Element {
     let unit_id = props.unit_id;

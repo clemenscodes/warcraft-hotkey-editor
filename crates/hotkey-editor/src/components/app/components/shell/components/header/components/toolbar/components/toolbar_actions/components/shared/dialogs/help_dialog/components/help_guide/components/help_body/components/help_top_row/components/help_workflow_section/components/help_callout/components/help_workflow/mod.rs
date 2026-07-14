@@ -11,8 +11,6 @@ use model::HelpWorkflowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The ordered list of workflow steps. A pure loop: the steps and their inline
-/// glyphs are data, passed in, never baked into this markup.
 #[component]
 pub fn HelpWorkflow(props: HelpWorkflowModel) -> Element {
     rsx! {

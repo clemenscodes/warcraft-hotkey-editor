@@ -12,8 +12,6 @@ use model::TemplateCardPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A clickable template card: its name and description above a preview of the
-/// command card and research menu it would apply. Owns `.template-card`.
 #[component]
 pub fn TemplateCard(props: TemplateCardModel) -> Element {
     let name = props.name.clone();

@@ -1,7 +1,5 @@
 use tw_macro::tw;
 
-// The muted id look: the shared id typography plus the faint resting text color.
-
 classes! {
     base: tw![
         "text-base",

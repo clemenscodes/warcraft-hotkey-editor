@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Attack Type";
 
-/// The unit's attack type — what its damage is classified as.
 #[component]
 pub fn AttackTypeRow(props: AttackTypeRowModel) -> Element {
     let value = props.value;

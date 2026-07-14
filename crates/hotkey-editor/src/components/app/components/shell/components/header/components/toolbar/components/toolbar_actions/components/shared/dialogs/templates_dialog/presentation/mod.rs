@@ -7,11 +7,6 @@ use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 use warcraft_keybinds::ResolvedTemplate;
 
-/// The templates dialog's shaped wiring: whether the templates browser is open, the change
-/// handler mirroring the headless dialog's own close (escape, outside click) back to the
-/// trigger that owns the open signal, and the resolved template card views the body lays
-/// out — each with its apply handler that overwrites the loaded document. Body-scroll lock
-/// is owned once by `WarcraftDialog`, so this presentation only carries the trigger's handler.
 pub(super) struct TemplatesDialogPresentation {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
@@ -22,12 +17,6 @@ impl ddd::Presentation for TemplatesDialogPresentation {
     type Model = TemplatesDialogModel;
 }
 
-/// Reads context and shapes the templates dialog from the trigger's props: the open value and
-/// change handler the trigger owns, plus the resolved cards. Each card's apply handler imports
-/// the bundled template through the sanctioned `CustomKeysService::import_overlay` command
-/// (which overlays, normalizes, and writes through to storage), sets the upload-status signal,
-/// toasts, and closes the browser through the trigger's change handler. All that domain work
-/// lives here, never in the markup.
 pub(super) fn use_templates_dialog(props: &TemplatesDialogModel) -> TemplatesDialogPresentation {
     let custom_keys_service = use_custom_keys_service();
     let mut upload_status = use_upload_status();

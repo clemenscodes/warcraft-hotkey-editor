@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The hotkey-override section header: name/id on the left, the hotkey slot pinned right, with
-// a hairline divider under it. A fixed two-column grid on the mobile panel.
 
 classes! {
     base: tw![

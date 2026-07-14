@@ -3,8 +3,6 @@ use crate::components::app::components::shell::components::collisions_page::pres
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The scrolling grid of shared-hotkey conflict cards: one card per conflict, all
-/// deep-linking through the owning unit id.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyConflictGridModel {
     pub conflicts: Vec<HotkeyConflictView>,

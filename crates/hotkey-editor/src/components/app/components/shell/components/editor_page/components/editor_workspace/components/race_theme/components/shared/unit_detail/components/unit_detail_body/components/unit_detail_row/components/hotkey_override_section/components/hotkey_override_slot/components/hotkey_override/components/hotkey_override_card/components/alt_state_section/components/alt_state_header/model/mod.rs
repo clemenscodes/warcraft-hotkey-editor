@@ -1,7 +1,6 @@
 use super::view::AltStateHeaderView;
 use dioxus::prelude::*;
 
-/// The off-state block's top row: the label column beside its editable controls.
 #[derive(Props, Clone, PartialEq)]
 pub struct AltStateHeaderModel {
     pub alt_name_text: Option<String>,

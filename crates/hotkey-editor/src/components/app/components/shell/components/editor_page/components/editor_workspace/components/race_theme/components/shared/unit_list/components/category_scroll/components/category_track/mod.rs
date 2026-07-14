@@ -12,9 +12,6 @@ use model::CategoryTrackModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inner track laying out the category sections: a vertical stack on the sidebar,
-/// a horizontal fixed-height carousel on small screens. It receives the category kinds
-/// in display order and renders one section per kind.
 #[component]
 pub fn CategoryTrack(props: CategoryTrackModel) -> Element {
     rsx! {

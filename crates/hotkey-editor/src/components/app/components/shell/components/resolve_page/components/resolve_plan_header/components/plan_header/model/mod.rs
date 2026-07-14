@@ -1,7 +1,6 @@
 use super::view::PlanHeaderView;
 use dioxus::prelude::*;
 
-/// The plan header: the move/unresolved summary and the Apply button.
 #[derive(Props, Clone, PartialEq)]
 pub struct PlanHeaderModel {
     #[props(into)]

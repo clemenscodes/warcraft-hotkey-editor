@@ -4,12 +4,6 @@ use crate::services::navigation::context::use_view_navigation;
 use crate::services::navigation::editor_navigation::DecodedEditorNavigation;
 use dioxus::prelude::*;
 
-/// Reconcile the editor route into the shell's navigation signals — the read side of the
-/// URL contract. Decode `?race=&mode=&unit=&search_query=` and write it into the
-/// navigation signals whenever the route changes (a gesture's own push, a deep-link, or
-/// back/forward); the write side lives at each mutation site. The workspace and its
-/// children source every editor signal from context themselves, so the page shapes no
-/// child props.
 pub(super) fn use_editor_page(props: &EditorPageModel) {
     let navigation = use_view_navigation();
     let decoded = DecodedEditorNavigation::decode(

@@ -1,9 +1,4 @@
 use tw_macro::tw;
-// The unit list panel. On the sidebar it is an absolutely-positioned column filling
-// the sidebar column of the editor workspace; on small screens it collapses to a
-// static, self-contained block (search + tabs + horizontal card carousel). `group`
-// lets the cards read the active category and the scrollbar reveal on hover. The
-// per-band sidebar widths match the workspace grid's first column.
 
 classes! {
     base: tw![

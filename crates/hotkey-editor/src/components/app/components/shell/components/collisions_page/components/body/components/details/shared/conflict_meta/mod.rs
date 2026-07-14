@@ -12,8 +12,6 @@ use model::ConflictMetaModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The text meta column of a detail-pane header: the unit name, its object id, and the
-/// collision count. Shared by the hotkey and unit-position detail headers.
 #[component]
 pub fn ConflictMeta(props: ConflictMetaModel) -> Element {
     let name = props.name;

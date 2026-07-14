@@ -4,8 +4,6 @@ use crate::components::app::components::shell::components::shared::grid_tile::Gr
 use dioxus::prelude::*;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RowIndex};
 
-/// The tile painter's private internal model, mirroring the published
-/// [`TileFaceView`]. Parents set these fields by name from a view they hold.
 #[derive(Props, Clone, PartialEq)]
 pub struct TileFaceModel {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]

@@ -1,12 +1,4 @@
 use tw_macro::tw;
-// Centers the embedded command grid inside a position-picker dialog and picker-styles
-// its tiles for the single-button off-state drag: non-draggable tiles dim out, and the
-// drop candidates glow gold. It keys off the tiles' mounted markers — the Host's
-// `.draggable-marker`, and the painter's `.drop-target-overlay` / `.drag-over-ring` /
-// `.dragging-source-ghost` (the overlay children that replaced the old
-// `data-draggable` / `data-drag-over` / `data-dragging-source` / `data-drop-target`
-// look-flags). These beat the tile's own single-`:has` rules by descendant specificity,
-// so no `!important` is needed.
 classes! {
     base: tw![
         "flex",

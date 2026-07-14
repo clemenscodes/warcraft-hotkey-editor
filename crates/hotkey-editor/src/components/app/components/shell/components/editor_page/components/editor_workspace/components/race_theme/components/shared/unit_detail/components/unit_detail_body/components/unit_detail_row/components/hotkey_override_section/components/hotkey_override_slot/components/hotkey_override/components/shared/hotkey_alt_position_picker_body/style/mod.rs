@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The scroll body of a position-picker dialog: the DialogContent's scroll region
-// and the centered column holding the explainer and the grid. Shared by the
-// off-state and upgraded-form pickers.
 
 classes! {
     base: tw![

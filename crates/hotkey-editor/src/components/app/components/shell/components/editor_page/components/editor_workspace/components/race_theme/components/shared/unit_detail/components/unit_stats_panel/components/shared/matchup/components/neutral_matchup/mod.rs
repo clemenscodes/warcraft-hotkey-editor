@@ -11,7 +11,6 @@ use model::NeutralMatchupModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The neutral matchup cell: no tint. The value reads its colour from the `--matchup-color` this cell publishes.
 #[component]
 pub fn NeutralMatchup(props: NeutralMatchupModel) -> Element {
     let subject = props.subject;

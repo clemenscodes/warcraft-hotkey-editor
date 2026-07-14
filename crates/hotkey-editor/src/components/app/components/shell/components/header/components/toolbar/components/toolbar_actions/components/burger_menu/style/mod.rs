@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The burger appears at a single size (the compact header, hidden at laptop and up),
-// so its chrome is fixed rather than cqi — there is no size change to scale against.
 
 classes! {
     base: tw![

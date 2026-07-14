@@ -5,7 +5,6 @@ use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::HotkeyTarget;
 use warcraft_keybinds::HotkeyToken;
 
-/// Override (or clear) the hotkey of one ability/research/off-state target.
 pub struct SetHotkeyCommand {
     target: HotkeyTarget,
     token: Option<HotkeyToken>,

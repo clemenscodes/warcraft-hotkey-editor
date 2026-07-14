@@ -5,14 +5,13 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The trailing side of the header: the same flourish mirrored to face inward.
 #[component]
 pub fn DialogHeaderDecorationTrailing() -> Element {
     rsx! {
         span {
             class: CLASS,
             DialogHeaderDecoration {
-            
+
 
 
             }

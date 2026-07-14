@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`UpgradeSectionHeaderModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UpgradeSectionHeaderView {
     pub hotkey_label: String,

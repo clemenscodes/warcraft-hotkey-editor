@@ -5,14 +5,13 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The leading side of the header: the flourish facing inward as drawn.
 #[component]
 pub fn DialogHeaderDecorationLeading() -> Element {
     rsx! {
         span {
             class: CLASS,
             DialogHeaderDecoration {
-            
+
 
 
             }

@@ -9,11 +9,6 @@ use presentation::{BurgerPreviewItemPresentation, use_burger_preview_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout preview action: the drawer row that toggles the serialized-keys preview,
-/// and the preview dialog it owns, mounted beneath it. It owns the preview's open signal
-/// locally, so the dialog is part of the row and travels with it. Tapping it leaves the drawer
-/// open (closing the drawer would unmount this row and its dialog), so the preview opens over
-/// the drawer and the row's label flips to the hide wording while it is open.
 #[component]
 pub fn BurgerPreviewItem() -> Element {
     let BurgerPreviewItemPresentation {

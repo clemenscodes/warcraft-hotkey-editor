@@ -13,8 +13,6 @@ use model::IslandConflictAbilityRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The two clashing abilities flanking the centered separator. It owns its own abilities
-/// row element directly.
 #[component]
 pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowModel) -> Element {
     let IslandConflictAbilityRowModel {
@@ -46,7 +44,7 @@ pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowModel) -> Element
                 inspected: own_inspected,
             }
             ConflictSeparator {
-            
+
 
 
             }

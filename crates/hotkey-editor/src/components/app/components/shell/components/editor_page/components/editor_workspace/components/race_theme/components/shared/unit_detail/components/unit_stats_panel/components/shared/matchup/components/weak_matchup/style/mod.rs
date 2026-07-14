@@ -1,5 +1,4 @@
 use tw_macro::tw;
-// The weak matchup cell: a danger tint. Shared cell layout VALUES with the sibling variants; each writes its own list.
 classes! {
     base: tw![
         "flex",

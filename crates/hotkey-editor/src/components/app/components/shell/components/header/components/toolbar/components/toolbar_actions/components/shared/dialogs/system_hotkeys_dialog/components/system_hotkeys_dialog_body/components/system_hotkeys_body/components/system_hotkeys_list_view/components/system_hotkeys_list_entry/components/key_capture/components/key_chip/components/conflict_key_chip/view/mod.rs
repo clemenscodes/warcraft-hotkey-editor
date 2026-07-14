@@ -1,7 +1,6 @@
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`ConflictKeyChipModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ConflictKeyChipView {
     pub label: String,

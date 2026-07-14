@@ -9,12 +9,6 @@ use presentation::{BurgerUploadItemPresentation, use_burger_upload_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout upload action: the drawer row that opens the upload info dialog, and the
-/// dialog it owns, mounted beneath it. It owns the dialog's open signal locally, so the dialog
-/// is part of the row and travels with it. Tapping it leaves the drawer open (closing the
-/// drawer would unmount this row and its dialog), so the info dialog opens over the drawer. The
-/// info dialog's confirm triggers the hidden file input (by element id) that lives in the
-/// inline upload button, so this row mounts no input of its own.
 #[component]
 pub fn BurgerUploadItem() -> Element {
     let BurgerUploadItemPresentation {

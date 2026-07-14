@@ -2,11 +2,6 @@ use super::view::GridEditorView;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridBehavior;
 
-/// The `GridEditor` component's internal model (a `ddd::Model`): a [`GridEditorView`]
-/// bound to a concrete [`GridBehavior`]. The behavior is a zero-sized marker; the
-/// three variant wrappers each instantiate it with their own type. It exists so the
-/// generic `GridEditor<B>` carries `B`, letting the `From` impls cascade and mutate
-/// tiles. It is built from the published `GridEditorView` at the variant boundary.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridEditorModel<B: GridBehavior> {
     #[props(default)]

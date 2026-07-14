@@ -9,9 +9,6 @@ use presentation::{use_inventory_hotkeys_view, InventoryHotkeysViewModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inventory hotkey editor: the domain-supplied intro caption above the six-slot
-/// grid, reorderable by drag. It reads the editing section and drag follower from the
-/// dialog state context through its descendants, so it threads nothing.
 #[component]
 pub fn InventoryHotkeysView() -> Element {
     let InventoryHotkeysViewModel { caption } = use_inventory_hotkeys_view();
@@ -22,7 +19,7 @@ pub fn InventoryHotkeysView() -> Element {
                 text: caption,
             }
             InventoryGrid {
-            
+
 
 
             }

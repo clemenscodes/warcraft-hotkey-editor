@@ -14,8 +14,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Regeneration";
 
-/// The unit's mana regeneration: an indented companion to the mana row, wearing the
-/// human-blue accent. Dimmed when the unit does not regenerate mana.
 #[component]
 pub fn ManaRegenRow(props: ManaRegenRowModel) -> Element {
     let value = props.value;

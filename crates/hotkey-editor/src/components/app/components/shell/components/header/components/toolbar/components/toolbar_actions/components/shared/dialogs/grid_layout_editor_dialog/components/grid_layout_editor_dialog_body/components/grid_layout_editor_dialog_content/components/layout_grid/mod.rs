@@ -11,7 +11,6 @@ use model::LayoutGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The four-by-three grid of editable hotkey cells.
 #[component]
 pub fn LayoutGrid(props: LayoutGridModel) -> Element {
     let cells = props.cells;

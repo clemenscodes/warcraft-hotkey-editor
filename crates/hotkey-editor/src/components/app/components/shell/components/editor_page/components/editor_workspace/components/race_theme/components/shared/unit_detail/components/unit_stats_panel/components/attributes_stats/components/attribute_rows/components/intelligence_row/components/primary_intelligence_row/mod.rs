@@ -12,8 +12,6 @@ use model::PrimaryIntelligenceRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's intelligence row when intelligence is the hero's primary attribute: it wears the
-/// gold primary glow and publishes the full-gold `--attribute-label-color` its label reads.
 #[component]
 pub fn PrimaryIntelligenceRow(props: PrimaryIntelligenceRowModel) -> Element {
     let statistic = props.statistic;

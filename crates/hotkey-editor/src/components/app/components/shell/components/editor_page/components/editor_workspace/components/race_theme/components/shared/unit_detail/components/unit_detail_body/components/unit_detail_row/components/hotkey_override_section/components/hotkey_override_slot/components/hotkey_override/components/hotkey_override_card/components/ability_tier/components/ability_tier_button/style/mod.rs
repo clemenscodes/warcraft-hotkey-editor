@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// A prev/next arrow button in the tier-cycling footer. Small bronze square that
-// golds on hover; the injected arrow SVG is centered and fixed-size. Class
-// `.tile-override-tier-button` is load-bearing (keyboard navigation).
 
 classes! {
     base: tw![

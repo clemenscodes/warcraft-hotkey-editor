@@ -9,8 +9,6 @@ use model::PopoverActiveCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The selected category tab in the small-viewport popover: a full-width, ringed gold
-/// row marked as the current page.
 #[component]
 pub fn PopoverActiveCategoryTab(props: PopoverActiveCategoryTabModel) -> Element {
     let label = props.label;

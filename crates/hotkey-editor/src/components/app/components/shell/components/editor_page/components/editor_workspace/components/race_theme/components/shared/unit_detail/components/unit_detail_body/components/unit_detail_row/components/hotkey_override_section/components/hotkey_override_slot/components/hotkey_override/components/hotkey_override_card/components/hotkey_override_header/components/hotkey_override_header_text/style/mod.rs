@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The name-and-id column of the override header; centered with a touch floor on the
-// mobile panel so the row height stays stable.
 
 classes! {
     base: tw![

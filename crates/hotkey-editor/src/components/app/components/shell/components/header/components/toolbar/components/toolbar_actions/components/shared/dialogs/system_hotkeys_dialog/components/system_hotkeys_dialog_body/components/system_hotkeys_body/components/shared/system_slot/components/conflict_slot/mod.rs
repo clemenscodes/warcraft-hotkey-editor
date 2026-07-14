@@ -10,9 +10,6 @@ use model::ConflictSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The conflict look of a system slot: the gold border-image frame with a danger-red
-/// glow overlay, composing the shared slot content. Presentational — the dispatcher
-/// renders it when the slot's glow state is a binding conflict.
 #[component]
 pub fn ConflictSlot(props: ConflictSlotModel) -> Element {
     let slot_label = props.slot_label;

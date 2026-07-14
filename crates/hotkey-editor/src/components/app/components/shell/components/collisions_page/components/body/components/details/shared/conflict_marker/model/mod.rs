@@ -2,9 +2,6 @@ use super::state::ConflictMarker;
 use super::view::ConflictMarkerView;
 use dioxus::prelude::*;
 
-/// The marker between (or above) a conflict's abilities, plus whether it sits atop a
-/// multi-way row. `ConflictMarker` switches on the marker to the hotkey badge or
-/// the colliding-cell mini grid.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictMarkerModel {
     pub marker: ConflictMarker,

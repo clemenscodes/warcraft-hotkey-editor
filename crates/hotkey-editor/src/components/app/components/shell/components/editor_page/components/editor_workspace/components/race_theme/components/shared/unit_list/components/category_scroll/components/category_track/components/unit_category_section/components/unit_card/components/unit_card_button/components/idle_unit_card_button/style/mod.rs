@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The idle card surface: shared entity-card chrome values, resting, taking the generic
-// `--race-color` accent on hover. Shared values with the selected sibling.
 classes! {
     base: tw![
         "flex",

@@ -10,9 +10,6 @@ use model::NarrowKeySlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The sizing box for a standard-width picker key. A component owns its look; its
-/// parent owns its size — so the key's width lives here, and the color leaf inside
-/// fills the box. Standard caps (single letters, digits) get this narrow width.
 #[component]
 pub fn NarrowKeySlot(props: NarrowKeySlotModel) -> Element {
     let state = props.state;

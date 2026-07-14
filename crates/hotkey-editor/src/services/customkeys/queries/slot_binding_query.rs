@@ -7,10 +7,6 @@ use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::SystemBindingMap;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// The resolved binding and conflict picture for one system keybind section:
-/// what key it currently shows, whether that key collides with another binding,
-/// which sections it collides with, and the per-key conflict names a picker
-/// needs. Everything a system-hotkey slot renders, already decided by the domain.
 #[derive(Clone, PartialEq, Debug)]
 pub struct SlotBindingView {
     effective_label: String,
@@ -21,8 +17,6 @@ pub struct SlotBindingView {
 }
 
 impl SlotBindingView {
-    /// The view for a section that resolves to nothing (an unknown id): no label,
-    /// no conflicts. `KeyCode::Escape` mirrors the domain's own resolve fallback.
     fn empty() -> Self {
         Self {
             effective_label: String::new(),
@@ -33,7 +27,6 @@ impl SlotBindingView {
         }
     }
 
-    /// The idle key label (e.g. `Ctrl+Q`), as the domain formats it.
     pub(crate) fn effective_label(&self) -> &str {
         &self.effective_label
     }
@@ -46,8 +39,6 @@ impl SlotBindingView {
         self.is_conflict
     }
 
-    /// The section comments of every binding this slot collides with; presentation
-    /// composes the "Also used by …" copy from them.
     pub(crate) fn colliding_names(&self) -> &[String] {
         &self.colliding_names
     }
@@ -57,9 +48,6 @@ impl SlotBindingView {
     }
 }
 
-/// Query: the [`SlotBindingView`] for one system keybind section, addressed by its
-/// `WarcraftObjectId`. Answered against the live `CustomKeys` aggregate so the
-/// renderer never builds the binding map or resolves collisions itself.
 pub struct SlotBindingQuery {
     section_id: WarcraftObjectId,
 }
@@ -69,8 +57,6 @@ impl SlotBindingQuery {
         Self { section_id }
     }
 
-    /// Answer the query against a keys snapshot. Pure — the service's
-    /// [`ddd::QueryHandler`] impl wraps this with the reactive signal read.
     pub fn answer(&self, custom_keys: Option<&CustomKeys>) -> SlotBindingView {
         let map = SystemBindingMap::build(custom_keys);
         let Some(resolved) = map.binding_for(self.section_id) else {
@@ -122,8 +108,6 @@ mod tests {
             .expect("itm3 is a known system keybind section");
         let query = SlotBindingQuery::new(section_id);
         let view = query.answer(None);
-        // A known section resolves to its database default, so the label is
-        // always populated (whether or not that default happens to collide).
         assert!(!view.effective_label().is_empty());
     }
 }

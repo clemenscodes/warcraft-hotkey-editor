@@ -3,9 +3,6 @@ use crate::components::app::components::shell::components::collisions_page::pres
 use crate::components::app::components::shell::components::collisions_page::presentation::UnitIconView;
 use warcraft_api::WarcraftObjectId;
 
-/// The populated shared-hotkey detail pane's presentation: the selected unit, its
-/// collision count, the owning unit id, and the shared-hotkey conflicts. Built purely
-/// from the model — a shaping leaf, no effects.
 pub struct FilledHotkeyUnitDetailPresentation {
     pub(super) unit: UnitIconView,
     pub(super) count: usize,

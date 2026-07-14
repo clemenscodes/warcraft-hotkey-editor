@@ -10,9 +10,6 @@ use model::IdleSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle (unglowed) look of a system slot: the gold border-image frame composing
-/// the shared slot content. Presentational — the dispatcher renders it when the slot's
-/// glow state is idle.
 #[component]
 pub fn IdleSlot(props: IdleSlotModel) -> Element {
     let slot_label = props.slot_label;

@@ -11,7 +11,6 @@ use model::TemplateGalleryModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The two-column grid of template cards. Owns `.template-gallery`.
 #[component]
 pub fn TemplateGallery(props: TemplateGalleryModel) -> Element {
     let cards = props.cards;

@@ -9,7 +9,6 @@ use model::LinkMoveNameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The clickable ability name that deep-links into the editor; underlines on the button's hover.
 #[component]
 pub fn LinkMoveName(props: LinkMoveNameModel) -> Element {
     let text = props.text;

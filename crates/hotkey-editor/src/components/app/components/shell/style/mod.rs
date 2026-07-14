@@ -1,14 +1,4 @@
 use tw_macro::tw;
-// The app shell centres the routed page in a single full-bleed column — no padding, so
-// the shell (and its header) spans the whole viewport width and its content reaches
-// every edge. It sets no inter-section spacing: each section (header, the view, footer)
-// owns its own spacing, so the shell never reaches across the wall to space its children.
-// It also owns the app-wide foundational resets that used to live as global rules in
-// tailwind.css: they are `.app`-scoped, so they are inline descendant utilities on
-// this root, not global CSS.
-
-// Phone/tablet: full-bleed with no padding at all (the shell spans the whole viewport and
-// its content reaches every edge), a content-driven height above the dvh floor.
 
 classes! {
     base: tw![

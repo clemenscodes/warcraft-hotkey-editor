@@ -5,10 +5,6 @@ use warcraft_keybinds::CollisionSummary;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::GridLayout;
 
-/// Query: the collision-count summary the toolbar badge shows — how many position,
-/// command-card-hotkey, and system-hotkey collisions the current document has for a
-/// given grid layout. Answered against the live aggregate so the badge never runs
-/// the collision reports itself at render time.
 pub struct CollisionSummaryQuery {
     layout: GridLayout,
 }
@@ -18,8 +14,6 @@ impl CollisionSummaryQuery {
         Self { layout }
     }
 
-    /// Answer the query against a keys snapshot. Pure — the service's
-    /// [`ddd::QueryHandler`] impl wraps this with the reactive signal read.
     pub fn answer(&self, custom_keys: Option<&CustomKeys>) -> CollisionSummary {
         match custom_keys {
             Some(keys) => CollisionSummary::compute(keys, self.layout),

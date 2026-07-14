@@ -1,6 +1,5 @@
 use warcraft_api::WarcraftObjectId;
 
-/// The published `View` contract mirroring [`ConflictObjectIdModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ConflictObjectIdView {
     pub object_id: WarcraftObjectId,

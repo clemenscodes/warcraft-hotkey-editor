@@ -15,8 +15,6 @@ use model::MoveReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The reason-badge row atop a move card. It routes the move's kind to the
-/// matching per-kind badge wrapper, forwarding the domain label text.
 #[component]
 pub fn MoveReasonBadge(props: MoveReasonBadgeModel) -> Element {
     let kind = props.kind;

@@ -1,7 +1,6 @@
 use super::view::CarrierBadgeView;
 use dioxus::prelude::*;
 
-/// The carrier-count badge on an ability icon; gold when it wins the cell.
 #[derive(Props, Clone, PartialEq)]
 pub struct CarrierBadgeModel {
     pub count: usize,

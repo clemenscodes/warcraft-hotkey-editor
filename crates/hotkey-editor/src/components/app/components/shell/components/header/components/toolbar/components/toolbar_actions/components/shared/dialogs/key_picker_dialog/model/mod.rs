@@ -3,10 +3,6 @@ use super::view::KeyPickerDialogView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
-/// The key picker's private internal model — the props the component receives. Mirrors
-/// the published [`KeyPickerDialogView`] field-for-field (decoupling, not duplication); the
-/// `From<&View>` is the boundary translation. Signal-free: the board shaping and the
-/// open-signal live in the presentation builder.
 #[derive(Props, Clone, PartialEq)]
 pub struct KeyPickerDialogModel {
     #[props(into)]

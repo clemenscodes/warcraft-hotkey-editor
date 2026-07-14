@@ -11,10 +11,6 @@ use model::MiniGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A tiny command grid marking one coordinate. A thin wrapper that owns the
-/// collisions page's fixed-width, hairline-radius outer box and highlights the
-/// given coordinate's tile before handing the built grid to the shared `MiniGrid`
-/// frame. Shared by the island sidebar cards and the detail headers.
 #[component]
 pub fn MiniGrid(props: MiniGridModel) -> Element {
     let tiles = presentation::grid(&props);

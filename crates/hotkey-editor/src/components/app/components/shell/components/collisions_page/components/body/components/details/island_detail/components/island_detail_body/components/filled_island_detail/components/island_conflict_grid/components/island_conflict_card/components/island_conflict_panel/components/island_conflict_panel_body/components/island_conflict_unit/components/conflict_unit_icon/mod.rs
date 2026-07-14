@@ -11,9 +11,6 @@ use model::ConflictUnitIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A conflicting unit's portrait. It owns its slot (a hover `.group`) and lifts to a
-/// gold glow on hover; the shared `FramedIcon` draws the bordered, rounded image and
-/// renders nothing when the unit has no icon.
 #[component]
 pub fn ConflictUnitIcon(props: ConflictUnitIconModel) -> Element {
     let Some(source) = props.src else {

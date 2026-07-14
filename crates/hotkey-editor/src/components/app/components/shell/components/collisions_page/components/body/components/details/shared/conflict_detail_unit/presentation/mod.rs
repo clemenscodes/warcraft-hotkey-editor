@@ -2,8 +2,6 @@ use super::model::ConflictDetailUnitModel;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 
-/// The shaped detail-header unit: its portrait icon source and alt and the open-unit
-/// handler wired from the navigation read from context.
 pub(super) struct ConflictDetailUnitPresentation {
     pub(super) icon_src: Option<String>,
     pub(super) icon_alt: String,

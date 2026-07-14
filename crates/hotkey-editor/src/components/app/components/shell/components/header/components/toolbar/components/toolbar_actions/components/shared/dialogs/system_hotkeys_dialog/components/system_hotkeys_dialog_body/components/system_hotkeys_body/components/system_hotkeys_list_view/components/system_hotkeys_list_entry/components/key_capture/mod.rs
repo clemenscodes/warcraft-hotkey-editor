@@ -13,9 +13,6 @@ use presentation::use_key_capture;
 use model::KeyCaptureModel;
 use tw_macro::assert_component;
 
-/// The connected host for a system-hotkey list row: it sources the row's resolved
-/// binding through `use_key_capture`, renders the presentational `KeyChip`, and
-/// mounts the system key picker beneath itself while editing.
 #[component]
 pub fn KeyCapture(props: KeyCaptureModel) -> Element {
     let KeyCapturePresentation {

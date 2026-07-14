@@ -1,7 +1,6 @@
 use warcraft_api::AttackType;
 use warcraft_api::{AttackRange, AttackSpeed, DamagePerSecond, DamageRange};
 
-/// The published `View` contract mirroring [`CombatRowsModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct CombatRowsView {
     pub damage: DamageRange,

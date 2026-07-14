@@ -12,8 +12,6 @@ use model::HelpWorkflowSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The left column of the top row: the heading above the numbered workflow in
-/// its callout.
 #[component]
 pub fn HelpWorkflowSection(props: HelpWorkflowSectionModel) -> Element {
     let steps = props.steps;

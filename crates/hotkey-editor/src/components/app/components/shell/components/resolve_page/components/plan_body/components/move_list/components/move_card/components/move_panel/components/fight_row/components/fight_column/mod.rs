@@ -14,7 +14,6 @@ use model::FightColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The mover's fighter column: its name button over its ability icon.
 #[component]
 pub fn FightColumn(props: FightColumnModel) -> Element {
     let FightColumnPresentation {

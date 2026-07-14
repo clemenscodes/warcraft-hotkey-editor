@@ -1,6 +1,5 @@
 use warcraft_api::SystemHotkeysCategory;
 
-/// The published `View` contract mirroring [`SystemHotkeysListViewModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SystemHotkeysListViewView {
     pub category: SystemHotkeysCategory,

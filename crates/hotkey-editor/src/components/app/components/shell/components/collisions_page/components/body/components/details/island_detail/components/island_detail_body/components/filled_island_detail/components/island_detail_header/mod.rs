@@ -12,8 +12,6 @@ use model::IslandDetailHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The island detail pane header row: the island's mini-grid beside its text meta
-/// column.
 #[component]
 pub fn IslandDetailHeader(props: IslandDetailHeaderModel) -> Element {
     let coordinate = props.coordinate;

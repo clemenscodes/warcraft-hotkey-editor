@@ -10,9 +10,6 @@ use model::StuckReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The "Stuck" reason badge: publishes the Stuck accent colour and composes the base
-/// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
-/// names the pill's classes.
 #[component]
 pub fn StuckReasonBadge(props: StuckReasonBadgeModel) -> Element {
     let label = props.label;

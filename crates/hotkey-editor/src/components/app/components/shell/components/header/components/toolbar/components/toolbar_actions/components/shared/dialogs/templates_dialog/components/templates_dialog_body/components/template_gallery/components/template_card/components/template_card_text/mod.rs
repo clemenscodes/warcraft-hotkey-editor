@@ -12,7 +12,6 @@ use model::TemplateCardTextModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The card's name-and-description block. Owns `.template-card-text`.
 #[component]
 pub fn TemplateCardText(props: TemplateCardTextModel) -> Element {
     let name = props.name.clone();

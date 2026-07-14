@@ -1,7 +1,6 @@
 use super::view::HelpBodyTextView;
 use dioxus::prelude::*;
 
-/// The body text's only input: the paragraph copy.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpBodyTextModel {
     #[props(into)]

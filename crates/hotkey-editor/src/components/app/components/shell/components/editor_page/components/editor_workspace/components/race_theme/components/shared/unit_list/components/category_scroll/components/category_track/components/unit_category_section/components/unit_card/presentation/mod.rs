@@ -5,8 +5,6 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The card's shaped view: the portrait, name, id, whether it is selected, and its
-/// select handlers — the finished domain values the button surface renders.
 pub(super) struct UnitCardPresentation {
     pub(super) icon_path: Option<IconUrl>,
     pub(super) display_name: String,
@@ -16,9 +14,6 @@ pub(super) struct UnitCardPresentation {
     pub(super) onkeydown: EventHandler<KeyboardEvent>,
 }
 
-/// Reads the selection from context: the card is selected when it is the selected unit,
-/// and selecting it (click or Space/Enter) sets it as the selected unit, clears any
-/// selected slot, and switches the active category to the card's kind.
 pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
     let unit_id = props.unit_id;
     let unit_kind = props.unit_kind;

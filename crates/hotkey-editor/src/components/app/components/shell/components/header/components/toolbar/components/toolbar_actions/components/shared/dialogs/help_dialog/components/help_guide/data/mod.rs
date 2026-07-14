@@ -3,9 +3,6 @@ use crate::components::app::components::shell::components::shared::icons::{
     ICON_RESOLVE, ICON_TEMPLATES, ICON_UNDO, ICON_UPLOAD,
 };
 
-/// One toolbar button in the legend: its glyph, its name, and its one-line
-/// description. Plain guide content, threaded into the legend row component as a
-/// named field — never a component's props.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct HelpLegendEntry {
     icon: &'static str,
@@ -27,9 +24,6 @@ impl HelpLegendEntry {
     }
 }
 
-/// One glossary item: a term paired with its definition. Plain guide content,
-/// threaded into the glossary entry component as a named field — never a
-/// component's props.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct HelpGlossaryItem {
     term: &'static str,
@@ -46,17 +40,12 @@ impl HelpGlossaryItem {
     }
 }
 
-/// One piece of a workflow step: either a run of text or an inline toolbar glyph.
-/// A step is a sequence of these, so the renderer is a pure loop and never bakes
-/// copy or icons into markup.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum HelpSegment {
     Text { content: &'static str },
     Icon { svg: &'static str },
 }
 
-/// The whole onboarding guide's content, sourced here and threaded into the
-/// renderer components as props. No UI component owns any of this.
 #[derive(Clone, Copy, PartialEq)]
 pub struct HelpContent {
     workflow: &'static [&'static [HelpSegment]],
@@ -83,7 +72,6 @@ impl HelpContent {
     }
 }
 
-/// The guide content, defined once and passed down from the dialog root.
 pub const HELP_CONTENT: HelpContent = HelpContent {
     workflow: WORKFLOW,
     legend: LEGEND,

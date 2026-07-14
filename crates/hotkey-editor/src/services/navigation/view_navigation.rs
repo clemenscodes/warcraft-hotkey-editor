@@ -11,9 +11,6 @@ use warcraft_api::{Race, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_api::{UnitMode, WarcraftApi};
 use warcraft_keybinds::GridSlotId;
 
-/// The five signals that make up the editor's own navigation state: which page is
-/// active, and the editor's race/mode/unit/search selection. Grouped so the shell hands
-/// them to [`ViewNavigationContext`] as one value rather than five loose arguments.
 #[derive(Clone, Copy, PartialEq)]
 pub struct EditorNavigationSignals {
     current_view: Signal<AppView>,
@@ -41,19 +38,6 @@ impl EditorNavigationSignals {
     }
 }
 
-/// The navigation write/read surface for the whole app.
-///
-/// **Route is the single source of truth; these signals are a pure read-cache.** The
-/// data flows one way: a user gesture builds a typed [`NavigationSnapshot`], wraps it in
-/// a [`NavigationCommand`] (with push or replace decided at the gesture), and hands it to
-/// the shell-supplied `dispatch` callback, which is the only place that names the
-/// concrete `Route`. The router then navigates, each page reconciles the new route back
-/// into these signals ([`restore`](Self::restore) / [`restore_view`](Self::restore_view)),
-/// and the UI re-renders. There is no signals→route effect and therefore no echo guard:
-/// the only writer of the route is an explicit gesture, and reconciling a route never
-/// writes one back.
-///
-/// Exposed as a `Copy` struct so onclick closures capture it cheaply.
 #[derive(Clone, Copy, PartialEq)]
 pub struct ViewNavigationContext {
     current_view: Signal<AppView>,
@@ -115,10 +99,6 @@ impl ViewNavigationContext {
         self.search_query
     }
 
-    /// Build the snapshot the address bar should show for `view`, from the current
-    /// signal values (peeked, since this runs inside a gesture and never subscribes).
-    /// The editor carries its race/mode/unit/search; a collisions view carries the
-    /// active kind's currently-selected entry; the resolve view its selected category.
     fn snapshot(&self, view: AppView) -> NavigationSnapshot {
         match view {
             AppView::Editor => {
@@ -143,7 +123,6 @@ impl ViewNavigationContext {
         }
     }
 
-    /// The collision-selection signal that names the selected entry for `kind`.
     fn collision_entry_signal(&self, kind: CollisionKind) -> Signal<Option<String>> {
         match kind {
             CollisionKind::Positions => self.collision_selection.selected_island(),
@@ -162,9 +141,6 @@ impl ViewNavigationContext {
         self.dispatch.call(command);
     }
 
-    /// Switch to `target`, pushing a new history entry. No-op when `target` already
-    /// matches the current view (so re-clicking the active page adds no history). The
-    /// target route reconciles back into the signals when the page mounts.
     pub fn apply(self, target: AppView) {
         if target == *self.current_view.peek() {
             return;
@@ -173,11 +149,6 @@ impl ViewNavigationContext {
         self.push(snapshot);
     }
 
-    /// Select `race`: land on that race's default unit for the current mode and clear the
-    /// slot selection, then push the editor route. Which unit is the default is a domain
-    /// decision, resolved through [`DefaultUnit`], never computed in the renderer. The
-    /// slot reset is pure UI state (not in the URL), so it is set directly; the race and
-    /// unit ride into the route and reconcile back into their signals.
     pub fn select_race(self, race: Race, mut selected_slot: Signal<Option<GridSlotId>>) {
         selected_slot.set(None);
         let unit_mode = *self.unit_mode.peek();
@@ -189,8 +160,6 @@ impl ViewNavigationContext {
         self.push(snapshot);
     }
 
-    /// Select `mode`: land on the current race's default unit for that mode, clear the
-    /// slot selection, and push the editor route. Symmetric with [`select_race`](Self::select_race).
     pub fn select_mode(self, mode: UnitMode, mut selected_slot: Signal<Option<GridSlotId>>) {
         selected_slot.set(None);
         let race = *self.active_race.peek();
@@ -202,9 +171,6 @@ impl ViewNavigationContext {
         self.push(snapshot);
     }
 
-    /// Deep-link into the editor focused on `unit_id`. Resolves the unit's race and mode
-    /// from the database so the editor opens on the right tabs, keeps the current search,
-    /// and pushes the editor route.
     pub fn open_unit(self, unit_id: WarcraftObjectId) {
         let api = WarcraftApi::default();
         let object_option = api.object(unit_id);
@@ -229,11 +195,6 @@ impl ViewNavigationContext {
         self.push(snapshot);
     }
 
-    /// Select `unit_id` within the current race and mode: push the editor route carrying
-    /// it, keeping the current race, mode, and search. Which unit is shown is route state,
-    /// so it rides into the URL and reconciles back into the signal; the slot reset and
-    /// category switch that accompany a pick are pure UI state and stay at the call site.
-    /// Symmetric with [`select_race`](Self::select_race) / [`select_mode`](Self::select_mode).
     pub fn select_unit(self, unit_id: WarcraftObjectId) {
         let race = *self.active_race.peek();
         let unit_mode = *self.unit_mode.peek();
@@ -244,9 +205,6 @@ impl ViewNavigationContext {
         self.push(snapshot);
     }
 
-    /// Pick a collisions-list entry: replace the current history entry (picking an entry
-    /// must not spam history) with the active kind's route carrying `entry`. The active
-    /// kind comes from the current view; on any non-collisions view this is a no-op.
     pub fn select_collision_entry(self, entry: String) {
         let AppView::Collisions { kind } = *self.current_view.peek() else {
             return;
@@ -259,8 +217,6 @@ impl ViewNavigationContext {
         self.replace(snapshot);
     }
 
-    /// Pick a resolve move-category breadcrumb: replace the current history entry with the
-    /// resolve route carrying `slug`.
     pub fn select_move_category(self, slug: String) {
         let selected_entry = Some(slug);
         let snapshot = NavigationSnapshot::Resolve {
@@ -269,11 +225,6 @@ impl ViewNavigationContext {
         self.replace(snapshot);
     }
 
-    /// Set the editor search query, running the debounced typing session: the first
-    /// keystroke pushes a history entry and opens the session; every keystroke while the
-    /// session is open replaces; the session closes 500 ms after the last keystroke. This
-    /// is the write side of the search box — the query rides into the editor route and
-    /// reconciles back into its signal.
     pub fn set_search_query(self, value: String) {
         let race = *self.active_race.peek();
         let unit_mode = *self.unit_mode.peek();
@@ -299,10 +250,6 @@ impl ViewNavigationContext {
         });
     }
 
-    /// Reconcile the current view alone, without touching the editor selection. The
-    /// collisions and resolve pages call this: their route carries no race/mode/unit/
-    /// search (that is the editor's state, which persists untouched in these signals
-    /// while another page is shown), so they only announce which page is now active.
     pub fn restore_view(self, view: AppView) {
         let mut current_view = self.current_view;
         if *current_view.peek() != view {
@@ -310,11 +257,6 @@ impl ViewNavigationContext {
         }
     }
 
-    /// Reconcile the editor route into these navigation signals: set the current view and
-    /// the decoded editor race/mode/unit/search. Each field is set only when it actually
-    /// changes, so restoring a route the signals already match (the common case, since a
-    /// gesture's own push wrote it) triggers no needless re-render. This is the read side
-    /// of the URL contract for the editor page.
     pub fn restore(self, view: AppView, navigation: &DecodedEditorNavigation) {
         self.restore_view(view);
         let mut active_race = self.active_race;

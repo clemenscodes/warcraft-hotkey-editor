@@ -2,7 +2,6 @@ use super::view::TransitionColumnView;
 use crate::components::app::components::shell::components::resolve_page::presentation::MiniGridPlacement;
 use dioxus::prelude::*;
 
-/// One side (from or to) of the transition block: the placements for its mini grid.
 #[derive(Props, Clone, PartialEq)]
 pub struct TransitionColumnModel {
     pub placements: Vec<MiniGridPlacement>,

@@ -2,10 +2,6 @@ use super::state::BurgerItemState;
 use super::view::BurgerMenuItemView;
 use dioxus::prelude::*;
 
-/// A single drawer row. Its label and icon are content; its visual weight is the
-/// `state`; its behaviour is the click handler; and the accessibility/e2e
-/// attributes it needs are threaded as optional fields (only the ones a given
-/// row carries are set, the rest stay `None` and are omitted from the markup).
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerMenuItemModel {
     pub icon: &'static str,

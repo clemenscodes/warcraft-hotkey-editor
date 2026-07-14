@@ -16,11 +16,6 @@ use presentation::use_hotkey_upgrade_position_picker_dialog;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Connected wrapper for the upgraded-form position picker: mounts it only while the
-/// picker is open and the ability has an upgraded form, resolving the dialog through the
-/// host builder. It renders the reusable `WarcraftDialog`, handing it the isolated
-/// upgraded-form picker body as its body region; keeping the mount conditional here
-/// re-initialises the headless dialog each time it opens.
 #[component]
 pub fn HotkeyUpgradePositionPickerDialog(props: HotkeyUpgradePositionPickerDialogModel) -> Element {
     let dialog = use_hotkey_upgrade_position_picker_dialog(&props);

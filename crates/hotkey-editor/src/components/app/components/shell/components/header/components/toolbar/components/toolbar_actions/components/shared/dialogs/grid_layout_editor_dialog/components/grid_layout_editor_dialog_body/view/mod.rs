@@ -4,10 +4,6 @@ use super::model::GridLayoutEditorDialogBodyModel;
 use browser_kit::frame::Render;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`GridLayoutEditorDialogBodyModel`], threaded to
-/// this component as data. It is also the layout editor's body region: it `impl Render` and
-/// renders the presentational `GridLayoutEditorDialogBody` once, so the dialog places the
-/// published `View` directly as `WarcraftDialog`'s body, with no ad-hoc region type.
 #[derive(Clone, PartialEq, Default)]
 pub struct GridLayoutEditorDialogBodyView {
     pub cells: Vec<LayoutTileView>,

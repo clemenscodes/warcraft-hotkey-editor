@@ -1,8 +1,6 @@
 use super::view::SearchFieldButtonView;
 use dioxus::prelude::*;
 
-/// One search-field option: its label, whether it is the active field, and the
-/// handler that selects it.
 #[derive(Props, Clone, PartialEq)]
 pub struct SearchFieldButtonModel {
     pub label: &'static str,

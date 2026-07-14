@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The crosshair button that opens the position picker for an off-state / upgraded-
-// form button. Blue-themed square matching the alt-state block; the crosshair SVG
-// fills it. Shared by the alt-state and upgrade sections.
 
 classes! {
     base: tw![

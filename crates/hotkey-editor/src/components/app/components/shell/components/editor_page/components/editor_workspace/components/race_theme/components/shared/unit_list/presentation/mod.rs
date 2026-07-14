@@ -5,9 +5,6 @@ use warcraft_api::UnitListing;
 use warcraft_api::UnitListingRequest;
 use warcraft_api::UnitMode;
 
-/// The inputs the memoized catalog walk reads — race, mode, committed query,
-/// search field, and catalog visibility. It orchestrates the domain call
-/// [`UnitListing::resolve`]; the walk itself lives in `warcraft-keybinds`.
 #[derive(Clone, PartialEq, Debug)]
 pub(super) struct CatalogListingInputs {
     pub(super) race: Race,
@@ -18,9 +15,6 @@ pub(super) struct CatalogListingInputs {
 }
 
 impl CatalogListingInputs {
-    /// Consume these inputs into the domain [`UnitListing`]. A consuming `into_*`
-    /// conversion rather than `From`/`Into`, since the output is the foreign domain
-    /// type (the orphan rule forbids a `From` impl in the renderer crate).
     pub(super) fn into_listing(self) -> UnitListing {
         let Self {
             race,
@@ -43,12 +37,6 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use std::time::Duration;
 
-/// The debounced search box's shaped state: the immediate `raw_query` the input
-/// shows, plus its input and clear handlers. Owns the `raw_query` and generation-
-/// counter signals and the effect that resyncs `raw_query` when the committed
-/// query changes underneath it. The input handler commits the query 150ms after
-/// the last keystroke, guarded by the generation counter so only the final
-/// keystroke wins; the clear handler resets both queries and bumps the counter.
 pub(super) struct DebouncedSearch {
     pub(super) raw_query: Signal<String>,
     pub(super) on_input: EventHandler<FormEvent>,
@@ -95,8 +83,6 @@ fn use_debounced_search(navigation: ViewNavigationContext) -> DebouncedSearch {
     }
 }
 
-/// The search box's keydown handler: Escape clears a non-empty query, and Enter
-/// selects the first result. Owns none of its inputs; the composed hook wires them.
 fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent> {
     let SearchKeydownInputs {
         raw_query,
@@ -127,12 +113,6 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
     })
 }
 
-/// Reads the list's signals from context, runs the debounced search, computes the
-/// derived catalog state, and shapes every child's props so the body stays pure RSX.
-///
-/// The catalog walk itself (`UnitListing::resolve`) is memoized on the race, mode,
-/// committed query, search field, and visibility — the values it actually depends on —
-/// so it does not re-run on unrelated re-renders such as a unit selection.
 pub(super) fn use_unit_list() -> UnitListModel {
     let navigation = use_view_navigation();
     let editor = use_editor_state();

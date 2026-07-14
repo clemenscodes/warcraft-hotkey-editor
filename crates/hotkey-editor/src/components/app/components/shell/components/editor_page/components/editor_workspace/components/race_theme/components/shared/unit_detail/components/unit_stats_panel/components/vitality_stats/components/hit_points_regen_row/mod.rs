@@ -17,9 +17,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Regeneration";
 
-/// The unit's health regeneration: an indented companion to the hit points row. It
-/// carries its own conditional qualifier ("at night", "on blight") and its green gain,
-/// dimmed when the unit does not regenerate.
 #[component]
 pub fn HitPointsRegenRow(props: HitPointsRegenRowModel) -> Element {
     let value = props.value;

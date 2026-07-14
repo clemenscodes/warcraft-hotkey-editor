@@ -3,10 +3,6 @@ use super::model::InfoDialogBodyModel;
 use browser_kit::frame::Render;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`InfoDialogBodyModel`], threaded to this
-/// component as data. It is also the info dialog's body region: it `impl Render` and
-/// renders the presentational `InfoDialogBody` once, so the base places the published
-/// `View` directly as `WarcraftDialog`'s body, with no ad-hoc region type.
 #[derive(Clone, PartialEq, Default)]
 pub struct InfoDialogBodyView {
     pub intro: &'static str,

@@ -13,9 +13,6 @@ use presentation::{BurgerUndoItemPresentation, use_burger_undo_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout undo action: the drawer row that undoes one edit and then closes the
-/// drawer. Unlike the help row it mounts no dialog — it performs the undo command and dismisses
-/// the menu.
 #[component]
 pub fn BurgerUndoItem(props: BurgerUndoItemModel) -> Element {
     let BurgerUndoItemPresentation {

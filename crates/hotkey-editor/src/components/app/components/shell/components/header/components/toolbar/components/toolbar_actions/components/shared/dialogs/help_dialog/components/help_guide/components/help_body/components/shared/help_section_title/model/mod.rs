@@ -1,7 +1,6 @@
 use super::view::HelpSectionTitleView;
 use dioxus::prelude::*;
 
-/// The section title's only input: the heading text.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpSectionTitleModel {
     #[props(into)]

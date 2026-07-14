@@ -17,8 +17,6 @@ use presentation::use_unit_command_grids;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unit's command grids: the command card plus any build, uprooted, and research
-/// menus the unit has. Each optional menu renders itself away when the unit lacks it.
 #[component]
 pub fn UnitCommandGrids(props: UnitCommandGridsModel) -> Element {
     let model = use_unit_command_grids(&props);

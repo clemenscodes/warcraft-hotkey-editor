@@ -10,9 +10,6 @@ use presentation::{HeroLevelPickerView, use_hero_level_picker};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero-level dropdown: the trigger, and — while open — the menu and its
-/// dismissing backdrop. Owns its own open state, sources the selected level from
-/// context, and mounts its own menu — so nothing is threaded in from the header.
 #[component]
 pub fn HeroLevelPicker() -> Element {
     let HeroLevelPickerView {

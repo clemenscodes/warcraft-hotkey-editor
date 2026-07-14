@@ -1,7 +1,6 @@
 use super::view::FightNamePlateView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
-/// The rival ability's name + id (non-interactive plate).
 #[derive(Props, Clone, PartialEq)]
 pub struct FightNamePlateModel {
     #[props(into)]

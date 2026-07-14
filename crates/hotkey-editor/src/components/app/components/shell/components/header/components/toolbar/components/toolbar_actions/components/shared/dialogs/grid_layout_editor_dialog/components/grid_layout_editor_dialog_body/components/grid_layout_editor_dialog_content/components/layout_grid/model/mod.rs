@@ -2,7 +2,6 @@ use super::components::layout_tile::LayoutTileView;
 use super::view::LayoutGridView;
 use dioxus::prelude::*;
 
-/// The grid's already-shaped cells, built by the layout editor hook.
 #[derive(Props, Clone, PartialEq)]
 pub struct LayoutGridModel {
     pub cells: Vec<LayoutTileView>,

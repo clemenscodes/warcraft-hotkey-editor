@@ -12,9 +12,6 @@ use model::{TemplatePreview, command_preview, research_preview};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The row of two layout previews under a card: the command card and the
-/// research menu, each a read-only `PreviewHeadedGrid` drawing the template.
-/// Owns `.template-card-previews`.
 #[component]
 pub fn TemplateCardPreviews(props: TemplateCardPreviewsModel) -> Element {
     let resolved = props.resolved;

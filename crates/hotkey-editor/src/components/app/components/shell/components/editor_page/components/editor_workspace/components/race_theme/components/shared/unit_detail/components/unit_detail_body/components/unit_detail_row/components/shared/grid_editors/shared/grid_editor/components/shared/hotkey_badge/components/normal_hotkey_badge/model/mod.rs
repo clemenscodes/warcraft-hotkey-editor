@@ -2,7 +2,6 @@ use super::view::NormalHotkeyBadgeView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
-/// An ordinary-binding badge: it needs only the letter to draw.
 #[derive(Props, Clone, PartialEq)]
 pub struct NormalHotkeyBadgeModel {
     pub letter: HotkeyToken,

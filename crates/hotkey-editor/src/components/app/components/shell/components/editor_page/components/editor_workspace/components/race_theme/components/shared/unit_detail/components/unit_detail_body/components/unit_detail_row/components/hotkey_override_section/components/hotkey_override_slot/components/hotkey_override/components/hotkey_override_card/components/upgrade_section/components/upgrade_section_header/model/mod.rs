@@ -1,8 +1,6 @@
 use super::view::UpgradeSectionHeaderView;
 use dioxus::prelude::*;
 
-/// The upgraded-form block's top row: the label column beside the position button and
-/// hotkey cell.
 #[derive(Props, Clone, PartialEq)]
 pub struct UpgradeSectionHeaderModel {
     pub hotkey_label: String,

@@ -3,7 +3,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 };
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`CurrentKeyModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct CurrentKeyView {
     pub label: String,

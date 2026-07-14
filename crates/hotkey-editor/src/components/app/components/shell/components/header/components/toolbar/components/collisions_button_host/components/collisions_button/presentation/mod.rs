@@ -5,10 +5,6 @@ use crate::components::app::components::shell::components::shared::icons::{
 };
 use dioxus::prelude::*;
 
-/// Everything the button renders, shaped once from the domain-computed collision
-/// summary: the surface's visual state, the total collision count that gates the
-/// badge, the badge label, the aria label, the icon glyph, and the click handler.
-/// The body never computes any of this — it destructures this and places the values.
 pub struct CollisionsButtonPresentation {
     pub(super) surface_state: SurfaceState,
     pub(super) collision_count: usize,
@@ -19,9 +15,6 @@ pub struct CollisionsButtonPresentation {
 }
 
 impl From<&CollisionsButtonModel> for CollisionsButtonPresentation {
-    /// Map the domain-counted summary to presentation. The counting already
-    /// happened in `warcraft-keybinds`; this only shapes counts into the surface
-    /// state, badge, aria label, and glyph. The click handler is supplied by the host.
     fn from(props: &CollisionsButtonModel) -> Self {
         let summary = props.summary;
         let onclick = props.onclick;

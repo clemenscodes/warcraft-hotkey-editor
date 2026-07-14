@@ -1,8 +1,6 @@
 use super::view::HeroLevelTriggerView;
 use dioxus::prelude::*;
 
-/// The hero-level dropdown trigger: the current level shown, whether the menu is
-/// open (selects the open xor resting look), and the toggle handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct HeroLevelTriggerModel {
     #[props(into)]

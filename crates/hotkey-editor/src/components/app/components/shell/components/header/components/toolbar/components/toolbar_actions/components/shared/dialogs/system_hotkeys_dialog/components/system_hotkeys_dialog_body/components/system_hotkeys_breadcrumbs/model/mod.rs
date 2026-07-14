@@ -2,8 +2,6 @@ use super::view::SystemHotkeysBreadcrumbsView;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// The breadcrumbs' only input: the active category signal it reads and its tabs
-/// write.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsModel {
     pub active_category: Signal<SystemHotkeysCategory>,

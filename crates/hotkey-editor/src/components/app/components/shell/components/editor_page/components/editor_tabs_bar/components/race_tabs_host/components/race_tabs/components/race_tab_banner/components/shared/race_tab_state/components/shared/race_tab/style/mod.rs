@@ -1,13 +1,5 @@
 use tw_macro::tw;
 
-// The base race tab's entire look, owned here and nowhere else: this `mod style` is
-// private and never re-exported, so no other component can name or reuse these classes.
-// A richer look (the active tab) does not extend this — it renders `RaceTab` and adds an
-// accent on top. The banner surface, image, accent, and label colour are read from the
-// `--race-color`/`--banner-*`/`--race-color`/`--label-color` custom properties the
-// per-race wrapper and the active variant publish, so this base stays race- and
-// state-agnostic. The accent border and glow appear only on hover (the resting,
-// inactive look); the white label is the `--label-color` default.
 classes! {
     base: tw![
         "group",

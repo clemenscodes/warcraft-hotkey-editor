@@ -14,9 +14,6 @@ use presentation::CombatFigures;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The combat column: the attack-type icon beside its stat rows and matchup grid, laid
-/// into the `combat` grid area. Present only when the unit has an attack; a unit that
-/// cannot attack renders nothing here.
 #[component]
 pub fn CombatStats(props: CombatStatsModel) -> Element {
     let Some(attack) = props.attack else {

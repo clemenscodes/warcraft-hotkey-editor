@@ -1,7 +1,6 @@
 use super::view::PlanSummaryView;
 use dioxus::prelude::*;
 
-/// The plan title + counts block. `moves_text` is pre-built ("5 moves").
 #[derive(Props, Clone, PartialEq)]
 pub struct PlanSummaryModel {
     #[props(into)]

@@ -2,8 +2,6 @@ use super::super::super::super::super::super::super::presentation::IslandAbility
 use super::view::IslandConflictAbilityRowView;
 use dioxus::prelude::*;
 
-/// The two abilities flanking the centered separator: the unit's own ability and the
-/// ability it shares the key with.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictAbilityRowModel {
     pub(crate) own_ability: IslandAbilityData,

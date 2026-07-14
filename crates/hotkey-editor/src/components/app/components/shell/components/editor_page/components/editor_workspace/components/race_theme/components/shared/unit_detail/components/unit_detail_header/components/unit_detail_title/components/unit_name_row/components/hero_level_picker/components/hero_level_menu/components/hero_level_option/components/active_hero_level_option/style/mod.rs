@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The active level option: the shared option chrome values with the gold gradient
-// surface and gold text marking it the current level. Shared values with the idle sibling.
 classes! {
     base: tw![
         "block",

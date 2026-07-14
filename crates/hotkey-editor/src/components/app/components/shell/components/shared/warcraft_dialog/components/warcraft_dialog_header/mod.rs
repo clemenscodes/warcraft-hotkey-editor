@@ -9,11 +9,6 @@ use dioxus::prelude::*;
 use model::WarcraftDialogHeaderModel;
 use tw_macro::assert_component;
 
-/// The dialog's fixed title bar chrome — the ONE shared dialog header. It composes the
-/// shared `DialogHeader` (mirrored gold decorations, the title, the close control),
-/// adapting the dialog's `Callback` close to the `EventHandler` the header leaf takes.
-/// Every WarcraftDialog renders exactly this; individual dialogs never duplicate the
-/// chrome.
 #[component]
 pub fn WarcraftDialogHeader(props: WarcraftDialogHeaderModel) -> Element {
     let title = props.title;

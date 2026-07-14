@@ -1,9 +1,6 @@
 use super::view::ToastCloseView;
 use dioxus::prelude::*;
 
-/// The close button's private internal model — the props it receives. Mirrors the
-/// published [`ToastCloseView`] field-for-field; the `From<&View>` is the boundary
-/// translation.
 #[derive(Props, Clone, PartialEq)]
 pub struct ToastCloseModel {
     pub id: usize,

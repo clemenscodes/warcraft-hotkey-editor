@@ -9,8 +9,6 @@ use model::HelpInlineIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A toolbar glyph dropped inline into a workflow sentence. A leaf: the step
-/// passes which icon to draw.
 #[component]
 pub fn HelpInlineIcon(props: HelpInlineIconModel) -> Element {
     rsx! {

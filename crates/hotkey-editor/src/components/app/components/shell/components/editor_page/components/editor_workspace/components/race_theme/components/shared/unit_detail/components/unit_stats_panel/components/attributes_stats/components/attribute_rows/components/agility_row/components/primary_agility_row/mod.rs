@@ -12,8 +12,6 @@ use model::PrimaryAgilityRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's agility row when agility is the hero's primary attribute: it wears the
-/// gold primary glow and publishes the full-gold `--attribute-label-color` its label reads.
 #[component]
 pub fn PrimaryAgilityRow(props: PrimaryAgilityRowModel) -> Element {
     let statistic = props.statistic;

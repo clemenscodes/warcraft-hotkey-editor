@@ -4,7 +4,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// Guards the off-state position picker so it is mounted only while it is open.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyAltPositionPickerDialogModel {
     pub object_id: WarcraftObjectId,

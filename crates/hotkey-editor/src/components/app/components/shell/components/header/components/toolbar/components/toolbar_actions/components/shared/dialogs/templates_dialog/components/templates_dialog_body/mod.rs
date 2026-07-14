@@ -11,8 +11,6 @@ use model::TemplatesDialogBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The templates dialog's scrolling content region between the header and the panel
-/// edge, holding the gallery of bundled template cards.
 #[component]
 pub fn TemplatesDialogBody(props: TemplatesDialogBodyModel) -> Element {
     let cards = props.cards;

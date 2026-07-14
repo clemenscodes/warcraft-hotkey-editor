@@ -8,12 +8,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 };
 use dioxus::prelude::*;
 
-/// A picker key's fully shaped presentation: the width the dispatcher matches on to pick
-/// a sizing slot, plus the color state and the button attributes every look renders the
-/// same way (the cap label, the disabled flag, the click handler) and the conflict
-/// tooltip flattened to its three domain fields. Built by `From` so the body only reads
-/// the width and hands the rest down by name. The width is owned by the slot, the color
-/// by the leaf; every attribute here is shared by both.
 pub(super) struct KeyPickerKeyPresentation {
     pub(super) state: ColorKeyState,
     pub(super) label: String,

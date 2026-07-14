@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The scroll region around the collision cards. Vertical scroll on the sidebar
-// (the shell's global gold scrollbar applies); horizontal snap scroll (the
-// swipe carousel) on small screens with the scrollbar hidden.
 
 classes! {
     base: tw![

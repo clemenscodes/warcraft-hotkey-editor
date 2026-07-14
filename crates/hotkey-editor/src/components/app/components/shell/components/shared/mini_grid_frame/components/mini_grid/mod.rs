@@ -10,10 +10,6 @@ use model::MiniGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The shrunk read-only command grid: the three-by-four square of inert base
-/// `GridTile`s. A pure tile renderer that encodes the grid shape (shared with the
-/// editor and preview grids via the same utility values) and draws whatever twelve
-/// tiles its frame hands it.
 #[component]
 pub fn MiniGrid(props: MiniGridModel) -> Element {
     let tiles = props.tiles;

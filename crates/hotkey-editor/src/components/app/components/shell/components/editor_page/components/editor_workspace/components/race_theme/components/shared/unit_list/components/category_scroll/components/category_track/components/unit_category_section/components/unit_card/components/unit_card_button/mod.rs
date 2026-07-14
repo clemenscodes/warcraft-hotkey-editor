@@ -10,11 +10,6 @@ use dioxus::prelude::*;
 use model::UnitCardButtonModel;
 use tw_macro::assert_component;
 
-/// The unit card's selectable button. A pure dispatcher: from whether the card is the
-/// selected unit it renders `SelectedUnitCardButton` xor `IdleUnitCardButton`. Each
-/// owns its `<button>` and its own look — the selected one wears the generic
-/// `--race-color` accent and publishes `--name-color`; there is no `data-selected`, the
-/// look follows the component.
 #[component]
 pub fn UnitCardButton(props: UnitCardButtonModel) -> Element {
     let icon_path = props.icon_path.clone();

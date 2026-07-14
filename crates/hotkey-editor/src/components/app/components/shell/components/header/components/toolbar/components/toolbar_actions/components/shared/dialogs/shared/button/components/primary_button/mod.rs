@@ -9,8 +9,6 @@ use model::PrimaryButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The primary (affirmative) weight of a WC3 action button. Presentational — the
-/// dispatcher builds its props and renders it when the variant is primary.
 #[component]
 pub fn PrimaryButton(props: PrimaryButtonModel) -> Element {
     let onclick = props.onclick;

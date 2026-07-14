@@ -1,7 +1,6 @@
 use super::view::InactiveCategoryTabView;
 use dioxus::prelude::*;
 
-/// An unselected tab's inputs: its caption and the select handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct InactiveCategoryTabModel {
     pub label: String,

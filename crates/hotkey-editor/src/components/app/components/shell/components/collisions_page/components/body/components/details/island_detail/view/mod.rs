@@ -1,6 +1,5 @@
 use crate::components::app::components::shell::components::collisions_page::presentation::IslandView;
 
-/// The published `View` contract mirroring [`IslandDetailModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct IslandDetailView {
     pub islands: Vec<IslandView>,

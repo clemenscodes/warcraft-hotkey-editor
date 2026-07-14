@@ -10,7 +10,6 @@ use model::InlineHotkeyMarkerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The shared-hotkey badge shown inline between two abilities.
 #[component]
 pub fn InlineHotkeyMarker(props: InlineHotkeyMarkerModel) -> Element {
     let label = props.label;

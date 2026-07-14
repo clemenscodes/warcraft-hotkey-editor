@@ -5,8 +5,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The "upload a file" prompt shown before any CustomKeys.txt is loaded. It centers
-/// its prompt message in the available space.
 #[component]
 pub fn EmptyState() -> Element {
     rsx! {

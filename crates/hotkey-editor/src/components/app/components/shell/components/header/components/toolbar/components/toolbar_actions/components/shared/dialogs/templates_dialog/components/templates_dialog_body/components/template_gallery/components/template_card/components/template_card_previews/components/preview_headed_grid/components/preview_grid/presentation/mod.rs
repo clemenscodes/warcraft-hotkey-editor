@@ -5,10 +5,6 @@ use warcraft_keybinds::GridCoordinate;
 use warcraft_keybinds::HotkeyToken;
 use warcraft_keybinds::RenderedTile;
 
-/// One preview tile's painted values: the read-only slice of a `TileFace` a preview
-/// draws — its address, icon, label, hotkey, and the badge/tile states. Adapted from a
-/// resolved domain tile through the shared painter's own `From<&RenderedTile>`, so the
-/// preview draws exactly the tiles the editor does, without re-deriving the adaptation.
 pub(super) struct PreviewTile {
     pub(super) coordinate: GridCoordinate,
     pub(super) icon: Option<String>,
@@ -42,8 +38,6 @@ impl From<&RenderedTile> for PreviewTile {
 }
 use super::model::PreviewGridModel;
 
-/// Adapts the preview grid's resolved domain tiles into the painted values each
-/// `TileFace` places, so the body stays a flat loop over already-shaped data.
 pub(super) fn use_preview_grid(props: &PreviewGridModel) -> Vec<PreviewTile> {
     props.tiles.iter().map(PreviewTile::from).collect()
 }

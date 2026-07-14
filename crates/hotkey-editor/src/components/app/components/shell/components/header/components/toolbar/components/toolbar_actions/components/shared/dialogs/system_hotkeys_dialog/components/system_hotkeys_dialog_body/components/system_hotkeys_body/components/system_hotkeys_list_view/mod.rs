@@ -11,8 +11,6 @@ use model::SystemHotkeysListViewModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A plain list editor: one row per hotkey in the category, each a binding name
-/// beside its editable key chip.
 #[component]
 pub fn SystemHotkeysListView(props: SystemHotkeysListViewModel) -> Element {
     let category = props.category;

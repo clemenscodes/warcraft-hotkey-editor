@@ -10,9 +10,6 @@ use model::InteractiveSurfaceModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The interactive resting look of a toolbar button: muted text at rest that
-/// brightens to gold on hover. Presentational — the dispatcher builds its props and
-/// renders it when the surface state is `Interactive`.
 #[component]
 pub fn InteractiveSurface(props: InteractiveSurfaceModel) -> Element {
     let icon = props.icon;

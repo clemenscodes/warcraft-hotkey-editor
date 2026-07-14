@@ -11,7 +11,6 @@ use model::KeyPickerRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One horizontal row of picker keys.
 #[component]
 pub fn KeyPickerRow(props: KeyPickerRowModel) -> Element {
     let keys = props.keys;

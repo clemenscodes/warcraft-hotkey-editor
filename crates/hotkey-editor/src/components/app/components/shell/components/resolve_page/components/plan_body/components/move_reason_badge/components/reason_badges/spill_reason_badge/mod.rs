@@ -10,9 +10,6 @@ use model::SpillReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The "Spill" reason badge: publishes the Spill accent colour and composes the base
-/// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
-/// names the pill's classes.
 #[component]
 pub fn SpillReasonBadge(props: SpillReasonBadgeModel) -> Element {
     let label = props.label;

@@ -12,10 +12,6 @@ use model::ActiveRaceTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The active race tab: the base look, extended by composition. It renders the base
-/// `RaceTab` unchanged and adds the accent ON TOP — the `ActiveAccent` overlay ring, plus
-/// the `--label-color` its own root publishes so the base's label reads accent. It never
-/// names or reuses the base's classes; it only stacks its own on top.
 #[component]
 pub fn ActiveRaceTab(props: ActiveRaceTabModel) -> Element {
     let label = props.label;
@@ -30,7 +26,7 @@ pub fn ActiveRaceTab(props: ActiveRaceTabModel) -> Element {
                 onkeydown,
             }
             ActiveAccent {
-            
+
 
 
             }

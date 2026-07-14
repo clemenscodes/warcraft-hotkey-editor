@@ -2,10 +2,8 @@ use super::model::IslandDetailBodyModel;
 use crate::components::app::components::shell::components::collisions_page::presentation::IslandView;
 use dioxus::prelude::*;
 
-/// The prompt shown in the island detail pane before a collision is selected.
 pub(super) const EMPTY_PROMPT: &str = "Select a collision to inspect.";
 
-/// Resolves the selected island, or `None` when nothing is selected.
 pub(super) fn selected(
     props: &IslandDetailBodyModel,
     selected_island: Signal<Option<String>>,

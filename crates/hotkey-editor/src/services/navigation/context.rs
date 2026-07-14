@@ -11,22 +11,10 @@ use crate::services::navigation::view_navigation::{
 };
 use crate::services::resolve_selection::ResolveSelection;
 
-/// Access the [`ViewNavigationContext`] provided at the app root. Call from a
-/// component or hook body (it is a hook). Navigation is a global, crate-wide
-/// concept — no single component owns it — so this accessor lives beside the
-/// type in `services/`, not colocated with any component.
 pub(crate) fn use_view_navigation() -> ViewNavigationContext {
     use_context()
 }
 
-/// Create the editor's own navigation signals (view, race, mode, unit, search, all
-/// seeded from the entry URL) and a fresh, closed search-typing session, then assemble
-/// the [`ViewNavigationContext`] over them plus the already-provided collision and
-/// resolve selections and the shell's route `dispatch`, provide it as context, and
-/// hand it back. The `dispatch` callback is the sole seam to the concrete `Route`, so
-/// it is created in the shell and passed in — this layer stays route-agnostic. The
-/// shell calls this once on boot; everything reads the result through
-/// [`use_view_navigation`].
 pub(crate) fn use_view_navigation_provider(
     initial_view: AppView,
     navigation: DecodedEditorNavigation,

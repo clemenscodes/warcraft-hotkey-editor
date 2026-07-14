@@ -9,7 +9,6 @@ use model::EmptyHotkeyUnitDetailModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The empty detail pane: the base pane surface, centered and muted, showing the prompt.
 #[component]
 pub fn EmptyHotkeyUnitDetail(props: EmptyHotkeyUnitDetailModel) -> Element {
     rsx! {

@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`CarrierCardNameModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct CarrierCardNameView {
     pub text: String,

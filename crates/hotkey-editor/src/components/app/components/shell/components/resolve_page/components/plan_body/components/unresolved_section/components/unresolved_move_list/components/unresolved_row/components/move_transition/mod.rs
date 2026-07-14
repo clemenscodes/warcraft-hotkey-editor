@@ -10,7 +10,6 @@ use model::MoveTransitionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The block flagging the cell the stuck ability lands on.
 #[component]
 pub fn MoveTransition(props: MoveTransitionModel) -> Element {
     let placements = props.placements;

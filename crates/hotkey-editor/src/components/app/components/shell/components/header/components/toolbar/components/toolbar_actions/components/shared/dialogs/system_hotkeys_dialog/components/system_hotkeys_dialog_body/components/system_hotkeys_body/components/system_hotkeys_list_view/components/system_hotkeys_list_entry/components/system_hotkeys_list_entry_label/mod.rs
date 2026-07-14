@@ -9,7 +9,6 @@ use model::SystemHotkeysListEntryLabelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The binding name shown in a system-hotkey list row.
 #[component]
 pub fn SystemHotkeysListEntryLabel(props: SystemHotkeysListEntryLabelModel) -> Element {
     let text = props.text;

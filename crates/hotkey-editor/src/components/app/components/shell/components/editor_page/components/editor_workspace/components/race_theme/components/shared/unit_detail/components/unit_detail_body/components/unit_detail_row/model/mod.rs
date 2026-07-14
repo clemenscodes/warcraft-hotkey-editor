@@ -4,8 +4,6 @@ use crate::components::app::components::shell::components::editor_page::componen
 };
 use dioxus::prelude::*;
 
-/// The grids-and-override row: the command grids above the hotkey-override section. Threads the
-/// unit's grid slots and override target, splitting them between its two children.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitDetailRowModel {
     pub(crate) grid_slots: UnitCommandGridSlots,

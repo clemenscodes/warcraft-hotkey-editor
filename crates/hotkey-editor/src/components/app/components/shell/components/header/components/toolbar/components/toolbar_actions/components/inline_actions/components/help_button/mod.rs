@@ -9,10 +9,6 @@ use presentation::{HelpButtonPresentation, use_help_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline help action: the toolbar button that opens the onboarding guide, and the guide
-/// dialog it owns, mounted beneath it. It owns the guide's open signal locally (opening it on
-/// a first visit), so the dialog is part of the button and travels with it — move this button
-/// and its dialog comes along.
 #[component]
 pub fn HelpButton() -> Element {
     let HelpButtonPresentation {

@@ -1,9 +1,6 @@
 use super::view::ActiveMenuItemView;
 use dioxus::prelude::*;
 
-/// The active-look drawer row's props: the icon markup and label text it composes,
-/// plus the accessibility/e2e attributes and click handler the `<button>` needs.
-/// The dispatcher names these fields from `BurgerMenuItemModel`.
 #[derive(Props, Clone, PartialEq)]
 pub struct ActiveMenuItemModel {
     pub icon: &'static str,

@@ -1,13 +1,6 @@
 use super::icon_radius::IconRadius;
 use super::model::FramedIconModel;
 
-/// The resolved look of a framed icon: the radius token folded together with
-/// whether it lifts to a hover glow or draws the empty-placeholder fill. Derived
-/// from the public axes of [`FramedIconModel`]. The mapping reflects how the app
-/// actually uses the frame — the tile radius appears both plain and glowing, the
-/// card radius always glows, the control radius never does, and the hairline radius
-/// is only ever the placeholder square — so the whole reachable look space is these
-/// five variants and no more.
 #[derive(Clone, Copy, PartialEq)]
 pub enum FramedIconStyle {
     TilePlain,

@@ -7,9 +7,6 @@ use crate::services::navigation::app_view::AppView;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 
-/// The burger resolve row's shaped data: the fixed icon and label, its idle weight, its aria
-/// role, whether there is no file to resolve against, and the click handler that navigates to
-/// the resolve view and then closes the drawer.
 pub struct BurgerResolveItemPresentation {
     pub(super) icon: &'static str,
     pub(super) label: String,
@@ -19,9 +16,6 @@ pub struct BurgerResolveItemPresentation {
     pub(super) onclick: EventHandler<MouseEvent>,
 }
 
-/// Reads navigation and the document, and shapes the row: disabled until a file is loaded, and a
-/// click handler that navigates to the resolve view and then closes the drawer via the threaded
-/// close handler.
 pub(super) fn use_burger_resolve_item(
     props: &BurgerResolveItemModel,
 ) -> BurgerResolveItemPresentation {

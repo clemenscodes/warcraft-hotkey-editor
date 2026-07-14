@@ -4,9 +4,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 };
 use dioxus::prelude::*;
 
-/// The key currently bound here. Its button attributes and children are shared with the
-/// other looks (they arrive as named fields from the dispatcher); this look adds only the
-/// current color styling in its own `style.rs`.
 #[derive(Props, Clone, PartialEq)]
 pub struct CurrentKeyModel {
     pub label: String,

@@ -8,27 +8,23 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The app's top chrome: the brand on the left, the global grid-layout button
-/// centered, and the toolbar on the right. Below 1280px the centered button hides
-/// and the layout collapses to brand-left, toolbar-right. Pure layout — it wires
-/// nothing and threads nothing; every child sources its own state.
 #[component]
 pub fn Header() -> Element {
     rsx! {
         header {
             class: CLASS,
             BrandHost {
-            
+
 
 
             }
             GridLayoutEditorButtonHost {
-            
+
 
 
             }
             Toolbar {
-            
+
 
 
             }

@@ -8,8 +8,6 @@ const LICENSE_URL: &str =
 const DISCLAIMER_URL: &str =
     "https://github.com/clemenscodes/warcraft-hotkey-editor/blob/main/DISCLAIMER.md";
 
-/// The authorship line's content: the two text fragments that flank the heart
-/// glyph. Sourced here and threaded into `FooterCredit` as named fields.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub(super) struct FooterCreditContent {
     pub(super) lead: &'static str,
@@ -23,9 +21,6 @@ pub(super) const CREDIT: FooterCreditContent = FooterCreditContent {
     heart: HEART_SVG,
 };
 
-/// One outbound footer link: its visible label, destination, and optional inline
-/// glyph. The GitHub entry carries a glyph; the others are plain text links
-/// (`icon` is `None`).
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub(super) struct FooterLinkContent {
     pub(super) label: &'static str,
@@ -33,7 +28,6 @@ pub(super) struct FooterLinkContent {
     pub(super) icon: Option<&'static str>,
 }
 
-/// The outbound links, looped over by the footer.
 pub(super) const LINKS: &[FooterLinkContent] = &[
     FooterLinkContent {
         label: "Source on GitHub",
@@ -52,6 +46,5 @@ pub(super) const LINKS: &[FooterLinkContent] = &[
     },
 ];
 
-/// The trademark disclaimer, sourced here and threaded into `FooterDisclaimer`.
 pub(super) const DISCLAIMER: &str = "Not affiliated with or endorsed by Blizzard Entertainment. \
      Warcraft III is a trademark of Blizzard Entertainment, Inc.";

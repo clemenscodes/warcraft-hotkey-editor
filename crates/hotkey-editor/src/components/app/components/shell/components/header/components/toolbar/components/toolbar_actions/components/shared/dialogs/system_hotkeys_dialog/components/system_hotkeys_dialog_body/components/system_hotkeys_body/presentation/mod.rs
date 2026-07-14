@@ -2,10 +2,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// The seam: this host reads the active category from context and picks which editor
-/// to render. Each editor reads the editing section and drag follower from the dialog
-/// state context itself and resolves its bindings from the CustomKeys query, so
-/// nothing is threaded here.
 pub(super) struct SystemHotkeysBodyModel {
     pub(super) active_category: Signal<SystemHotkeysCategory>,
 }

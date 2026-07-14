@@ -12,10 +12,6 @@ use model::CaptionedEditorGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A captioned editor grid: the shared `GridHeading` above the interactive
-/// `EditorGrid`. Owns `.captioned-editor-grid`, which stacks the two and establishes
-/// the query container the tiles size against. Purely presentational — `GridEditor`
-/// builds the finished interactive tiles and hands them down; this just draws them.
 #[component]
 pub fn CaptionedEditorGrid(props: CaptionedEditorGridModel) -> Element {
     let heading = props.heading;

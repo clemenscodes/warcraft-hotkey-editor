@@ -1,7 +1,6 @@
 use super::state::CollisionCardContent;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`CollisionCardModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct CollisionCardView {
     pub is_selected: bool,

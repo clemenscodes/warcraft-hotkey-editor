@@ -12,9 +12,6 @@ use model::GridLayoutEditorButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Prominent call-to-action that opens the global grid-layout editor. Deliberately
-/// styled apart from the icon-only toolbar buttons. Presentational: its open state
-/// and toggle handler arrive as props.
 #[component]
 pub fn GridLayoutEditorButton(props: GridLayoutEditorButtonModel) -> Element {
     let is_open = props.is_open;
@@ -28,12 +25,12 @@ pub fn GridLayoutEditorButton(props: GridLayoutEditorButtonModel) -> Element {
             aria_expanded: is_open,
             onclick,
             GridLayoutEditorButtonIcon {
-            
+
 
 
             }
             GridLayoutEditorButtonLabel {
-            
+
 
 
             }

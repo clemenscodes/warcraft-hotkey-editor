@@ -1,9 +1,6 @@
 use super::view::HelpFooterView;
 use dioxus::prelude::*;
 
-/// The footer's only input: the dismiss handler fired by the button, handed down by the
-/// dialog that owns the open signal. The region carries it as a `Callback` (for `Default`);
-/// the button below takes an `EventHandler`, so it is adapted here at the boundary.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpFooterModel {
     pub on_dismiss: EventHandler<MouseEvent>,

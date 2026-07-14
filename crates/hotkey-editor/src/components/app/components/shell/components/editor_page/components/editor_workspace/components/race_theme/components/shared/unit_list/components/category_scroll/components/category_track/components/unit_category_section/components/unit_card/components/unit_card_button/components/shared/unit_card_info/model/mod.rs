@@ -2,9 +2,6 @@ use super::view::UnitCardInfoView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The card's text column: the display name, the unit id, and whether the card is
-/// selected. The id's selected accent is read from `--race-color`, so no race is
-/// threaded in.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardInfoModel {
     #[props(into)]

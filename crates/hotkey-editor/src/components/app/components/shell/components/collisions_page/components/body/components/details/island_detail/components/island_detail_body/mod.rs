@@ -12,11 +12,6 @@ use dioxus::prelude::*;
 use model::IslandDetailBodyModel;
 use tw_macro::assert_component;
 
-/// The island detail card's body region. A dispatcher: when an island is selected it renders
-/// the filled pane (its mini-grid coordinate header over the conflict cards), otherwise the
-/// empty prompt. The selection is read from collision-selection context. It renders no
-/// surface — the filled and empty panes carry their own inner layout, inside the shared
-/// `DetailCard`.
 #[component]
 pub fn IslandDetailBody(props: IslandDetailBodyModel) -> Element {
     let selected_island = use_collision_selection().selected_island();

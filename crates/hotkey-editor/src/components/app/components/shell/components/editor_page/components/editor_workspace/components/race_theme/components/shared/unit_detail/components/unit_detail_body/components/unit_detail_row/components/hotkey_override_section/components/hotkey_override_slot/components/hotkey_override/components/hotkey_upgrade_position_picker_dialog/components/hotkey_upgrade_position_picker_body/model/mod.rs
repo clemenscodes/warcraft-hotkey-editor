@@ -4,9 +4,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The upgraded-form position picker scroll body's inputs: the upgraded-form unit id
-/// whose button is draggable, and the command-card slots to lay the grid out from. The
-/// grid signals the editor needs are sourced from context by this component's builder.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyUpgradePositionPickerBodyModel {
     pub upgrade_unit_id: WarcraftObjectId,

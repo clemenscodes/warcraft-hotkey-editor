@@ -1,6 +1,5 @@
 use super::super::stat_figure::StatFigure;
 
-/// The published `View` contract mirroring [`StatGainModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct StatGainView<Figure: StatFigure> {
     pub value: Figure,

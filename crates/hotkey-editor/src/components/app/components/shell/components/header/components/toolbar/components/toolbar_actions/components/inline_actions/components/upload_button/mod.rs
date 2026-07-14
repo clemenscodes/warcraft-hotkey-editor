@@ -11,10 +11,6 @@ use presentation::{UploadButtonPresentation, use_upload_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline import control: a hidden file input, the upload button that opens the import-info
-/// dialog, and that dialog, mounted beneath it. It owns the dialog's open signal locally, so the
-/// dialog is part of the button and travels with it. The info dialog's confirm triggers the
-/// hidden input (decoupled by element id), which imports the chosen file.
 #[component]
 pub fn UploadButton() -> Element {
     let UploadButtonPresentation {

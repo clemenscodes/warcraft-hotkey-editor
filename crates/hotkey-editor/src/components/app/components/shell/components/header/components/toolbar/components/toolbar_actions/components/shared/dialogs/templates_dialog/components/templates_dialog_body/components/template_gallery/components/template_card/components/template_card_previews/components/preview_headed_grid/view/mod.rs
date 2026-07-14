@@ -1,6 +1,5 @@
 use warcraft_keybinds::{COMMAND_GRID_TILE_COUNT, RenderedTile};
 
-/// The published `View` contract mirroring [`PreviewHeadedGridModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct PreviewHeadedGridView {
     pub heading: &'static str,

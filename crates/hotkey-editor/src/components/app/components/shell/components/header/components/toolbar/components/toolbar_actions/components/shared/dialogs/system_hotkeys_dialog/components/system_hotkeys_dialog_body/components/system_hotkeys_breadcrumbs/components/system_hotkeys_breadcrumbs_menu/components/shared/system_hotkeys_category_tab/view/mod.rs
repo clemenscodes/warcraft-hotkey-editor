@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// The published `View` contract mirroring [`SystemHotkeysCategoryTabModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SystemHotkeysCategoryTabView {
     pub category: SystemHotkeysCategory,

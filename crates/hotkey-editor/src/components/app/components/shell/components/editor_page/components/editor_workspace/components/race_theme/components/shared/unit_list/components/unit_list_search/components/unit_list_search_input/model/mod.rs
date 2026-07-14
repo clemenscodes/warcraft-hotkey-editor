@@ -1,8 +1,6 @@
 use super::view::UnitListSearchInputView;
 use dioxus::prelude::*;
 
-/// The search input's bound value plus its placeholder and the two handlers the
-/// container wires up (debounced input, and Escape/Enter keydown).
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitListSearchInputModel {
     pub value: ReadSignal<String>,

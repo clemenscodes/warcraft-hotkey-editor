@@ -11,8 +11,6 @@ use model::HelpLegendModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The list of toolbar buttons with what each one does, one row per entry passed
-/// in.
 #[component]
 pub fn HelpLegend(props: HelpLegendModel) -> Element {
     let rows = props.rows;

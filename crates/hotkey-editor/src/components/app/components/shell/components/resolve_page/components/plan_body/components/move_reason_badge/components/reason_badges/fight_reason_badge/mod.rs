@@ -10,9 +10,6 @@ use model::FightReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The "Fight" reason badge: publishes the Fight accent colour and composes the base
-/// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
-/// names the pill's classes.
 #[component]
 pub fn FightReasonBadge(props: FightReasonBadgeModel) -> Element {
     let label = props.label;

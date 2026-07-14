@@ -1,8 +1,5 @@
 use tw_macro::tw;
 
-// The shared action-button chrome plus the primary weight: a gold-bordered blue
-// panel with gold text that glows on hover.
-
 classes! {
     base: tw![
         "inline-flex",

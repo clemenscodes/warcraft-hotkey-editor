@@ -13,8 +13,6 @@ use presentation::IslandConflictCardPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One conflict card: the affected unit on top, its two clashing abilities flanking
-/// the centered separator below. It owns its own card surface directly.
 #[component]
 pub fn IslandConflictCard(props: IslandConflictCardModel) -> Element {
     let model = IslandConflictCardPresentation::from(&props);

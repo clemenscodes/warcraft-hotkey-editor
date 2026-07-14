@@ -21,14 +21,6 @@ use super::handlers::{
 
 use super::mechanics;
 
-/// Builds the editor's finished tiles. `rendered_tiles` is already resolved by the
-/// caller (`GridEditor`, in a `use_memo` in its own reactive scope) — that is what lets
-/// one grid's edit avoid re-rendering its siblings, so this builder must not itself read
-/// `loaded_keys` or any other grid-state signal. It only adapts each rendered tile into
-/// an `EditorTile` and overlays the drag state plus every pointer handler on top. This
-/// is all the grid's behavior, kept in the editor; the `CaptionedEditorGrid` and the
-/// `EditorGrid` only draw what comes out. Always exactly `COMMAND_GRID_TILE_COUNT` tiles,
-/// so the result is a fixed-size array.
 impl EditorTile {
     pub(crate) fn grid<B: GridBehavior>(
         props: &GridEditorModel<B>,
@@ -164,11 +156,6 @@ impl EditorTile {
     }
 }
 
-/// An inert, empty tile used only as a fallback when the memoized rendered
-/// tiles are transiently not exactly `COMMAND_GRID_TILE_COUNT` long (e.g. the
-/// first frame before boot has resolved `loaded_keys`). Renders an empty,
-/// non-interactive square instead of panicking; the installed panic hook
-/// still surfaces the real cause if this path is ever hit outside boot.
 fn placeholder_tile() -> EditorTile {
     let coordinate = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero);
     EditorTile {
@@ -193,9 +180,6 @@ fn placeholder_tile() -> EditorTile {
     }
 }
 
-/// The final tile state: an occupied tile keeps its base state; an empty tile
-/// during a drag becomes a drop target, or a blocked one when the callback
-/// refuses the move.
 fn tile_state(
     base_state: GridTileState,
     coordinate: GridCoordinate,

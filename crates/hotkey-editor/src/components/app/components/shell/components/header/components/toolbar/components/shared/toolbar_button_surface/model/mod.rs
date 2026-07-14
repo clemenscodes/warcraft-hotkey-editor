@@ -2,9 +2,6 @@ use super::state::SurfaceState;
 use super::view::ToolbarButtonSurfaceView;
 use dioxus::prelude::*;
 
-/// The surface carries every attribute of the clickable button: the icon, the resting
-/// look, the click handler, and the aria/disabled state. Callers set the fields they
-/// need by name; the rest default.
 #[derive(Props, Clone, PartialEq, Default)]
 pub struct ToolbarButtonSurfaceModel {
     pub icon: &'static str,

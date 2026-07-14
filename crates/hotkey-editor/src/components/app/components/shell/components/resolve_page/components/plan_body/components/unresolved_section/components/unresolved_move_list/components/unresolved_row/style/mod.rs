@@ -1,6 +1,5 @@
 use tw_macro::tw;
 
-// The stuck card surface: bordered, tinted, orc-accented.
 classes! {
     base: tw![
         "flex",

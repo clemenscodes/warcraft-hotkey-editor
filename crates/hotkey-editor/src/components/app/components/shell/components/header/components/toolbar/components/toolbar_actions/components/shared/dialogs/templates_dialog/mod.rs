@@ -14,11 +14,6 @@ use model::TemplatesDialogModel;
 use presentation::{TemplatesDialogPresentation, use_templates_dialog};
 use tw_macro::assert_component;
 
-/// The layout-templates browser, opened by the trigger that owns its open signal (the inline
-/// templates button or the burger drawer, each with its own instance). It mounts the reusable
-/// `WarcraftDialog` only while `open` is set — the trigger's signal is the switch that puts the
-/// dialog in the DOM — handing it the isolated gallery body region; the headless dialog derives
-/// its own close from `on_open_change`.
 #[component]
 pub fn TemplatesDialog(props: TemplatesDialogModel) -> Element {
     let TemplatesDialogPresentation {

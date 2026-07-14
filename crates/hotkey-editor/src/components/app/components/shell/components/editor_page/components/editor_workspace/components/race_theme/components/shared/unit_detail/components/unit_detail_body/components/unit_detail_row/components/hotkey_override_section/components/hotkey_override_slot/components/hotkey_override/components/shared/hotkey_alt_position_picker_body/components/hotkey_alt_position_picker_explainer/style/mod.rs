@@ -1,5 +1,4 @@
 use tw_macro::tw;
-// The instruction line at the top of a position-picker dialog.
 
 classes! {
     base: tw![

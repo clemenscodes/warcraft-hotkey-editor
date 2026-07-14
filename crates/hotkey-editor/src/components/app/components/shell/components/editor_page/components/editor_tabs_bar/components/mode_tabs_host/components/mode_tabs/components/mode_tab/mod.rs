@@ -8,9 +8,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::ModeTabModel;
 
-/// One mode button (Melee or Campaign). It is the shared [`ToggleButton`] configured
-/// for the mode toggle: a gold pill with no tooltip, carrying the keyboard handler
-/// that moves focus onto the race tabs.
 #[component]
 pub fn ModeTab(props: ModeTabModel) -> Element {
     let label = props.label;

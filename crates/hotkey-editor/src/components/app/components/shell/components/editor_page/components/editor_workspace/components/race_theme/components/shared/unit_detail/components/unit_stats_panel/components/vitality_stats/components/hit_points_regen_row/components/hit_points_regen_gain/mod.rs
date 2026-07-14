@@ -9,9 +9,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::HitPointsRegenGainModel;
 
-/// The health-regeneration gain: green, pushed to the row's end. A thin dispatcher —
-/// it renders the active look (`ActiveHitPointsRegenGain`) xor the muted look
-/// (`MutedHitPointsRegenGain`), per whether the unit regenerates health.
 #[component]
 pub fn HitPointsRegenGain(props: HitPointsRegenGainModel) -> Element {
     let value = props.value;

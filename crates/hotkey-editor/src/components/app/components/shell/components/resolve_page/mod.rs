@@ -20,19 +20,13 @@ use presentation::{ResolvePagePresentation, ResolvePlanPresentation, use_resolve
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The Resolve page: a transparent preview of the cascade plan — every move the
-/// algorithm would make and any unresolved abilities — with an Apply button that
-/// runs the cascade. Shows an upload prompt with no file and an all-clear state
-/// when there is nothing to resolve; only the plan state composes the headless `Page`
-/// frame, from its header (the plan summary + breadcrumbs) and body (the scrollable plan)
-/// regions. The hook shapes the state's data; the body only places it.
 #[component]
 pub fn ResolvePage(props: ResolvePageModel) -> Element {
     let plan = match use_resolve_page(&props) {
         ResolvePagePresentation::NoFile => {
             return rsx! {
                 EmptyState {
-                
+
 
 
                 }
@@ -41,7 +35,7 @@ pub fn ResolvePage(props: ResolvePageModel) -> Element {
         ResolvePagePresentation::Clear => {
             return rsx! {
                 ClearState {
-                
+
 
 
                 }

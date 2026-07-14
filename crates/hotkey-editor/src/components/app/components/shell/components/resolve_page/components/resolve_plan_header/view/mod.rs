@@ -4,10 +4,6 @@ use crate::components::app::components::shell::components::shared::breadcrumbs::
 use browser_kit::frame::Render;
 use dioxus::prelude::*;
 
-/// The published `View` for the resolve plan header region: the cascade summary text, the
-/// Apply control's state and handler, and the move-category breadcrumb tabs. It is also the
-/// resolve page frame's header region: it `impl Render` and renders the `ResolvePlanHeader`
-/// once, so the page places the published `View` directly, with no ad-hoc region type.
 #[derive(Clone, PartialEq, Default)]
 pub struct ResolvePlanHeaderView {
     pub moves_text: String,

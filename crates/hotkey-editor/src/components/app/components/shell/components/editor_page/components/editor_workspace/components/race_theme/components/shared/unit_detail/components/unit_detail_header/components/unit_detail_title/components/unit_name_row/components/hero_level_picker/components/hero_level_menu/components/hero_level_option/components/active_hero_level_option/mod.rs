@@ -9,7 +9,6 @@ use model::ActiveHeroLevelOptionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The active hero-level option button. Presentational — the dispatcher renders it.
 #[component]
 pub fn ActiveHeroLevelOption(props: ActiveHeroLevelOptionModel) -> Element {
     let label = props.label;

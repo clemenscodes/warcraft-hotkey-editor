@@ -1,10 +1,6 @@
 use std::fmt;
 use warcraft_api::{AttackType, DefenseType};
 
-/// What a matchup cell's label names: the attack type (on a defender's row) or the
-/// defense type (on an attacker's row). Carrying the domain type — rather than a
-/// pre-rendered string — lets the [`MatchupLabel`](super::components::shared::matchup_label::MatchupLabel)
-/// leaf render it through the type's own `Display`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MatchupSubject {
     Attack(AttackType),

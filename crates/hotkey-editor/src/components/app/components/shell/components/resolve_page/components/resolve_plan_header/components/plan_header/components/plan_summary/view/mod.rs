@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`PlanSummaryModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct PlanSummaryView {
     pub moves_text: String,

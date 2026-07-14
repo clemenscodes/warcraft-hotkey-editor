@@ -2,8 +2,6 @@ use super::view::VitalityStatsView;
 use dioxus::prelude::*;
 use warcraft_api::{HitPoints, HitPointsRegen, Mana, ManaRegen};
 
-/// The vitality column's input: the unit's resolved hit points, mana, and their
-/// regeneration figures.
 #[derive(Props, Clone, PartialEq)]
 pub struct VitalityStatsModel {
     pub hit_points: HitPoints,

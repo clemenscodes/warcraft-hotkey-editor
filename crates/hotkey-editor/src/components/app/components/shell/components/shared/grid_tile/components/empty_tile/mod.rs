@@ -16,11 +16,6 @@ use presentation::EmptyTilePresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// An empty command slot. Purely presentational: it draws its resting look and its race
-/// accent, and — during a drag or a mini-grid highlight — mounts the matching overlay
-/// child (drop-target / blocked / highlight, plus the `DragOverRing` under the cursor)
-/// whose presence turns the tile's own border into that look. It knows nothing of
-/// hotkeys, focus, or dragging; `GridEditorTile` layers all interaction on top.
 #[component]
 pub fn EmptyTile(props: EmptyTileModel) -> Element {
     let EmptyTilePresentation {

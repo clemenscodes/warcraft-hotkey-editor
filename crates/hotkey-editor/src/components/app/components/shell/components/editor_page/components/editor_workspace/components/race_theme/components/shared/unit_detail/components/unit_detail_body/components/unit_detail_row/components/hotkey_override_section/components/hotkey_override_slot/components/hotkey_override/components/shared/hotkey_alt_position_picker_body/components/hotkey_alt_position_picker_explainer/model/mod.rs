@@ -1,7 +1,6 @@
 use super::view::HotkeyAltPositionPickerExplainerView;
 use dioxus::prelude::*;
 
-/// The instruction text shown above the picker grid.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyAltPositionPickerExplainerModel {
     #[props(into)]

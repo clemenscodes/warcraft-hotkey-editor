@@ -9,9 +9,6 @@ use tw_macro::assert_component;
 
 use model::CatalogVisibilityButtonModel;
 
-/// One button of the catalog-visibility toggle. It is the shared [`ToggleButton`]
-/// configured for a visibility filter — the only one of the toggles that carries a
-/// tooltip.
 #[component]
 pub fn CatalogVisibilityButton(props: CatalogVisibilityButtonModel) -> Element {
     let label = props.label;

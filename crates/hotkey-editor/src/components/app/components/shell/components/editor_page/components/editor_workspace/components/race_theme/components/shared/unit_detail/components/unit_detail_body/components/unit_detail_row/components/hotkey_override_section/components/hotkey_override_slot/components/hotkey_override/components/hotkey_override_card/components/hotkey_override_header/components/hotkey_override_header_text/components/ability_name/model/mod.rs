@@ -1,7 +1,6 @@
 use super::view::AbilityNameView;
 use dioxus::prelude::*;
 
-/// The active ability / unit name shown in the hotkey-override section header.
 #[derive(Props, Clone, PartialEq)]
 pub struct AbilityNameModel {
     #[props(into)]

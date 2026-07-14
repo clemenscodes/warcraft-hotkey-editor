@@ -4,9 +4,6 @@ use dioxus::prelude::*;
 use warcraft_api::DefenseType;
 use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
-/// The defense column's figures, shaped out of the body: the defense icon, the three
-/// always-shown values, the guarded evasion, and the defense type that drives the
-/// matchup grid.
 pub(super) struct DefenseFigures {
     pub(super) icon_src: Asset,
     pub(super) icon_alt: String,

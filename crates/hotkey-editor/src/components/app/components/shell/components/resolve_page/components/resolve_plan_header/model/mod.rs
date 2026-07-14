@@ -2,9 +2,6 @@ use super::view::ResolvePlanHeaderView;
 use crate::components::app::components::shell::components::shared::breadcrumbs::BreadcrumbView;
 use dioxus::prelude::*;
 
-/// The resolve plan header region: the cascade summary and Apply control, plus the
-/// move-category breadcrumb tabs. The bar's assistive-tech name is fixed ("Move categories"),
-/// so it is the region's own identity, not a field.
 #[derive(Props, Clone, PartialEq)]
 pub struct ResolvePlanHeaderModel {
     #[props(into)]

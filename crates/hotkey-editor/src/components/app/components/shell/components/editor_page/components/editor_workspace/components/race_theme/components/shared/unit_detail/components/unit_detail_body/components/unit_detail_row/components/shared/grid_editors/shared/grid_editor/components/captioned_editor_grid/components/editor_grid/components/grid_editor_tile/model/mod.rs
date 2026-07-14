@@ -4,10 +4,6 @@ use crate::components::app::components::shell::components::shared::grid_tile::Gr
 use dioxus::prelude::*;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RowIndex};
 
-/// The interactive editor tile's props: the `TileFace` painter's visual fields plus the
-/// editor's interaction — focus, drag state, and the event handlers. This is the only
-/// tile that expects a hotkey. Its address is the domain `GridCoordinate`; its hotkey is
-/// the domain `HotkeyToken`.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridEditorTileModel {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
@@ -16,7 +12,6 @@ pub struct GridEditorTileModel {
     pub icon: Option<String>,
     #[props(default)]
     pub label: String,
-    /// The hotkey; every editor tile always has one, shown as its badge.
     pub hotkey: HotkeyToken,
     #[props(default)]
     pub badge_state: HotkeyBadgeState,

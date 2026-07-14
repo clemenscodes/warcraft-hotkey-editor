@@ -11,7 +11,6 @@ use presentation::ToastClosePresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The dismiss control on a toast.
 #[component]
 pub fn ToastClose(props: ToastCloseModel) -> Element {
     let ToastClosePresentation { onclick } = ToastClosePresentation::from(&props);

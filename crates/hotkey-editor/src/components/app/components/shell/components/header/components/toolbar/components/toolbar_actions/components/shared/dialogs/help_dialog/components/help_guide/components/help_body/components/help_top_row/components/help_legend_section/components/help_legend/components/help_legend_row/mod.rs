@@ -15,7 +15,6 @@ use presentation::HelpLegendRowPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One legend entry: a framed glyph beside its label and description.
 #[component]
 pub fn HelpLegendRow(props: HelpLegendRowModel) -> Element {
     let HelpLegendRowPresentation {

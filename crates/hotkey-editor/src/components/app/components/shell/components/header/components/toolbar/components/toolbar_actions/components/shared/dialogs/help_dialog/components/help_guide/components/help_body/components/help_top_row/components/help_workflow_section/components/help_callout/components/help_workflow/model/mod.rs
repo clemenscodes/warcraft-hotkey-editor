@@ -2,7 +2,6 @@ use super::view::HelpWorkflowView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_guide::data::HelpSegment;
 use dioxus::prelude::*;
 
-/// The workflow list's input: the steps to render, each its own segment list.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpWorkflowModel {
     pub steps: &'static [&'static [HelpSegment]],

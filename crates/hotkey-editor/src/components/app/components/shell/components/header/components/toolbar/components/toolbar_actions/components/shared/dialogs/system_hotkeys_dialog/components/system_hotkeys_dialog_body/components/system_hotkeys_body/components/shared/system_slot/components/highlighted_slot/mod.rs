@@ -10,9 +10,6 @@ use model::HighlightedSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The highlighted look of a system slot: the gold border-image frame with a gold
-/// glow overlay, composing the shared slot content. Presentational — the dispatcher
-/// renders it when the slot's glow state is highlighted.
 #[component]
 pub fn HighlightedSlot(props: HighlightedSlotModel) -> Element {
     let slot_label = props.slot_label;

@@ -2,7 +2,6 @@ use super::view::HitPointsRowView;
 use dioxus::prelude::*;
 use warcraft_api::HitPoints;
 
-/// The hit points row's input: the unit's resolved hit points at the selected level.
 #[derive(Props, Clone, PartialEq)]
 pub struct HitPointsRowModel {
     pub value: HitPoints,

@@ -3,10 +3,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// The seam: this host reads the dialog's UI state from context and threads the raw
-/// values its two gallery-rendered children need — the breadcrumbs' active category
-/// signal and the overlay's drag follower signal. `SystemHotkeysBody` reads context
-/// itself, so it needs no props from here.
 pub(super) struct SystemHotkeysDialogBodyWiring {
     pub(super) active_category: Signal<SystemHotkeysCategory>,
     pub(super) drag_follower: Signal<Option<InventoryDragFollower>>,

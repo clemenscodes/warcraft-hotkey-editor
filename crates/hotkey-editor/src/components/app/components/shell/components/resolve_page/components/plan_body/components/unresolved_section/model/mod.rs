@@ -2,8 +2,6 @@ use super::view::UnresolvedSectionView;
 use crate::components::app::components::shell::components::resolve_page::presentation::UnresolvedView;
 use dioxus::prelude::*;
 
-/// The unresolved-abilities section: one stuck card per ability the cascade could
-/// not place.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnresolvedSectionModel {
     pub unresolved: Vec<UnresolvedView>,

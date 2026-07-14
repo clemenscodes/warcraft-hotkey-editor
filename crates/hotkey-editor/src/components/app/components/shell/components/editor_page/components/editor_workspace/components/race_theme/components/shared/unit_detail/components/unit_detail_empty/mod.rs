@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::UnitDetailEmptyModel;
 
-/// The unit-detail card in its empty / not-found state.
 #[component]
 pub fn UnitDetailEmpty(props: UnitDetailEmptyModel) -> Element {
     let message = props.message;

@@ -1,5 +1,3 @@
-/// The app's upload seam: opens the OS file picker for the hidden CustomKeys
-/// file input. The DOM mechanics live in `browser_kit::dom::UploadPicker`.
 pub(crate) const UPLOAD_INPUT_ELEMENT_ID: &str = "upload-customkeys-input";
 
 pub(crate) fn trigger() {

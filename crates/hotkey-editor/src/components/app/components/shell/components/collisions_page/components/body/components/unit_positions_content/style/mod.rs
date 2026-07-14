@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The two-pane layout (sidebar column + fluid detail), shared value across the three
-// per-kind content wrappers.
 classes! {
     base: tw![
         "grid",

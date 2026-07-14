@@ -1,8 +1,5 @@
 use tw_macro::tw;
 
-// The shared badge chrome written out in full, plus this tone's own muted colour triple.
-// Sibling tones share these *values*, never a look.
-
 classes! {
     base: tw![
         "inline-flex",

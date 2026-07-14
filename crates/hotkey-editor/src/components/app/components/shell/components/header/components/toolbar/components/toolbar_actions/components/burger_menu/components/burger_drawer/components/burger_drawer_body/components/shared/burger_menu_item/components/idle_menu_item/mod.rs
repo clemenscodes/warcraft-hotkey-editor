@@ -11,9 +11,6 @@ use model::IdleMenuItemModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle (plain) look of a drawer row: the resting gold panel button that composes
-/// the icon and label. Presentational — the dispatcher names its fields and renders it
-/// when the row's visual weight is idle.
 #[component]
 pub fn IdleMenuItem(props: IdleMenuItemModel) -> Element {
     let icon = props.icon;

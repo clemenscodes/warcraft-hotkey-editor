@@ -4,10 +4,6 @@ use crate::services::customkeys::context::use_custom_keys_service;
 use crate::services::files::download;
 use dioxus::prelude::*;
 
-/// The download dialog's shaped data: the open value it drives, the change handler
-/// mirroring the headless dialog's own close, the shared copy and warning, and the
-/// cancel and confirm handlers. The shared `InfoDialog` is placed with these as
-/// named fields.
 pub(super) struct DownloadInfoDialogPresentation {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
@@ -19,10 +15,6 @@ pub(super) struct DownloadInfoDialogPresentation {
     pub(super) on_cancel: EventHandler<MouseEvent>,
 }
 
-/// Reads the live document from the [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService)
-/// and shapes the download dialog: confirming serializes the stored CustomKeys.txt (R5:
-/// the download IS the stored text, never re-serialized from the in-memory aggregate),
-/// triggers the browser download, and closes.
 pub(super) fn use_download_info_dialog(
     props: &DownloadInfoDialogModel,
 ) -> DownloadInfoDialogPresentation {

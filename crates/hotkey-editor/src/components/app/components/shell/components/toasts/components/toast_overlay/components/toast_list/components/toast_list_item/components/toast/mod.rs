@@ -15,11 +15,6 @@ use model::ToastModel;
 use presentation::use_toast_auto_dismiss;
 use tw_macro::assert_component;
 
-/// A single toast, dispatched by its type. The surface tint, icon, and title all
-/// differ per kind, so each kind is its own card component. This dispatcher carries
-/// no markup of its own: it schedules the auto-dismiss, then renders the one card
-/// its type selects. Each per-kind card owns its `role="alertdialog"` root and the
-/// shared icon/content/close leaves.
 #[component]
 pub fn Toast(props: ToastModel) -> Element {
     use_toast_auto_dismiss(&props);

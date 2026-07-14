@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The active crumb: the shared crumb chrome values lit gold, publishing full count
-// opacity. Shared values with the idle sibling, each written in its own style.rs.
 classes! {
     base: tw![
         "py-1",

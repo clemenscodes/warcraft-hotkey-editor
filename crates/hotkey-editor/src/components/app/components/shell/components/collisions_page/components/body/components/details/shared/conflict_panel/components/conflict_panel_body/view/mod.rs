@@ -4,11 +4,6 @@ use crate::components::app::components::shell::components::collisions_page::comp
 use browser_kit::frame::Render;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`ConflictPanelBodyModel`], threaded to this
-/// component as data. It is also the conflict panel card's body region: it `impl Render` and
-/// renders the presentational `ConflictPanelBody` once, so `ConflictPanel` places the
-/// published `View` directly as `PanelCard`'s body, with no ad-hoc region type. The shaped
-/// card model is carried as a list so the region is `Default`-able; exactly one is present.
 #[derive(Clone, PartialEq, Default)]
 pub struct ConflictPanelBodyView {
     pub(crate) models: Vec<ConflictCardModel>,

@@ -2,7 +2,6 @@ use super::components::template_card::TemplateCardView;
 use super::view::TemplateGalleryView;
 use dioxus::prelude::*;
 
-/// The gallery's input: the resolved template card views to lay out.
 #[derive(Props, Clone, PartialEq)]
 pub struct TemplateGalleryModel {
     pub cards: Vec<TemplateCardView>,

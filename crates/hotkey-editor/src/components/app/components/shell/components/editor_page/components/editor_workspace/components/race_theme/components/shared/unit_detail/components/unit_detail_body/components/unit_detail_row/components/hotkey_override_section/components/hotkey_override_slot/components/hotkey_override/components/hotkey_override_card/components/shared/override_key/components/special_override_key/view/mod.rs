@@ -1,7 +1,6 @@
 use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`SpecialOverrideKeyModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SpecialOverrideKeyView {
     pub label: String,

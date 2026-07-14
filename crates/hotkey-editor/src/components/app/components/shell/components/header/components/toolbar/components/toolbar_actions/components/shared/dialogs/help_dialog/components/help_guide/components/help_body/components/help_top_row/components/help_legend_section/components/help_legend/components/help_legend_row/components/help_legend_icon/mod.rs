@@ -9,8 +9,6 @@ use model::HelpLegendIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The framed toolbar glyph in a legend row. A leaf: the row passes which icon
-/// to draw.
 #[component]
 pub fn HelpLegendIcon(props: HelpLegendIconModel) -> Element {
     let icon = props.icon;

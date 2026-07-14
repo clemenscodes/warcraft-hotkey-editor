@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The idle crumb: the shared crumb chrome values muted, lightening on hover, publishing
-// dimmed count opacity. Shared values with the active sibling.
 classes! {
     base: tw![
         "py-1",

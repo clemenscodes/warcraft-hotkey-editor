@@ -9,7 +9,6 @@ use model::UnitPortraitModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unit's portrait image; renders nothing when the unit has no portrait.
 #[component]
 pub fn UnitPortrait(props: UnitPortraitModel) -> Element {
     let Some(src) = props.src else {

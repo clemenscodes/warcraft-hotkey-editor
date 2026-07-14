@@ -3,9 +3,6 @@ use crate::components::app::components::shell::components::editor_page::componen
 use crate::services::drag_state::DragFollower;
 use super::state::GhostState;
 
-/// The computed presentation for the follower ghost, derived from one
-/// `DragFollower`. Field names match the attributes and child props they feed, so
-/// the markup spreads them with RSX shorthand.
 #[derive(Clone, PartialEq)]
 pub struct FollowerPresentation {
     pub(super) state: GhostState,
@@ -17,8 +14,6 @@ pub struct FollowerPresentation {
 }
 
 impl From<&DragFollower> for FollowerPresentation {
-    /// Derives the follower's state, fixed position, badge, icon, and label from
-    /// the dragged tile's captured visual.
     fn from(follower: &DragFollower) -> Self {
         let visual = follower.visual();
         let left = follower.left();

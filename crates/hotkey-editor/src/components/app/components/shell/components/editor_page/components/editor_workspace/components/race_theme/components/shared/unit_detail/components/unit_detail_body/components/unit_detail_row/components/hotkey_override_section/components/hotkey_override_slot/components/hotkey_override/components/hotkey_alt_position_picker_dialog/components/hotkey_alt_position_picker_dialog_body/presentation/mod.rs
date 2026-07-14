@@ -8,10 +8,6 @@ use std::collections::HashMap;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The off-state picker body's shaped view: the explainer copy and the fully-built grid
-/// editor config. The local picker signals and the config assembly live here — signals
-/// live only in the presentation builder, never in the body's `View`/`Model` — so the body
-/// stays a single hook line plus RSX.
 pub(super) struct HotkeyAltPositionPickerDialogBodyPresentation {
     pub(super) explainer_text: String,
     pub(super) grid_config: GridEditorView,

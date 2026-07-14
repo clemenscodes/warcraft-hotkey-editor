@@ -9,7 +9,6 @@ use model::ToolbarButtonIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The glyph inside a toolbar button.
 #[component]
 pub fn ToolbarButtonIcon(props: ToolbarButtonIconModel) -> Element {
     let icon = props.icon;

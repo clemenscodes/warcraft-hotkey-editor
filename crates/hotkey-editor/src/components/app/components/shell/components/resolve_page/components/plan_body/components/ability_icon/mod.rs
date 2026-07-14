@@ -15,9 +15,6 @@ use presentation::{AbilityIconPresentation, use_ability_icon};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One ability icon with a carrier-count badge; clicking opens this ability's carriers
-/// dialog. The icon owns the open state and mounts the dialog's host beneath itself, so
-/// no ancestor knows the dialog exists.
 #[component]
 pub fn AbilityIcon(props: AbilityIconModel) -> Element {
     let AbilityIconPresentation {

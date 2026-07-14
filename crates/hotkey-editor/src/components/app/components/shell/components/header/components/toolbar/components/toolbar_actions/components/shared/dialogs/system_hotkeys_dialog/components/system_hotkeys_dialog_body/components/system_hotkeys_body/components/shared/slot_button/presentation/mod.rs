@@ -7,9 +7,6 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
-/// Everything the slot's markup needs, already shaped: its visual state, the key
-/// label and conflict tooltip, whether its picker is open (and the picker's inputs),
-/// and the click / pick / close handlers.
 pub(super) struct SlotButtonPresentation {
     pub(super) state: SystemSlotState,
     pub(super) slot_label: String,
@@ -28,10 +25,6 @@ pub(super) struct SlotButtonPresentation {
     pub(super) on_close: EventHandler<()>,
 }
 
-/// Reads the slot's resolved binding + conflicts from the CustomKeys query, picks
-/// the editing-dependent presentation, and wires the edit / pick / close handlers.
-/// The pick routes through the service's `set_system_hotkey` command, never
-/// mutating the aggregate inline.
 pub(super) fn use_slot_button(props: &SlotButtonModel) -> SlotButtonPresentation {
     let custom_keys_service = use_custom_keys_service();
     let dialog_state = use_system_hotkeys_dialog_state();
@@ -39,11 +32,6 @@ pub(super) fn use_slot_button(props: &SlotButtonModel) -> SlotButtonPresentation
     let lookup_id = props.section_id;
     let slot_label = props.slot_label.clone();
 
-    // Firebreak: `slot_binding` reads the whole CustomKeys document, so calling it
-    // bare re-renders this slot on every edit anywhere. Memoizing on the returned
-    // `SlotBindingView` (which derives `PartialEq`) confines the re-render to when
-    // *this* slot's binding actually changes — the same reactive-scope isolation
-    // `GridEditor` uses for its rendered tiles.
     let memoized_binding = use_memo(move || custom_keys_service.slot_binding(lookup_id));
     let binding = memoized_binding.read();
     let is_conflict = binding.is_conflict();

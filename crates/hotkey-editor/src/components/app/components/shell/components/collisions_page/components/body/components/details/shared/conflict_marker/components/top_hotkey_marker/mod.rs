@@ -10,7 +10,6 @@ use model::TopHotkeyMarkerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The shared-hotkey badge capping a multi-way stack (nudged down).
 #[component]
 pub fn TopHotkeyMarker(props: TopHotkeyMarkerModel) -> Element {
     let label = props.label;

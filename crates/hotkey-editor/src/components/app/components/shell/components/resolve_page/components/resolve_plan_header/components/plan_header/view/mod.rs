@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`PlanHeaderModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct PlanHeaderView {
     pub moves_text: String,

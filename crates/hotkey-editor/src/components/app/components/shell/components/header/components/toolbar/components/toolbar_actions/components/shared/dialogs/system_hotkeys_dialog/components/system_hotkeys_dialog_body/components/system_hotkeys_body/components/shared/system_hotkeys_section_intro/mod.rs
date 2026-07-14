@@ -9,7 +9,6 @@ use model::SystemHotkeysSectionIntroModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The caption introducing a system-hotkeys category editor.
 #[component]
 pub fn SystemHotkeysSectionIntro(props: SystemHotkeysSectionIntroModel) -> Element {
     let text = props.text;

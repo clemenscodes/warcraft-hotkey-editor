@@ -1,7 +1,6 @@
 use super::view::AbilityDescriptionView;
 use dioxus::prelude::*;
 
-/// The description text as pre-split lines; each becomes its own paragraph.
 #[derive(Props, Clone, PartialEq)]
 pub struct AbilityDescriptionModel {
     pub description_lines: Vec<String>,

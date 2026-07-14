@@ -3,8 +3,6 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The selected unit card surface's props: the portrait and text it lays out plus the
-/// card's handlers. Built by the dispatcher from `UnitCardButtonModel`.
 #[derive(Props, Clone, PartialEq)]
 pub struct SelectedUnitCardButtonModel {
     pub icon_path: Option<IconUrl>,

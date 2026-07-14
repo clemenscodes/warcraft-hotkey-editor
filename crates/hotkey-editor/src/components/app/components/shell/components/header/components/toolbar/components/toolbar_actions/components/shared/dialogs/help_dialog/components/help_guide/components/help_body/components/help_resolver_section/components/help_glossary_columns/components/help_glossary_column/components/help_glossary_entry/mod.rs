@@ -12,7 +12,6 @@ use model::HelpGlossaryEntryModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One glossary term paired with its definition.
 #[component]
 pub fn HelpGlossaryEntry(props: HelpGlossaryEntryModel) -> Element {
     let item = props.item;

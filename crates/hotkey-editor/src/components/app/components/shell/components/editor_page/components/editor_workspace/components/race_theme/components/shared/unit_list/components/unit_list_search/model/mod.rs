@@ -1,7 +1,6 @@
 use super::view::UnitListSearchView;
 use dioxus::prelude::*;
 
-/// The search box's bound value, placeholder, and the input/keydown handlers.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitListSearchModel {
     pub value: ReadSignal<String>,

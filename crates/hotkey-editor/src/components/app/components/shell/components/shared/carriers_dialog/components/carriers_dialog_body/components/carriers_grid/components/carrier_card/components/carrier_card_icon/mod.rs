@@ -11,8 +11,6 @@ use model::CarrierCardIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A carrier unit's square icon: it owns its fixed slot and the shared `FramedIcon`
-/// draws the bordered, rounded image.
 #[component]
 pub fn CarrierCardIcon(props: CarrierCardIconModel) -> Element {
     let Some(source) = props.src else {

@@ -12,9 +12,6 @@ use presentation::UnitCardIconPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The framed portrait slot of a unit card: it owns the per-band icon size, and the
-/// shared `FramedIcon` draws the bordered, rounded image — or the empty framed square
-/// when the unit has no icon.
 #[component]
 pub fn UnitCardIcon(props: UnitCardIconModel) -> Element {
     let UnitCardIconPresentation {

@@ -1,8 +1,4 @@
 use tw_macro::tw;
-// The editor page owns the vertical rhythm between its two sections — the mode/race
-// tab bar and the workspace — as a `gap` (tighter on touch, wider from laptop up),
-// so neither child reaches across the boundary with a margin. It fills the shell's
-// routed slot and lets the workspace grow into the space beneath the tab bar.
 
 classes! {
     base: tw![

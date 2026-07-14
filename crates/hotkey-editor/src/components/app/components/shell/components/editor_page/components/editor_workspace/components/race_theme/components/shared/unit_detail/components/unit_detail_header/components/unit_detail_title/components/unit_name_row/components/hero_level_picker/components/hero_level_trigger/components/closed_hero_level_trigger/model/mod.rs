@@ -1,7 +1,6 @@
 use super::view::ClosedHeroLevelTriggerView;
 use dioxus::prelude::*;
 
-/// The resting-look trigger's inputs: the current level caption and the toggle handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct ClosedHeroLevelTriggerModel {
     #[props(into)]

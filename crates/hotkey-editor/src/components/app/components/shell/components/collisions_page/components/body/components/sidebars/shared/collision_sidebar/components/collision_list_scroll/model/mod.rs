@@ -2,7 +2,6 @@ use super::components::collision_list_track::components::collision_card::Collisi
 use super::view::CollisionListScrollView;
 use dioxus::prelude::*;
 
-/// The collision list scroll carries the collision cards down to its track.
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionListScrollModel {
     pub cards: Vec<CollisionCardData>,

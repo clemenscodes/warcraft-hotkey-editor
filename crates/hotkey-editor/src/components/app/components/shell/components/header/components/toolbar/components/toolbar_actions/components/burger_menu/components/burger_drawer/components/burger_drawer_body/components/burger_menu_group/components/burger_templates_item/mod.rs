@@ -9,10 +9,6 @@ use presentation::{BurgerTemplatesItemPresentation, use_burger_templates_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout templates action: the drawer row that opens the template browser, and the
-/// browser dialog it owns, mounted beneath it. It owns the browser's open signal locally, so the
-/// dialog is part of the row and travels with it. Tapping it leaves the drawer open (closing
-/// the drawer would unmount this row and its dialog), so the browser opens over the drawer.
 #[component]
 pub fn BurgerTemplatesItem() -> Element {
     let BurgerTemplatesItemPresentation {

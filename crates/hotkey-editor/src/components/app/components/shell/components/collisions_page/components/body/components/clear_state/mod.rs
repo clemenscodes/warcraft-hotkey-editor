@@ -6,15 +6,13 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The centered "all clear" state for a collision kind with no conflicts. It centers
-/// its glyph and label in the available space.
 #[component]
 pub fn ClearState() -> Element {
     rsx! {
         section {
             class: CLASS,
             ClearIcon {
-            
+
 
 
             }

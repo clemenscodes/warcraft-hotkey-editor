@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`SearchFieldButtonModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SearchFieldButtonView {
     pub label: &'static str,

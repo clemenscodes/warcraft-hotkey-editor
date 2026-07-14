@@ -1,8 +1,6 @@
 use super::view::CurrentHotkeySlotView;
 use dioxus::prelude::*;
 
-/// The right side of the override header: exactly one of the hotkey cell, the
-/// research hotkey cell, or the passive note (or nothing), chosen by the flags.
 #[derive(Props, Clone, PartialEq)]
 pub struct CurrentHotkeySlotModel {
     pub show_hotkey_field: bool,

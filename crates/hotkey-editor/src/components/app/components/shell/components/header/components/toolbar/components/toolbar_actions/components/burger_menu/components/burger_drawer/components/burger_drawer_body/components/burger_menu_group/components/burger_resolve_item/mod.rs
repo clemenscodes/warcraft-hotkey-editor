@@ -13,9 +13,6 @@ use presentation::{BurgerResolveItemPresentation, use_burger_resolve_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout resolve action: the drawer row that navigates to the conflict-resolution
-/// view and then closes the drawer. Unlike the help row it mounts no dialog — it performs the
-/// navigation and dismisses the menu.
 #[component]
 pub fn BurgerResolveItem(props: BurgerResolveItemModel) -> Element {
     let BurgerResolveItemPresentation {

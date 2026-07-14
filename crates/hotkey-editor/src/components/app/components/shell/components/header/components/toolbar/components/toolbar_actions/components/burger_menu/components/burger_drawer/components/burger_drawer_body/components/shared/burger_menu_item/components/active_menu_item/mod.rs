@@ -11,9 +11,6 @@ use model::ActiveMenuItemModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The active (open-toggle) look of a drawer row: the gold panel button lit to show
-/// its dialog/preview is open, composing the icon and label. Presentational — the
-/// dispatcher names its fields and renders it when the row's visual weight is active.
 #[component]
 pub fn ActiveMenuItem(props: ActiveMenuItemModel) -> Element {
     let icon = props.icon;

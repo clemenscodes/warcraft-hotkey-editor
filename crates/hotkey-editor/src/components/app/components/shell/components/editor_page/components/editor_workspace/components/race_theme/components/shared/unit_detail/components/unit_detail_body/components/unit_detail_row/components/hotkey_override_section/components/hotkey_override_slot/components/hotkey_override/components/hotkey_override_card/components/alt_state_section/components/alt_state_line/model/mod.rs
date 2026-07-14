@@ -1,7 +1,6 @@
 use super::view::AltStateLineView;
 use dioxus::prelude::*;
 
-/// One description line of the alt-state block.
 #[derive(Props, Clone, PartialEq)]
 pub struct AltStateLineModel {
     #[props(into)]

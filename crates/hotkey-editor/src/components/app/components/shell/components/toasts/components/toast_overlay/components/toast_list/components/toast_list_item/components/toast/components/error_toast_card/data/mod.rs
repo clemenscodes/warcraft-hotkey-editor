@@ -1,4 +1,1 @@
-//! The error toast glyph. stroke="currentColor" picks up the icon's tint from
-//! the surrounding span.
-
 pub const ICON: &str = r##"<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>"##;

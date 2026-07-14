@@ -1,7 +1,6 @@
 use super::view::UpgradeSectionHeaderLabelColumnView;
 use dioxus::prelude::*;
 
-/// The label column of the upgraded-form header row.
 #[derive(Props, Clone, PartialEq)]
 pub struct UpgradeSectionHeaderLabelColumnModel {
     pub text: Option<String>,

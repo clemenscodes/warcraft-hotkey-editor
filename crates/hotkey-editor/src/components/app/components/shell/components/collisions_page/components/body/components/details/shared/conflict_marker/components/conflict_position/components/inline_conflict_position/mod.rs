@@ -10,7 +10,6 @@ use model::InlineConflictPositionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The colliding cell shown inline between a conflict's two abilities.
 #[component]
 pub fn InlineConflictPosition(props: InlineConflictPositionModel) -> Element {
     let coordinate = props.coordinate;

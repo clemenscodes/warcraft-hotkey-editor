@@ -9,8 +9,6 @@ use model::PrimaryAttributeLabelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// An attribute row's label: gold, reading its exact tint from the `--attribute-label-color`
-/// its row publishes (full gold when the row is the hero's primary attribute, dimmer otherwise).
 #[component]
 pub fn PrimaryAttributeLabel(props: PrimaryAttributeLabelModel) -> Element {
     let text = props.text;

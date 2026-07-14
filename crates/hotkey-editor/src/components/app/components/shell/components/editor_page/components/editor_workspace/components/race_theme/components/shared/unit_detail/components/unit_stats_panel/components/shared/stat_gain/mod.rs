@@ -10,10 +10,6 @@ use dioxus::prelude::*;
 use model::StatGainModel;
 use tw_macro::assert_component;
 
-/// A stat row's per-level growth in the default treatment: green, tabular text sitting
-/// inline after the value. A thin dispatcher — the figure reports whether it is muted
-/// and this leaf renders the active look (`ActiveStatGain`) xor the muted look
-/// (`MutedStatGain`), each built by `From`.
 #[component]
 pub fn StatGain<Figure: StatFigure>(props: StatGainModel<Figure>) -> Element {
     let value = props.value;

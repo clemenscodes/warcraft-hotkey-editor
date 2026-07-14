@@ -1,6 +1,5 @@
 use super::icon_radius::IconRadius;
 
-/// The published `View` contract mirroring [`FramedIconModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct FramedIconView {
     pub src: Option<String>,

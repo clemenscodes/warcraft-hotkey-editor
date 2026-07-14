@@ -12,9 +12,6 @@ use model::PreviewHeadedGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A captioned template preview: the shared `GridHeading` above the read-only
-/// `PreviewGrid`. Owns `.preview-headed-grid`, which stacks the two and establishes
-/// the query container the tiles size against. Purely presentational.
 #[component]
 pub fn PreviewHeadedGrid(props: PreviewHeadedGridModel) -> Element {
     let heading = props.heading;

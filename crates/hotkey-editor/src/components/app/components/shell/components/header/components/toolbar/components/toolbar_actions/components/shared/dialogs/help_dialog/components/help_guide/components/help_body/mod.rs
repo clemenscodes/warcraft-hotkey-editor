@@ -12,8 +12,6 @@ use model::HelpBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The help guide's scrolling content: the split top row above the full-width
-/// resolver explanation. Pure layout; it threads the content down.
 #[component]
 pub fn HelpBody(props: HelpBodyModel) -> Element {
     let content = props.content;

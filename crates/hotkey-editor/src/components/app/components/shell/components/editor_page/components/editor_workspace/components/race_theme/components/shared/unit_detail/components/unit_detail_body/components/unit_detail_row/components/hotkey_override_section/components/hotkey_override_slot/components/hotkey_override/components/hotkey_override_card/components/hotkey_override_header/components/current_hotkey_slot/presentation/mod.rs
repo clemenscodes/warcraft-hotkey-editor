@@ -2,7 +2,6 @@ use dioxus::prelude::*;
 
 use super::model::CurrentHotkeySlotModel;
 
-/// The domain data for the hotkey / research-hotkey cell shown in the slot.
 pub(super) struct HotkeySlotKeyCell {
     pub(super) label: String,
     pub(super) is_editing: bool,
@@ -11,8 +10,6 @@ pub(super) struct HotkeySlotKeyCell {
     pub(super) on_activate: EventHandler<()>,
 }
 
-/// Which of the three mutually-exclusive slot contents applies: the hotkey/research
-/// cell, the passive note, or nothing.
 pub(super) struct CurrentHotkeySlotDispatch {
     pub(super) key_cell: Option<HotkeySlotKeyCell>,
     pub(super) info_text: Option<String>,

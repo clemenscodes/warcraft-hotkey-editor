@@ -9,9 +9,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::ManaValueModel;
 
-/// The mana figure: the human-blue accent, semibold and enlarged when the unit has a
-/// mana pool, faint when it has none. A thin dispatcher — it renders the active look
-/// (`ActiveManaValue`) xor the muted look (`MutedManaValue`).
 #[component]
 pub fn ManaValue(props: ManaValueModel) -> Element {
     let value = props.value;

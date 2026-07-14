@@ -9,7 +9,6 @@ use model::TemplateCardDescriptionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A template card's description line. Owns `.template-card-description`.
 #[component]
 pub fn TemplateCardDescription(props: TemplateCardDescriptionModel) -> Element {
     let description = props.description.clone();

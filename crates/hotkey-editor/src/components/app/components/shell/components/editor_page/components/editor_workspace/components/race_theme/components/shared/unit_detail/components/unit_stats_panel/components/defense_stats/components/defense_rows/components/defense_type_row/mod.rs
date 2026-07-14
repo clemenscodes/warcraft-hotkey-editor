@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Defense Type";
 
-/// The unit's defense type — what governs how incoming damage is scaled.
 #[component]
 pub fn DefenseTypeRow(props: DefenseTypeRowModel) -> Element {
     let value = props.value;

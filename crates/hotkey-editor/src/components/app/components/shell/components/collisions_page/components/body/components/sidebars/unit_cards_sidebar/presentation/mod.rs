@@ -9,10 +9,6 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use std::marker::PhantomData;
 
-/// Maps a collision conflict kind to the collision-selection field that names the
-/// selected unit for that kind, so the shared generic sidebar reads its own selection
-/// from context instead of receiving it drilled as a prop — mirroring how
-/// `IslandSidebar` and the detail panes read their selection.
 pub(super) trait SelectedCollisionUnit {
     fn selected_unit(collision_selection: CollisionSelection) -> Signal<Option<String>>;
 }
@@ -29,9 +25,6 @@ impl SelectedCollisionUnit for UnitPositionConflictView {
     }
 }
 
-/// The unit sidebar's render-ready cards: one card per clashing unit. Generic over the
-/// conflict shape so the hotkey and unit-position kinds share one builder. The body only
-/// places these; all shaping happens in the builder below.
 pub(super) struct UnitCardsSidebarPresentation<Conflict: Clone + PartialEq + 'static> {
     pub(super) cards: Vec<CollisionCardData>,
     conflict: PhantomData<Conflict>,
@@ -43,10 +36,6 @@ impl<Conflict: Clone + PartialEq + 'static> ddd::Presentation
     type Model = UnitCardsSidebarModel<Conflict>;
 }
 
-/// Reads the selected unit (the conflict kind names which field) and the navigation
-/// context, then shapes one card per clashing unit: its portrait, name, id, and clash
-/// count. The click routes through navigation, which replaces the collisions route's
-/// `?entry=` with the picked unit for the active kind.
 pub(super) fn use_unit_cards_sidebar_presentation<
     Conflict: Clone + PartialEq + SelectedCollisionUnit + 'static,
 >(

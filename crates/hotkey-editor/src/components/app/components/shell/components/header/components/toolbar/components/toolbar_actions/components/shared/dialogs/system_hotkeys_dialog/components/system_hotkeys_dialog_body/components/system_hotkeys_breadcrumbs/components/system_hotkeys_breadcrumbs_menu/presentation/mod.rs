@@ -2,9 +2,6 @@ use super::model::SystemHotkeysBreadcrumbsMenuModel;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// One category tab's raw inputs: which category it is, whether it is the active one,
-/// whether a separator follows it, whether the popover is open (selecting the tab's
-/// look), and the mobile-popover open signal it closes on select.
 #[derive(Clone, PartialEq)]
 pub(crate) struct SystemHotkeysCategoryTabDescriptor {
     pub(super) category: SystemHotkeysCategory,
@@ -14,8 +11,6 @@ pub(crate) struct SystemHotkeysCategoryTabDescriptor {
     pub(super) picker_open: Signal<bool>,
 }
 
-/// Builds one descriptor per category, marking the active one and whether a
-/// separator follows it.
 pub(super) fn use_system_hotkeys_breadcrumbs_menu(
     props: &SystemHotkeysBreadcrumbsMenuModel,
 ) -> Vec<SystemHotkeysCategoryTabDescriptor> {

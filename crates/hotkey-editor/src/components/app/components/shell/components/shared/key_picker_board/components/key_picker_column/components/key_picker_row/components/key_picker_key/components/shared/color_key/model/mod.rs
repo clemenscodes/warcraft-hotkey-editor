@@ -5,10 +5,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 };
 use dioxus::prelude::*;
 
-/// A picker key's color look plus the shared button attributes (cap label, disabled flag,
-/// click handler) and the conflict tooltip's three domain fields every color renders the
-/// same way. Handed down by the slot from named fields; the three colors differ only in
-/// their own styling, and the width is owned by the slot, not here.
 #[derive(Props, Clone, PartialEq)]
 pub struct ColorKeyModel {
     pub state: ColorKeyState,

@@ -1,16 +1,11 @@
 use dioxus::prelude::*;
 
-/// The drawer's shaped controller state the body renders: whether the drawer is open, and its
-/// toggle and close handlers. Every drawer row is its own component (owning any dialog it opens),
-/// so no row data is threaded here.
 pub struct BurgerMenuView {
     pub(super) is_open: bool,
     pub(super) toggle: EventHandler<MouseEvent>,
     pub(super) on_close: EventHandler<MouseEvent>,
 }
 
-/// Owns the drawer's local open signal and the body-scroll lock it drives, and shapes the
-/// controller: whether the drawer is open, plus its toggle and close handlers.
 pub fn use_burger_menu() -> BurgerMenuView {
     let mut burger_open = use_signal::<bool>(|| false);
     use_effect(move || {

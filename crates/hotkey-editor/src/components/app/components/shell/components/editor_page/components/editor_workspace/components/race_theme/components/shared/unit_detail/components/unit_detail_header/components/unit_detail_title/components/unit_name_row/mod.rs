@@ -12,7 +12,6 @@ use model::UnitNameRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unit name beside the optional hero level picker.
 #[component]
 pub fn UnitNameRow(props: UnitNameRowModel) -> Element {
     let unit_name = props.unit_name;
@@ -25,7 +24,7 @@ pub fn UnitNameRow(props: UnitNameRowModel) -> Element {
             }
             if has_hero_attributes {
                 HeroLevelPicker {
-                
+
 
 
                 }

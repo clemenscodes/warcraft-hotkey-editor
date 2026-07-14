@@ -12,8 +12,6 @@ use model::FightRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The fighting-abilities row: the mover column beside the optional rival column (the
-/// rival renders itself away when the move has no anchor).
 #[component]
 pub fn FightRow(props: FightRowModel) -> Element {
     let move_view = props.move_view;

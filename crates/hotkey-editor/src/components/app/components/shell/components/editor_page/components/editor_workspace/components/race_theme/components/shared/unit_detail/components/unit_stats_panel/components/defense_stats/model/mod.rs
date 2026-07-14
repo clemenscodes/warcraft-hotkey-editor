@@ -3,8 +3,6 @@ use dioxus::prelude::*;
 use warcraft_api::DefenseType;
 use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
-/// The defense column's input: the unit's resolved armor, defense type, effective hit
-/// points, and dodge chance.
 #[derive(Props, Clone, PartialEq)]
 pub struct DefenseStatsModel {
     pub armor: Armor,

@@ -12,7 +12,6 @@ use model::UnitDetailTitleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The title column of the header: the name row and the unit id.
 #[component]
 pub fn UnitDetailTitle(props: UnitDetailTitleModel) -> Element {
     let unit_name = props.unit_name;

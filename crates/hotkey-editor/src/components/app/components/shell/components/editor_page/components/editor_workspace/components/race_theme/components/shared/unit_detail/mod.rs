@@ -15,10 +15,6 @@ use state::{UnitDetailModel, UnitDetailView};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unit detail card: header, description, stats, and the grids/override body.
-/// Empty until a unit is selected. Composes its children from a single shaped hook
-/// that reads the active race and selected unit from context, so the panel takes no
-/// props.
 #[component]
 pub fn UnitDetail() -> Element {
     let model = match use_unit_detail_panel() {

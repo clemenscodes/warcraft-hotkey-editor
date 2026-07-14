@@ -12,7 +12,6 @@ use model::HelpLegendSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The right column of the top row: the heading above the toolbar button legend.
 #[component]
 pub fn HelpLegendSection(props: HelpLegendSectionModel) -> Element {
     let rows = props.rows;

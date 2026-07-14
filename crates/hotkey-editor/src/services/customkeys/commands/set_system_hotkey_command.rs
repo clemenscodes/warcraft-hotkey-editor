@@ -5,8 +5,6 @@ use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::KeyCode;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// Set one system keybind's hotkey, addressed by the section's `WarcraftObjectId`
-/// (a keybind section is one of a fixed, database-defined set of ids).
 pub struct SetSystemHotkeyCommand {
     section_id: WarcraftObjectId,
     code: KeyCode,

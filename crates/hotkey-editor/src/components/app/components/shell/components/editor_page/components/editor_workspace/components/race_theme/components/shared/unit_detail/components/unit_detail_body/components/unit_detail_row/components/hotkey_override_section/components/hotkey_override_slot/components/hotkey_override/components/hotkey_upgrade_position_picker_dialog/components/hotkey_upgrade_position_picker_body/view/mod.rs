@@ -6,10 +6,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The published `View` contract for the upgraded-form position picker's scroll body. It
-/// is also the dialog's body region: it `impl Render` and renders the presentational
-/// `HotkeyUpgradePositionPickerBody` once, so the host places the published `View`
-/// directly as `WarcraftDialog`'s body, with no ad-hoc region type.
 #[derive(Clone, PartialEq, Default)]
 pub struct HotkeyUpgradePositionPickerBodyView {
     pub upgrade_unit_id: WarcraftObjectId,

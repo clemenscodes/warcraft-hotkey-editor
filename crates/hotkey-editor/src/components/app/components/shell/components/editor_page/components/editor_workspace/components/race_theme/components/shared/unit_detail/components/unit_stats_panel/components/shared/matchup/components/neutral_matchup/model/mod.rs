@@ -2,7 +2,6 @@ use super::super::super::subject::MatchupSubject;
 use super::view::NeutralMatchupView;
 use dioxus::prelude::*;
 
-/// The neutral matchup cell: no tint.
 #[derive(Props, Clone, PartialEq)]
 pub struct NeutralMatchupModel {
     pub subject: MatchupSubject,

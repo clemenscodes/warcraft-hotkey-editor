@@ -9,7 +9,6 @@ use model::RegenQualifierModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The italic regen qualifier parked before the regen gain.
 #[component]
 pub fn RegenQualifier(props: RegenQualifierModel) -> Element {
     let Some(text) = props.text else {

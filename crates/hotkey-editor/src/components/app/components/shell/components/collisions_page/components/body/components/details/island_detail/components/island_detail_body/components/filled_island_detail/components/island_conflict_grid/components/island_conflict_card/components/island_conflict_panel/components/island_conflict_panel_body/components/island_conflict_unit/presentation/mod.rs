@@ -3,8 +3,6 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The shaped affected-unit heading: its icon source and alt text, name, and id, plus
-/// the open-unit handler wired from the navigation read from context.
 pub(super) struct IslandConflictUnitPresentation {
     pub(super) icon_src: Option<String>,
     pub(super) icon_alt: String,

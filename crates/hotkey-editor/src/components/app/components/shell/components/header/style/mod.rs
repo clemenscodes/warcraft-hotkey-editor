@@ -1,39 +1,4 @@
 use tw_macro::tw;
-// On laptop and up the bar is a three-column grid (brand | centered layout button |
-// toolbar). Its `min-height` is a fixed per-band step (`min-h-18` → `24` → `28` → `34`
-// from laptop through 4K) — one truth per band, nothing inherited across bands. Its inner
-// rhythm — column `gap`, vertical `py` — is `cqi` off the bar itself, so it tracks the
-// bar's own width, never the raw viewport. Everything *inside* the bar likewise scales in
-// `cqi`: `items-stretch` gives every column the full row height so the layout button and
-// toolbar buttons fill it and render at one shared height.
-// Below laptop it collapses to a flex row (brand left, toolbar right) sized for touch.
-//
-// The horizontal inset is one always-on `px-4`, so the bar's content is indented by the
-// same amount on every band. Padding never clips an element's background, so the bar's
-// fill (its own gradient below laptop, the app's fixed backdrop above) stays edge-to-edge
-// while only the content is inset. Vertical padding stays band-specific: safe-area top +
-// `pb-2` below laptop, symmetric `vw` on laptop and up.
-//
-// The gold divider that separates the bar from the app is the header's own `::after`, not
-// a full-width `border-b`: it is absolutely positioned along the bottom and inset
-// `left-4 right-4` to the same `px-4` edge as the content, so the line ends exactly where
-// the content ends while the bar's fill still spans edge-to-edge. The double drop-shadow
-// under it is the original bevel, now riding the inset line.
-//
-// The header is always a query container (`@container` in BASE): every `cqi` length in its
-// children — the brand on every band, the layout button and toolbar buttons on laptop up —
-// resolves against the bar's own width, not the raw viewport. `container-type` makes a
-// *query* container only; unlike `contain`/`transform` it is not a containing block, so the
-// mobile burger's `fixed` drawer still fills the screen.
-
-// From laptop up the bar carries its height as a fixed per-band `min-height` step
-// (`min-h-18` → `24` → `28` → `34`), stepping up once per band above the mobile/tablet
-// `min-h-14`. `items-stretch` hands that same row height to every column, so the layout
-// button and the toolbar buttons fill it and render at one shared height. `py-[0.7cqi]`
-// then insets that fill so the buttons sit shorter than the bar with breathing room above
-// and below — this padding, `cqi` off the bar, is the one knob for the button-to-bar height
-// ratio. No button carries a fixed size — change the per-band `min-height` (bar height) or
-// the `py` (button ratio) and the whole bar rescales together within the band.
 
 classes! {
     base: tw![

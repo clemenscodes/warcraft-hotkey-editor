@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The shared gold pill's resting look. The active sibling writes these same chrome
-// values plus its gold accent — shared values, not a shared look (no data-attr, no
-// shared const). No size variant: the parent owns the box the pill fills.
 
 classes! {
     base: tw![

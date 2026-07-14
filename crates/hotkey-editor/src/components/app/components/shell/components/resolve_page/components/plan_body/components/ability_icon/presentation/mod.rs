@@ -2,9 +2,6 @@ use super::model::AbilityIconModel;
 use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 
-/// The ability icon's shaped state: the open-state signal it owns, the icon and badge
-/// props, the tooltip, whether it is disabled, and the click handler that opens this
-/// ability's carriers dialog.
 pub(super) struct AbilityIconPresentation {
     pub(super) open_state: Signal<Option<InspectedAbility>>,
     pub(super) icon_src: Option<String>,
@@ -16,8 +13,6 @@ pub(super) struct AbilityIconPresentation {
     pub(super) onclick: EventHandler<MouseEvent>,
 }
 
-/// Owns the icon's local open state and wires the click that opens its carriers dialog,
-/// so the body only names the result and renders.
 pub(super) fn use_ability_icon(props: &AbilityIconModel) -> AbilityIconPresentation {
     let mut open_state = use_signal(|| None::<InspectedAbility>);
     let inspected = props.inspected.clone();

@@ -5,20 +5,10 @@ use warcraft_keybinds::GridSlotId;
 
 use crate::services::editor_state::EditorState;
 
-/// Access the [`EditorState`] provided by the app shell. Call from a component or
-/// hook body (it is a hook). The editor's UI state is a shell-wide concept the
-/// editor page reads from context rather than as props, so this accessor lives
-/// beside the type in `services/`, not colocated with any component.
 pub(crate) fn use_editor_state() -> EditorState {
     use_context()
 }
 
-/// Create every editor-scoped signal, assemble the [`EditorState`], provide it as
-/// context, and hand it back. All of these start empty/default — none is seeded from
-/// the URL, since the editor's own view state is not part of the route. The one
-/// input, `update_hotkeys_on_move`, is the persisted editor preference the shell
-/// loads. The shell calls this once on boot; the editor page reads the result through
-/// [`use_editor_state`].
 pub(crate) fn use_editor_state_provider(update_hotkeys_on_move: Signal<bool>) -> EditorState {
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
     let selected_hero_level = use_signal::<u32>(|| 1);

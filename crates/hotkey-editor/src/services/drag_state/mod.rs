@@ -7,15 +7,6 @@ pub mod hit_test;
 pub use drag::{DragFollower, DragFollowerVisual, DraggingSlot, DropTargetTile};
 pub(crate) use hit_test::{CursorPoint, HitTestPoint};
 
-/// The in-progress grid-editor drag: the source cell being dragged, the tile currently
-/// hovered as a drop target, and the floating follower rendered under the cursor. This
-/// is the grid editor's own concern — only the grid editor and the app-level Escape
-/// handler touch it — split out of the broader [`EditorState`] rather than lumped into
-/// it. Provided once at the app root and read with `use_context`. Each field is a
-/// `Signal`, so a reader subscribes only to the slice it touches; the whole struct is
-/// `Copy`, so a handler captures it cheaply.
-///
-/// [`EditorState`]: crate::services::editor_state::EditorState
 #[derive(Clone, Copy, PartialEq)]
 pub struct DragState {
     dragging_slot: Signal<Option<DraggingSlot>>,

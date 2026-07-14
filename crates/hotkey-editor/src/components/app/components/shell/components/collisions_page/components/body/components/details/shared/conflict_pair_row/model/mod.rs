@@ -2,8 +2,6 @@ use super::state::AbilityPair;
 use super::view::ConflictPairRowView;
 use dioxus::prelude::*;
 
-/// The pair-clash row: two abilities flanking the marker, or nothing when the clash
-/// is not an exact pair.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictPairRowModel {
     pub pair: Option<AbilityPair>,

@@ -1,8 +1,6 @@
 use super::view::BurgerMenuGroupView;
 use dioxus::prelude::*;
 
-/// The file-action menu's only input: the drawer's close handler, passed to the non-dialog rows
-/// (undo, redo, resolve) that dismiss the drawer on click.
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerMenuGroupModel {
     pub on_close: EventHandler<MouseEvent>,

@@ -9,9 +9,6 @@ use presentation::{use_hero_selection_hotkeys_view, HeroSelectionHotkeysViewMode
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero-selection hotkey editor: the domain-supplied intro caption above three big
-/// slots for selecting heroes by index. Its slots read the editing section from the
-/// dialog state context, so it threads nothing.
 #[component]
 pub fn HeroSelectionHotkeysView() -> Element {
     let HeroSelectionHotkeysViewModel { caption } = use_hero_selection_hotkeys_view();
@@ -22,7 +19,7 @@ pub fn HeroSelectionHotkeysView() -> Element {
                 text: caption,
             }
             HeroSelectionRow {
-            
+
 
 
             }

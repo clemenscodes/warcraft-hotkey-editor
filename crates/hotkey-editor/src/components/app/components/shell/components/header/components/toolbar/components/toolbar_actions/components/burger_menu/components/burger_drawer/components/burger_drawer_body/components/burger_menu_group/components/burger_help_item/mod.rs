@@ -9,10 +9,6 @@ use presentation::{BurgerHelpItemPresentation, use_burger_help_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout help action: the drawer row that opens the onboarding guide, and the
-/// guide dialog it owns, mounted beneath it. It owns the guide's open signal locally, so the
-/// dialog is part of the row and travels with it. Tapping it leaves the drawer open (closing
-/// the drawer would unmount this row and its dialog), so the guide opens over the drawer.
 #[component]
 pub fn BurgerHelpItem() -> Element {
     let BurgerHelpItemPresentation {

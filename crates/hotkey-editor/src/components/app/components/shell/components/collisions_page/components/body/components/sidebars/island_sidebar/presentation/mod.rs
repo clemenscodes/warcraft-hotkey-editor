@@ -4,8 +4,6 @@ use crate::services::collision_selection::context::use_collision_selection;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 
-/// The island sidebar's render-ready cards: one card per collision island. The body only
-/// places these; all shaping happens in the builder below.
 pub(super) struct IslandSidebarPresentation {
     pub(super) cards: Vec<CollisionCardData>,
 }
@@ -14,10 +12,6 @@ impl ddd::Presentation for IslandSidebarPresentation {
     type Model = IslandSidebarModel;
 }
 
-/// Reads the selected island and the navigation context, then shapes one card per
-/// collision island: its selected state, key, click handler, highlighted coordinate, and
-/// collision-count line. The click routes through navigation, which replaces the
-/// collisions route's `?entry=` with the picked island.
 pub(super) fn use_island_sidebar_presentation(
     props: &IslandSidebarModel,
 ) -> IslandSidebarPresentation {

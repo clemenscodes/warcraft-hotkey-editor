@@ -9,8 +9,6 @@ use tw_macro::assert_component;
 
 use model::SearchFieldButtonModel;
 
-/// One button of the search-field toggle. It is the shared [`ToggleButton`]
-/// configured for the Unit / Ability field switch.
 #[component]
 pub fn SearchFieldButton(props: SearchFieldButtonModel) -> Element {
     let label = props.label;

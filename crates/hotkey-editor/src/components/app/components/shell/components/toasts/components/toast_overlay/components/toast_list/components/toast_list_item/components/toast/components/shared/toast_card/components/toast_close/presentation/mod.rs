@@ -1,8 +1,6 @@
 use super::model::ToastCloseModel;
 use dioxus::prelude::*;
 
-/// The close button's presentation: the click handler that dismisses this toast. Built
-/// purely from the model — a shaping leaf, no effects.
 pub struct ToastClosePresentation {
     pub(super) onclick: EventHandler<MouseEvent>,
 }

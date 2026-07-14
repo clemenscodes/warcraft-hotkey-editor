@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The idle category tab: shared chrome values, muted, taking the race accent border on
-// hover (generic `var(--race-color)` from the theme container — no per-race arm, no
-// join macro). Shared values with the active sibling.
 classes! {
     base: tw![
         "flex-1",

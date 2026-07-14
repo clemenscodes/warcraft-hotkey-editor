@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`SelectionRingModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SelectionRingView {
     pub selected: bool,

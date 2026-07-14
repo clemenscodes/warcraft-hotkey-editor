@@ -2,7 +2,6 @@ use super::view::ArmorRowView;
 use dioxus::prelude::*;
 use warcraft_api::ArmorFigure as Armor;
 
-/// The armor row's input: the unit's resolved armor.
 #[derive(Props, Clone, PartialEq)]
 pub struct ArmorRowModel {
     pub value: Armor,

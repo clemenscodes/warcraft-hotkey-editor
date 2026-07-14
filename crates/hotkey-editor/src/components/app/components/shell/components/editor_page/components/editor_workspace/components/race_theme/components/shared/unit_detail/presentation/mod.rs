@@ -11,9 +11,6 @@ use warcraft_api::WarcraftApi;
 use warcraft_api::{Evasion, HeroAttributes, UnitCombat, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitSlotContainers};
 
-/// The unit's command-grid slot containers: the always-present command card plus the
-/// optional build, uprooted, and research menus, keyed to the host unit. Threaded down
-/// the card body to the grids, which read the shared editor signals from context.
 #[derive(Clone, PartialEq)]
 pub(crate) struct UnitCommandGridSlots {
     pub(super) unit_id: WarcraftObjectId,
@@ -23,17 +20,12 @@ pub(crate) struct UnitCommandGridSlots {
     pub(super) research_menu_slots: Option<Rc<[GridSlotId]>>,
 }
 
-/// The hotkey-override target: the inspected slot's detail (absent when nothing is
-/// selected) and the container slots the override card edits against.
 #[derive(Clone, PartialEq)]
 pub(crate) struct UnitOverrideTarget {
     pub(super) detail: Option<InspectorDetail>,
     pub(super) active_container_slots: Rc<[GridSlotId]>,
 }
 
-/// The selected unit resolved from the game database: its name, portrait, flavor
-/// text, combat block, optional hero attributes, and evasion. Resolution fails with
-/// the empty-state message the panel should show instead.
 #[derive(Clone, PartialEq)]
 pub(super) struct ResolvedUnit {
     pub(super) unit_name: &'static str,
@@ -77,17 +69,11 @@ impl TryFrom<WarcraftObjectId> for ResolvedUnit {
     }
 }
 
-/// The inspector panel for the currently-selected slot, resolved from its binding.
-/// `None` when no slot is selected. The upgrade-form unit id is looked up from the
-/// unit's train-upgrade map for ability slots.
 #[derive(Clone, PartialEq)]
 pub(super) struct InspectorPanel {
     pub(super) detail: Option<InspectorDetail>,
 }
 
-/// The inputs that shape an [`InspectorPanel`]: the selected slot, the live
-/// document, the host unit, the research / uprooted flags, and the unit's
-/// train-upgrade map.
 pub(super) struct InspectorPanelInputs<'a> {
     pub(super) inspector_slot: &'a Option<GridSlotId>,
     pub(super) custom_keys: &'a Option<CustomKeys>,
@@ -126,16 +112,11 @@ impl From<InspectorPanelInputs<'_>> for InspectorPanel {
     }
 }
 
-/// Which of the unit's containers the hotkey-override section edits against, selected from the
-/// research / uprooted flags and, in the default case, whether the inspected slot is
-/// a build-menu entry rather than a command-card one.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(super) struct ActiveContainer {
     pub(super) slots: Rc<[GridSlotId]>,
 }
 
-/// The inputs that select an [`ActiveContainer`]: the unit's containers, the
-/// inspected slot, and the research / uprooted flags.
 pub(super) struct ActiveContainerInputs<'a> {
     pub(super) containers: &'a UnitSlotContainers,
     pub(super) inspector_slot: &'a Option<GridSlotId>,
@@ -176,9 +157,6 @@ impl From<ActiveContainerInputs<'_>> for ActiveContainer {
     }
 }
 
-/// Resets the selected hero level to its default whenever the selected unit changes.
-/// The picker owns its own open state, and the stats panel reads the chosen level from
-/// context, so this hook only owns the reset effect.
 fn use_hero_level_reset(selected_unit_id: Signal<Option<WarcraftObjectId>>) {
     let mut selected_hero_level = use_editor_state().selected_hero_level();
     use_effect(move || {
@@ -187,10 +165,6 @@ fn use_hero_level_reset(selected_unit_id: Signal<Option<WarcraftObjectId>>) {
     });
 }
 
-/// Resolves the selected unit and shapes every child's props. The domain work is
-/// grouped into the [`ResolvedUnit`], [`InspectorPanel`], and [`ActiveContainer`]
-/// derivations plus the memoized [`UnitSlotContainers`]; this hook only orchestrates
-/// them, gathers the [`UnitDetailInputs`], and lets the props tree derive itself.
 pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     let navigation = use_view_navigation();
     let selected_unit_id = navigation.selected_unit_id();

@@ -13,8 +13,6 @@ use model::UpgradeSectionHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The upgraded-form block's top row: the label column beside the position button and
-/// hotkey cell.
 #[component]
 pub fn UpgradeSectionHeader(props: UpgradeSectionHeaderModel) -> Element {
     let UpgradeSectionHeaderModel {

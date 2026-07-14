@@ -13,7 +13,6 @@ use gloo_timers::future::TimeoutFuture;
 use std::collections::{HashMap, HashSet};
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CascadePlan, GridCoordinate, GridSlotId, MoveReason};
-/// One ability resolved to an icon, display name, and object id for the plan.
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct AbilityDisplay {
     object_id: WarcraftObjectId,
@@ -38,8 +37,6 @@ impl From<GridSlotId> for AbilityDisplay {
     }
 }
 
-/// Which kind of move this is. Drives both grouping into sections and the order
-/// the sections render in (Fights first, then Gap pulls, Spills, Swaps).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum MoveCategory {
     Fight,
@@ -69,9 +66,6 @@ impl MoveCategory {
         }
     }
 
-    /// Parses the `?entry=` slug back into a category — used to restore the
-    /// selected move section from the URL parameter. Unknown slugs yield `None`
-    /// (the page then falls back to the first section).
     pub fn from_entry_slug(slug: &str) -> Option<Self> {
         match slug {
             "fights" => Some(Self::Fight),
@@ -83,8 +77,6 @@ impl MoveCategory {
     }
 }
 
-/// The visual kind of a move's reason badge — the four move categories plus the
-/// "Stuck" badge shown on unresolved abilities. Selects the badge's colour.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum ReasonKind {
     Fight,
@@ -105,8 +97,6 @@ impl From<MoveCategory> for ReasonKind {
     }
 }
 
-/// The display-ready pieces of a move's rationale: a short badge label + kind
-/// and, for Fight/Swap, the rival ability and its carrier count.
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct ReasonParts {
     label: &'static str,
@@ -168,8 +158,6 @@ impl From<&MoveReason> for ReasonParts {
     }
 }
 
-/// One planned move, display-ready: the moved ability (with carriers + a unit to
-/// link to), the old → new cell, and the rival ability that displaced it.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct MoveView {
     mover: AbilityDisplay,
@@ -182,15 +170,12 @@ pub struct MoveView {
 }
 
 impl MoveView {
-    /// How many units this move ties together — the larger of the moved ability's
-    /// carriers and the rival's. Used to rank Fights by impact.
     fn contributor_count(&self) -> usize {
         let rival_carriers = self.reason.other_carriers.unwrap_or(0);
         self.mover_carriers.max(rival_carriers)
     }
 }
 
-/// One ability the cascade could not place, with the cell it is stuck on.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct UnresolvedView {
     ability: AbilityDisplay,
@@ -199,8 +184,6 @@ pub struct UnresolvedView {
     position: GridCoordinate,
 }
 
-/// One titled group of moves of the same category (e.g. all Fights), in render
-/// order.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct MoveSection {
     category: MoveCategory,
@@ -208,7 +191,6 @@ pub struct MoveSection {
     moves: Vec<MoveView>,
 }
 
-/// The cascade preview grouped into titled move sections and unresolved entries.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct PlanView {
     sections: Vec<MoveSection>,
@@ -291,8 +273,6 @@ impl PlanView {
         }
     }
 
-    /// Partition the flat move list into titled sections in a fixed order, and
-    /// within Fights put the ones with the most contributors first.
     fn group_into_sections(moves: Vec<MoveView>) -> Vec<MoveSection> {
         let mut sections: Vec<MoveSection> = Vec::new();
         for category in MoveCategory::ORDER {
@@ -323,8 +303,6 @@ impl PlanView {
         sections
     }
 
-    /// The section matching the selected breadcrumb slug, falling back to the
-    /// first section when the slug is missing or names an absent category.
     pub fn active_section(&self, selected_slug: Option<&str>) -> Option<&MoveSection> {
         let selected = selected_slug.and_then(MoveCategory::from_entry_slug);
         let selected_exists = selected
@@ -347,7 +325,6 @@ impl PlanView {
     }
 }
 
-/// One ability icon pinned to a cell inside a `MiniGrid`.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct MiniGridPlacement {
     coordinate: GridCoordinate,
@@ -377,9 +354,6 @@ impl MiniGridPlacement {
     }
 }
 
-/// The move counts derived from the cascade preview: how many slots the plan moves
-/// and how many abilities it cannot place. The plan state tags its root element with
-/// these and the header phrases them; both `0` is the all-clear state.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub(super) struct PlanCounts {
     pub(super) move_count: usize,
@@ -397,19 +371,12 @@ impl From<Option<&PlanView>> for PlanCounts {
     }
 }
 
-/// The active section of the plan shaped for the body: the breadcrumb bar (one tab
-/// per section, the selected one flagged, each closing over the selection signal so
-/// a click reselects) and the domain the scrollable body renders (the active section's
-/// moves plus every unresolved ability). Shaping the breadcrumbs needs the Copy
-/// selection signal, which arrives as an input.
 pub(super) struct ActivePlanView {
     pub(super) breadcrumbs: Vec<BreadcrumbView>,
     pub(super) section: Option<MoveSection>,
     pub(super) unresolved: Vec<UnresolvedView>,
 }
 
-/// The inputs that shape an [`ActivePlanView`]: the plan to render, the selected
-/// section slug, and the navigation surface its breadcrumbs write to when clicked.
 pub(super) struct ActivePlanInputs<'a> {
     pub(super) plan: &'a PlanView,
     pub(super) selected_slug: Option<&'a str>,
@@ -547,21 +514,12 @@ impl PlanView {
     }
 }
 
-/// The three states the Resolve page renders, each as already shaped data. The
-/// component body matches on this and places the data; the hook never builds
-/// markup.
 pub(super) enum ResolvePagePresentation {
-    /// No CustomKeys.txt is loaded yet — the upload prompt.
     NoFile,
-    /// A file is loaded but has no conflicts — the all-clear state.
     Clear,
-    /// A cascade plan to preview and apply.
     Plan(Box<ResolvePlanPresentation>),
 }
 
-/// Everything the plan state needs, fully shaped: the header's summary text and Apply
-/// control, the breadcrumb bar, and the domain the body renders (the active section's
-/// moves and the unresolved abilities).
 pub(super) struct ResolvePlanPresentation {
     pub moves_text: String,
     pub unresolved_count: usize,
@@ -572,19 +530,11 @@ pub(super) struct ResolvePlanPresentation {
     pub unresolved: Vec<UnresolvedView>,
 }
 
-/// The Apply control's state: whether the cascade is currently running and the
-/// handler that spawns it. Owns the `is_running` signal and routes the cascade
-/// through the [`CustomKeysService`](crate::services::customkeys) commit boundary —
-/// never mutating `CustomKeys` inline — then reports the result via a toast.
 pub(super) struct ApplyPlan {
     pub(super) running: bool,
     pub(super) on_apply: EventHandler<MouseEvent>,
 }
 
-/// Reconcile the live route into the shell's signals — the read side of the URL
-/// contract: announce the Resolve view and sync the selected move-category from the
-/// `?entry=` parameter. Reactive on `entry`; the move-category pick that writes the route
-/// lives at the breadcrumb mutation site.
 fn use_route_reconcile(
     entry: Option<String>,
     view_navigation: ViewNavigationContext,
@@ -599,9 +549,6 @@ fn use_route_reconcile(
     }));
 }
 
-/// Owns the running flag and builds the Apply handler. The handler yields a tick so
-/// the running state paints, runs the cascade through the service commit boundary
-/// (which normalizes and writes through to storage), and toasts the outcome.
 fn use_apply_plan() -> ApplyPlan {
     let loaded_keys = use_loaded_keys();
     let custom_keys_service = use_custom_keys_service();
@@ -639,9 +586,6 @@ fn use_apply_plan() -> ApplyPlan {
     ApplyPlan { running, on_apply }
 }
 
-/// Computes the cascade preview (memoised on the loaded keys), reconciles the route,
-/// wires the Apply handler, and shapes the active section, breadcrumbs, and header —
-/// returning the state's data for the body to render.
 pub(super) fn use_resolve_page(props: &ResolvePageModel) -> ResolvePagePresentation {
     let view_navigation = use_view_navigation();
     let resolve_selection = use_resolve_selection();

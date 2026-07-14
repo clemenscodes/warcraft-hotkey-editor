@@ -2,17 +2,12 @@ use dioxus::prelude::*;
 use std::collections::HashSet;
 use warcraft_api::UnitKind;
 
-/// The heading's inputs: which category it heads, whether it is collapsed, and the
-/// collapsed-set signal its toggle flips. The section reads the collapsed set from
-/// context and hands these to the heading builder.
 pub(super) struct UnitCategoryHeadingInputs {
     pub(super) category_kind: UnitKind,
     pub(super) is_collapsed: bool,
     pub(super) collapsed_categories: Signal<HashSet<UnitKind>>,
 }
 
-/// The heading's shaped data: its label, collapsed state, and the toggle handler the
-/// section hands down to `UnitCategoryHeading` as named fields.
 pub(super) struct CategoryHeadingData {
     pub(super) label: String,
     pub(super) is_collapsed: bool,
@@ -49,7 +44,6 @@ use warcraft_api::UnitCategoryListing;
 use warcraft_api::UnitCategoryRequest;
 use warcraft_api::WarcraftObjectId;
 
-/// One unit's shaped catalog data for a card: its id, display name, portrait, and kind.
 pub(super) struct UnitCardEntry {
     pub(super) unit_id: WarcraftObjectId,
     pub(super) display_name: String,
@@ -57,19 +51,12 @@ pub(super) struct UnitCardEntry {
     pub(super) unit_kind: UnitKind,
 }
 
-/// The section's shaped view: its heading (with the collapse toggle) and the unit
-/// cards to draw when expanded.
 pub(super) struct UnitCategorySectionPresentation {
     pub(super) heading: CategoryHeadingData,
     pub(super) is_collapsed: bool,
     pub(super) cards: Vec<UnitCardEntry>,
 }
 
-/// Reads the race, mode, search, visibility, and collapsed state from context, shapes
-/// the heading, and queries this category's units. The catalog walk is memoized on
-/// race, mode, category, query, search field, and visibility — not on the active
-/// selection — so selecting a unit elsewhere in the list does not re-walk the catalog
-/// for every section.
 pub(super) fn use_unit_category_section(
     props: &UnitCategorySectionModel,
 ) -> UnitCategorySectionPresentation {

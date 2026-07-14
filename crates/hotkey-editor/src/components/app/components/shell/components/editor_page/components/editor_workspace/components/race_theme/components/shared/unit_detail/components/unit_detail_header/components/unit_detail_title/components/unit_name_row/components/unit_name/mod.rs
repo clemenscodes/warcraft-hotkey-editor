@@ -9,7 +9,6 @@ use model::UnitNameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unit's name, in gold Friz Quadrata.
 #[component]
 pub fn UnitName(props: UnitNameModel) -> Element {
     let text = props.text;

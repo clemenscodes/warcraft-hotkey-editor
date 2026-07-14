@@ -10,10 +10,6 @@ use model::AttentionSurfaceModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The attention resting look of a toolbar button: a persistently gold surface used
-/// when the button is surfacing a condition that needs the user's eye. Presentational
-/// — the dispatcher builds its props and renders it when the surface state is
-/// `Attention`.
 #[component]
 pub fn AttentionSurface(props: AttentionSurfaceModel) -> Element {
     let icon = props.icon;

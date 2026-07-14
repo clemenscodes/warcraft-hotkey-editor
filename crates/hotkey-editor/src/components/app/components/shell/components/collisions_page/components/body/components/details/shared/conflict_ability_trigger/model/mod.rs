@@ -1,8 +1,6 @@
 use super::view::ConflictAbilityTriggerView;
 use dioxus::prelude::*;
 
-/// The icon button that opens the carrying unit: the ability icon it shows (its source
-/// and alt text) and the click handler that navigates to that unit.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictAbilityTriggerModel {
     pub onclick: EventHandler<MouseEvent>,

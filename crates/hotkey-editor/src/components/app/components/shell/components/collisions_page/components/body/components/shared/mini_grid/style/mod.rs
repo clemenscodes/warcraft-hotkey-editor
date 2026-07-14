@@ -1,8 +1,4 @@
 use tw_macro::tw;
-// The collisions page's outer box for the shared mini grid frame: a fixed width per
-// band (which sets the frame's scale) that never shrinks, rounded at the hairline
-// radius. `overflow-hidden` clips the frame's panel surface and border to that
-// radius.
 
 classes! {
     base: tw![

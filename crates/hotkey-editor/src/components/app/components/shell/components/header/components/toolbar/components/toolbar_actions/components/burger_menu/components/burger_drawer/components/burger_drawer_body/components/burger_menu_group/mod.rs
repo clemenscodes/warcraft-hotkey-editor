@@ -19,10 +19,6 @@ use model::BurgerMenuGroupModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The scrolling list of file actions inside the drawer: a `role="menu"` container that names
-/// each bespoke action row in order. The non-dialog rows (undo, redo, resolve) close the drawer
-/// on click, so they receive its close handler; the dialog rows own their own dialogs and leave
-/// the drawer open.
 #[component]
 pub fn BurgerMenuGroup(props: BurgerMenuGroupModel) -> Element {
     let on_close = props.on_close;
@@ -38,17 +34,17 @@ pub fn BurgerMenuGroup(props: BurgerMenuGroupModel) -> Element {
                 on_close,
             }
             BurgerUploadItem {
-            
+
 
 
             }
             BurgerTemplatesItem {
-            
+
 
 
             }
             BurgerSystemHotkeysItem {
-            
+
 
 
             }
@@ -56,17 +52,17 @@ pub fn BurgerMenuGroup(props: BurgerMenuGroupModel) -> Element {
                 on_close,
             }
             BurgerPreviewItem {
-            
+
 
 
             }
             BurgerDownloadItem {
-            
+
 
 
             }
             BurgerHelpItem {
-            
+
 
 
             }

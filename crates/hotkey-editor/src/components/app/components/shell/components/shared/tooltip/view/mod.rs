@@ -1,6 +1,5 @@
 use super::state::{TooltipAnchor, TooltipPlacement};
 
-/// The published `View` contract mirroring [`TooltipModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct TooltipView {
     pub text: String,

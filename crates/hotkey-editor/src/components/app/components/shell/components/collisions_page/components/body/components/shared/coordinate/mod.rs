@@ -7,8 +7,6 @@ use dioxus::prelude::*;
 use model::CoordinateModel;
 use style::CLASS;
 use tw_macro::assert_component;
-/// A command-card coordinate: displays the column and row of the domain
-/// `GridCoordinate` it is handed.
 #[component]
 pub fn Coordinate(props: CoordinateModel) -> Element {
     let coordinate = props.coordinate;

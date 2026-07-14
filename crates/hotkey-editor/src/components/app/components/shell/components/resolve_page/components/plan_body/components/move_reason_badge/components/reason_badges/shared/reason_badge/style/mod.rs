@@ -1,9 +1,5 @@
 use tw_macro::tw;
 
-// The reason pill's entire look, owned here and nowhere else — a private `mod style`,
-// never re-exported. Its colour is the `--reason-color` custom property each per-reason
-// wrapper publishes, so one pill serves every reason. The reasons reuse this by
-// composition (rendering `ReasonBadge`), never by sharing these classes.
 classes! {
     base: tw![
         "flex-none",

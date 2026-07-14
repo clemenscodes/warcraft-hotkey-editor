@@ -5,8 +5,6 @@ use crate::services::customkeys::context::{use_custom_keys_service, use_upload_s
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 
-/// The file-import handler for the hidden upload input: reads the chosen file, imports it
-/// through the sanctioned service command, and reports the outcome via toast.
 pub(super) fn use_upload_file_import() -> EventHandler<FormEvent> {
     let custom_keys_service = use_custom_keys_service();
     let mut upload_status = use_upload_status();
@@ -47,10 +45,6 @@ pub(super) fn use_upload_file_import() -> EventHandler<FormEvent> {
     })
 }
 
-/// The upload button's shaped data: the fixed icon and label, whether the import-info dialog is
-/// open, the click handler that opens it, the change handler the mounted dialog mirrors its own
-/// close through, and the hidden input's file-import handler. The open signal is local and owned
-/// here — the button that opens the dialog owns it, so the dialog travels with it.
 pub(super) struct UploadButtonPresentation {
     pub(super) icon: &'static str,
     pub(super) aria_label: &'static str,
@@ -60,9 +54,6 @@ pub(super) struct UploadButtonPresentation {
     pub(super) on_change: EventHandler<FormEvent>,
 }
 
-/// Owns the import-info dialog's local open signal and shapes the button's data: the click
-/// handler that opens the dialog, the change handler the mounted dialog mirrors its own close
-/// through, and the hidden input's file-import handler.
 pub(super) fn use_upload_button() -> UploadButtonPresentation {
     let on_change = use_upload_file_import();
     let mut open_signal = use_signal::<bool>(|| false);

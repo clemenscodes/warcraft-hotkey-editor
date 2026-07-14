@@ -1,9 +1,5 @@
 use tw_macro::tw;
 
-// The full floating-tile chrome (fixed position, border, race-tinted glow) written out,
-// plus the command menu's own blue panel background. The ability ghost shares these
-// *values* and writes its own list; neither can restyle the other.
-
 classes! {
     base: tw![
         "fixed",

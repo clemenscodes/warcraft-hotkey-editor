@@ -15,12 +15,6 @@ use presentation::EditorTileChrome;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The interactive command tile: the connected Host that wraps the presentational
-/// `TileFace` painter and owns all interaction — focus, the cursor, and every event
-/// handler. The painter draws the tile and, from the drag flags this Host forwards into
-/// it, mounts the dragging-source ghost and drag-over ring itself; this wrapper mounts
-/// the `DraggableMarker` (the grab-cursor and off-state-picker signal that replaced the
-/// `data-draggable` attribute) and layers the focus ring over the tile.
 #[component]
 pub fn GridEditorTile(props: GridEditorTileModel) -> Element {
     let coordinate = props.coordinate;

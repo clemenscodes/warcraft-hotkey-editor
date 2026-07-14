@@ -1,15 +1,11 @@
 use dioxus::prelude::*;
 use warcraft_api::UnitKind;
 
-/// The tab's kind together with the active-category signal it flips on tap, read from
-/// editor context by the component and handed to the model builder.
 pub(super) struct MobileCategoryTabInputs {
     pub(super) kind: UnitKind,
     pub(super) active_category: Signal<UnitKind>,
 }
 
-/// A category tab's shaped view: its display label and the tap handler that makes its
-/// kind the active category.
 pub(super) struct MobileCategoryTabPresentation {
     label: &'static str,
     onclick: EventHandler<MouseEvent>,
@@ -38,9 +34,6 @@ impl MobileCategoryTabPresentation {
 }
 use crate::services::editor_state::context::use_editor_state;
 
-/// The tab's dispatched view: whether its kind is the active category (which look to
-/// render) and the shaped model both looks are built from. Reads the active-category
-/// signal from editor context, so the tab is fed only its kind.
 pub(super) struct MobileCategoryTabDispatch {
     pub(super) is_active: bool,
     pub(super) model: MobileCategoryTabPresentation,

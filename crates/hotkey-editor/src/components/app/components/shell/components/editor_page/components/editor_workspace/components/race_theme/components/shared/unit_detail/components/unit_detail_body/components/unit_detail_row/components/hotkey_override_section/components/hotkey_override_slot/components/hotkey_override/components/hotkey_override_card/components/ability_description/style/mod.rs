@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The primary ubertip / tip text block for an ability or upgrade. A scrollable
-// gold-edged panel on the sidebar; natural-height and smaller text on small screens.
-// Each line is a `<p>` (pre-wrapped) so authored spacing survives.
 
 classes! {
     base: tw![

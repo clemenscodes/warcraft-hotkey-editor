@@ -1,11 +1,5 @@
 use tw_macro::tw;
 
-// The inventory slot host: the focusable, draggable outer cell. It owns the cell's
-// size (its mobile/tablet aspect ratio) and the drag/edit interaction, and is the
-// named `group/tooltip` positioning context the framed `SystemSlot` it wraps reacts
-// to for its hover/keyboard-focus glows and reveals its tooltip against. Its
-// `.inventory-filled-slot` identity is what the drag hit-test and follower measure.
-// It draws no frame itself — the `SystemSlot` fills it.
 classes! {
     base: tw![
         "relative",

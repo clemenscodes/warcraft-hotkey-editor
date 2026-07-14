@@ -1,7 +1,6 @@
 use super::view::InfoIntroView;
 use dioxus::prelude::*;
 
-/// The intro line's copy.
 #[derive(Props, Clone, PartialEq)]
 pub struct InfoIntroModel {
     pub intro: &'static str,

@@ -10,8 +10,6 @@ use model::ApplyButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The action that rewrites every ability hotkey to match the grid, centered
-/// in the editor body below the grid.
 #[component]
 pub fn ApplyButton(props: ApplyButtonModel) -> Element {
     let onclick = props.on_apply;

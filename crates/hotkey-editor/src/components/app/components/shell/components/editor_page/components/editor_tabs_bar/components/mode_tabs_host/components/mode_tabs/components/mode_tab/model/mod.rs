@@ -1,8 +1,6 @@
 use super::view::ModeTabView;
 use dioxus::prelude::*;
 
-/// One mode button: the label it shows, whether it is the active mode, and the
-/// pointer and keyboard activation handlers.
 #[derive(Props, Clone, PartialEq)]
 pub struct ModeTabModel {
     pub label: &'static str,

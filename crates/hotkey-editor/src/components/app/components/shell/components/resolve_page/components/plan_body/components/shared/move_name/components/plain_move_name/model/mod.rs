@@ -1,7 +1,6 @@
 use super::view::PlainMoveNameView;
 use dioxus::prelude::*;
 
-/// The non-clickable ability name (no owning unit to link to).
 #[derive(Props, Clone, PartialEq)]
 pub struct PlainMoveNameModel {
     #[props(into)]

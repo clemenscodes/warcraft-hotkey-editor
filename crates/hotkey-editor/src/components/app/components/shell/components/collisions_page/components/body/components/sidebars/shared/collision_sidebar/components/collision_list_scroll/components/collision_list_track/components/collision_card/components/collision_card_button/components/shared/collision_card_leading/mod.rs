@@ -11,9 +11,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::CollisionCardLeadingModel;
 
-/// The leading visual of a collision card: the unit's portrait for a unit card, or
-/// the highlighted mini grid for an island card. A dedicated switch on the card
-/// content, so the card body stays a flat list of children.
 #[component]
 pub fn CollisionCardLeading(props: CollisionCardLeadingModel) -> Element {
     match props.content {

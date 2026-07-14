@@ -15,9 +15,6 @@ use model::DefenseRowsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The defense column's stat rows stacked beside its icon: the armor, defense-type, and
-/// effective-hit-points rows, the guarded evasion row, and the defender's matchup grid.
-/// It names its rows directly — each row owns its own look.
 #[component]
 pub fn DefenseRows(props: DefenseRowsModel) -> Element {
     let armor = props.armor;

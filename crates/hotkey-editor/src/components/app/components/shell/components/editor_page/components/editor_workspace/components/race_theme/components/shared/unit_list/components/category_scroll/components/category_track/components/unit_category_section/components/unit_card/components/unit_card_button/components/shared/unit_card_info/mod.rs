@@ -12,7 +12,6 @@ use model::UnitCardInfoModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The text column of a unit card: name over database id.
 #[component]
 pub fn UnitCardInfo(props: UnitCardInfoModel) -> Element {
     let display_name = props.display_name.clone();

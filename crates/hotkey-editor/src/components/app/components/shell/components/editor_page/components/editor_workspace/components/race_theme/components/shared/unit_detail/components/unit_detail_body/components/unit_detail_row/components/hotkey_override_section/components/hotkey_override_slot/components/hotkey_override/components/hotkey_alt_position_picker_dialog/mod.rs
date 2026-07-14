@@ -16,10 +16,6 @@ use presentation::use_hotkey_alt_position_picker_dialog;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Mounts the off-state position picker only while it is open, reading its own open signal
-/// to decide — the way `CarriersDialog` reads its open state. It renders the reusable
-/// `WarcraftDialog`, handing it the isolated position-picker grid as its body region;
-/// keeping the mount conditional here re-initialises the headless dialog each time it opens.
 #[component]
 pub fn HotkeyAltPositionPickerDialog(props: HotkeyAltPositionPickerDialogModel) -> Element {
     let dialog = use_hotkey_alt_position_picker_dialog(&props);

@@ -3,8 +3,6 @@ use super::view::UnitCardIdView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The unit id and whether its card is selected (which dispatches the selected look;
-/// the accent colour is read from `--race-color`).
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardIdModel {
     pub unit_id: WarcraftObjectId,

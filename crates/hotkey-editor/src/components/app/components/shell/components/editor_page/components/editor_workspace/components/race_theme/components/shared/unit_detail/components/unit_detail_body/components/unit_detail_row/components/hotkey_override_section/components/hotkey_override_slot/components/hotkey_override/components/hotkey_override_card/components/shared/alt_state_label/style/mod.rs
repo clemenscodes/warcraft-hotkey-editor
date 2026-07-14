@@ -1,5 +1,4 @@
 use tw_macro::tw;
-// The bold light-blue caption naming the off-state / upgraded form.
 
 classes! {
     base: tw![

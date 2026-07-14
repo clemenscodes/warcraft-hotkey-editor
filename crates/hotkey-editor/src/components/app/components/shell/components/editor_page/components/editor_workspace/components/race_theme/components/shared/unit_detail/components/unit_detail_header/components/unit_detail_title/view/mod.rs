@@ -1,6 +1,5 @@
 use warcraft_api::WarcraftObjectId;
 
-/// The published `View` contract mirroring [`UnitDetailTitleModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UnitDetailTitleView {
     pub unit_name: &'static str,

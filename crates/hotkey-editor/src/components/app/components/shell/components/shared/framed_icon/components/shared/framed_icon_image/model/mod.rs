@@ -1,7 +1,6 @@
 use super::view::FramedIconImageView;
 use dioxus::prelude::*;
 
-/// The resolved image source and its alt text.
 #[derive(Props, Clone, PartialEq)]
 pub struct FramedIconImageModel {
     #[props(into)]

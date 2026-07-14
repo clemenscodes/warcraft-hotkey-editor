@@ -9,7 +9,6 @@ use model::ActiveCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The selected category tab: gold, highlighted, and marked as the current page.
 #[component]
 pub fn ActiveCategoryTab(props: ActiveCategoryTabModel) -> Element {
     let label = props.label;

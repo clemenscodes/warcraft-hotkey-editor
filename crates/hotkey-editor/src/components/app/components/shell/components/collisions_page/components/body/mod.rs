@@ -14,9 +14,6 @@ use model::BodyModel;
 use tw_macro::assert_component;
 pub use view::{ContentModel, HotkeysPane, PositionsPane, UnitPositionsPane};
 
-/// The active collision content: dispatches the shaped `ContentModel` to
-/// the upload prompt, the all-clear state, or the kind's two-pane view. Pure
-/// data-driven render — the hook decides which variant, this only places it.
 #[component]
 pub fn Body(props: BodyModel) -> Element {
     match props.content {
@@ -30,7 +27,7 @@ pub fn Body(props: BodyModel) -> Element {
         ContentModel::Clear => {
             rsx! {
                 ClearState {
-                
+
 
 
                 }

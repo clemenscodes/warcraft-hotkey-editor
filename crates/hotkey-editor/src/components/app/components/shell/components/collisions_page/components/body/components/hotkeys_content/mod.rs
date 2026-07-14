@@ -11,8 +11,6 @@ use model::HotkeysContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The shared-hotkey two-pane content: the clashing-units sidebar column beside the
-/// fluid hotkey unit detail pane.
 #[component]
 pub fn HotkeysContent(props: HotkeysContentModel) -> Element {
     let sidebar_units = props.units.clone();

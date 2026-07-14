@@ -11,8 +11,6 @@ use model::IdleUnitCardButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle unit card surface: the card button in its idle look, composing the shared
-/// portrait and text column. Presentational — the dispatcher renders it.
 #[component]
 pub fn IdleUnitCardButton(props: IdleUnitCardButtonModel) -> Element {
     let icon_path = props.icon_path.clone();

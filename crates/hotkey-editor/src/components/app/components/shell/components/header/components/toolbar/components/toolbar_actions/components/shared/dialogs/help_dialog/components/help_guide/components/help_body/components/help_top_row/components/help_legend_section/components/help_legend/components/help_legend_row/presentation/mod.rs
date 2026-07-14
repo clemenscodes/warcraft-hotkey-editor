@@ -1,7 +1,5 @@
 use super::model::HelpLegendRowModel;
 
-/// One legend row's presentation: the entry's glyph, label, and description, ready to
-/// place. Built purely from the model — a shaping leaf, no effects.
 pub struct HelpLegendRowPresentation {
     pub(super) icon: &'static str,
     pub(super) label: &'static str,

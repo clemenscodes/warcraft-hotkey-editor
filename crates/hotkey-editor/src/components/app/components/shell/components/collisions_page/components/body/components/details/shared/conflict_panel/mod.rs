@@ -10,9 +10,6 @@ use dioxus::prelude::*;
 use model::ConflictPanelModel;
 use tw_macro::assert_component;
 
-/// The conflict card: the role caption over exactly one of the two clash layouts (the pair
-/// row or the multi stack). Composes the shared `PanelCard` surface, supplying its body
-/// region. Shared by the hotkey and unit-position conflict cards.
 #[component]
 pub fn ConflictPanel(props: ConflictPanelModel) -> Element {
     let model = props.model;

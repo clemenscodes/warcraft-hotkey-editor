@@ -12,7 +12,6 @@ use model::SystemHotkeysListEntryModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One hotkey row: the binding name beside its editable key chip.
 #[component]
 pub fn SystemHotkeysListEntry(props: SystemHotkeysListEntryModel) -> Element {
     let text = props.comment.clone();

@@ -9,8 +9,6 @@ use model::IdleToggleButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle toggle button: the shared gold pill in its resting look. Presentational —
-/// the dispatcher renders it for every button that is not the active one in its group.
 #[component]
 pub fn IdleToggleButton(props: IdleToggleButtonModel) -> Element {
     let label = props.label;

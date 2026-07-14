@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The name reads the card's `--name-color` (white on a selected mobile/tablet tile,
-// inheriting the surface text otherwise) — no `data-[selected]` selector.
 classes! {
     base: tw![
         "text-base",

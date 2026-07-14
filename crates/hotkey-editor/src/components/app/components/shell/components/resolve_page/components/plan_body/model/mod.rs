@@ -4,8 +4,6 @@ use crate::components::app::components::shell::components::resolve_page::present
 };
 use dioxus::prelude::*;
 
-/// The scrollable plan body: the active move section (absent when the plan has only
-/// unresolved abilities) and every unresolved ability.
 #[derive(Props, Clone, PartialEq)]
 pub struct PlanBodyModel {
     pub section: Option<MoveSection>,

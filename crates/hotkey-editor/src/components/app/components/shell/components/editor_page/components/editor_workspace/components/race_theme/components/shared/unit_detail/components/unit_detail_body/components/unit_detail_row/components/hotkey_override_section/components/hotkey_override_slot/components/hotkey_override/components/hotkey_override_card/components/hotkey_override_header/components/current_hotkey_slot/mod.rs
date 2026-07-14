@@ -14,8 +14,6 @@ use tw_macro::assert_component;
 
 use model::CurrentHotkeySlotModel;
 
-/// The hotkey / research-hotkey / passive-note slot in the override header. Renders
-/// exactly the one that applies, or nothing.
 #[component]
 pub fn CurrentHotkeySlot(props: CurrentHotkeySlotModel) -> Element {
     let dispatch = CurrentHotkeySlotDispatch::from(&props);

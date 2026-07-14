@@ -4,10 +4,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The open upgraded-form position picker's shaped data: the dialog title, the
-/// upgraded-form unit id and command-card slots the body builds its grid from, and the
-/// change handler mirroring the headless dialog's own close (escape, outside click) back
-/// to the trigger's open signal, which it clears.
 pub(super) struct OpenHotkeyUpgradePositionPickerDialog {
     pub(super) title: String,
     pub(super) upgrade_unit_id: WarcraftObjectId,
@@ -15,10 +11,6 @@ pub(super) struct OpenHotkeyUpgradePositionPickerDialog {
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// The host's seam: shape the open dialog when the picker is open — or `None` when it is
-/// closed or the ability has no upgraded form. Body scroll is locked once by
-/// `WarcraftDialog`. The body region builds its own grid config from context; the host
-/// only provides the title and the body's inputs.
 pub(super) fn use_hotkey_upgrade_position_picker_dialog(
     props: &HotkeyUpgradePositionPickerDialogModel,
 ) -> Option<OpenHotkeyUpgradePositionPickerDialog> {

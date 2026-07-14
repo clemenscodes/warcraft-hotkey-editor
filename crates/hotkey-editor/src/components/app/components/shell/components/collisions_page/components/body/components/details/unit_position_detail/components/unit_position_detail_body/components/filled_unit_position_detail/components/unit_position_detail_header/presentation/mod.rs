@@ -1,9 +1,6 @@
 use super::model::UnitPositionDetailHeaderModel;
 use warcraft_api::WarcraftObjectId;
 
-/// The position-collision detail pane header's presentation: the unit button inputs and
-/// its text meta column, shaped from the unit view. Built purely from the model — a
-/// shaping leaf.
 pub struct UnitPositionDetailHeaderPresentation {
     pub(super) name: String,
     pub(super) unit_id: WarcraftObjectId,

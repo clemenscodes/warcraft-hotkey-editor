@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`MoveNameModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct MoveNameView {
     pub text: String,

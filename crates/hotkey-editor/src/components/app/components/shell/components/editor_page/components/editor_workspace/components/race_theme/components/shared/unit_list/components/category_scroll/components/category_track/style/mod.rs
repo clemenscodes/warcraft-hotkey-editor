@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The inner track laying out the category sections: a vertical stack on the sidebar,
-// a horizontal fixed-height carousel on small screens.
 
 classes! {
     base: tw![

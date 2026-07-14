@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Effective Hit Points";
 
-/// The unit's effective hit points — raw health scaled by armor mitigation.
 #[component]
 pub fn EffectiveHitPointsRow(props: EffectiveHitPointsRowModel) -> Element {
     let value = props.value;

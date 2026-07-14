@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`CatalogVisibilityButtonModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct CatalogVisibilityButtonView {
     pub label: &'static str,

@@ -1,7 +1,6 @@
 use super::view::EmptyHotkeyUnitDetailView;
 use dioxus::prelude::*;
 
-/// The empty detail pane's model: the prompt to show.
 #[derive(Props, Clone, PartialEq)]
 pub struct EmptyHotkeyUnitDetailModel {
     #[props(into)]

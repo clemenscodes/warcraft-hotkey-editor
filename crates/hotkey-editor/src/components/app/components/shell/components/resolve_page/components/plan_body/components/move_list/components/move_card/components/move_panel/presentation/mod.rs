@@ -2,9 +2,6 @@ use crate::components::app::components::shell::components::resolve_page::present
     MiniGridPlacement, MoveView, ReasonKind,
 };
 
-/// The move card's shaped body, derived from the move: the reason badge's kind and
-/// label, and the "before"/"after" mini-grid placements (the mover on both sides, plus
-/// the rival landing on the mover's old cell — and, on a swap, the rival's old cell).
 pub(super) struct MovePanelPresentation {
     pub(super) reason_kind: ReasonKind,
     pub(super) reason_label: String,

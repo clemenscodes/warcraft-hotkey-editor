@@ -2,9 +2,6 @@ use super::view::IslandConflictCardView;
 use crate::components::app::components::shell::components::collisions_page::presentation::ConflictView;
 use dioxus::prelude::*;
 
-/// One island conflict: the affected unit and its two clashing abilities. The affected
-/// unit and each ability read the navigation from context to deep-link, and each
-/// ability owns its own carriers dialog, so nothing is threaded through this card.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictCardModel {
     pub conflict: ConflictView,

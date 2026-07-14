@@ -10,9 +10,6 @@ use model::GapPullReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The "GapPull" reason badge: publishes the GapPull accent colour and composes the base
-/// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
-/// names the pill's classes.
 #[component]
 pub fn GapPullReasonBadge(props: GapPullReasonBadgeModel) -> Element {
     let label = props.label;

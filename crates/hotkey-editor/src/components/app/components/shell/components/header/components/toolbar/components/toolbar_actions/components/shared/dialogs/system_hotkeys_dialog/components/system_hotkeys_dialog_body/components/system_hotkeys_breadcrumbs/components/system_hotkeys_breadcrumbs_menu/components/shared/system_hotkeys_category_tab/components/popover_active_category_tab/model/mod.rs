@@ -1,7 +1,6 @@
 use super::view::PopoverActiveCategoryTabView;
 use dioxus::prelude::*;
 
-/// The selected popover tab's inputs: its caption and the select handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct PopoverActiveCategoryTabModel {
     pub label: String,

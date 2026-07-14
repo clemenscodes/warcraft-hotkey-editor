@@ -1,8 +1,6 @@
 use super::view::AltStatePositionButtonView;
 use dioxus::prelude::*;
 
-/// The position-picker crosshair button: its tooltip, accessible label, and the
-/// click handler that opens the picker.
 #[derive(Props, Clone, PartialEq)]
 pub struct AltStatePositionButtonModel {
     #[props(into)]

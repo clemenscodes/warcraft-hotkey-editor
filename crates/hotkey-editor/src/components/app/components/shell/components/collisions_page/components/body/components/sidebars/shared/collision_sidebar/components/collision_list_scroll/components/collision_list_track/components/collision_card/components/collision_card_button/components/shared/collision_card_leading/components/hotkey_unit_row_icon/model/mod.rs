@@ -1,6 +1,5 @@
 use super::view::HotkeyUnitRowIconView;
 use dioxus::prelude::*;
-/// A unit's portrait on a hotkey/position collision card.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyUnitRowIconModel {
     pub icon_url: Option<String>,

@@ -3,8 +3,6 @@ use super::view::LayoutTileView;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
-/// One editable grid cell: its visual state, the letter it shows, its grid
-/// address, and the drag/click handlers the editor wired for it.
 #[derive(Props, Clone, PartialEq)]
 pub struct LayoutTileModel {
     pub state: LayoutTileState,

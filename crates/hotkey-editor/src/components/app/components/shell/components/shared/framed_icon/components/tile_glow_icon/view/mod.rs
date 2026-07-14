@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`TileGlowIconModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct TileGlowIconView {
     pub source: Option<String>,

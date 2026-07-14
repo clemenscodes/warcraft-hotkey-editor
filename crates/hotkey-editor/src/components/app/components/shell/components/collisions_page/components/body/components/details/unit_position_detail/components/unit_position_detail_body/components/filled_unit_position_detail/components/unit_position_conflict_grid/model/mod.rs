@@ -3,8 +3,6 @@ use crate::components::app::components::shell::components::collisions_page::pres
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The scrolling grid of position-collision cards for the selected unit: one card per
-/// conflict, all deep-linking through the owning unit id.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitPositionConflictGridModel {
     pub conflicts: Vec<UnitPositionConflictView>,

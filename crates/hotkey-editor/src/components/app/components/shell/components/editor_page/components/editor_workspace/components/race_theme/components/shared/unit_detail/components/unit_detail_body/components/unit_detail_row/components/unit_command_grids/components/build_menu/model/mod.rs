@@ -2,7 +2,6 @@ use super::view::BuildMenuView;
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::GridEditorView;
 use dioxus::prelude::*;
 
-/// The unit's optional build menu grid; renders nothing when the unit has none.
 #[derive(Props, Clone, PartialEq)]
 pub struct BuildMenuModel {
     pub config: Option<GridEditorView>,

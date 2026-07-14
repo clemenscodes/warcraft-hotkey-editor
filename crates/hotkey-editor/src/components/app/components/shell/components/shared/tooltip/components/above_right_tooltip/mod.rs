@@ -9,9 +9,6 @@ use model::AboveRightTooltipModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The tooltip bubble placed above its trigger and anchored right. It owns
-/// its own bubble and the positioning utilities for this placement and anchor across
-/// both `@supports` bands; it shows only the message it is handed.
 #[component]
 pub fn AboveRightTooltip(props: AboveRightTooltipModel) -> Element {
     let text = props.text;

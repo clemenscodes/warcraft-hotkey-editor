@@ -1,6 +1,5 @@
 use warcraft_api::WarcraftObjectId;
 
-/// The published `View` contract mirroring [`AbilityTierModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct AbilityTierView {
     pub object_id: WarcraftObjectId,

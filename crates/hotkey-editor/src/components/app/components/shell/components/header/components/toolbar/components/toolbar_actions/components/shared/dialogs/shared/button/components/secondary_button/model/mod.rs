@@ -1,7 +1,6 @@
 use super::view::SecondaryButtonView;
 use dioxus::prelude::*;
 
-/// The action button's click handler and label text.
 #[derive(Props, Clone, PartialEq)]
 pub struct SecondaryButtonModel {
     pub onclick: EventHandler<MouseEvent>,

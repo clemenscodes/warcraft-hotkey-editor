@@ -13,10 +13,6 @@ use presentation::use_hotkey_alt_position_picker_dialog_body;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The off-state position picker dialog's body region: its presentation assembles the
-/// embedded command grid's config from context and local picker signals, and this places
-/// the shared position-picker scroll body — the instruction explainer above the grid —
-/// inside the dialog content box.
 #[component]
 pub fn HotkeyAltPositionPickerDialogBody(props: HotkeyAltPositionPickerDialogBodyModel) -> Element {
     let HotkeyAltPositionPickerDialogBodyPresentation {

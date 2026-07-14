@@ -12,8 +12,6 @@ use model::MoveTransitionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The from → to transition block: the "before" grid, the centred arrow, and the
-/// "after" grid.
 #[component]
 pub fn MoveTransition(props: MoveTransitionModel) -> Element {
     let from_placements = props.from_placements;
@@ -25,7 +23,7 @@ pub fn MoveTransition(props: MoveTransitionModel) -> Element {
                 placements: from_placements,
             }
             MoveArrow {
-            
+
 
 
             }

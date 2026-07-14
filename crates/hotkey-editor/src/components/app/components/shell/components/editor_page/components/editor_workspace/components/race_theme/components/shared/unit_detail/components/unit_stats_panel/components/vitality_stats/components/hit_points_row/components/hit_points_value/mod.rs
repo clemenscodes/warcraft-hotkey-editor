@@ -9,9 +9,6 @@ use model::HitPointsValueModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hit-points figure: green, semibold, enlarged — the vitality headline value worn
-/// directly rather than selected through a shared variant. Hit points are never muted,
-/// so it renders plainly.
 #[component]
 pub fn HitPointsValue(props: HitPointsValueModel) -> Element {
     let value = props.value;

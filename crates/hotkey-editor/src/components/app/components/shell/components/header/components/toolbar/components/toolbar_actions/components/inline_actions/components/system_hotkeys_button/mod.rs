@@ -9,9 +9,6 @@ use presentation::{SystemHotkeysButtonPresentation, use_system_hotkeys_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline system-hotkeys action: the toolbar cog button that opens the system-hotkeys
-/// editor, and that editor dialog, mounted beneath it. It owns the editor's open signal locally,
-/// so the dialog is part of the button and travels with it.
 #[component]
 pub fn SystemHotkeysButton() -> Element {
     let SystemHotkeysButtonPresentation {

@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::AltStateLineModel;
 
-/// One description line under the alt-state header.
 #[component]
 pub fn AltStateLine(props: AltStateLineModel) -> Element {
     let text = props.text;

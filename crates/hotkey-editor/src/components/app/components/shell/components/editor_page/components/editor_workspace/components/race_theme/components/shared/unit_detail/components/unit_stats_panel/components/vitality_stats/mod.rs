@@ -14,10 +14,6 @@ use model::VitalityStatsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The vitality column: the unit's hit points and mana rows with their regeneration,
-/// laid into the `vitality` grid area. Always present; every unit has vitality
-/// figures. It names its four rows directly — each row owns its own look — rather than
-/// configuring one shared row through variant flags.
 #[component]
 pub fn VitalityStats(props: VitalityStatsModel) -> Element {
     let hit_points = props.hit_points;

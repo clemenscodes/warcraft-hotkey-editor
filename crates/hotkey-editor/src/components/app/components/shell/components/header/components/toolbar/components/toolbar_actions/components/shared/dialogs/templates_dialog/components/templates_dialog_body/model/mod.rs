@@ -2,8 +2,6 @@ use super::components::template_gallery::components::template_card::TemplateCard
 use super::view::TemplatesDialogBodyView;
 use dioxus::prelude::*;
 
-/// The templates dialog's scroll region input: the resolved template card views its
-/// gallery lays out.
 #[derive(Props, Clone, PartialEq)]
 pub struct TemplatesDialogBodyModel {
     pub cards: Vec<TemplateCardView>,

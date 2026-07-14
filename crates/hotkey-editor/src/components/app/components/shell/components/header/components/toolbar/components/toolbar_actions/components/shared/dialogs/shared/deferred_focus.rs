@@ -1,10 +1,5 @@
 use dioxus::prelude::*;
 
-/// Focuses the element matching `selector` one tick after mount. Portal-mounted
-/// dialog content has its focus reset to `document.body` a tick after mount, so
-/// `autofocus`/`set_focus` only ever land on the first open; deferring one tick
-/// past that reset restores focus on every reopen. Shared by the key-picker boards
-/// (each passing its own board selector).
 pub(crate) fn use_deferred_focus(selector: &'static str) {
     use_effect(move || {
         spawn(async move {

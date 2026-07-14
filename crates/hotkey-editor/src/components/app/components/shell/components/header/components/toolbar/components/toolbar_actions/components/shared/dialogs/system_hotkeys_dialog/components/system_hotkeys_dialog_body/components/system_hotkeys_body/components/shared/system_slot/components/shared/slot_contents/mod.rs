@@ -10,10 +10,6 @@ use dioxus::prelude::*;
 use model::SlotContentsModel;
 use tw_macro::assert_component;
 
-/// The framed slot's inner content — caption, bound key, and conflict tooltip —
-/// shared by every slot look. While the slot is being dragged the content is
-/// unmounted rather than hidden, so the frame's DOM node stays mounted and the
-/// pointer-capture drag on the host is never interrupted by a class swap.
 #[component]
 pub fn SlotContents(props: SlotContentsModel) -> Element {
     if props.dragging {

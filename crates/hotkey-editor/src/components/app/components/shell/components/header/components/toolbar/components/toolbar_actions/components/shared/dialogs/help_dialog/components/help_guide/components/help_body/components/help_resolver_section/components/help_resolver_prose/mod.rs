@@ -10,8 +10,6 @@ use model::HelpResolverProseModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The plain-language walkthrough of how the resolver settles a clash, one
-/// paragraph per passage passed in.
 #[component]
 pub fn HelpResolverProse(props: HelpResolverProseModel) -> Element {
     rsx! {

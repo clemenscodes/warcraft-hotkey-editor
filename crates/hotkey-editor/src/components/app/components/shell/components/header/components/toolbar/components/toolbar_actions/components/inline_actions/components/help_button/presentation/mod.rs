@@ -3,10 +3,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_H
 use crate::persistence::onboarding_persistence;
 use dioxus::prelude::*;
 
-/// The help button's shaped data: the fixed icon and accessible label, whether its guide is
-/// open (for aria), the toggle handler, and the change handler the mounted dialog mirrors its
-/// own close back through. The open signal is local and owned here — the button that opens the
-/// dialog owns it, so the dialog travels with the button.
 pub(super) struct HelpButtonPresentation {
     pub(super) icon: &'static str,
     pub(super) aria_label: &'static str,
@@ -17,9 +13,6 @@ pub(super) struct HelpButtonPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// Owns the help guide's local open signal — initialized open on a first visit so the guide
-/// onboards, closed thereafter — and shapes the button's data: the toggle handler that opens
-/// or closes it, and the change handler the mounted dialog mirrors its own close through.
 pub(super) fn use_help_button() -> HelpButtonPresentation {
     let mut open_signal = use_signal::<bool>(|| !onboarding_persistence::has_been_seen());
     let open = open_signal();

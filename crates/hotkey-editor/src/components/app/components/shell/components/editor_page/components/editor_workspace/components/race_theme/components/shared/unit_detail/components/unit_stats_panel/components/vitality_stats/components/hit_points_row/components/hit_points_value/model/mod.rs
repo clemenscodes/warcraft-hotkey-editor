@@ -2,7 +2,6 @@ use super::view::HitPointsValueView;
 use dioxus::prelude::*;
 use warcraft_api::HitPoints;
 
-/// The hit-points value leaf's input: the unit's resolved hit points.
 #[derive(Props, Clone, PartialEq)]
 pub struct HitPointsValueModel {
     pub value: HitPoints,

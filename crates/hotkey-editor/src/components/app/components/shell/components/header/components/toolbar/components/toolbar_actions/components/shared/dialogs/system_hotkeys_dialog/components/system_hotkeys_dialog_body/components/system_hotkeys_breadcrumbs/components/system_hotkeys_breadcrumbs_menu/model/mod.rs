@@ -2,9 +2,6 @@ use super::view::SystemHotkeysBreadcrumbsMenuView;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// The menu's inputs: the active category (read + written by its tabs), the shared
-/// open signal (tabs close it on select), and whether the dropdown is open (selects
-/// the popover xor tab-bar look).
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsMenuModel {
     pub active_category: Signal<SystemHotkeysCategory>,

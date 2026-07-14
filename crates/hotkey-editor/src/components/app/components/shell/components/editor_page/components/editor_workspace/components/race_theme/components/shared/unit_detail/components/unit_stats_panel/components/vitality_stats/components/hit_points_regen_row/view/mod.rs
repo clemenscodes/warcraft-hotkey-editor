@@ -1,6 +1,5 @@
 use warcraft_api::HitPointsRegen;
 
-/// The published `View` contract mirroring [`HitPointsRegenRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct HitPointsRegenRowView {
     pub value: HitPointsRegen,

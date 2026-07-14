@@ -12,10 +12,6 @@ use model::ButtonModel;
 pub use state::ButtonVariant;
 use tw_macro::assert_component;
 
-/// A WC3 action button in primary or secondary weight. A pure dispatcher: from the
-/// variant it renders `PrimaryButton` xor `SecondaryButton`. Each look owns its own
-/// classed `button` root and forwards one click; callers pick the variant and pass
-/// the label text.
 #[component]
 pub fn Button(props: ButtonModel) -> Element {
     match props.variant {

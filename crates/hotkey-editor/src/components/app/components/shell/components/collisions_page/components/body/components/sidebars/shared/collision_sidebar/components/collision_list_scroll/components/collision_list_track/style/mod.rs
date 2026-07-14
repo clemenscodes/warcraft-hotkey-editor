@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The list of collision cards. A vertical stack on the sidebar; a horizontal
-// fixed-height row (the swipe carousel) on small screens.
 
 classes! {
     base: tw![

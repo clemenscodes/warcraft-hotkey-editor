@@ -1,7 +1,6 @@
 use super::view::HelpTermView;
 use dioxus::prelude::*;
 
-/// The glossary term's only input: the term text.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpTermModel {
     #[props(into)]

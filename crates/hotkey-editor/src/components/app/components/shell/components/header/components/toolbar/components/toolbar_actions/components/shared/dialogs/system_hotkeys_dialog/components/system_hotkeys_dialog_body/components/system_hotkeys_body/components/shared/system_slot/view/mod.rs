@@ -1,7 +1,6 @@
 use super::state::SystemSlotState;
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 
-/// The published `View` contract mirroring [`SystemSlotModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SystemSlotView {
     pub state: SystemSlotState,

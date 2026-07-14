@@ -3,8 +3,6 @@ use super::view::GridTileView;
 use dioxus::prelude::*;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, RowIndex};
 
-/// The base tile's private internal model, mirroring the published [`GridTileView`].
-/// Parents set these fields by name from a view they hold.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridTileModel {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]

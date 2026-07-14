@@ -5,9 +5,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_R
 use crate::services::undo::context::use_undo_history;
 use dioxus::prelude::*;
 
-/// The burger redo row's shaped data: the fixed icon and label, its idle weight, its aria role,
-/// whether redo is currently unavailable, and the click handler that runs the redo command and
-/// then closes the drawer.
 pub struct BurgerRedoItemPresentation {
     pub(super) icon: &'static str,
     pub(super) label: String,
@@ -17,8 +14,6 @@ pub struct BurgerRedoItemPresentation {
     pub(super) onclick: EventHandler<MouseEvent>,
 }
 
-/// Reads the undo history and shapes the row: disabled while there is nothing to redo, and a
-/// click handler that redoes one step and then closes the drawer via the threaded close handler.
 pub(super) fn use_burger_redo_item(props: &BurgerRedoItemModel) -> BurgerRedoItemPresentation {
     let history = use_undo_history();
     let can_redo = history.can_redo();

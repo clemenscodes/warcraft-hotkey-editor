@@ -4,14 +4,9 @@ use ddd::Query;
 use warcraft_keybinds::CrossUnitCollisionReport;
 use warcraft_keybinds::CustomKeys;
 
-/// Query: the cross-unit position-collision report — every grid position where
-/// abilities from different units contend for the same spot. Answered against the
-/// live aggregate so the collisions page never runs the report at render time.
 pub struct CrossUnitCollisionsQuery;
 
 impl CrossUnitCollisionsQuery {
-    /// Answer the query against a keys snapshot. Pure — the service's
-    /// [`ddd::QueryHandler`] impl wraps this with the reactive signal read.
     pub fn answer(&self, custom_keys: Option<&CustomKeys>) -> CrossUnitCollisionReport {
         let default_keys = CustomKeys::default();
         let keys = custom_keys.unwrap_or(&default_keys);

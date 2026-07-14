@@ -8,8 +8,6 @@ use presentation::{ResolveButtonPresentation, use_resolve_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline resolve action: the toolbar button that navigates to the conflict-resolution view.
-/// It sources its own disabled state and click handler from the navigation service and document.
 #[component]
 pub fn ResolveButton() -> Element {
     let ResolveButtonPresentation {

@@ -3,9 +3,6 @@ use dioxus::prelude::*;
 use warcraft_api::AttackType;
 use warcraft_api::{AttackRange, AttackSpeed, AttackStatistics, DamagePerSecond, DamageRange};
 
-/// The combat column's figures, shaped out of the body from the unit's attack: the
-/// icon source and alt text, the five stat values (three always shown, the guarded
-/// range and damage-per-second), and the attack type that drives the matchup grid.
 pub(super) struct CombatFigures {
     pub(super) icon_src: Asset,
     pub(super) icon_alt: String,

@@ -16,9 +16,6 @@ pub(crate) use presentation::{
 };
 pub use presentation::{InventoryDragFollower, InventoryDragSource};
 
-/// The two-by-three inventory slot grid. Each filled slot is an editable,
-/// draggable `InventoryFilledSlot`; the grid seeds the gold-frame CSS variable and holds
-/// the drag/drop signals its cells share.
 #[component]
 pub fn InventoryGrid() -> Element {
     let model = use_inventory_grid();

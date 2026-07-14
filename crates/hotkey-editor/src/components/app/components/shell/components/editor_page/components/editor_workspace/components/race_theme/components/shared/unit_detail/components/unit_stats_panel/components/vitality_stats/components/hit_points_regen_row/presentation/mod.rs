@@ -4,10 +4,6 @@ use warcraft_api::RegenType;
 const AT_NIGHT: &str = "at night";
 const ON_BLIGHT: &str = "on blight";
 
-/// The hit-points regeneration row's shaped presentation: its optional italic
-/// qualifier, resolved out of the component body. The qualifier names the condition the
-/// regeneration depends on; it is `None` when regeneration applies unconditionally. The
-/// gain itself carries the domain figure and formats it at the leaf.
 pub(super) struct HitPointsRegenPresentation {
     pub(super) qualifier: Option<&'static str>,
 }

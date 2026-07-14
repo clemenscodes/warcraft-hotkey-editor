@@ -10,7 +10,6 @@ use model::AttackMatchupModel;
 use presentation::{AttackMatchupPresentation, use_attack_matchup};
 use tw_macro::assert_component;
 
-/// One cell of an attacker's damage matchup. A thin wrapper over `Matchup`.
 #[component]
 pub fn AttackMatchup(props: AttackMatchupModel) -> Element {
     let AttackMatchupPresentation {

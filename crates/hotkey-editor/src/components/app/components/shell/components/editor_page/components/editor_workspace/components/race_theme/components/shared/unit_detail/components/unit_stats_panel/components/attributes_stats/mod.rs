@@ -14,9 +14,6 @@ use presentation::AttributeFigures;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero attributes column: the primary-attribute icon beside the three attribute
-/// rows, laid into the `attributes` grid area. Present only for a hero unit; an
-/// ordinary unit renders nothing here.
 #[component]
 pub fn AttributesStats(props: AttributesStatsModel) -> Element {
     let Some(hero) = props.hero else {

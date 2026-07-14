@@ -3,18 +3,10 @@ use dioxus::prelude::*;
 use warcraft_api::AllRaces;
 use warcraft_api::Race;
 
-/// The finished race tabs, one per race in the domain's `AllRaces` order. `RaceTabs` is
-/// the one consumer of the active race: this reads it once, marks each tab active, and
-/// bakes the select handler into each tab's pointer/keyboard handlers — so only plain,
-/// navigation-free items flow to the dispatcher. The set and order of races come from
-/// the domain (`AllRaces`), never hardcoded here.
 pub(super) struct RaceTabsPresentation {
     pub(super) tabs: Vec<RaceTabItem>,
 }
 
-/// One race tab's finished item: which race it is (so the dispatcher picks that race's
-/// themed wrapper), whether it is the active tab, its display label, and the baked
-/// pointer/keyboard handlers. Plain data — no navigation signal.
 pub(super) struct RaceTabItem {
     pub(super) race: Race,
     pub(super) is_active: bool,

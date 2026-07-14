@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The Unit/Ability search-field toggle group. A stacked pair that becomes a side-by-
-// side row on small screens; the child buttons are tall on the sidebar and shorter
-// on mobile.
 
 classes! {
     base: tw![

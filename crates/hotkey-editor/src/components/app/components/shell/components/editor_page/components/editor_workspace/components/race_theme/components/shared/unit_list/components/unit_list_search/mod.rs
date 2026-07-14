@@ -14,7 +14,6 @@ use tw_macro::assert_component;
 
 use model::UnitListSearchModel;
 
-/// The unit list's search box: a magnifier icon (mobile only) over the query input.
 #[component]
 pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
     let value = props.value;
@@ -25,7 +24,7 @@ pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
         div {
             class: CLASS,
             UnitListSearchIcon {
-            
+
 
 
             }

@@ -14,8 +14,6 @@ use model::HotkeyOverrideSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hotkey-override section: the "Hotkey override" heading above the override card.
-/// Its own classed `aside`, flowing below the command grids.
 #[component]
 pub fn HotkeyOverrideSection(props: HotkeyOverrideSectionModel) -> Element {
     let override_target = props.override_target;

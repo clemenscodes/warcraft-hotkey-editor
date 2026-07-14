@@ -4,8 +4,6 @@ use ddd::Layered;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::GridLayout;
 
-/// Reassign every binding's hotkey from a grid layout. Its outcome is the number
-/// of bindings whose hotkey actually changed.
 pub struct ApplyGridLayoutCommand {
     layout: GridLayout,
 }

@@ -2,8 +2,6 @@ use super::view::AttributesStatsView;
 use dioxus::prelude::*;
 use warcraft_api::HeroStatistics;
 
-/// The hero attributes column's input: the hero's three attributes at the selected
-/// level, or `None` for a non-hero unit (the column then renders nothing).
 #[derive(Props, Clone, PartialEq)]
 pub struct AttributesStatsModel {
     pub hero: Option<HeroStatistics>,

@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The grid glyph inside the grid-layout button.
 #[component]
 pub fn GridLayoutEditorButtonIcon() -> Element {
     rsx! {

@@ -15,11 +15,6 @@ use model::SystemHotkeysCategoryTabModel;
 use presentation::use_system_hotkeys_category_tab;
 use tw_macro::assert_component;
 
-/// One selectable category in the breadcrumbs. A pure dispatcher: from the tab's
-/// popover and active flags it renders the matching look — the tab-bar
-/// `ActiveCategoryTab` xor `InactiveCategoryTab`, or the popover
-/// `PopoverActiveCategoryTab` xor `PopoverInactiveCategoryTab` — followed by a
-/// trailing separator on all but the last (only in the tab bar; the popover has none).
 #[component]
 pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabModel) -> Element {
     let model = use_system_hotkeys_category_tab(&props);
@@ -53,7 +48,7 @@ pub fn SystemHotkeysCategoryTab(props: SystemHotkeysCategoryTabModel) -> Element
         }
         if has_separator {
             SystemHotkeysCategorySeparator {
-            
+
 
 
             }

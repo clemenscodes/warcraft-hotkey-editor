@@ -14,8 +14,6 @@ use model::DialogHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A dialog's title bar: mirrored gold decorations either side of the title,
-/// with the close control pinned right.
 #[component]
 pub fn DialogHeader(props: DialogHeaderModel) -> Element {
     let title = props.title.clone();
@@ -25,7 +23,7 @@ pub fn DialogHeader(props: DialogHeaderModel) -> Element {
         header {
             class: CLASS,
             DialogHeaderDecorationLeading {
-            
+
 
 
             }
@@ -33,7 +31,7 @@ pub fn DialogHeader(props: DialogHeaderModel) -> Element {
                 title,
             }
             DialogHeaderDecorationTrailing {
-            
+
 
 
             }

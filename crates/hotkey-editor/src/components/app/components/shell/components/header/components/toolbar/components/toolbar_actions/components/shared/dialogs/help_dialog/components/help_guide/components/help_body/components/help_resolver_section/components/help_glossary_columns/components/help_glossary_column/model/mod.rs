@@ -2,7 +2,6 @@ use super::view::HelpGlossaryColumnView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_guide::data::HelpGlossaryItem;
 use dioxus::prelude::*;
 
-/// One column's only input: the glossary items it lays out, in order.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpGlossaryColumnModel {
     pub entries: &'static [HelpGlossaryItem],

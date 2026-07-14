@@ -5,7 +5,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The required filename shown as a boxed monospace chip.
 #[component]
 pub fn InfoFilename() -> Element {
     rsx! {

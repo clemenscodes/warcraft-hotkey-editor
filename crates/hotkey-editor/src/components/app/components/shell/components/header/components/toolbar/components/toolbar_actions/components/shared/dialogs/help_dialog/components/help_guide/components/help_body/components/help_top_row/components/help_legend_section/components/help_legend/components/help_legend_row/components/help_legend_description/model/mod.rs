@@ -1,7 +1,6 @@
 use super::view::HelpLegendDescriptionView;
 use dioxus::prelude::*;
 
-/// The legend description's only input: the copy.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpLegendDescriptionModel {
     #[props(into)]

@@ -10,11 +10,6 @@ use dioxus::prelude::*;
 use model::StatValueModel;
 use tw_macro::assert_component;
 
-/// A stat row's value in the default treatment: the domain figure presented as
-/// tabular, right-aligned text. A thin dispatcher — the figure reports whether it is
-/// muted and this leaf renders the active look (`ActiveStatValue`) xor the muted look
-/// (`MutedStatValue`), each built by `From`. Rows with a distinctive value (hit
-/// points' green, mana's blue) render their own span instead.
 #[component]
 pub fn StatValue<Figure: StatFigure>(props: StatValueModel<Figure>) -> Element {
     let value = props.value;

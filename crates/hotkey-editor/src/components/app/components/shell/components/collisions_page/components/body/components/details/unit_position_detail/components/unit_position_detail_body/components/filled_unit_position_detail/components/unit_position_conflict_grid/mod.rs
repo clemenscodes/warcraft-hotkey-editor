@@ -11,7 +11,6 @@ use model::UnitPositionConflictGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The scrolling grid of position-collision cards for the selected unit.
 #[component]
 pub fn UnitPositionConflictGrid(props: UnitPositionConflictGridModel) -> Element {
     let conflicts = props.conflicts;

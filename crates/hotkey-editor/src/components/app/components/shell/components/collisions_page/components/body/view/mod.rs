@@ -6,10 +6,6 @@ use crate::components::app::components::shell::components::collisions_page::pres
 use browser_kit::frame::Render;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`BodyModel`], threaded to this component as data.
-/// It is also the collisions page frame's body region: it `impl Render` and renders the `Body`
-/// dispatcher once, so the page places the published `View` directly, with no ad-hoc region
-/// type.
 #[derive(Clone, PartialEq, Default)]
 pub struct BodyView {
     pub content: ContentModel,
@@ -30,8 +26,6 @@ impl Render for BodyView {
     }
 }
 
-/// The position-collision two-pane content: the island list shared by the sidebar and
-/// the detail pane.
 #[derive(Clone, PartialEq)]
 pub struct PositionsPane {
     islands: Vec<IslandView>,
@@ -47,8 +41,6 @@ impl PositionsPane {
     }
 }
 
-/// The hotkey-collision two-pane content: the clashing-unit list shared by the sidebar
-/// and the detail pane.
 #[derive(Clone, PartialEq)]
 pub struct HotkeysPane {
     units: Vec<HotkeyUnitView>,
@@ -64,8 +56,6 @@ impl HotkeysPane {
     }
 }
 
-/// The per-unit position-collision two-pane content: the clashing-unit list shared by
-/// the sidebar and the detail pane.
 #[derive(Clone, PartialEq)]
 pub struct UnitPositionsPane {
     units: Vec<UnitPositionUnitView>,
@@ -81,9 +71,6 @@ impl UnitPositionsPane {
     }
 }
 
-/// The active collision content as data: an upload prompt (its message), an all-clear
-/// state, or one of the three kinds' two-pane views. `Body` renders each variant; the
-/// hook only shapes it.
 #[derive(Clone, PartialEq, Default)]
 pub enum ContentModel {
     Empty(String),

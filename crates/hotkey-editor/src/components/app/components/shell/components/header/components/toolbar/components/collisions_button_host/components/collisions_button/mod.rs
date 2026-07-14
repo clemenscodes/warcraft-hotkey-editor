@@ -14,12 +14,6 @@ use presentation::CollisionsButtonPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Toolbar control that surfaces collision health and routes to the Collisions page on
-/// click. It reuses the shared gold `ToolbarButtonSurface` for its entire look — amber
-/// warning triangle in the `Attention` state while collisions remain, gold circled
-/// checkmark in the `Clear` state when the config is clean — and layers a corner count
-/// badge on top. Presentational: the collision summary and click handler arrive as props
-/// from `CollisionsButtonHost`.
 #[component]
 pub fn CollisionsButton(props: CollisionsButtonModel) -> Element {
     let CollisionsButtonPresentation {

@@ -13,8 +13,6 @@ use presentation::UnitPositionDetailHeaderPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The position-collision detail pane header row: the selected unit's icon button
-/// beside its text meta column.
 #[component]
 pub fn UnitPositionDetailHeader(props: UnitPositionDetailHeaderModel) -> Element {
     let UnitPositionDetailHeaderPresentation {

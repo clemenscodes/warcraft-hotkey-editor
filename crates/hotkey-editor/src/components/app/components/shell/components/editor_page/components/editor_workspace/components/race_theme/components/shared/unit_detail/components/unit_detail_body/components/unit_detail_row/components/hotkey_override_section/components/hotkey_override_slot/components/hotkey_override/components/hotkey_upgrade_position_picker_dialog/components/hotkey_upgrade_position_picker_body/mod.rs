@@ -13,10 +13,6 @@ use presentation::use_hotkey_upgrade_position_picker_body;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The upgraded-form position picker's scrolling content region: the instruction
-/// explainer above the embedded command grid where the upgraded-form button can be
-/// dragged to a new cell. It builds the grid config from context in its own builder and
-/// composes the shared `HotkeyAltPositionPickerBody`.
 #[component]
 pub fn HotkeyUpgradePositionPickerBody(props: HotkeyUpgradePositionPickerBodyModel) -> Element {
     let HotkeyUpgradePositionPickerBodyPresentation {

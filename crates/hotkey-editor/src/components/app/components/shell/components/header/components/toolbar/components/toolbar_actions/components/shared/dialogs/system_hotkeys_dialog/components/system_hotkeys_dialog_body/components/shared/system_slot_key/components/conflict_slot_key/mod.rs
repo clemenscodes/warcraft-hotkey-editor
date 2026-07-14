@@ -9,8 +9,6 @@ use model::ConflictSlotKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The danger-red key glyph shown when the slot's binding is in conflict.
-/// Presentational — the `SystemSlotKey` dispatcher renders it for the conflict look.
 #[component]
 pub fn ConflictSlotKey(props: ConflictSlotKeyModel) -> Element {
     let label = props.label;

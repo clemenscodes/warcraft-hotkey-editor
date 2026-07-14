@@ -1,7 +1,6 @@
 use super::view::SystemHotkeysBreadcrumbsTriggerCaretView;
 use dioxus::prelude::*;
 
-/// The caret indicator; `is_open` selects the flipped xor resting look.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsTriggerCaretModel {
     pub is_open: bool,

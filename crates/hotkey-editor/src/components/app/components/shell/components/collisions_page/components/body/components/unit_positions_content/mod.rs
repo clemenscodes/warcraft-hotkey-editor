@@ -11,8 +11,6 @@ use model::UnitPositionsContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The per-unit position-collision two-pane content: the clashing-units sidebar column
-/// beside the fluid unit position detail pane.
 #[component]
 pub fn UnitPositionsContent(props: UnitPositionsContentModel) -> Element {
     let sidebar_units = props.units.clone();

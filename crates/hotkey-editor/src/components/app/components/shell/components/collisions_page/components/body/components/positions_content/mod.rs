@@ -11,8 +11,6 @@ use model::PositionsContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The position-collision two-pane content: the island sidebar column beside the
-/// fluid island detail pane.
 #[component]
 pub fn PositionsContent(props: PositionsContentModel) -> Element {
     let sidebar_islands = props.islands.clone();

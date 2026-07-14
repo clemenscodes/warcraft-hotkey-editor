@@ -3,17 +3,11 @@ use dioxus::prelude::*;
 
 const SLOT_FRAME_GOLD: Asset = asset!("/assets/webui/widgets/listitems/list-item-focus-border.png");
 
-/// The follower's shaped view: the inline placement style (position, size, and the
-/// gold-frame CSS variable the border-image reads) and the key label it shows.
 pub(super) struct DragFollowerView {
     pub(super) placement: String,
     pub(super) label: String,
 }
 
-/// Shapes the drag follower for rendering, or returns `None` when nothing is being
-/// dragged (the overlay renders nothing). The placement is genuinely dynamic — it
-/// tracks the cursor — so it stays an inline `style`, the one thing utilities can't
-/// express.
 pub(super) fn use_inventory_drag_overlay(
     props: &InventoryDragOverlayModel,
 ) -> Option<DragFollowerView> {

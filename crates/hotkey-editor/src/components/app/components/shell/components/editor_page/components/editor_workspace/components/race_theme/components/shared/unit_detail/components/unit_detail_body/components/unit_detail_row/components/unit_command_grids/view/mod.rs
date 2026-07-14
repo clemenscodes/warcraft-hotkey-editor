@@ -2,7 +2,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The published `View` contract mirroring [`UnitCommandGridsModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UnitCommandGridsView {
     pub unit_id: WarcraftObjectId,

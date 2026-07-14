@@ -12,8 +12,6 @@ use model::BurgerDrawerBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The drawer's scrolling content: the primary Grid Layout row on top, then the file-action
-/// menu. The close handler flows through to the menu's non-dialog rows, which dismiss the drawer.
 #[component]
 pub fn BurgerDrawerBody(props: BurgerDrawerBodyModel) -> Element {
     let on_close = props.on_close;
@@ -21,7 +19,7 @@ pub fn BurgerDrawerBody(props: BurgerDrawerBodyModel) -> Element {
         div {
             class: CLASS,
             BurgerLayoutItem {
-            
+
 
 
             }

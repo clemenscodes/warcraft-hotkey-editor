@@ -16,8 +16,6 @@ use style::CLASS;
 use tw_macro::assert_component;
 use warcraft_api::UnitKind;
 
-/// The stable per-category key string used to identify a category's row in the
-/// mobile tabs and the category sections (a Dioxus list `key`).
 pub(super) fn unit_kind_key(kind: UnitKind) -> &'static str {
     match kind {
         UnitKind::Hero => "hero",
@@ -27,10 +25,6 @@ pub(super) fn unit_kind_key(kind: UnitKind) -> &'static str {
     }
 }
 
-/// The unit sidebar: search, catalog toggles, mobile category tabs, and the
-/// scrollable category sections. Its root owns only the panel class; the tab row
-/// and the scroll region are their own child components, each fed by conversion
-/// from the composed hook.
 #[component]
 pub fn UnitList() -> Element {
     let UnitListModel {
@@ -45,12 +39,12 @@ pub fn UnitList() -> Element {
         aside {
             class: CLASS,
             SearchFieldToggle {
-            
+
 
 
             }
             CatalogVisibilityToggle {
-            
+
 
 
             }

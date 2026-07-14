@@ -7,7 +7,6 @@ use presentation::use_control_groups_row;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The ten-cell control-group strip.
 #[component]
 pub fn ControlGroupsRow() -> Element {
     let model = use_control_groups_row();

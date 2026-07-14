@@ -2,9 +2,6 @@ use browser_kit::frame::{Frame, Render};
 use dioxus::prelude::*;
 use dioxus_kit::frame::Empty;
 
-/// The detail card's frame: just the caller's body region. `DetailCard` builds this and hands
-/// it to the headless `Card`, which places the body inside the styled detail surface. The card
-/// has no header or footer, so those regions default to `None`.
 #[derive(Clone, PartialEq, Default)]
 pub struct DetailCardFrame<Body: Render<Output = Element>> {
     pub(super) body: Body,

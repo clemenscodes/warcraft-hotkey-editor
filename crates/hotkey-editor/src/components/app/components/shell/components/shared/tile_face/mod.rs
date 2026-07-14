@@ -12,12 +12,6 @@ use model::TileFaceModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The tile painter: the resting visual of a command-grid slot — the inert base
-/// `GridTile` (filled or empty) with the `TileBadge` hotkey letter layered on top,
-/// inside the square, container-query box the badge sizes against. Purely
-/// presentational: props in, markup out, no handlers and no drag state. The editor's
-/// `GridEditorTile` Host wraps this and adds the interaction; the templates preview and
-/// the gallery render it directly, read-only.
 #[component]
 pub fn TileFace(props: TileFaceModel) -> Element {
     let coordinate = props.coordinate;

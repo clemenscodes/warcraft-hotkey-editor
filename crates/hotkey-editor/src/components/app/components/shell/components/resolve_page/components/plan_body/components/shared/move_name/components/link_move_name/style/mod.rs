@@ -1,5 +1,4 @@
 use tw_macro::tw;
-// The clickable ability name that deep-links into the editor; underlines on the button's hover. Shared name typography VALUES with its sibling; each writes its own list.
 classes! {
     base: tw![
         "text-xl",

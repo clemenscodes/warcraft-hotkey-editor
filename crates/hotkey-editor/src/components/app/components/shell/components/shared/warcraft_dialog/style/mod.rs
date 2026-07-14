@@ -1,8 +1,4 @@
 use tw_macro::tw;
-// The dialog content box: the bordered, self-centring surface that holds the frame's
-// regions. The headless `Dialog` applies this class to its content container via `class:`;
-// the primitive owns no positioning, so the box places itself (fixed + inset-0 + m-auto
-// centres the sized box on the viewport).
 
 classes! {
     base: tw![

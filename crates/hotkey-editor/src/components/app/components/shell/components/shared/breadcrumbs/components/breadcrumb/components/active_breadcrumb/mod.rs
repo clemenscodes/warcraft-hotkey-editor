@@ -11,9 +11,6 @@ use model::ActiveBreadcrumbModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The active breadcrumb tab: the current page's crumb, its label and count lit gold.
-/// It publishes `--count-opacity: 1` so its count reads full-strength. Presentational —
-/// the dispatcher renders it for the active tab.
 #[component]
 pub fn ActiveBreadcrumb(props: ActiveBreadcrumbModel) -> Element {
     let text = props.label;

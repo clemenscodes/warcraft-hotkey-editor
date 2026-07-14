@@ -4,8 +4,6 @@ use warcraft_keybinds::HotkeyToken;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker_dialog::KeyPickerCell;
 
-/// Guards the hotkey picker so it is mounted only while editing (mounting it while
-/// closed would attach its keyboard handling when it should be absent).
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyPickerDialogDialogModel {
     pub visible: bool,

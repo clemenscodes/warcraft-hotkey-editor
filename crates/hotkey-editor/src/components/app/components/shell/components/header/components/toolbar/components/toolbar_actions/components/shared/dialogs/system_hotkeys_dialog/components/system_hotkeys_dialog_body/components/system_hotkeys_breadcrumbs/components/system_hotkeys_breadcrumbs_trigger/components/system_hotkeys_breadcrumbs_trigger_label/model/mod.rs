@@ -1,7 +1,6 @@
 use super::view::SystemHotkeysBreadcrumbsTriggerLabelView;
 use dioxus::prelude::*;
 
-/// The trigger's caption: the active category name.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsTriggerLabelModel {
     #[props(into)]

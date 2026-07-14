@@ -1,11 +1,5 @@
 use tw_macro::tw;
 
-// The unit card is a thin identity wrapper around its own `UnitCardButton` button:
-// it owns only the card's placement box (full width in the vertical list; a fixed
-// carousel item on mobile/tablet, sized as a size-container so the portrait can scale
-// in `cqh`). All of the card's look — border, fill, hover, focus, and the
-// `--race-color` selected accent — lives on the surface.
-
 classes! {
     base: tw![
         "w-full",

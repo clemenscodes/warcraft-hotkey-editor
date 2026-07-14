@@ -1,9 +1,5 @@
 use warcraft_keybinds::KeyCode;
 
-/// A browser `KeyboardEvent`, narrowed to the two fields the board reads. This is the
-/// only place that knows the shape of a web key event; it translates one into a domain
-/// [`KeyCode`] and makes no decision beyond that mapping. The board resolves every
-/// keypress through this, then matches the result against the keys it offers.
 pub(crate) struct BrowserKeyEvent<'a> {
     key: &'a str,
     code: &'a str,
@@ -14,17 +10,11 @@ impl<'a> BrowserKeyEvent<'a> {
         Self { key, code }
     }
 
-    /// The domain key this event names, or `None` when the browser reported a key
-    /// Warcraft III does not accept.
     pub(crate) fn key_code(&self) -> Option<KeyCode> {
         let raw_code = self.raw_code()?;
         KeyCode::try_from(raw_code).ok()
     }
 
-    /// The offered key this event picks, or `None` when it names no key the board
-    /// offers. Resolves the press to a [`KeyCode`], then keeps it only if it is one
-    /// of `offered`; the board's keyboard handler and the host's focus-gap fallback
-    /// both select through this, so they agree on what a press means.
     pub(crate) fn pick_among(&self, offered: &[KeyCode]) -> Option<KeyCode> {
         let resolved = self.key_code()?;
         if offered.contains(&resolved) {

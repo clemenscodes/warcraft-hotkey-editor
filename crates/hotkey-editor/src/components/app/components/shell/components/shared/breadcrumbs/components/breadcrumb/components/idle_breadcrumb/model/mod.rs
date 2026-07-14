@@ -1,7 +1,6 @@
 use super::view::IdleBreadcrumbView;
 use dioxus::prelude::*;
 
-/// The idle breadcrumb tab's props: its label, live count, and click handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct IdleBreadcrumbModel {
     #[props(into)]

@@ -13,9 +13,6 @@ use model::ClosedHeroLevelTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The resting look of the hero-level trigger: a dim gold border and no glow, with an
-/// upright caret. Rendered by the dispatcher while the menu is closed; owns its button
-/// root and composes the shared label and number leaves plus its upright caret.
 #[component]
 pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerModel) -> Element {
     let number = props.number;
@@ -26,7 +23,7 @@ pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerModel) -> Element {
             r#type: "button",
             onclick,
             HeroLevelTriggerLabel {
-            
+
 
 
             }
@@ -34,7 +31,7 @@ pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerModel) -> Element {
                 number,
             }
             ClosedHeroLevelTriggerChevron {
-            
+
 
 
             }

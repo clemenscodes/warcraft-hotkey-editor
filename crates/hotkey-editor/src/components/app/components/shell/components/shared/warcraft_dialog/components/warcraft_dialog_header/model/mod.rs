@@ -1,8 +1,6 @@
 use super::view::WarcraftDialogHeaderView;
 use dioxus::prelude::*;
 
-/// The dialog header's inputs: the title to show and the close callback fired by the ✕
-/// control. `Callback<()>` so the header region can carry it as `Default` plain data.
 #[derive(Props, Clone, PartialEq)]
 pub struct WarcraftDialogHeaderModel {
     #[props(into)]

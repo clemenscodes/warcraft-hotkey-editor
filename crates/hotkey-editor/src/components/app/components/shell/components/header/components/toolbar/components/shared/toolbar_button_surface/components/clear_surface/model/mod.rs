@@ -1,10 +1,6 @@
 use super::view::ClearSurfaceView;
 use dioxus::prelude::*;
 
-/// The clear resting look of a toolbar surface: a gold-bordered surface with a soft
-/// resting glow, the affirmative "all clear" look. Carries every attribute needed to
-/// render the `<button>`, including the icon glyph it draws. Built by the dispatcher
-/// from the shared toolbar surface state.
 #[derive(Props, Clone, PartialEq)]
 pub struct ClearSurfaceModel {
     pub icon: &'static str,

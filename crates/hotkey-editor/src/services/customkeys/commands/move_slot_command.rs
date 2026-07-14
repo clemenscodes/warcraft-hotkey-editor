@@ -4,9 +4,6 @@ use ddd::Layered;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::MoveRequest;
 
-/// Move a slot to a target cell (with optional swap / co-move / hotkey-follow),
-/// resolving any cascade the move triggers. Carries a `MoveRequest`, which is
-/// `Copy`, so the command owns it outright.
 pub struct MoveSlotCommand<'a> {
     request: MoveRequest<'a>,
 }

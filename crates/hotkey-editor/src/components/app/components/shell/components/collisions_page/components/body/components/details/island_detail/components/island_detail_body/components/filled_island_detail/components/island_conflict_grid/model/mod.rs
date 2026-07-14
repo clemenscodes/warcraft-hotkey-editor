@@ -2,7 +2,6 @@ use super::view::IslandConflictGridView;
 use crate::components::app::components::shell::components::collisions_page::presentation::ConflictView;
 use dioxus::prelude::*;
 
-/// The scrolling grid of conflict cards for the selected island.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictGridModel {
     pub conflicts: Vec<ConflictView>,

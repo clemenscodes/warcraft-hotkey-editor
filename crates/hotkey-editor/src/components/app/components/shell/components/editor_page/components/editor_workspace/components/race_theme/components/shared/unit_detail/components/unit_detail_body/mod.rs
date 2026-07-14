@@ -11,7 +11,6 @@ use model::UnitDetailBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The card body: the grids-and-override row.
 #[component]
 pub fn UnitDetailBody(props: UnitDetailBodyModel) -> Element {
     let grid_slots = props.grid_slots;

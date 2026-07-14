@@ -12,9 +12,6 @@ use model::ConflictMultiStackModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The stacked layout for a shared-key clash carried by three or more abilities: the
-/// key badge over a wrapping row of ability icons. It owns its own abilities row.
-/// Renders nothing when there are no abilities to stack.
 #[component]
 pub fn ConflictMultiStack(props: ConflictMultiStackModel) -> Element {
     let abilities = props.abilities;

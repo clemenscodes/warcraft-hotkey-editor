@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The search box wrapper. On the sidebar it is a bordered inset panel; on mobile it
-// becomes a bare relative box (the input carries its own chrome there) so the icon
-// can be positioned over the field.
 
 classes! {
     base: tw![

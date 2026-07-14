@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`SystemHotkeysBreadcrumbsTriggerModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsTriggerView {
     pub label: String,

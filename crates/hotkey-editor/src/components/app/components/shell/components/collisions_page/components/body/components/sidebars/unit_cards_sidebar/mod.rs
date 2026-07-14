@@ -11,10 +11,6 @@ use presentation::{
 };
 use tw_macro::assert_component;
 
-/// The unit-collision sidebar: one card per clashing unit, handed to the collision
-/// sidebar. Generic over the conflict shape, so the hotkey and unit-position kinds
-/// render this one sidebar. The selected unit is read from collision-selection context
-/// (the conflict kind names which field), mirroring `IslandSidebar`.
 #[component]
 pub fn UnitCardsSidebar<Conflict: Clone + PartialEq + SelectedCollisionUnit + 'static>(
     props: UnitCardsSidebarModel<Conflict>,

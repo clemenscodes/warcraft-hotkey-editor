@@ -2,8 +2,6 @@ use super::view::ConflictMetaView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The text meta column of a detail-pane header: the unit name, its object id, and the
-/// collision count.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictMetaModel {
     pub name: String,

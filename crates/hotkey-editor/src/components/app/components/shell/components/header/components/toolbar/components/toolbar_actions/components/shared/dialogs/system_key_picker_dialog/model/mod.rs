@@ -3,9 +3,6 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
-/// What the system key picker needs: the title the shell shows, the key currently
-/// bound (highlighted), the map of already-taken keys to the hotkeys that hold
-/// them, the open flag that mounts it, and the pick/close handlers.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemKeyPickerDialogModel {
     #[props(into)]

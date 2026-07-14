@@ -6,9 +6,6 @@ use warcraft_keybinds::CustomKeys;
 
 use crate::persistence::custom_keys_persistence;
 
-/// Infrastructure adapter that persists the [`CustomKeys`] aggregate to
-/// localStorage. Its `save` funnels through the canonical `Display` text, so only
-/// normalized text can ever reach storage (architecture rule R2).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct CustomKeysRepository;
 

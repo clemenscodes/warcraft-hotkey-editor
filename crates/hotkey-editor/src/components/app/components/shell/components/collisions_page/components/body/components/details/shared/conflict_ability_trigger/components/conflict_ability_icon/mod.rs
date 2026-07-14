@@ -11,9 +11,6 @@ use model::ConflictAbilityIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One conflicting ability's square icon: it owns its slot and lifts to a gold glow
-/// when its trigger `.group` is hovered. The shared `FramedIcon` draws the bordered,
-/// rounded image.
 #[component]
 pub fn ConflictAbilityIcon(props: ConflictAbilityIconModel) -> Element {
     let Some(source) = props.src else {

@@ -10,8 +10,6 @@ use model::SystemKeyPickerDialogBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The system key picker's scrolling content region between the header and the
-/// panel edge, holding the shared full-bleed on-screen keyboard board.
 #[component]
 pub fn SystemKeyPickerDialogBody(props: SystemKeyPickerDialogBodyModel) -> Element {
     let columns = props.columns;

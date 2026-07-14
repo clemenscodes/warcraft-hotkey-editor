@@ -7,17 +7,6 @@ use warcraft_keybinds::GridSlotId;
 
 pub mod context;
 
-/// The editor view's own UI state: the selected slot, the per-catalog toggles, and the
-/// tier overrides. Provided once by the app shell and read by the editor page from
-/// context, so the page is fed no god-bag of signals as props. Each field is a `Signal`,
-/// so a reader subscribes only to the slice it touches; the whole struct is `Copy`, so a
-/// handler captures it cheaply. The in-progress drag is its own concern and lives in
-/// [`DragState`](crate::services::drag_state::DragState), not here.
-///
-/// The nav-scoped signals (race, mode, selected unit, search query) live in
-/// [`ViewNavigationContext`](crate::services::navigation::view_navigation::ViewNavigationContext)
-/// and the document lives in [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService);
-/// this is only the state confined to the editor subtree.
 #[derive(Clone, Copy, PartialEq)]
 pub struct EditorState {
     selected_slot: Signal<Option<GridSlotId>>,

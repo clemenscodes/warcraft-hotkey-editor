@@ -11,9 +11,6 @@ use model::UpgradeSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The upgraded-form block of a tile override: it owns its own block directly and
-/// delegates the header row (label, position button, hotkey cell) to its child.
-/// Renders nothing when there is no upgrade to show.
 #[component]
 pub fn UpgradeSection(props: UpgradeSectionModel) -> Element {
     if !props.show {

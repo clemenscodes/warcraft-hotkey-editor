@@ -11,9 +11,6 @@ use model::KeyPickerColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One column of the picker board: a vertical stack of key rows. The letter picker
-/// renders a single column; the system keyboard renders the main keyboard and the
-/// numpad as two columns side by side.
 #[component]
 pub fn KeyPickerColumn(props: KeyPickerColumnModel) -> Element {
     let rows = props.rows;

@@ -6,23 +6,18 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The Neutral race-themed container. A `display:contents` wrapper that publishes the
-/// Neutral colour as `--race-color` for its descendants — the unit
-/// list and the unit detail panel — which read them for their selected and hover accents.
-/// Being `contents`, it adds no box: the custom properties inherit down while the
-/// workspace grid still lays out the list and detail directly.
 #[component]
 pub fn NeutralRaceTheme() -> Element {
     rsx! {
         div {
             class: CLASS,
             UnitList {
-            
+
 
 
             }
             UnitDetail {
-            
+
 
 
             }

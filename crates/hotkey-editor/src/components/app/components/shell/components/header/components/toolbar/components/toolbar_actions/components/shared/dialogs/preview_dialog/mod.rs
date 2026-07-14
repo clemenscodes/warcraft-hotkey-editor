@@ -12,11 +12,6 @@ use dioxus_kit::frame::Empty;
 use model::PreviewDialogModel;
 use tw_macro::assert_component;
 
-/// The export preview dialog: a read-only pane showing the serialized CustomKeys.txt, opened
-/// by the trigger that owns its open signal (the inline preview button or the burger drawer,
-/// each with its own instance). It mounts the reusable `WarcraftDialog` with the isolated
-/// preview content as its body region only while `open`; the headless dialog derives its own
-/// close from `on_open_change`.
 #[component]
 pub fn PreviewDialog(props: PreviewDialogModel) -> Element {
     let open = props.open;

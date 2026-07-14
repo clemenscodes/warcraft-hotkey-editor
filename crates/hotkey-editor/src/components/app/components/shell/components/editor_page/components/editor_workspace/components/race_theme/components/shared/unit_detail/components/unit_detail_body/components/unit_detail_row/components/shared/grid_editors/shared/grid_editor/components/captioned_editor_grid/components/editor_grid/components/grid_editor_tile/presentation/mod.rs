@@ -5,11 +5,6 @@ use crate::components::app::components::shell::components::shared::tile_face::Ti
 use dioxus::prelude::*;
 use warcraft_keybinds::{GridCoordinate, HotkeyToken, RenderedTile};
 
-/// A finished interactive editor tile as domain-shaped data: the paint fields plus the
-/// editor's interaction — focus, drag flags, and the pointer/keyboard handlers. The
-/// `GridEditor` builds these in its own reactive scope and threads them down through
-/// `CaptionedEditorGrid` and `EditorGrid`, which render each `GridEditorTile` from these
-/// named fields. It is the tile's view-model, never another component's props.
 #[derive(Clone, PartialEq)]
 pub(crate) struct EditorTile {
     pub(crate) coordinate: GridCoordinate,
@@ -33,10 +28,6 @@ pub(crate) struct EditorTile {
 }
 
 impl From<&RenderedTile> for EditorTile {
-    /// The read-only base from a domain tile: the paint comes from `TileFaceView`, and
-    /// the editor overlays behavior on top. Every handler starts at its default (the
-    /// `GridEditor` wires them); only the two interaction flags the domain decides —
-    /// focusability and draggability — are read from the rendered tile.
     fn from(rendered: &RenderedTile) -> Self {
         let face = TileFaceView::from(rendered);
         let TileFaceView {
@@ -73,12 +64,6 @@ impl From<&RenderedTile> for EditorTile {
     }
 }
 
-/// Everything the editor tile's interactive wrapper renders: the focus tabindex and
-/// every forwarded event handler. Field names match the attributes they feed, so the
-/// wrapper spreads them with RSX shorthand. This is the interaction that the inert base
-/// `GridTile` deliberately does not carry; the drag-state looks are the painter's own
-/// mounted overlays, and draggability is the `DraggableMarker`, so no look-flag
-/// attributes live here.
 #[derive(Clone, PartialEq)]
 pub struct EditorTileChrome {
     pub(super) tabindex: &'static str,

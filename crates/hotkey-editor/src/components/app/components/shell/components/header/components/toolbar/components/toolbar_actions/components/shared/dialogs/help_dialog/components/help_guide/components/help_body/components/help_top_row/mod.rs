@@ -12,8 +12,6 @@ use model::HelpTopRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The split upper region: the workflow on the left, the button legend on the
-/// right; stacked on small screens, side by side on laptop and up.
 #[component]
 pub fn HelpTopRow(props: HelpTopRowModel) -> Element {
     let content = props.content;

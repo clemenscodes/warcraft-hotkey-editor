@@ -16,8 +16,6 @@ use model::{HotkeyOverrideModel, HotkeyOverridePresentation};
 use presentation::use_hotkey_override;
 use tw_macro::assert_component;
 
-/// The per-tile override editor. A pure renderer: the composed hook shapes the card's
-/// fields and the pickers as domain values, and the body names each child directly.
 #[component]
 pub fn HotkeyOverride(props: HotkeyOverrideModel) -> Element {
     let HotkeyOverridePresentation {

@@ -1,8 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::SearchField;
 
-/// The two search-field options, each finished with its active flag and select
-/// handler.
 pub(super) struct SearchFieldToggleModel {
     pub(super) unit_is_active: bool,
     pub(super) ability_is_active: bool,

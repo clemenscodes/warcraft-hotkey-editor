@@ -9,7 +9,6 @@ use model::NormalHotkeyBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hotkey badge for an ordinary binding: the warcraft-gold letter on a dark chip.
 #[component]
 pub fn NormalHotkeyBadge(props: NormalHotkeyBadgeModel) -> Element {
     let label = props.letter.display_label();

@@ -12,8 +12,6 @@ use model::PrimaryStrengthRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's strength row when strength is the hero's primary attribute: it wears the
-/// gold primary glow and publishes the full-gold `--attribute-label-color` its label reads.
 #[component]
 pub fn PrimaryStrengthRow(props: PrimaryStrengthRowModel) -> Element {
     let statistic = props.statistic;

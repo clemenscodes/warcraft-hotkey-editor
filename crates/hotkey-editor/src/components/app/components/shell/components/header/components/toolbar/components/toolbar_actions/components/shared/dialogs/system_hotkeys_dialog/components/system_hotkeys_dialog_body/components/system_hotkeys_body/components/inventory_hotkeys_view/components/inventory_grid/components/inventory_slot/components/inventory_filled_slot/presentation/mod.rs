@@ -21,10 +21,6 @@ use warcraft_keybinds::{KeyCode, WarcraftObjectId};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::closure::Closure;
 
-/// The presentational state of one inventory cell: its glow state, drag flag,
-/// caption/key labels, conflict tooltip, and picker conflict set. The binding half
-/// comes from the CustomKeys query; the drag/editing half from the shared UI
-/// signals. Pure derivation — no signals owned, no handlers.
 pub(super) struct InventoryFilledSlotView {
     pub(super) state: SystemSlotState,
     pub(super) dragging: bool,
@@ -37,9 +33,6 @@ pub(super) struct InventoryFilledSlotView {
     pub(super) picker_conflicts: HashMap<KeyCode, Vec<String>>,
 }
 
-/// The inputs that shape an [`InventoryFilledSlotView`]: the slot's props (its UI
-/// drag signals), the editing section from the dialog state context, and the
-/// resolved binding from the CustomKeys query.
 pub(super) struct InventoryFilledSlotInputs<'a> {
     pub(super) props: &'a InventoryFilledSlotModel,
     pub(super) binding: &'a SlotBindingView,
@@ -105,10 +98,6 @@ impl From<InventoryFilledSlotInputs<'_>> for InventoryFilledSlotView {
     }
 }
 
-/// Everything the cell's markup needs, already shaped: its glow state, drag flag,
-/// caption/key, conflict tooltip, whether its picker is open, and the full set of
-/// pointer/click/pick handlers that drive the drag-to-swap and edit-on-click
-/// behaviour. All of that work lives here so the body is pure.
 pub(super) struct InventoryFilledSlotPresentation {
     pub(super) state: SystemSlotState,
     pub(super) dragging: bool,
@@ -131,9 +120,6 @@ pub(super) struct InventoryFilledSlotPresentation {
     pub(super) on_close: EventHandler<()>,
 }
 
-/// The pointer-drag handlers that drive the drag-to-swap gesture. Owns no signals of
-/// its own — it drives the shared drag signals plus the thread-local drag session —
-/// and commits a completed swap through the [`CustomKeysService`](crate::services::customkeys).
 struct InventoryDrag {
     on_pointerdown: EventHandler<Event<PointerData>>,
     on_pointermove: EventHandler<Event<PointerData>>,
@@ -141,8 +127,6 @@ struct InventoryDrag {
     on_pointercancel: EventHandler<Event<PointerData>>,
 }
 
-/// The click-to-edit handlers: open the picker on click, commit a picked key through
-/// the service, and close on dismiss.
 struct InventoryEditing {
     on_click: EventHandler<MouseEvent>,
     on_pick: EventHandler<KeyCode>,
@@ -185,12 +169,6 @@ fn use_inventory_drag(props: &InventoryFilledSlotModel, label_for_drag: String) 
         let click_offset_horizontal = cursor_horizontal_position - cell_rect.left();
         let click_offset_vertical = cursor_vertical_position - cell_rect.top();
         let pointer_id = web_event.pointer_id();
-        // The drag is only recorded as pending here; the state change (capture, drag
-        // signals, follower) is deferred to the first past-threshold pointermove (see
-        // `on_pointermove`). Mutating the drag signals on pointerdown unmounts the slot
-        // content under the cursor, detaching the mousedown target so the browser drops
-        // the `click` and swallows the click-to-edit gesture. Mirrors the grid editor's
-        // drag mechanics.
         let drag_origin = DragOrigin {
             cursor_horizontal_position,
             cursor_vertical_position,
@@ -221,10 +199,6 @@ fn use_inventory_drag(props: &InventoryFilledSlotModel, label_for_drag: String) 
         let cursor_horizontal_position = f64::from(web_event.client_x());
         let cursor_vertical_position = f64::from(web_event.client_y());
         if !drag_is_active {
-            // A pending drag: promote it into a real drag once movement crosses the
-            // threshold — capturing the pointer, marking the source, and mounting the
-            // follower. Below-threshold moves leave it pending so a release still reads
-            // as a click.
             let Some(origin) = DRAG_ORIGIN.with(|cell| cell.get()) else {
                 return;
             };
@@ -305,8 +279,6 @@ fn use_inventory_drag(props: &InventoryFilledSlotModel, label_for_drag: String) 
         }
         let did_move = DID_DRAG_MOVE.with(|cell: &Cell<bool>| cell.replace(false));
         DRAG_ORIGIN.with(|cell| cell.set(None));
-        // A never-promoted pending drag means the pointer was released without crossing
-        // the threshold: it was a click, so drop it and let the click through.
         PENDING_INVENTORY_DRAG.with(|cell| *cell.borrow_mut() = None);
         if did_move || performed_swap {
             SUPPRESS_NEXT_CLICK.with(|cell: &Cell<bool>| cell.set(true));
@@ -358,7 +330,6 @@ fn use_inventory_editing(
     }
 }
 
-/// Composes an inventory cell's state and behaviour.
 pub(super) fn use_inventory_filled_slot(
     props: &InventoryFilledSlotModel,
 ) -> InventoryFilledSlotPresentation {

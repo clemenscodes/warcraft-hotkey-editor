@@ -3,13 +3,11 @@ use crate::components::app::components::shell::components::shared::grid_tile::Gr
 use dioxus::prelude::*;
 use warcraft_keybinds::{GridCoordinate, HotkeyToken};
 
-/// The published `View` contract mirroring [`GridEditorTileModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct GridEditorTileView {
     pub coordinate: GridCoordinate,
     pub icon: Option<String>,
     pub label: String,
-    /// The hotkey; every editor tile always has one, shown as its badge.
     pub hotkey: HotkeyToken,
     pub badge_state: HotkeyBadgeState,
     pub state: GridTileState,

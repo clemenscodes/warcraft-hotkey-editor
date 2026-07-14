@@ -2,10 +2,6 @@ use super::data::{HIDE_LABEL, LABEL};
 use crate::components::app::components::shell::components::shared::icons::ICON_PREVIEW;
 use dioxus::prelude::*;
 
-/// The preview button's shaped data: the fixed icon, the accessible label (which flips while
-/// the pane is open), the pressed state, whether the pane is open, the toggle handler, and the
-/// change handler the mounted dialog mirrors its own close through. The open signal is local
-/// and owned here — the button that opens the dialog owns it, so the dialog travels with it.
 pub(super) struct PreviewButtonPresentation {
     pub(super) icon: &'static str,
     pub(super) aria_label: &'static str,
@@ -15,9 +11,6 @@ pub(super) struct PreviewButtonPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// Owns the preview pane's local open signal and shapes the button's data: the toggle handler
-/// that opens or closes the pane, and the change handler the mounted dialog mirrors its own
-/// close through.
 pub(super) fn use_preview_button() -> PreviewButtonPresentation {
     let mut open_signal = use_signal::<bool>(|| false);
     let open = open_signal();

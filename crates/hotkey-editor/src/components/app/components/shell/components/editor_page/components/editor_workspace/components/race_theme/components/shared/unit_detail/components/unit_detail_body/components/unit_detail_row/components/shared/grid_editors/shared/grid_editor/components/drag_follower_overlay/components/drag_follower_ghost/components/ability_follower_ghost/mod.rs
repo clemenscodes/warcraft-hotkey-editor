@@ -12,8 +12,6 @@ use model::AbilityFollowerGhostModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The drag-follower ghost for a tile lifted from an ordinary ability menu: the panel
-/// surface, the dragged icon, and its hotkey badge, pinned to the cursor.
 #[component]
 pub fn AbilityFollowerGhost(props: AbilityFollowerGhostModel) -> Element {
     let FollowerPresentation {

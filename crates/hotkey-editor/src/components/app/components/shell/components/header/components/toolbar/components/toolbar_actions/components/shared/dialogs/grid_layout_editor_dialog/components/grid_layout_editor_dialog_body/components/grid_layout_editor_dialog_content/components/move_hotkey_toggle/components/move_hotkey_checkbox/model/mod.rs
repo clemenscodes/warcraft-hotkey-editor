@@ -1,7 +1,6 @@
 use super::view::MoveHotkeyCheckboxView;
 use dioxus::prelude::*;
 
-/// The checkbox's current value and the change handler forwarded from the toggle.
 #[derive(Props, Clone, PartialEq)]
 pub struct MoveHotkeyCheckboxModel {
     pub checked: bool,

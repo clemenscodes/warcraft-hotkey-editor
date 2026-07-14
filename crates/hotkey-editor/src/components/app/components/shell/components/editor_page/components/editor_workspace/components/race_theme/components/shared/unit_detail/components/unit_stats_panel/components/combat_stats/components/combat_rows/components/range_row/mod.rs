@@ -13,8 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Range";
 
-/// The range row, shown only for a ranged attack. A melee attack has a reach of zero
-/// and no row at all. A guarded leaf that early-returns.
 #[component]
 pub fn RangeRow(props: RangeRowModel) -> Element {
     let value = props.value;

@@ -1,7 +1,6 @@
 use super::view::SystemHotkeysListEntryLabelView;
 use dioxus::prelude::*;
 
-/// A hotkey row's binding name.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysListEntryLabelModel {
     #[props(into)]

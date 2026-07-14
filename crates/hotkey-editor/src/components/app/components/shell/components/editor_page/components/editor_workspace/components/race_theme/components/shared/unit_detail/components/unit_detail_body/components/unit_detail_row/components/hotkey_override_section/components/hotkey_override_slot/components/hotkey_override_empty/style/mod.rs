@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The placeholder shown in the hotkey-override section before a grid tile is
-// selected: a dashed muted-italic box.
 
 classes! {
     base: tw![

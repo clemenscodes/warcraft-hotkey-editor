@@ -3,7 +3,6 @@ use crate::components::app::components::shell::components::collisions_page::pres
 use crate::services::carriers::InspectedAbility;
 use warcraft_api::WarcraftObjectId;
 
-/// The affected unit heading a conflict card: its id, icon, and display name.
 #[derive(Clone, PartialEq)]
 pub(crate) struct IslandUnitData {
     pub(super) unit_id: WarcraftObjectId,
@@ -11,8 +10,6 @@ pub(crate) struct IslandUnitData {
     pub(super) name: String,
 }
 
-/// One clashing ability of a conflict card: its display name, id, icon, the count of
-/// further carriers, and the opaque identity it opens its carriers dialog on.
 #[derive(Clone, PartialEq)]
 pub(crate) struct IslandAbilityData {
     pub(super) ability_name: String,
@@ -22,7 +19,6 @@ pub(crate) struct IslandAbilityData {
     pub(super) inspected: InspectedAbility,
 }
 
-/// The shaped card: the affected unit heading it, and the two abilities that clash.
 pub(super) struct IslandConflictCardPresentation {
     pub(super) unit: IslandUnitData,
     pub(super) own_ability: IslandAbilityData,

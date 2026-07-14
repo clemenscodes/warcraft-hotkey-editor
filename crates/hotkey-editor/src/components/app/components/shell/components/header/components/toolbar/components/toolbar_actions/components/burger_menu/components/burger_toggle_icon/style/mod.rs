@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// Fixed glyph size: the burger renders at a single button size, so the icon is a plain
-// fixed size (~44% of the 36px button) rather than a cqi fraction.
 
 classes! {
     base: tw![

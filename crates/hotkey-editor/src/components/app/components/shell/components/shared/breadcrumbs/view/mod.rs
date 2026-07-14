@@ -1,6 +1,5 @@
 use super::breadcrumb_view::BreadcrumbView;
 
-/// The published `View` contract mirroring [`BreadcrumbsModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct BreadcrumbsView {
     pub breadcrumbs: Vec<BreadcrumbView>,

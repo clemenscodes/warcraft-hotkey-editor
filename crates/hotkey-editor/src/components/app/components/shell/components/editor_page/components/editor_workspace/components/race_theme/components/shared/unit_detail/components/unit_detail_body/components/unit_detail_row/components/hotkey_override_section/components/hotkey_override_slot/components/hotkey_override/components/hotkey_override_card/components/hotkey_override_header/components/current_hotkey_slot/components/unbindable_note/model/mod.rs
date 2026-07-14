@@ -1,7 +1,6 @@
 use super::view::UnbindableNoteView;
 use dioxus::prelude::*;
 
-/// The note shown for a passive ability that has no hotkey field.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnbindableNoteModel {
     #[props(into)]

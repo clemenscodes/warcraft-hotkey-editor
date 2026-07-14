@@ -11,7 +11,6 @@ use model::CollisionCardMetaModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The text column of a collision card: the primary meta line above the collision count.
 #[component]
 pub fn CollisionCardMeta(props: CollisionCardMetaModel) -> Element {
     let count = props.count;

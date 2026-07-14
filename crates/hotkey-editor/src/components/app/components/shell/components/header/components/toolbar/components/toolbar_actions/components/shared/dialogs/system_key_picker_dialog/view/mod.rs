@@ -2,7 +2,6 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
-/// The published `View` contract mirroring [`SystemKeyPickerDialogModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SystemKeyPickerDialogView {
     pub title: String,

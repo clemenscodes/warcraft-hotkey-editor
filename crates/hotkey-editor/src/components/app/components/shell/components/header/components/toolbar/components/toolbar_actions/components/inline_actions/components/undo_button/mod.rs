@@ -8,8 +8,6 @@ use presentation::{UndoButtonPresentation, use_undo_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline undo action: the toolbar button that undoes the last edit. It sources its own
-/// disabled state and click handler from the undo history.
 #[component]
 pub fn UndoButton() -> Element {
     let UndoButtonPresentation {

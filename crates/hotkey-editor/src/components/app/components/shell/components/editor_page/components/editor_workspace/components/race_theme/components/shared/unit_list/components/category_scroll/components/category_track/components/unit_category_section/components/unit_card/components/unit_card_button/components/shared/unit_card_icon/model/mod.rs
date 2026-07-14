@@ -2,7 +2,6 @@ use super::view::UnitCardIconView;
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use dioxus::prelude::*;
 
-/// The portrait source (absent for units without an icon) and the alt text.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardIconModel {
     pub icon_path: Option<IconUrl>,

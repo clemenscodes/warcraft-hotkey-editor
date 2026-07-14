@@ -1,7 +1,6 @@
 use super::view::AltStateHeaderLabelColumnView;
 use dioxus::prelude::*;
 
-/// The label column of the off-state header row.
 #[derive(Props, Clone, PartialEq)]
 pub struct AltStateHeaderLabelColumnModel {
     pub text: Option<String>,

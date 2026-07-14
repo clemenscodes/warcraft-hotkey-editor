@@ -13,8 +13,6 @@ use model::HelpResolverSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The full-width lower region: the heading, the prose walkthrough of what the
-/// resolver does, and the glossary that defines its terms.
 #[component]
 pub fn HelpResolverSection(props: HelpResolverSectionModel) -> Element {
     let paragraphs = props.prose;

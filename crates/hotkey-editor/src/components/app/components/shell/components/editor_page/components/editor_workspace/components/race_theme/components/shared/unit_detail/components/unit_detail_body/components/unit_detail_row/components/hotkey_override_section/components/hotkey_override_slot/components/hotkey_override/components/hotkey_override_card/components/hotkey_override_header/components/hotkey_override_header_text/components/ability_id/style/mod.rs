@@ -1,5 +1,4 @@
 use tw_macro::tw;
-// The object id under the name, in a monospace face; smaller on the mobile panel.
 
 classes! {
     base: tw![

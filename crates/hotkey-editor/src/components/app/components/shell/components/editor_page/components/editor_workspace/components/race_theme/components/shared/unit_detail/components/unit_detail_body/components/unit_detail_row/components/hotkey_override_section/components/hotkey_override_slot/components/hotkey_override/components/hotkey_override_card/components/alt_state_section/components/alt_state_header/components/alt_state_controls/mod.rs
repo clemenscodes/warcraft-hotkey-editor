@@ -12,8 +12,6 @@ use crate::components::app::components::shell::components::editor_page::componen
 
 use model::AltStateControlsModel;
 
-/// The position button and off-state hotkey cell of the alt-state block; renders
-/// nothing when the off-state is not editable in this context.
 #[component]
 pub fn AltStateControls(props: AltStateControlsModel) -> Element {
     let AltStateControlsModel {

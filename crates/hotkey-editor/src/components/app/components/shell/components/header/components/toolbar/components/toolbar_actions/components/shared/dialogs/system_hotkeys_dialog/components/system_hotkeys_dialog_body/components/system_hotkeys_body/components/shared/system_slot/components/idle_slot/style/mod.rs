@@ -1,14 +1,5 @@
 use tw_macro::tw;
 
-// The framed WC3 slot cell: the gold border-image frame, the caption/key layout, and
-// the glow filters. It fills the box its host hands it (`size-full`) and draws the
-// frame at that size; the host owns the cell's size (aspect ratio, min-height) and
-// interaction. The frame's density (border width, padding, gap, image slice) is
-// inherited from the parent size container through the `--slot-frame-*` custom
-// properties (the control-group row tightens them); with no container override the
-// per-band fallbacks reproduce the regular hero/inventory frame. The hover and
-// keyboard-focus glows are keyed off the host's named `group/tooltip`. The idle look
-// carries no extra glow overlay.
 classes! {
     base: tw![
         "size-full",

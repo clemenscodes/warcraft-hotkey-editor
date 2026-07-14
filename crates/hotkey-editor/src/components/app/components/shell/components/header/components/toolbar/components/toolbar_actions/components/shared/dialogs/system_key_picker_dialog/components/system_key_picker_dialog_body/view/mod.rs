@@ -5,10 +5,6 @@ use browser_kit::frame::Render;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
 
-/// The published `View` contract mirroring [`SystemKeyPickerDialogBodyModel`], threaded to
-/// this component as data. It is also the system key picker's body region: it `impl Render`
-/// and renders the presentational `SystemKeyPickerDialogBody` once, so the dialog places the
-/// published `View` directly as `WarcraftDialog`'s body, with no ad-hoc region type.
 #[derive(Clone, PartialEq, Default)]
 pub struct SystemKeyPickerDialogBodyView {
     pub columns: Vec<KeyColumn>,

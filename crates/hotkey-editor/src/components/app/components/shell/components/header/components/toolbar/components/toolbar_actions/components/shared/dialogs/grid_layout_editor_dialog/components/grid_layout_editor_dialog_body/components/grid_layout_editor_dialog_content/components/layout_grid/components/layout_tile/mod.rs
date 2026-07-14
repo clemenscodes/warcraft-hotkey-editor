@@ -13,10 +13,6 @@ pub use state::LayoutTileState;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A single editable cell in the global hotkey grid. Draggable to swap, clickable
-/// to open the key picker, and pulses while being edited. The focusable, keyboard-
-/// navigable host: it owns the drag/click behaviour, the grid address, focus, and the
-/// font size, and wraps the shared `EditableKeycap` that draws the gold cap and pulse.
 #[component]
 pub fn LayoutTile(props: LayoutTileModel) -> Element {
     let ondragstart = props.ondragstart;

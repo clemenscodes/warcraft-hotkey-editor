@@ -11,8 +11,6 @@ use model::HelpGlossaryColumnsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The side-by-side glossaries that define the resolver's vocabulary, one column
-/// per entry list passed in.
 #[component]
 pub fn HelpGlossaryColumns(props: HelpGlossaryColumnsModel) -> Element {
     rsx! {

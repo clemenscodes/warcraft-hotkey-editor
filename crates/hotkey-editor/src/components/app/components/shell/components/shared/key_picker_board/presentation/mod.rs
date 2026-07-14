@@ -4,10 +4,6 @@ use super::model::KeyPickerBoardModel;
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
 
-/// The board's fully shaped view: the domain columns of keys to render, the pick handler
-/// each key fires, and the one keydown handler the focusable board wires. Built by `From`
-/// so the body only places these; the columns stay domain [`KeyColumn`]s threaded down,
-/// never another component's props.
 pub(super) struct KeyPickerBoardPresentation {
     pub(super) columns: Vec<KeyColumn>,
     pub(super) on_pick: EventHandler<KeyCode>,

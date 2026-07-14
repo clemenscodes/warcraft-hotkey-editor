@@ -1,9 +1,6 @@
 use super::model::ToastModel;
 use dioxus::prelude::*;
 
-/// Schedule the auto-dismissal of a non-permanent toast: once mounted, wait its
-/// resolved duration, then ask the provider to remove it. Permanent toasts and
-/// toasts without a duration are left in place.
 pub fn use_toast_auto_dismiss(props: &ToastModel) {
     let id = props.record.id();
     let duration = props.record.duration();

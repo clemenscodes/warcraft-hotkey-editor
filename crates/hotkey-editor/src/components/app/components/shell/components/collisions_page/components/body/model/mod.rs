@@ -2,7 +2,6 @@ use super::view::BodyView;
 use super::view::ContentModel;
 use dioxus::prelude::*;
 
-/// The dispatcher's input: the shaped active content for the current kind and state.
 #[derive(Props, Clone, PartialEq)]
 pub struct BodyModel {
     pub content: ContentModel,

@@ -2,8 +2,6 @@ use super::view::HotkeyOverrideHeaderView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The header owns the name/id column and the hotkey slot beside it; every field its
-/// children place is threaded through here as a domain value.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyOverrideHeaderModel {
     pub name_text: String,

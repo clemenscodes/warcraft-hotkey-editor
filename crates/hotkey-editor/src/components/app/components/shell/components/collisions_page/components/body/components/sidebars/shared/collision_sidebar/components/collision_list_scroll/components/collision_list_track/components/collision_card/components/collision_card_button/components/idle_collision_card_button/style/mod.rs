@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The idle collision card surface: shared entity-card chrome values, resting, with a
-// blue hover border. Shared values with the selected sibling.
 classes! {
     base: tw![
         "flex",

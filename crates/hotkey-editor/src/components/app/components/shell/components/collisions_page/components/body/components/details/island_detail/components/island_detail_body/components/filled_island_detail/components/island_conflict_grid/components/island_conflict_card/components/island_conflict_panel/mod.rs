@@ -10,8 +10,6 @@ use dioxus::prelude::*;
 use model::IslandConflictPanelModel;
 use tw_macro::assert_component;
 
-/// One island conflict card: the affected unit heading its two clashing abilities. Composes
-/// the shared `PanelCard` surface, supplying its body region.
 #[component]
 pub fn IslandConflictPanel(props: IslandConflictPanelModel) -> Element {
     let IslandConflictPanelModel {

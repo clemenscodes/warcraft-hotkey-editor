@@ -1,6 +1,5 @@
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 
-/// The published `View` contract mirroring [`HighlightedSlotModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct HighlightedSlotView {
     pub slot_label: String,

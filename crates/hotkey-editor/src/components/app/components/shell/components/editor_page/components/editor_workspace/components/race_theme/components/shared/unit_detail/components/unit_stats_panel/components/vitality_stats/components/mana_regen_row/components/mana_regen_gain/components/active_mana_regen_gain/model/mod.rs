@@ -1,8 +1,6 @@
 use super::view::ActiveManaRegenGainView;
 use dioxus::prelude::*;
 
-/// The active mana-regeneration leaf's input: the shaped display text, built by the
-/// dispatcher from the unit's mana regeneration.
 #[derive(Props, Clone, PartialEq)]
 pub struct ActiveManaRegenGainModel {
     #[props(into)]

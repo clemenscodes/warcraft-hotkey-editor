@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`CurrentHotkeySlotModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct CurrentHotkeySlotView {
     pub show_hotkey_field: bool,

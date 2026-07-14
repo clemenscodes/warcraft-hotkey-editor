@@ -1,10 +1,6 @@
 use super::IconUrl;
 use warcraft_api::{WarcraftApi, WarcraftObjectId};
 
-/// A database object resolved for display: its first icon URL and first name, if
-/// any. The single home for the `WarcraftApi → icon → name` resolution that the
-/// unit and ability card views all repeat; each caller supplies its own name
-/// fallback (a unit falls back to its id, an ability to its slot's display name).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct ResolvedIcon {
     name: Option<String>,
@@ -12,7 +8,6 @@ pub struct ResolvedIcon {
 }
 
 impl ResolvedIcon {
-    /// Resolve a database object id to its first icon URL and first display name.
     pub fn lookup(object_id: WarcraftObjectId) -> Self {
         let api = WarcraftApi::default();
         let object_option = api.object(object_id);
@@ -26,12 +21,10 @@ impl ResolvedIcon {
         Self { name, icon_url }
     }
 
-    /// The resolved display name, if the object has one.
     pub fn name(&self) -> Option<&str> {
         self.name.as_deref()
     }
 
-    /// The resolved display name, or `fallback` when the object has none.
     pub fn name_or(&self, fallback_id: WarcraftObjectId) -> String {
         match &self.name {
             Some(name) => name.clone(),
@@ -39,7 +32,6 @@ impl ResolvedIcon {
         }
     }
 
-    /// The resolved icon URL, if the object has one.
     pub fn icon_url(&self) -> Option<&str> {
         self.icon_url.as_deref()
     }

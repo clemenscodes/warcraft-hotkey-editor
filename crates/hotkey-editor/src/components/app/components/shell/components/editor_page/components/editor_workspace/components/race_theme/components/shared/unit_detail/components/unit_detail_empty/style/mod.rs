@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The unit-detail card in its empty state: the same bordered shell, centered muted
-// italic message when no (or an invalid) unit is selected.
 
 classes! {
     base: tw![

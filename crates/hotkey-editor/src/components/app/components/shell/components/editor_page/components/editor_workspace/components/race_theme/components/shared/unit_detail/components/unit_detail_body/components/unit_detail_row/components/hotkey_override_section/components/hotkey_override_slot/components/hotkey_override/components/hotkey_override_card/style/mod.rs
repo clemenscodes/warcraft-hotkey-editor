@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The hotkey-override card: the gold-edged column that holds the header and the
-// ability sections. Content-sized on every band; on touch bands it keeps the same
-// look at tighter density.
 
 classes! {
     base: tw![

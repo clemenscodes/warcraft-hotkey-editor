@@ -1,16 +1,4 @@
 use tw_macro::tw;
-// The empty tile's own look. The resting empty slot (dark panel, solid deep-blue
-// border, bevel) lives on this root. The drop-target / blocked / highlight looks are
-// each a conditionally-mounted overlay child, and the ROOT reacts to which one is
-// present with `:has(...)` — turning its OWN border dashed/danger/gold and its shadow
-// to the glow — so the look replaces the border instead of stacking a second one, and
-// the root never remounts on a state change (pointer-capture stays put through a drag).
-//
-// Border width and radius read `--tile-border-width` / `--tile-corner-radius` (a mini
-// grid shrinks them), defaulting to the full editor tile's 2cqi / 5.2cqi. The
-// drop-target look is the editor's fixed deep-blue dashed target that turns gold under
-// the cursor; a parent that recolors it (the off-state picker) styles the tile through
-// the `:has(.drop-target-overlay)` selector.
 classes! {
     base: tw![
         "relative",

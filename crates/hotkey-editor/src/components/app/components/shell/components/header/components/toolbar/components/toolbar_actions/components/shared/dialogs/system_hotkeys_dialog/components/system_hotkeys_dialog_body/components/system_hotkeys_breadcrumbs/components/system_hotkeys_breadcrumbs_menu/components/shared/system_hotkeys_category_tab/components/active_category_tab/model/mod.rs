@@ -1,7 +1,6 @@
 use super::view::ActiveCategoryTabView;
 use dioxus::prelude::*;
 
-/// The selected tab's inputs: its caption and the select handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct ActiveCategoryTabModel {
     pub label: String,

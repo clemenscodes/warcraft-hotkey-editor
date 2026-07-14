@@ -12,8 +12,6 @@ use model::RegularIntelligenceRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's intelligence row when intelligence is not the primary attribute: resting drop shadow,
-/// and it publishes the dimmer `--attribute-label-color` its label reads.
 #[component]
 pub fn RegularIntelligenceRow(props: RegularIntelligenceRowModel) -> Element {
     let statistic = props.statistic;

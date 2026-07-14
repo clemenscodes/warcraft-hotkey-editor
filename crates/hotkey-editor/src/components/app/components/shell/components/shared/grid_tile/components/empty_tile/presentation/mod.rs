@@ -1,10 +1,6 @@
 use super::super::super::GridTileState;
 use super::model::EmptyTileModel;
 
-/// The shaped inputs each overlay child of an empty tile needs, derived once from the
-/// slot's state. At most one of the three look overlays mounts (drop-target / blocked /
-/// highlight); the drag-over ring is independent. The body only binds these fields onto
-/// its children and never computes.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub(super) struct EmptyTilePresentation {
     pub drop_target_active: bool,

@@ -9,8 +9,6 @@ use model::SecondaryButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The secondary (dismissive) weight of a WC3 action button. Presentational — the
-/// dispatcher builds its props and renders it when the variant is secondary.
 #[component]
 pub fn SecondaryButton(props: SecondaryButtonModel) -> Element {
     let onclick = props.onclick;

@@ -1,11 +1,4 @@
 use tw_macro::tw;
-// The multi-character override key's host button: the widened, focusable box around the
-// shared `EditableKeycap`, sized to fit special tokens (Esc, Mouse4) whose labels exceed
-// the square letter box. It owns only the box — the widened size, the font size the cap
-// inherits, focus suppression, and the soft focus glow. The gold cap look and the
-// capture pulse live on the nested `EditableKeycap`; the `group/editable-keycap` marker
-// lets that cap reflect this button's keyboard focus. Class `.special-override-key` is
-// load-bearing (keyboard navigation).
 classes! {
     base: tw![
         "group/editable-keycap",

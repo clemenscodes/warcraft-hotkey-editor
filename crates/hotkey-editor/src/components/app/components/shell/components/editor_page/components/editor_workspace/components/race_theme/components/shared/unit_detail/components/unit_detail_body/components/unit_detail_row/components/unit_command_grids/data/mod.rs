@@ -1,5 +1,3 @@
-//! The four command-grid headings.
-
 pub(super) const COMMAND_CARD: &str = "Command card";
 pub(super) const BUILD_MENU: &str = "Build menu";
 pub(super) const UPROOTED: &str = "Uprooted";

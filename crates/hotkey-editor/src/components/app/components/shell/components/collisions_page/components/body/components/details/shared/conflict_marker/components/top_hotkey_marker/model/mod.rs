@@ -1,7 +1,6 @@
 use super::view::TopHotkeyMarkerView;
 use dioxus::prelude::*;
 
-/// The shared-hotkey badge capping a multi-way stack (nudged down).
 #[derive(Props, Clone, PartialEq)]
 pub struct TopHotkeyMarkerModel {
     #[props(into)]

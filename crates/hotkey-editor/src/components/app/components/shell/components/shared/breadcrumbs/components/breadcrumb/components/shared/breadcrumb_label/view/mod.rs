@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`BreadcrumbLabelModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct BreadcrumbLabelView {
     pub text: String,

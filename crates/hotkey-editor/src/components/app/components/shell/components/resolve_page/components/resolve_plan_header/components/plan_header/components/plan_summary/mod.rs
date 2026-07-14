@@ -11,7 +11,6 @@ use model::PlanSummaryModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The plan title over its move/unresolved counts.
 #[component]
 pub fn PlanSummary(props: PlanSummaryModel) -> Element {
     let moves_text = props.moves_text;
@@ -20,7 +19,7 @@ pub fn PlanSummary(props: PlanSummaryModel) -> Element {
         div {
             class: CLASS,
             PlanTitle {
-            
+
 
 
             }

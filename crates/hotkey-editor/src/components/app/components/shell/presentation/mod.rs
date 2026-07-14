@@ -24,14 +24,6 @@ use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
 
-/// The app's opening state, decoded once from the entry URL: the canonical route the
-/// address bar should show, whether the entry URL needs canonicalizing, and every
-/// initial value the shell's signals seed from.
-///
-/// A bare or partial URL (`/`, `/collisions`) decodes to the same state as its
-/// fully-materialized form (`/?race=human&mode=melee&unit=…`); `canonical_route` is
-/// that materialized form and `needs_canonicalize` is whether the entry differed, so
-/// the shell can replace the address bar once on entry.
 #[derive(Clone)]
 pub(super) struct RouteBootstrap {
     pub(super) canonical_route: Route,
@@ -96,17 +88,10 @@ impl From<&Route> for RouteBootstrap {
     }
 }
 
-/// The one thing the [`Shell`](super::Shell) body needs beyond its own class: the
-/// app-level key handler. Every piece of app-wide state the shell owns is handed to
-/// the page tree, the header, and the header's dialog hosts through context, so the
-/// body is a flat list of children — no god-bag of props.
 pub(super) struct ShellModel {
     pub(super) handle_keydown: EventHandler<KeyboardEvent>,
 }
 
-/// Load the canonical document from storage into a signal, provide it and its service
-/// as context, and persist every change back. localStorage is the source of truth: the
-/// signal is a read cache re-serialized to storage on every write.
 fn use_custom_keys_document() -> Signal<Option<CustomKeys>> {
     let loaded_keys = use_signal::<Option<CustomKeys>>(|| {
         let stored_text = custom_keys_persistence::load_text();
@@ -132,8 +117,6 @@ fn use_custom_keys_document() -> Signal<Option<CustomKeys>> {
     loaded_keys
 }
 
-/// Load the grid layout from storage into a signal, provide it and its service as
-/// context, and persist every change back.
 fn use_grid_layout_document() -> Signal<GridLayout> {
     let grid_layout = use_signal::<GridLayout>(|| {
         grid_layout_persistence::load_grid_layout().unwrap_or_else(GridLayout::qwerty_grid)
@@ -148,8 +131,6 @@ fn use_grid_layout_document() -> Signal<GridLayout> {
     grid_layout
 }
 
-/// The "update hotkeys as bindings move" editor preference, loaded from storage and
-/// persisted on change.
 fn use_editor_preferences() -> Signal<bool> {
     let update_hotkeys_on_move =
         use_signal(editor_preferences_persistence::load_update_hotkeys_on_move);
@@ -160,9 +141,6 @@ fn use_editor_preferences() -> Signal<bool> {
     update_hotkeys_on_move
 }
 
-/// Wire the undo/redo history: build it over the document and layout signals, provide
-/// it as context, record a snapshot on every change, and install its keyboard
-/// shortcuts.
 fn use_editor_history(loaded_keys: Signal<Option<CustomKeys>>, grid_layout: Signal<GridLayout>) {
     let undo_history = UndoHistory::use_history(loaded_keys, grid_layout);
     use_context_provider(|| undo_history);
@@ -180,9 +158,6 @@ fn use_editor_history(loaded_keys: Signal<Option<CustomKeys>>, grid_layout: Sign
     use_effect(move || undo_history.handle_keyboard_request());
 }
 
-/// Decode the entry URL once into the shell's opening state, and canonicalize the
-/// address bar on entry if the URL was bare or partial. No signals→route effect exists
-/// to materialize a bare URL, so this one-time replace is the sole home for that.
 fn use_route_bootstrap() -> RouteBootstrap {
     let initial_route = router().current::<Route>();
     let bootstrap = RouteBootstrap::from(&initial_route);
@@ -197,10 +172,6 @@ fn use_route_bootstrap() -> RouteBootstrap {
     bootstrap
 }
 
-/// The component-layer navigation seam: the callback the navigation service invokes with
-/// a typed [`NavigationCommand`]. This is the only place that names the concrete `Route`
-/// — it turns the command's snapshot into a route and pushes or replaces it — so the
-/// `services/navigation` layer stays route-agnostic.
 fn use_navigation_dispatch() -> Callback<NavigationCommand> {
     let navigator = use_navigator();
     use_callback(move |command: NavigationCommand| {
@@ -217,9 +188,6 @@ fn use_navigation_dispatch() -> Callback<NavigationCommand> {
     })
 }
 
-/// The app-level Escape handler: cancels an in-progress drag. Dialogs close themselves on
-/// Escape through the headless dialog primitive (each owns its open signal), so the shell
-/// only handles the drag case. All keyboard focus movement is the browser's native Tab order.
 fn use_app_keydown(drag_state: DragState) -> EventHandler<KeyboardEvent> {
     let mut dragging_slot = drag_state.dragging_slot();
     let mut drop_target_tile = drag_state.drop_target_tile();
@@ -238,12 +206,6 @@ fn use_app_keydown(drag_state: DragState) -> EventHandler<KeyboardEvent> {
     })
 }
 
-/// Build the app shell's full model: load the document and grid layout from storage,
-/// wire the persistence/undo effects, own every app-wide signal, provide the contexts
-/// the header and the routed pages read, and hand back the app-level key handler. Each
-/// concern is its own sub-hook. There is no signals→route effect: the write side of the
-/// URL contract lives at each mutation site (via the navigation service), and each page
-/// reconciles the route back into these signals on the read side.
 pub(super) fn use_shell() -> ShellModel {
     let loaded_keys = use_custom_keys_document();
     let grid_layout = use_grid_layout_document();

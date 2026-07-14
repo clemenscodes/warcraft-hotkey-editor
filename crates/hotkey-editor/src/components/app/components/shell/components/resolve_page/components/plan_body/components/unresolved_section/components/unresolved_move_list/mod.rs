@@ -11,7 +11,6 @@ use model::UnresolvedMoveListModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unresolved section's auto-fill grid: one stuck-ability card per unresolved row.
 #[component]
 pub fn UnresolvedMoveList(props: UnresolvedMoveListModel) -> Element {
     let unresolved = props.unresolved;

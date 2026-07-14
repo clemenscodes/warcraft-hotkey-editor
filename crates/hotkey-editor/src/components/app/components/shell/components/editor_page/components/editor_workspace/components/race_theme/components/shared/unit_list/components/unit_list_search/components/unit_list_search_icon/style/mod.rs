@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The magnifier glyph inside the mobile search pill. Absent on the sidebar (the
-// search box there needs no icon), shown as a gold leading icon on small screens.
 
 classes! {
     base: tw![

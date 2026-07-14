@@ -1,7 +1,6 @@
 use super::view::UnitNameView;
 use dioxus::prelude::*;
 
-/// The unit's display name.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitNameModel {
     pub text: &'static str,

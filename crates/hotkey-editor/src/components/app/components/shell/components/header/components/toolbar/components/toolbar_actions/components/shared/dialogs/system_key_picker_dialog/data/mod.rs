@@ -1,8 +1,5 @@
 use warcraft_keybinds::{Digit, FunctionKey, KeyCode, Letter, MouseButton, NumpadKey, Punctuation};
 
-/// One key on the on-screen board: the domain key it stands for plus the compact
-/// label shown on its cap. The label is deliberately shorter than the key's full
-/// `Display` (for example `Ins` rather than `Insert`) to fit the keyboard layout.
 pub(super) struct BoardKey {
     pub(super) code: KeyCode,
     pub(super) label: &'static str,

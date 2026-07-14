@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The count badge scales with the button: its corner offsets and font size are cqi
-// fractions of the button box, so it holds its position and proportion at any size.
 
 classes! {
     base: tw![

@@ -19,8 +19,6 @@ use tw_macro::assert_component;
 
 use model::AbilityTierModel;
 
-/// Tier-cycling footer for multi-level abilities: a prev/next arrow around a
-/// "Level N of M" caption.
 #[component]
 pub fn AbilityTier(props: AbilityTierModel) -> Element {
     if props.total_tier_count <= 1 {

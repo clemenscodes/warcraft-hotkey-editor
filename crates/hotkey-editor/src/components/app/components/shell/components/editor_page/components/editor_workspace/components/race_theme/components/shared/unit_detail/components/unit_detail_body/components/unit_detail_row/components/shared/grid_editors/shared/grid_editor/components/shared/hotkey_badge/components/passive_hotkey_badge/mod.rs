@@ -9,7 +9,6 @@ use model::PassiveHotkeyBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hotkey badge for a passive ability: a muted letter on a mid-panel chip.
 #[component]
 pub fn PassiveHotkeyBadge(props: PassiveHotkeyBadgeModel) -> Element {
     let label = props.letter.display_label();

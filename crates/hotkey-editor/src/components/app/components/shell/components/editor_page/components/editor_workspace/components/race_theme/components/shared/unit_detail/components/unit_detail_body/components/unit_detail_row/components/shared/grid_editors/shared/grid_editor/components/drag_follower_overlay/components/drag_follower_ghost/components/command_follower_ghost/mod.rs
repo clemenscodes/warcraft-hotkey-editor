@@ -12,8 +12,6 @@ use model::CommandFollowerGhostModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The drag-follower ghost for a tile lifted from a built-in command menu: the blue
-/// command surface, the dragged icon, and its hotkey badge, pinned to the cursor.
 #[component]
 pub fn CommandFollowerGhost(props: CommandFollowerGhostModel) -> Element {
     let FollowerPresentation {

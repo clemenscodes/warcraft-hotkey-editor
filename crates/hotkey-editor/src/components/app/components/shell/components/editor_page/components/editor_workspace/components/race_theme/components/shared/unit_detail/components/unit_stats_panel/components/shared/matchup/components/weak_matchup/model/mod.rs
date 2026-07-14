@@ -2,7 +2,6 @@ use super::super::super::subject::MatchupSubject;
 use super::view::WeakMatchupView;
 use dioxus::prelude::*;
 
-/// The weak matchup cell: a danger tint.
 #[derive(Props, Clone, PartialEq)]
 pub struct WeakMatchupModel {
     pub subject: MatchupSubject,

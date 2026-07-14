@@ -2,9 +2,6 @@ use super::state::CollisionCardContent;
 use super::view::CollisionCardView;
 use dioxus::prelude::*;
 
-/// A selectable collision-sidebar card: its selected state, click handler, live
-/// collision count, and the content that fills it (a unit portrait with name/id, or
-/// an island's highlighted coordinate).
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionCardModel {
     pub is_selected: bool,

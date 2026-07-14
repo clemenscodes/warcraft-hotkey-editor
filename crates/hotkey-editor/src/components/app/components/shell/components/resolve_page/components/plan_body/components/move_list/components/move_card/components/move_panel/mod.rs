@@ -15,8 +15,6 @@ use model::MovePanelModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The move card's surface (bordered, tinted, blue-accented): the reason badge over the
-/// fighting-abilities row over the from → to transition block.
 #[component]
 pub fn MovePanel(props: MovePanelModel) -> Element {
     let move_view = props.move_view;

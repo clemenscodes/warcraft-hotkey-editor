@@ -2,8 +2,6 @@ use super::view::SpecialOverrideKeyView;
 use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use dioxus::prelude::*;
 
-/// The multi-character override key's input: the gold-cap glyph and its capture state, the
-/// button title, and the activation handler. Set by the `OverrideKey` dispatcher.
 #[derive(Props, Clone, PartialEq)]
 pub struct SpecialOverrideKeyModel {
     #[props(into)]

@@ -4,11 +4,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_D
 use crate::services::customkeys::context::use_custom_keys_service;
 use dioxus::prelude::*;
 
-/// The burger download row's shaped data: whether it is hidden (no file loaded yet), the fixed
-/// icon and label, its idle weight, whether the download-info dialog is open, the click handler
-/// that opens it, and the change handler the mounted dialog mirrors its own close through. The
-/// open signal is local and owned here — the row is the button that opens the dialog, so it owns
-/// the signal and the dialog travels with it.
 pub(super) struct BurgerDownloadItemPresentation {
     pub(super) hidden: bool,
     pub(super) icon: &'static str,
@@ -20,9 +15,6 @@ pub(super) struct BurgerDownloadItemPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// Reads the live document from the CustomKeys service to hide the row until a file is loaded,
-/// owns the download-info dialog's local open signal, and shapes the row: the click handler that
-/// opens the dialog and the change handler the mounted dialog mirrors its own close through.
 pub(super) fn use_burger_download_item() -> BurgerDownloadItemPresentation {
     let custom_keys_service = use_custom_keys_service();
     let keys = custom_keys_service.keys();

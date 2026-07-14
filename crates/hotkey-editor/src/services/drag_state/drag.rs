@@ -1,8 +1,5 @@
 use warcraft_keybinds::{GridCoordinate, HotkeyToken};
 
-/// The in-progress drag's source cell. The grid is generic, so it tracks only
-/// where the drag started (the opaque grid id and the domain coordinate), never
-/// which domain slot occupies it.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct DraggingSlot {
     grid_id: &'static str,

@@ -1,8 +1,6 @@
 use super::view::CatalogVisibilityButtonView;
 use dioxus::prelude::*;
 
-/// One catalog-visibility toggle: its label, tooltip, current on/off state, and the
-/// handler that flips it.
 #[derive(Props, Clone, PartialEq)]
 pub struct CatalogVisibilityButtonModel {
     pub label: &'static str,

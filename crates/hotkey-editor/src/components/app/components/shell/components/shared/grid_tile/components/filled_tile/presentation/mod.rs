@@ -1,10 +1,6 @@
 use super::super::super::GridTileState;
 use super::model::FilledTileModel;
 
-/// The shaped inputs each child of a filled tile needs, derived once from the tile's
-/// state. It selects the fill (ability vs command), whether the selection ring mounts,
-/// and splits the icon/label into the icon source, its alt text and the text fallback —
-/// so the body only binds these fields onto its children and never computes.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub(super) struct FilledTilePresentation {
     pub ability_active: bool,

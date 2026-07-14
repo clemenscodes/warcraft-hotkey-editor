@@ -10,9 +10,6 @@ use model::ClearSurfaceModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The clear resting look of a toolbar button: a gold-bordered surface with a soft
-/// resting glow, the affirmative "all clear" look. Presentational — the dispatcher
-/// builds its props and renders it when the surface state is `Clear`.
 #[component]
 pub fn ClearSurface(props: ClearSurfaceModel) -> Element {
     let icon = props.icon;

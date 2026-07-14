@@ -10,10 +10,6 @@ use presentation::{BurgerMenuView, use_burger_menu};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout menu: a hamburger button that opens a slide-in drawer with every
-/// file action. Shown only in the compact header (the full header shows the inline toolbar
-/// instead). It only shows and toggles the drawer; each drawer row that opens a dialog owns
-/// that dialog itself, so the burger threads no document and mounts no dialog.
 #[component]
 pub fn BurgerMenu() -> Element {
     let view = use_burger_menu();
@@ -31,7 +27,7 @@ pub fn BurgerMenu() -> Element {
             aria_controls: "burger-drawer",
             onclick: toggle,
             BurgerToggleIcon {
-            
+
 
 
             }

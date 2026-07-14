@@ -2,18 +2,12 @@ use super::model::HeroLevelOptionModel;
 use crate::services::editor_state::context::use_editor_state;
 use dioxus::prelude::*;
 
-/// The option's inputs: which level it offers, the selected-level signal it reads (to
-/// mark the active option) and writes on select, and the menu's open signal it closes.
-/// The component reads the selected-level signal from context and hands these in.
 pub(super) struct HeroLevelOptionInputs {
     pub(super) level_index: u32,
     pub(super) selected_hero_level: Signal<u32>,
     pub(super) level_picker_open: Signal<bool>,
 }
 
-/// The option's shaped view: whether it is the active level, its label, and the
-/// select handler. The dispatcher reads `is_active` to pick the look, then builds the
-/// chosen variant's props.
 pub(super) struct HeroLevelOptionPresentation {
     is_active: bool,
     label: String,
@@ -53,9 +47,6 @@ impl From<HeroLevelOptionInputs> for HeroLevelOptionPresentation {
     }
 }
 
-/// Reads the selected hero level from context and shapes the option's presentation:
-/// whether it is the active level, its label, and the select handler that writes the
-/// level and closes the menu.
 pub(super) fn use_hero_level_option(props: &HeroLevelOptionModel) -> HeroLevelOptionPresentation {
     let selected_hero_level = use_editor_state().selected_hero_level();
     let inputs = HeroLevelOptionInputs {

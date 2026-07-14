@@ -1,8 +1,6 @@
 use super::view::ToolbarButtonView;
 use dioxus::prelude::*;
 
-/// Consumers swap only the icon, click handler, and aria/disabled state; the look is
-/// fixed. Every attribute is a typed field, set by name where the button is rendered.
 #[derive(Props, Clone, PartialEq, Default)]
 pub struct ToolbarButtonModel {
     pub icon: &'static str,

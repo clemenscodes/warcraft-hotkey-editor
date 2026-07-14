@@ -10,9 +10,6 @@ use model::ConflictKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The look for a key already taken by another binding: orc-red, escalating to danger on
-/// hover. It owns its own button and shares only the shaped attributes and the conflict
-/// tooltip leaf, which carries the "already used by" message.
 #[component]
 pub fn ConflictKey(props: ConflictKeyModel) -> Element {
     let ConflictKeyModel {

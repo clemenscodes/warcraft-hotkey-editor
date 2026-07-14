@@ -13,7 +13,6 @@ use model::DefenseMatchupRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The defender's matchup grid.
 #[component]
 pub fn DefenseMatchupRow(props: DefenseMatchupRowModel) -> Element {
     let defense_type = props.defense_type;

@@ -1,6 +1,5 @@
 use warcraft_api::{AttributeStatistic, Gain};
 
-/// The published `View` contract mirroring [`PrimaryStrengthRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct PrimaryStrengthRowView {
     pub statistic: AttributeStatistic,

@@ -9,7 +9,6 @@ use model::DialogCloseModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The close glyph in a dialog header; forwards one click.
 #[component]
 pub fn DialogClose(props: DialogCloseModel) -> Element {
     let onclick = props.onclick;

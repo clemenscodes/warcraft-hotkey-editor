@@ -10,10 +10,6 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
-/// Everything one board column needs to resolve every one of its keys. The
-/// [`BoardSection`] is the only thing that differs between the keyboard and the
-/// numpad, so both columns are built from one [`SystemKeyColumn::build`] with no
-/// copy-pasted loop.
 pub(super) struct ColumnInputs<'a> {
     pub(super) section: BoardSection,
     pub(super) rows: &'static [&'static [BoardKey]],
@@ -21,9 +17,6 @@ pub(super) struct ColumnInputs<'a> {
     pub(super) conflicts: &'a HashMap<KeyCode, Vec<String>>,
 }
 
-/// Resolves one board column to its [`KeyCell`] rows — each key marked current /
-/// conflict / available, given its cap label, wide flag, and (for a conflict) its
-/// tooltip text, placement, and anchor.
 impl From<&ColumnInputs<'_>> for KeyColumn {
     fn from(inputs: &ColumnInputs) -> Self {
         let total_row_count = inputs.rows.len();
@@ -88,12 +81,6 @@ impl From<&ColumnInputs<'_>> for KeyColumn {
     }
 }
 
-/// The system key picker's own shell, shaped from its model: the open value driving
-/// the dialog, the change handler that writes the open signal, the header's title, and
-/// the raw board values (both laid-out columns plus the pick and Escape handlers) the
-/// `WarcraftDialog` threads to its body region. Every dialog owns its shell now — there
-/// is no base. The title/close header chrome is owned by `WarcraftDialog`, which derives
-/// its close from `on_open_change`, so the shell carries no separate close handler.
 pub(super) struct SystemKeyPickerDialogShell {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,
@@ -126,9 +113,6 @@ use super::data::KEYBOARD_ROWS;
 use super::data::NUMPAD_ROWS;
 use super::model::SystemKeyPickerDialogModel;
 
-/// The system key picker's shaped view: the open signal that drives the dialog shell,
-/// its title, and the raw board values (both laid-out columns plus the pick and Escape
-/// handlers) the body hands to the shared board host.
 pub(super) struct SystemKeyPickerDialogPresentation {
     pub(super) open: Signal<bool>,
     pub(super) title: String,
@@ -137,10 +121,6 @@ pub(super) struct SystemKeyPickerDialogPresentation {
     pub(super) board_on_close: EventHandler<()>,
 }
 
-/// Composes the picker: mirrors the caller's open flag into a signal the dialog shell
-/// can close (firing the caller's `on_close` when it does), lays out the keyboard and
-/// numpad columns through one [`SystemKeyColumn`] builder, and wires the board's pick
-/// and Escape handlers. The board itself owns no dialog state.
 pub(super) fn use_system_key_picker(
     props: &SystemKeyPickerDialogModel,
 ) -> SystemKeyPickerDialogPresentation {

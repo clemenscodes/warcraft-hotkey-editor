@@ -1,7 +1,6 @@
 use super::view::HotkeyOverrideEmptyView;
 use dioxus::prelude::*;
 
-/// The prompt shown in the hotkey-override section before a tile is selected.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyOverrideEmptyModel {
     #[props(into)]

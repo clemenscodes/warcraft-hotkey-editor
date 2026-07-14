@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The isolated preview content's own box: the scrolling region that fills the space it is
-// given — a dialog's content box below the header, or a bare page — holding the read-only
-// textarea. The padding and scroll live here; the textarea flexes to fill it.
 
 classes! {
     base: tw![

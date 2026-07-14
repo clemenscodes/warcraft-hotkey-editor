@@ -1,9 +1,6 @@
 use super::view::ConflictSlotKeyView;
 use dioxus::prelude::*;
 
-/// The conflict key glyph's props: just the bound key's label. Built by the
-/// `SystemSlotKey` dispatcher from `SystemSlotKeyModel` when the slot is in a
-/// binding conflict.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictSlotKeyModel {
     #[props(into)]

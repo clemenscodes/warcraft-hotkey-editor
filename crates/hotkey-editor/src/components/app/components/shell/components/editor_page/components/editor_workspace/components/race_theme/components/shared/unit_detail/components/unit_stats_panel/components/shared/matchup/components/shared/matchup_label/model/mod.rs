@@ -2,8 +2,6 @@ use super::super::super::super::subject::MatchupSubject;
 use super::view::MatchupLabelView;
 use dioxus::prelude::*;
 
-/// A matchup cell's subject: the attack or defense type it names, rendered through the
-/// subject's own `Display`.
 #[derive(Props, Clone, PartialEq)]
 pub struct MatchupLabelModel {
     pub subject: MatchupSubject,

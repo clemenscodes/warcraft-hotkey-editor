@@ -1,14 +1,10 @@
 use dioxus::prelude::*;
 
-/// The two visibility signals the toggle reads and flips, read from editor context by
-/// the component and handed to the model builder.
 pub(super) struct CatalogVisibilitySignals {
     pub(super) show_abilityless_units: Signal<bool>,
     pub(super) expand_variants: Signal<bool>,
 }
 
-/// The two catalog-visibility options, each finished with its on/off state and
-/// flip handler.
 pub(super) struct CatalogVisibilityToggleModel {
     pub(super) abilityless_is_active: bool,
     pub(super) variants_is_active: bool,

@@ -13,9 +13,6 @@ use presentation::{ModeTabBinding, ModeTabPair};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The mode column: the Melee and Campaign buttons stacked (or laid in a row on
-/// phones). Each button's label, active flag, and handlers are built by
-/// conversion in `logic`.
 #[component]
 pub fn ModeTabs(props: ModeTabsModel) -> Element {
     let ModeTabPair { melee, campaign } = ModeTabPair::build(&props);

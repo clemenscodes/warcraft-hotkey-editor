@@ -12,8 +12,6 @@ use model::RegularAgilityRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's agility row when agility is not the primary attribute: resting drop shadow,
-/// and it publishes the dimmer `--attribute-label-color` its label reads.
 #[component]
 pub fn RegularAgilityRow(props: RegularAgilityRowModel) -> Element {
     let statistic = props.statistic;

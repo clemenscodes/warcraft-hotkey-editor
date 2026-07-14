@@ -1,6 +1,5 @@
 use warcraft_keybinds::GridCoordinate;
 
-/// The published `View` contract mirroring [`ConflictPositionModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ConflictPositionView {
     pub coordinate: GridCoordinate,

@@ -3,8 +3,6 @@ use dioxus::prelude::*;
 use warcraft_api::PrimaryAttribute;
 use warcraft_api::{AttributeStatistic, HeroStatistics};
 
-/// The attributes column's figures, shaped from the hero: the primary-attribute icon and
-/// each of the three attributes with whether it is the hero's primary.
 pub(super) struct AttributeFigures {
     pub(super) icon_src: Asset,
     pub(super) icon_alt: String,

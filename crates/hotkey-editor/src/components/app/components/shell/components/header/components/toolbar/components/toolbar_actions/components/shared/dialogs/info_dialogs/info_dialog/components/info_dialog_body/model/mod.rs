@@ -1,8 +1,6 @@
 use super::view::InfoDialogBodyView;
 use dioxus::prelude::*;
 
-/// The info dialog's scroll region inputs: the centered instruction copy and the
-/// trailing action row's label and handlers.
 #[derive(Props, Clone, PartialEq)]
 pub struct InfoDialogBodyModel {
     pub intro: &'static str,

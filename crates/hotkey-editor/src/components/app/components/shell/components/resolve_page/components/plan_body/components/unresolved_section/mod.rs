@@ -13,8 +13,6 @@ use model::UnresolvedSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unresolved-abilities section under the move list. It stacks the section title over
-/// its own move-list grid of stuck-ability cards.
 #[component]
 pub fn UnresolvedSection(props: UnresolvedSectionModel) -> Element {
     let unresolved = props.unresolved;

@@ -2,7 +2,6 @@ use super::view::ManaValueView;
 use dioxus::prelude::*;
 use warcraft_api::Mana;
 
-/// The mana value leaf's input: the unit's resolved mana pool.
 #[derive(Props, Clone, PartialEq)]
 pub struct ManaValueModel {
     pub value: Mana,

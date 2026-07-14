@@ -10,8 +10,6 @@ use model::KeyPickerBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The key picker's scrolling content region between the header and the panel
-/// edge, holding the shared on-screen key picker board.
 #[component]
 pub fn KeyPickerBody(props: KeyPickerBodyModel) -> Element {
     let columns = props.columns.clone();

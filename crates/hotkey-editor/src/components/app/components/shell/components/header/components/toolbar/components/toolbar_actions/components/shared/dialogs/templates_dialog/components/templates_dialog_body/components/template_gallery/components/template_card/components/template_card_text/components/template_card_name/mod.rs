@@ -9,7 +9,6 @@ use model::TemplateCardNameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A template card's name heading. Owns `.template-card-name`.
 #[component]
 pub fn TemplateCardName(props: TemplateCardNameModel) -> Element {
     let name = props.name.clone();

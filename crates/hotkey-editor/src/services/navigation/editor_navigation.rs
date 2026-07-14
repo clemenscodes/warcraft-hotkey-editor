@@ -2,17 +2,6 @@ use super::default_unit::DefaultUnit;
 use warcraft_api::{Race, WarcraftObjectId};
 use warcraft_api::{UnitMode, WarcraftApi};
 
-/// The editor navigation state decoded from the `?race=`/`?mode=`/`?unit=`/`?q=`
-/// query parameters every route carries. Each page reconciles its URL into the
-/// shell's navigation signals through this, so the editor's race/mode/unit/search
-/// survive switching views (they ride in every route's query string, not just the
-/// editor's).
-///
-/// The fallbacks mirror the app's long-standing URL contract: an unknown or empty
-/// race/mode falls back to Human/Melee, and an empty unit falls back to the
-/// race+mode default unit. A unit id is a [`WarcraftObjectId`]; the `?unit=` string is
-/// resolved against the catalog here, at the URL boundary, so the rest of the app never
-/// carries a stringly unit id.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct DecodedEditorNavigation {
     race: Race,
@@ -38,8 +27,6 @@ impl DecodedEditorNavigation {
         &self.search_query
     }
 
-    /// Assemble navigation state from already-typed values (the shell's write side,
-    /// diffing the live signals against the route).
     pub fn new(
         race: Race,
         unit_mode: UnitMode,
@@ -54,7 +41,6 @@ impl DecodedEditorNavigation {
         }
     }
 
-    /// Decode the four editor query parameters into typed navigation state.
     pub fn decode(
         race: Option<&str>,
         mode: Option<&str>,

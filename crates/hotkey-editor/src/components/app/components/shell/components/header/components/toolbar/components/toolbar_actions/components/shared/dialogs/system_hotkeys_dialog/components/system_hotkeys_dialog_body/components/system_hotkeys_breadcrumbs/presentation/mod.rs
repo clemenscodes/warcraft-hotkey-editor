@@ -2,8 +2,6 @@ use super::model::SystemHotkeysBreadcrumbsModel;
 use dioxus::prelude::*;
 use warcraft_api::SystemHotkeysCategory;
 
-/// The breadcrumbs' shaped view: the active category, the dropdown open signal and
-/// its resolved `is_open` flag, the trigger caption, and the toggle handler.
 pub(super) struct SystemHotkeysBreadcrumbsPresentation {
     pub(super) active_category: Signal<SystemHotkeysCategory>,
     pub(super) open: Signal<bool>,
@@ -12,7 +10,6 @@ pub(super) struct SystemHotkeysBreadcrumbsPresentation {
     pub(super) on_toggle: EventHandler<MouseEvent>,
 }
 
-/// Sets up the mobile dropdown's open state and the trigger caption.
 pub(super) fn use_system_hotkeys_breadcrumbs(
     props: &SystemHotkeysBreadcrumbsModel,
 ) -> SystemHotkeysBreadcrumbsPresentation {

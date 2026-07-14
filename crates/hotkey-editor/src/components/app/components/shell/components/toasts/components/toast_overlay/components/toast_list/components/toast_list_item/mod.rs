@@ -11,8 +11,6 @@ use model::ToastListItemModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A single list slot. Re-enables pointer events (the container is click-through)
-/// and hosts one toast card.
 #[component]
 pub fn ToastListItem(props: ToastListItemModel) -> Element {
     let record = props.record;

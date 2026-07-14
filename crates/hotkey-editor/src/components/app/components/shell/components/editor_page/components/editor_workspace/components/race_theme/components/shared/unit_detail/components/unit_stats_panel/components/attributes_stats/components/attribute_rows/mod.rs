@@ -13,9 +13,6 @@ use model::AttributeRowsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's three attribute rows stacked beside the column's primary-attribute icon.
-/// It names its rows directly — each attribute row owns its own look and its primary
-/// glow.
 #[component]
 pub fn AttributeRows(props: AttributeRowsModel) -> Element {
     let strength = props.strength;

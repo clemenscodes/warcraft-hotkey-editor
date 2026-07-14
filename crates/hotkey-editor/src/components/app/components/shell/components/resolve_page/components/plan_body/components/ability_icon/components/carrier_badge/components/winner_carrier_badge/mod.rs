@@ -9,7 +9,6 @@ use model::WinnerCarrierBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The carrier-count badge when its ability wins the cell: gold.
 #[component]
 pub fn WinnerCarrierBadge(props: WinnerCarrierBadgeModel) -> Element {
     let count = props.count;

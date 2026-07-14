@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`UnitCategoryHeadingModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UnitCategoryHeadingView {
     pub label: String,

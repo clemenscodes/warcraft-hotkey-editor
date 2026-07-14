@@ -2,8 +2,6 @@ use super::super::super::presentation::{IslandAbilityData, IslandUnitData};
 use super::view::IslandConflictPanelView;
 use dioxus::prelude::*;
 
-/// The card surface: the affected unit heading the two clashing abilities that flank
-/// the centered separator.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictPanelModel {
     pub(crate) unit: IslandUnitData,

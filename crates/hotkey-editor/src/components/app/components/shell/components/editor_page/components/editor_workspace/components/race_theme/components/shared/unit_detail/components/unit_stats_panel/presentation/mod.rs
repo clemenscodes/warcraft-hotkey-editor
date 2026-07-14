@@ -6,8 +6,6 @@ use warcraft_api::{
     HitPointsRegen, Mana, ManaRegen, UnitStatistics,
 };
 
-/// Every resolved stat figure the four columns render. The panel body destructures this
-/// and places the four columns, handing each its figures as named fields.
 pub(super) struct UnitStatsPanelPresentation {
     pub(super) hit_points: HitPoints,
     pub(super) hit_points_regen: HitPointsRegen,
@@ -21,9 +19,6 @@ pub(super) struct UnitStatsPanelPresentation {
     pub(super) hero: Option<HeroStatistics>,
 }
 
-/// Resolves every stat figure through the domain's [`UnitStatistics::compute`], then
-/// hands the panel the resolved figures. All the arithmetic lives in the domain; this
-/// only reads the resolved figures.
 pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelModel) -> UnitStatsPanelPresentation {
     let unit_combat = props.combat;
     let hero_attributes = props.hero_attributes;

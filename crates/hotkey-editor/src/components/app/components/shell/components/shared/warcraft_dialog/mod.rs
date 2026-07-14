@@ -16,12 +16,6 @@ use model::WarcraftDialogModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The reusable app dialog: the styled content box + title/close header chrome over the
-/// headless `Dialog` frame primitive. The caller supplies only a body region, a title, and
-/// the open state; this owns the header — built from the close it derives from
-/// `on_open_change` — and its single `CLASS` (the content box), which the headless `Dialog`
-/// applies to its content container via `class:`. It never sees the document. Every app
-/// dialog reuses it by composition.
 #[component]
 pub fn WarcraftDialog<Body: Render<Output = Element>, Footer: Render<Output = Element>>(
     props: WarcraftDialogModel<Body, Footer>,

@@ -1,10 +1,5 @@
 use tw_macro::tw;
 
-// The ten-cell control-group strip. As the compact size container it publishes the
-// `--slot-*` custom properties its slot buttons and framed slots read, tightening the
-// frame density, the key glyph size, and the host cell size into the compact
-// control-group look — the parent owning the size decision so the slots stay
-// size-agnostic.
 classes! {
     base: tw![
         "grid",

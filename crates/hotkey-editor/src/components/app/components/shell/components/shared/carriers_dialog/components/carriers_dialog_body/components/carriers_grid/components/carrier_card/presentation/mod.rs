@@ -3,15 +3,11 @@ use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The carrier card's inputs: the carrier view plus the navigation read from context by
-/// the component's hook.
 pub(super) struct CarrierCardInputs {
     pub(super) carrier: CarrierUnitView,
     pub(super) view_navigation: ViewNavigationContext,
 }
 
-/// The shaped carrier card: the icon source and alt text, the deep-link click handler,
-/// and the name and id the card places directly.
 pub(super) struct CarrierCardPresentation {
     pub(super) icon_src: Option<String>,
     pub(super) icon_alt: String,
@@ -42,8 +38,6 @@ impl From<CarrierCardInputs> for CarrierCardPresentation {
 use super::model::CarrierCardModel;
 use crate::services::navigation::context::use_view_navigation;
 
-/// Reads the navigation from context and shapes the carrier card: its icon, name, id,
-/// and the open-unit handler the card's button fires.
 pub(super) fn use_carrier_card(props: &CarrierCardModel) -> CarrierCardPresentation {
     let view_navigation = use_view_navigation();
     let carrier = props.carrier.clone();

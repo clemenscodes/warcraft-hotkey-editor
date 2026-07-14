@@ -12,8 +12,6 @@ use model::RegularStrengthRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The hero's strength row when strength is not the primary attribute: resting drop shadow,
-/// and it publishes the dimmer `--attribute-label-color` its label reads.
 #[component]
 pub fn RegularStrengthRow(props: RegularStrengthRowModel) -> Element {
     let statistic = props.statistic;

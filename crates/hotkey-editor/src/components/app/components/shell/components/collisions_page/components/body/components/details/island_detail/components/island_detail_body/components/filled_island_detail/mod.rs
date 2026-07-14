@@ -14,8 +14,6 @@ use presentation::FilledIslandDetailPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The populated island detail pane: the island's mini-grid coordinate header over its
-/// per-unit conflict cards.
 #[component]
 pub fn FilledIslandDetail(props: FilledIslandDetailModel) -> Element {
     let FilledIslandDetailPresentation {

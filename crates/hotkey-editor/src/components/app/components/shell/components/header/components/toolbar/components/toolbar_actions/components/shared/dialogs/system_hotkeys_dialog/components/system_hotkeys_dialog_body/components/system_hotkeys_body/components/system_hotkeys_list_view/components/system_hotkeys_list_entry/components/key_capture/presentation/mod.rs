@@ -6,9 +6,6 @@ use dioxus::prelude::*;
 use std::collections::HashMap;
 use warcraft_keybinds::KeyCode;
 
-/// Everything the chip's markup needs: its state, the key label and conflict
-/// tooltip, whether its picker is open (and the picker's inputs), and the edit /
-/// pick / close handlers.
 pub(super) struct KeyCapturePresentation {
     pub(super) conflict: bool,
     pub(super) label: String,
@@ -24,9 +21,6 @@ pub(super) struct KeyCapturePresentation {
     pub(super) on_close: EventHandler<()>,
 }
 
-/// Reads the chip's resolved binding + conflicts from the CustomKeys query and
-/// wires the edit / pick / close handlers. The pick routes through the service's
-/// `set_system_hotkey` command, never mutating the aggregate inline.
 pub(super) fn use_key_capture(props: &KeyCaptureModel) -> KeyCapturePresentation {
     let custom_keys_service = use_custom_keys_service();
     let dialog_state = use_system_hotkeys_dialog_state();

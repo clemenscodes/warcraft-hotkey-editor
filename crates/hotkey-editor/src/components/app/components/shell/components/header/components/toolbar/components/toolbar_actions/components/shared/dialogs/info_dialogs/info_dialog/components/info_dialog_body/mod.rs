@@ -12,8 +12,6 @@ use model::InfoDialogBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The info dialog's scrolling content region between the header and the panel
-/// edge, holding the centered instruction block and the action row.
 #[component]
 pub fn InfoDialogBody(props: InfoDialogBodyModel) -> Element {
     let intro = props.intro;

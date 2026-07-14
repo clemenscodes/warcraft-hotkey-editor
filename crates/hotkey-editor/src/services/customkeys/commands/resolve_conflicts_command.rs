@@ -4,8 +4,6 @@ use ddd::Layered;
 use warcraft_keybinds::CascadePlan;
 use warcraft_keybinds::CustomKeys;
 
-/// Run the position cascade that resolves every outstanding collision. Its outcome
-/// is the [`CascadePlan`] describing which slots moved and which could not be placed.
 pub struct ResolveConflictsCommand;
 
 impl Layered for ResolveConflictsCommand {

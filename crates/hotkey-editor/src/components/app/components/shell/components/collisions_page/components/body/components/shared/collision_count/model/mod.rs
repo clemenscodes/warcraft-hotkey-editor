@@ -1,7 +1,6 @@
 use super::view::CollisionCountView;
 use dioxus::prelude::*;
 
-/// The "N collisions" count line on a collision card.
 #[derive(Props, Clone, PartialEq)]
 pub struct CollisionCountModel {
     pub count: usize,

@@ -3,14 +3,10 @@ use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 use dioxus::prelude::*;
 
-/// The breadcrumb-tab labels, one per collision kind.
 const CROSS_COLLISIONS: &str = "Cross Collisions";
 const INTRA_COLLISIONS: &str = "Intra Collisions";
 const HOTKEY_COLLISIONS: &str = "Hotkey Collisions";
 
-/// What the collisions page hands the breadcrumb builder: the active kind, each
-/// kind's live count, and the navigation context the tabs drive. Converting it
-/// yields the presentational props the shared `Breadcrumbs` bar renders.
 pub(crate) struct CollisionBreadcrumbsInputs {
     pub(crate) active_kind: CollisionKind,
     pub(crate) position_count: usize,
@@ -19,7 +15,6 @@ pub(crate) struct CollisionBreadcrumbsInputs {
     pub(crate) view_navigation: ViewNavigationContext,
 }
 
-/// The three collision-kind breadcrumb tabs as shared domain views, in bar order.
 impl From<CollisionBreadcrumbsInputs> for Vec<BreadcrumbView> {
     fn from(inputs: CollisionBreadcrumbsInputs) -> Self {
         let CollisionBreadcrumbsInputs {
@@ -61,9 +56,6 @@ impl From<CollisionBreadcrumbsInputs> for Vec<BreadcrumbView> {
     }
 }
 
-/// One collision breadcrumb before it becomes presentational props: the kind it
-/// navigates to, its label and live count, the currently active kind, and the
-/// navigation context. Converting it builds the click handler and active flag.
 struct CollisionBreadcrumb {
     kind: CollisionKind,
     label: &'static str,

@@ -8,12 +8,6 @@ use dioxus::prelude::*;
 use presentation::RaceTabBehavior;
 use tw_macro::assert_component;
 
-/// The active-vs-inactive dispatcher for one race tab, shared by all five per-race
-/// wrappers. It takes the finished `RaceTabBinding` (no navigation — the handlers are
-/// already baked), shapes it into the tab's behaviour, then makes the clean switch:
-/// `if active { ActiveRaceTab } else { InactiveRaceTab }`. Both variants render the same
-/// base `RaceTab` by composition; the active one adds its accent on top. This dispatcher
-/// owns no class, and there is no `data-active`: the look follows the component.
 #[component]
 pub fn RaceTabState(props: RaceTabBinding) -> Element {
     let behavior = RaceTabBehavior::from(&props);

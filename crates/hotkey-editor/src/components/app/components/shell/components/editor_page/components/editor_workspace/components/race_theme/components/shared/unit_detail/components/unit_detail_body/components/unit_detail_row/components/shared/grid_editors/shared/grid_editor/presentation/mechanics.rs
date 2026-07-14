@@ -349,9 +349,6 @@ fn flush_drag_move(
         }
         return;
     };
-    // The grid under the cursor is compared to the drag's source grid by DOM element
-    // reference (JS `===`), not a `data-grid-id` string, so a drop is accepted only
-    // within the grid the drag started in.
     let grid_under_option = tile_under.closest(".editor-grid").ok().flatten();
     let Some(grid_under) = grid_under_option else {
         if drop_target_tile.read().is_some() {
@@ -372,9 +369,6 @@ fn flush_drag_move(
         }
         return;
     }
-    // The tile's coordinate is its row-major index among its grid's tile children — no
-    // `data-grid-row`/`-col`. The grid lays the tiles out row-major, so the count of
-    // preceding element siblings gives `row = index / columns`, `column = index % columns`.
     let mut tile_index: u32 = 0;
     let mut previous_sibling_option = tile_under.previous_element_sibling();
     while let Some(previous_sibling) = previous_sibling_option {

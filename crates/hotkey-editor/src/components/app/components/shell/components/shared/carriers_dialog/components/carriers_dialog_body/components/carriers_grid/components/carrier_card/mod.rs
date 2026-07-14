@@ -15,8 +15,6 @@ use presentation::use_carrier_card;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One unit that carries the ability; clicking deep-links into the editor focused on
-/// that unit through the navigation read from context.
 #[component]
 pub fn CarrierCard(props: CarrierCardModel) -> Element {
     let CarrierCardPresentation {

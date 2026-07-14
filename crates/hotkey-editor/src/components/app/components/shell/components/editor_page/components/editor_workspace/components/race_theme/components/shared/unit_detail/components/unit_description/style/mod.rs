@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The unit's flavor text under the header. Reserves two lines' height on desktop so
-// the stats card below never shifts; clamps to a single line on smaller panels.
 
 classes! {
     base: tw![

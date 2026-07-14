@@ -11,10 +11,6 @@ use model::PrimaryMenuItemModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The primary (call-to-action) look of a drawer row: the emphasised gold panel button
-/// carrying the drawer's headline action, composing the icon and label. Presentational
-/// — the dispatcher names its fields and renders it when the row's visual weight is
-/// primary.
 #[component]
 pub fn PrimaryMenuItem(props: PrimaryMenuItemModel) -> Element {
     let icon = props.icon;

@@ -4,7 +4,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// The published `View` contract mirroring [`InventoryFilledSlotModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct InventoryFilledSlotView {
     pub slot_index: usize,

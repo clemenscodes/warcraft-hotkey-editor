@@ -8,8 +8,6 @@ use presentation::{RedoButtonPresentation, use_redo_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline redo action: the toolbar button that redoes the next edit. It sources its own
-/// disabled state and click handler from the undo history.
 #[component]
 pub fn RedoButton() -> Element {
     let RedoButtonPresentation {

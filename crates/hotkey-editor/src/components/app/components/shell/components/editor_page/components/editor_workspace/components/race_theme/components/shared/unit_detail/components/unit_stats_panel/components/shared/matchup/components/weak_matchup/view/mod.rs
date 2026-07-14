@@ -1,6 +1,5 @@
 use super::super::super::subject::MatchupSubject;
 
-/// The published `View` contract mirroring [`WeakMatchupModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct WeakMatchupView {
     pub subject: MatchupSubject,

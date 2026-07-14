@@ -3,8 +3,6 @@ use crate::components::app::components::shell::components::shared::key_picker_bo
 use dioxus::prelude::*;
 use warcraft_keybinds::KeyCode;
 
-/// One column of the board: its rows of domain key cells and the handler a pick fires.
-/// The board threads the domain down; the column renders each row.
 #[derive(Props, Clone, PartialEq)]
 pub struct KeyPickerColumnModel {
     pub rows: Vec<Vec<KeyCell>>,

@@ -13,7 +13,6 @@ use presentation::hero_level_options;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The dropdown list of selectable hero levels.
 #[component]
 pub fn HeroLevelMenu(props: HeroLevelMenuModel) -> Element {
     let options = hero_level_options(&props);

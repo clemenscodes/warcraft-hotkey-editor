@@ -1,6 +1,5 @@
 use super::view::MoveNameView;
 use dioxus::prelude::*;
-/// A moved/rival ability's name; `is_link` underlines it on the button's hover.
 #[derive(Props, Clone, PartialEq)]
 pub struct MoveNameModel {
     #[props(into)]

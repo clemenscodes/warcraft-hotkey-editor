@@ -1,8 +1,6 @@
 use super::view::AltStateSectionView;
 use dioxus::prelude::*;
 
-/// The off-state block of a toggle ability: its name, description lines, and (when
-/// editable) the position button and off-state hotkey cell.
 #[derive(Props, Clone, PartialEq)]
 pub struct AltStateSectionModel {
     pub alt_name_text: Option<String>,

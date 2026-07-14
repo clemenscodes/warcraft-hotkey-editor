@@ -1,8 +1,4 @@
 use tw_macro::tw;
-// The isolated guide content's own box: the scrolling region that fills the space it is
-// given — a dialog's content box between the header and the pinned footer, or a bare page —
-// holding the onboarding guide. The padding and scroll live here; the guide flexes to fill
-// it.
 
 classes! {
     base: tw![

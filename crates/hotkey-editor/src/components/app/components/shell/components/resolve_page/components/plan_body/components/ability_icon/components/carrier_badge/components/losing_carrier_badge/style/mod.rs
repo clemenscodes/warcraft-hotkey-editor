@@ -1,5 +1,4 @@
 use tw_macro::tw;
-// The carrier-count badge when its ability does not win the cell. Shared badge chrome VALUES with its sibling; each writes its own list.
 classes! {
     base: tw![
         "absolute",

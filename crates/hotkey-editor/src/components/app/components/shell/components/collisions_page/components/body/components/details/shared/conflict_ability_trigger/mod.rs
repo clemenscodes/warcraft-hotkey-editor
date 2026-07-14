@@ -11,9 +11,6 @@ use model::ConflictAbilityTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The transparent icon button wrapping a conflict ability's icon: the click target
-/// that deep-links to the carrying unit. Its `.conflict-ability-trigger` identity class
-/// is coupled to the e2e suite.
 #[component]
 pub fn ConflictAbilityTrigger(props: ConflictAbilityTriggerModel) -> Element {
     let onclick = props.onclick;

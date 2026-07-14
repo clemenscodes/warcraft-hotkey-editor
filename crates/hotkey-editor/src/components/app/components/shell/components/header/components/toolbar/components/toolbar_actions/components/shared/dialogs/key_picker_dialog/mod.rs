@@ -15,11 +15,6 @@ use model::KeyPickerDialogModel;
 use presentation::{KeyPickerDialogPresentation, use_key_picker_dialog_presentation};
 use tw_macro::assert_component;
 
-/// Assigns an ability hotkey from an on-screen letter keyboard. It takes the
-/// `KeyPickerDialogModel` props, the presentation builder mirrors the open flag into a local
-/// signal and shapes the board, and this renders the reusable `WarcraftDialog` directly,
-/// handing it the isolated key board body region. The headless dialog owns the styled content
-/// box and the title/close header; the board keyboard-dismiss rides in the body region.
 #[component]
 pub fn KeyPickerDialog(props: KeyPickerDialogModel) -> Element {
     let KeyPickerDialogPresentation {

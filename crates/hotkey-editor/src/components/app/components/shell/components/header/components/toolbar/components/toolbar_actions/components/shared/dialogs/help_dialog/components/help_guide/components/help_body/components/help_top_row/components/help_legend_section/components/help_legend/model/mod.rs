@@ -2,7 +2,6 @@ use super::view::HelpLegendView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_guide::data::HelpLegendEntry;
 use dioxus::prelude::*;
 
-/// The legend's input: the toolbar rows to render.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpLegendModel {
     pub rows: &'static [HelpLegendEntry],

@@ -10,7 +10,6 @@ use model::AltStateHeaderLabelColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The label column of the off-state header row: holds the off-state name label.
 #[component]
 pub fn AltStateHeaderLabelColumn(props: AltStateHeaderLabelColumnModel) -> Element {
     let AltStateHeaderLabelColumnModel { text } = props;

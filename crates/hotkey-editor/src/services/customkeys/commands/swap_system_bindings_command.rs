@@ -4,8 +4,6 @@ use ddd::Layered;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// Exchange two system keybinds' hotkeys (the inventory drag-to-swap gesture),
-/// each addressed by its section's `WarcraftObjectId`.
 pub struct SwapSystemBindingsCommand {
     source_id: WarcraftObjectId,
     target_id: WarcraftObjectId,

@@ -12,9 +12,6 @@ use model::UnitPositionConflictCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One position-collision card: the abilities that land on the same command-card cell,
-/// flanking (or stacked under) a mini grid flagging that cell. It owns its own card
-/// shell directly and wraps the collision panel.
 #[component]
 pub fn UnitPositionConflictCard(props: UnitPositionConflictCardModel) -> Element {
     let model = ConflictCardModel::from(&props);

@@ -10,8 +10,6 @@ use model::EmptyStateModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The centered upload prompt for a collision kind with no file loaded. It centers its
-/// prompt message in the available space.
 #[component]
 pub fn EmptyState(props: EmptyStateModel) -> Element {
     let message = props.message;

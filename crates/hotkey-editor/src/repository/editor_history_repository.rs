@@ -7,9 +7,6 @@ use warcraft_keybinds::EditorHistory;
 
 use crate::persistence::editor_history_persistence;
 
-/// Infrastructure adapter that persists the [`EditorHistory`] aggregate to
-/// localStorage, bridging the aggregate's canonical text form and the compressed
-/// blob the persistence layer stores.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct EditorHistoryRepository;
 

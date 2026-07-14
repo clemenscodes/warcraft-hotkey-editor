@@ -13,9 +13,6 @@ use model::OpenHeroLevelTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The open look of the hero-level trigger: an accented gold border and glow, with a
-/// flipped caret. Rendered by the dispatcher while the menu is open; owns its button
-/// root and composes the shared label and number leaves plus its flipped caret.
 #[component]
 pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerModel) -> Element {
     let number = props.number;
@@ -26,7 +23,7 @@ pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerModel) -> Element {
             r#type: "button",
             onclick,
             HeroLevelTriggerLabel {
-            
+
 
 
             }
@@ -34,7 +31,7 @@ pub fn OpenHeroLevelTrigger(props: OpenHeroLevelTriggerModel) -> Element {
                 number,
             }
             OpenHeroLevelTriggerChevron {
-            
+
 
 
             }

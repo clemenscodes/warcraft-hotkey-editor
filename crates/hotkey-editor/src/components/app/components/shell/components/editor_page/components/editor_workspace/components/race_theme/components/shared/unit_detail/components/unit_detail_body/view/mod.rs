@@ -2,7 +2,6 @@ use crate::components::app::components::shell::components::editor_page::componen
     UnitCommandGridSlots, UnitOverrideTarget,
 };
 
-/// The published `View` contract mirroring [`UnitDetailBodyModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UnitDetailBodyView {
     pub(crate) grid_slots: UnitCommandGridSlots,

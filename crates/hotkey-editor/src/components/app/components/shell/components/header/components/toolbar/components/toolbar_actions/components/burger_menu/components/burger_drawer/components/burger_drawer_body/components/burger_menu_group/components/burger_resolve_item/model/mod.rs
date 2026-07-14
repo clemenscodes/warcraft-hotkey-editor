@@ -1,8 +1,6 @@
 use super::view::BurgerResolveItemView;
 use dioxus::prelude::*;
 
-/// The resolve drawer row's props: the drawer's close handler, threaded from the drawer body so
-/// tapping the row navigates to the resolve view and then closes the drawer.
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerResolveItemModel {
     pub on_close: EventHandler<MouseEvent>,

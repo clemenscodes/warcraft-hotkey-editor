@@ -10,7 +10,6 @@ use tw_macro::assert_component;
 
 use model::HotkeyPickerDialogDialogModel;
 
-/// Mounts the hotkey picker only while a hotkey field is being edited.
 #[component]
 pub fn HotkeyPickerDialog(props: HotkeyPickerDialogDialogModel) -> Element {
     if !props.visible {

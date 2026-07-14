@@ -11,8 +11,6 @@ use model::GridLayoutEditorDialogBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The layout editor's scrolling content region between the header and the panel
-/// edge, holding the centered editor column.
 #[component]
 pub fn GridLayoutEditorDialogBody(props: GridLayoutEditorDialogBodyModel) -> Element {
     let cells = props.cells;

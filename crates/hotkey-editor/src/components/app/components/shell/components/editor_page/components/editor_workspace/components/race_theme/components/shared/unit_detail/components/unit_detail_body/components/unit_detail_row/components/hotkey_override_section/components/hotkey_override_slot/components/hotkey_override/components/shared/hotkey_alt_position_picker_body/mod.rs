@@ -14,9 +14,6 @@ use tw_macro::assert_component;
 
 use model::HotkeyAltPositionPickerBodyModel;
 
-/// The scroll body of a position-picker dialog: the instruction explainer above the
-/// embedded command grid, centered in the dialog's own scroll region. Shared by the
-/// off-state and upgraded-form pickers.
 #[component]
 pub fn HotkeyAltPositionPickerBody(props: HotkeyAltPositionPickerBodyModel) -> Element {
     let HotkeyAltPositionPickerBodyModel {

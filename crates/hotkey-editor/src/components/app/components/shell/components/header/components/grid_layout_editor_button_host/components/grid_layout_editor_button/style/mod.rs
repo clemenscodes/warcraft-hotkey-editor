@@ -1,12 +1,4 @@
 use tw_macro::tw;
-// Fills its host container and draws its structure as a cqi-scaled drawing: it takes the
-// host's full box (`size-full`) — the host owns the `aspect-[39/10]` shape and gets its
-// size from the header — and expresses every interior *layout* length — padding, gap,
-// border, radius, font — as a `cqi` fraction of the host box, so making the host taller
-// scales the button up in proportion. The gold glow and focus ring are the shared design
-// tokens (`shadow-glow-soft` at rest, `shadow-glow-strong` on hover, `shadow-focus` on
-// focus) that every gold button wears — a glow is shared vocabulary, not a per-button
-// reinvention. The header sizes the host off the shared row height.
 
 classes! {
     base: tw![

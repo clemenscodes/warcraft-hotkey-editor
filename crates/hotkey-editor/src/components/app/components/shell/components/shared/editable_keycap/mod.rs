@@ -13,12 +13,6 @@ use tw_macro::assert_component;
 use model::EditableKeycapModel;
 pub use state::EditableKeycapState;
 
-/// The shared gold key-cap surface worn by both editable hotkey cells: the editor's
-/// override key and the layout-grid tile. A pure dispatcher: from the cap's state it
-/// renders the resting cap (`IdleKeycap`) or the pulsing one (`EditingKeycap`), each of
-/// which owns its own classed root. It carries no class of its own. It is presentational:
-/// the host owns size, focus, drag, and the click handler; the look-children only render
-/// the look, so the gallery can render it with any glyph, radius, and pulse state.
 #[component]
 pub fn EditableKeycap(props: EditableKeycapModel) -> Element {
     match props.state {

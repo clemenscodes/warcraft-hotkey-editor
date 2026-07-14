@@ -1,7 +1,5 @@
 use super::model::SuccessToastCardModel;
 
-/// The success card's presentation: the shared-card fields shaped from the toast
-/// record. Built purely from the model — a shaping leaf, no effects.
 pub struct SuccessToastCardPresentation {
     pub(super) title: String,
     pub(super) description: Option<String>,

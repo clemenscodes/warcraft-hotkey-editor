@@ -13,8 +13,6 @@ use model::InfoContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Every info dialog's centered instruction block: the intro line, the filename
-/// chip, and the optional warning callout.
 #[component]
 pub fn InfoContent(props: InfoContentModel) -> Element {
     let intro = props.intro;
@@ -26,7 +24,7 @@ pub fn InfoContent(props: InfoContentModel) -> Element {
                 intro,
             }
             InfoFilename {
-            
+
 
 
             }

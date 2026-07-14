@@ -2,7 +2,6 @@ use super::view::MoveTransitionView;
 use crate::components::app::components::shell::components::resolve_page::presentation::MiniGridPlacement;
 use dioxus::prelude::*;
 
-/// The block flagging the cell the stuck ability lands on.
 #[derive(Props, Clone, PartialEq)]
 pub struct MoveTransitionModel {
     pub placements: Vec<MiniGridPlacement>,

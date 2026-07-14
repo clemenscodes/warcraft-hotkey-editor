@@ -11,9 +11,6 @@ use model::IdleBreadcrumbModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle breadcrumb tab: a muted crumb that lightens on hover. It publishes
-/// `--count-opacity: 0.8` for its dimmed count. Presentational — the dispatcher renders
-/// it for every tab that is not the current page.
 #[component]
 pub fn IdleBreadcrumb(props: IdleBreadcrumbModel) -> Element {
     let text = props.label;

@@ -6,7 +6,6 @@ use crate::components::app::components::shell::components::shared::icons::ICON_S
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The leading magnifier icon shown in the mobile search field.
 #[component]
 pub fn UnitListSearchIcon() -> Element {
     rsx! {

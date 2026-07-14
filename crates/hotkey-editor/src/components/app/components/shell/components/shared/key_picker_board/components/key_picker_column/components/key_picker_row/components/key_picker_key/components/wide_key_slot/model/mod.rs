@@ -5,10 +5,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 };
 use dioxus::prelude::*;
 
-/// A wide-width picker key: the color state and the shared button attributes (cap label,
-/// disabled flag, click handler) plus the conflict tooltip's three domain fields, all
-/// passed straight through to the color leaf this slot sizes. Oversized caps
-/// (`Space`, `Backspace`, the mouse side buttons) get this wider width.
 #[derive(Props, Clone, PartialEq)]
 pub struct WideKeySlotModel {
     pub state: ColorKeyState,

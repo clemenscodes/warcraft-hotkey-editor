@@ -11,7 +11,6 @@ use model::StatIconFrameModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The square icon frame at the top of an icon-bearing stat column.
 #[component]
 pub fn StatIconFrame(props: StatIconFrameModel) -> Element {
     let src = props.src;

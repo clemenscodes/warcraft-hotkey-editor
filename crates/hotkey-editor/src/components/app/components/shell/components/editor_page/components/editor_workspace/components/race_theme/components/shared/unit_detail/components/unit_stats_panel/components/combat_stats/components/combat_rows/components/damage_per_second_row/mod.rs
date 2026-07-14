@@ -13,8 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Damage per Second";
 
-/// The damage-per-second row, shown only when the attack has a real cooldown. A
-/// guarded leaf that early-returns when the rate is undefined.
 #[component]
 pub fn DamagePerSecondRow(props: DamagePerSecondRowModel) -> Element {
     let Some(value) = props.value else {

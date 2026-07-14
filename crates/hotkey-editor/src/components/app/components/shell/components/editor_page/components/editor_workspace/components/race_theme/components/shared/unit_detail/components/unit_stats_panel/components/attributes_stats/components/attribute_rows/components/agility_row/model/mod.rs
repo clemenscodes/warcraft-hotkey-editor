@@ -2,8 +2,6 @@ use super::view::AgilityRowView;
 use dioxus::prelude::*;
 use warcraft_api::AttributeStatistic;
 
-/// The agility row's input: the hero's agility at the selected level and whether it
-/// is the hero's primary attribute (which glows gold).
 #[derive(Props, Clone, PartialEq)]
 pub struct AgilityRowModel {
     pub statistic: AttributeStatistic,

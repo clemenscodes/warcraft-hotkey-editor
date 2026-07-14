@@ -14,8 +14,6 @@ use presentation::use_system_hotkeys_breadcrumbs;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The category bar under the dialog header: a tab row on desktop, a dropdown on
-/// small viewports.
 #[component]
 pub fn SystemHotkeysBreadcrumbs(props: SystemHotkeysBreadcrumbsModel) -> Element {
     let model = use_system_hotkeys_breadcrumbs(&props);

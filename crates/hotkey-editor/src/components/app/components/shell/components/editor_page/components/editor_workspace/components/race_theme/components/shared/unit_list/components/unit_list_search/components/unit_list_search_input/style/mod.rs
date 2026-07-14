@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The search text field. A plain bordered box on the sidebar; on mobile it becomes a
-// tall pill with room for the leading magnifier icon and a gold focus glow.
 
 classes! {
     base: tw![

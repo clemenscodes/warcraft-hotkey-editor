@@ -6,8 +6,6 @@ use warcraft_keybinds::GridLayout;
 
 use crate::persistence::grid_layout_persistence;
 
-/// Infrastructure adapter that persists the selected [`GridLayout`] to
-/// localStorage as its fixed twelve-character storage string.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct GridLayoutRepository;
 

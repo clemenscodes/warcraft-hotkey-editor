@@ -14,9 +14,6 @@ use presentation::UnitDetailRowPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The command grids above the hotkey-override section (headed by "Hotkey override"). It
-/// owns that section directly, splitting its threaded domain data between the grids and
-/// the hotkey-override section.
 #[component]
 pub fn UnitDetailRow(props: UnitDetailRowModel) -> Element {
     let UnitDetailRowPresentation {

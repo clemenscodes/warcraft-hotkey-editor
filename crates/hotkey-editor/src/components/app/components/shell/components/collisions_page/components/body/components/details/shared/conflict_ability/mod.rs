@@ -14,8 +14,6 @@ use model::ConflictAbilityModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One ability of a conflict: icon (deep-link button), name, and object id. The icon
-/// button opens the owning unit through the navigation read from context.
 #[component]
 pub fn ConflictAbility(props: ConflictAbilityModel) -> Element {
     let ConflictAbilityPresentation {

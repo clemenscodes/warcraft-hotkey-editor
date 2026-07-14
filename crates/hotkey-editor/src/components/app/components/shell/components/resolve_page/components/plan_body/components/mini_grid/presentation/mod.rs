@@ -6,10 +6,6 @@ use warcraft_keybinds::{
     COMMAND_GRID_COLUMNS, COMMAND_GRID_ROWS, COMMAND_GRID_TILE_COUNT, GridCoordinate,
 };
 
-/// The twelve read-only base tiles: the command grid's cells in row-major order,
-/// each drawn filled with its ability's icon where a move places one and empty
-/// everywhere else. The mini is read-only, so the tiles carry no meaningful
-/// coordinate — the default stands in for the unused display address.
 pub(super) fn grid(props: &MiniGridModel) -> [GridTileView; COMMAND_GRID_TILE_COUNT] {
     let coordinate = GridCoordinate::default();
     let mut tile_list: Vec<GridTileView> = Vec::with_capacity(COMMAND_GRID_TILE_COUNT);

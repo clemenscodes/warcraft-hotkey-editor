@@ -14,10 +14,6 @@ use presentation::{SystemHotkeysDialogBodyWiring, use_system_hotkeys_dialog_body
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The system-hotkeys dialog's scrolling content region between the header and the
-/// panel edge: the category breadcrumbs above the active category's editor, with the
-/// inventory drag follower overlaid. A connected host: it reads the dialog UI state
-/// from context and feeds its gallery-rendered children their props.
 #[component]
 pub fn SystemHotkeysDialogBody() -> Element {
     let SystemHotkeysDialogBodyWiring {
@@ -31,7 +27,7 @@ pub fn SystemHotkeysDialogBody() -> Element {
                 active_category,
             }
             SystemHotkeysBody {
-            
+
 
 
             }

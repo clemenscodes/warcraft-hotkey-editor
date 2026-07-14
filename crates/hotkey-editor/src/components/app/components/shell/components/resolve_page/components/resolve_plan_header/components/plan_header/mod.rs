@@ -11,7 +11,6 @@ use model::PlanHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The plan header row: cascade summary on the left, Apply button on the right.
 #[component]
 pub fn PlanHeader(props: PlanHeaderModel) -> Element {
     let moves_text = props.moves_text;

@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`InteractiveSurfaceModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct InteractiveSurfaceView {
     pub icon: &'static str,

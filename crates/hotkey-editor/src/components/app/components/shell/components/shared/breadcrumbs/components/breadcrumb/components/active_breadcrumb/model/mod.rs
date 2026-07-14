@@ -1,7 +1,6 @@
 use super::view::ActiveBreadcrumbView;
 use dioxus::prelude::*;
 
-/// The active breadcrumb tab's props: its label, live count, and click handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct ActiveBreadcrumbModel {
     #[props(into)]

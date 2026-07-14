@@ -13,7 +13,6 @@ use model::DamageMatchupRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The attacker's damage matchup grid.
 #[component]
 pub fn DamageMatchupRow(props: DamageMatchupRowModel) -> Element {
     let attack_type = props.attack_type;

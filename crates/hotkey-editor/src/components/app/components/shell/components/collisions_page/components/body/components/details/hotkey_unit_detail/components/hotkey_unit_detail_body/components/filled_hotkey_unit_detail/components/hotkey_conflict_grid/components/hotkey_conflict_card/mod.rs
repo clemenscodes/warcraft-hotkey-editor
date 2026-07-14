@@ -12,8 +12,6 @@ use model::HotkeyConflictCardModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One shared-hotkey conflict card: the e2e-coupled `.conflict-card` shell wrapping the
-/// conflict panel. It shapes the card model and hands the panel the shaped card.
 #[component]
 pub fn HotkeyConflictCard(props: HotkeyConflictCardModel) -> Element {
     let model = ConflictCardModel::from(&props);

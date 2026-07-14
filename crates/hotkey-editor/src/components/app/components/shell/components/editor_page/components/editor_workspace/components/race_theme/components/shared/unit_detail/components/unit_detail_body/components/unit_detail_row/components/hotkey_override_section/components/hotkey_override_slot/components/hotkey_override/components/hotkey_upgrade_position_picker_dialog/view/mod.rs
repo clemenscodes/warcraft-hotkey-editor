@@ -3,7 +3,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The published `View` contract mirroring [`HotkeyUpgradePositionPickerDialogModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct HotkeyUpgradePositionPickerDialogView {
     pub upgrade_unit_id: Option<WarcraftObjectId>,

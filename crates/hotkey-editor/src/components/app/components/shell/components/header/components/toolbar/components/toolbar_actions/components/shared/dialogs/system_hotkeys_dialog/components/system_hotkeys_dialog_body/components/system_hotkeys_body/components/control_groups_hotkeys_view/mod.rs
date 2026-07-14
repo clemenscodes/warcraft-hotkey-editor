@@ -9,9 +9,6 @@ use presentation::{use_control_groups_hotkeys_view, ControlGroupsHotkeysViewMode
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The control-groups (1–10) hotkey editor: the domain-supplied intro caption above a
-/// ten-cell strip of editable slots. Its slots read the editing section from the dialog
-/// state context, so it threads nothing.
 #[component]
 pub fn ControlGroupsHotkeysView() -> Element {
     let ControlGroupsHotkeysViewModel { caption } = use_control_groups_hotkeys_view();
@@ -22,7 +19,7 @@ pub fn ControlGroupsHotkeysView() -> Element {
                 text: caption,
             }
             ControlGroupsRow {
-            
+
 
 
             }

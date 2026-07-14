@@ -2,7 +2,6 @@ use super::view::ConflictHotkeyBadgeView;
 use dioxus::prelude::*;
 use warcraft_keybinds::HotkeyToken;
 
-/// A conflicting-binding badge: it needs only the letter to draw.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictHotkeyBadgeModel {
     pub letter: HotkeyToken,

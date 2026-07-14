@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`UploadButtonInputModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UploadButtonInputView {
     pub on_change: EventHandler<FormEvent>,

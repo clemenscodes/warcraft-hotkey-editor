@@ -14,10 +14,6 @@ use model::InventoryFilledSlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A single draggable inventory slot: shows its caption and bound key, edits on
-/// click via the system key picker, and swaps with another slot on drag. The host
-/// owns the focusable, draggable outer cell and its size; the framed `SystemSlot`
-/// draws the cell.
 #[component]
 pub fn InventoryFilledSlot(props: InventoryFilledSlotModel) -> Element {
     let InventoryFilledSlotPresentation {

@@ -10,7 +10,6 @@ use model::TopConflictPositionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The colliding cell stacked over a multi-way ability row.
 #[component]
 pub fn TopConflictPosition(props: TopConflictPositionModel) -> Element {
     let coordinate = props.coordinate;

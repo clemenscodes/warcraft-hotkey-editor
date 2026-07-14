@@ -6,11 +6,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The Orc race tab: publishes Orc's banner colour, accent, strength, and
-/// banner image as the `--race-*`/`--banner-*` custom properties the shared chrome reads,
-/// then renders the shared state dispatcher with its finished binding. A thin per-race
-/// modifier — its only difference from the other four tabs is the four values in its
-/// `style.rs`; the binding it forwards carries no navigation.
 #[component]
 pub fn OrcRaceTab(props: RaceTabBinding) -> Element {
     let is_active = props.is_active;

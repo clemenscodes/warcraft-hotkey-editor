@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`FooterDisclaimerModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct FooterDisclaimerView {
     pub text: &'static str,

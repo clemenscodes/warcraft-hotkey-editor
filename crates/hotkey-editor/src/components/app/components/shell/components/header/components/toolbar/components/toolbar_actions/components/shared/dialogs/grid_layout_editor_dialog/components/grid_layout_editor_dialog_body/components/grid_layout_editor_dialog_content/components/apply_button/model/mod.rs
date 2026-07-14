@@ -1,7 +1,6 @@
 use super::view::ApplyButtonView;
 use dioxus::prelude::*;
 
-/// The apply action handler the button forwards.
 #[derive(Props, Clone, PartialEq)]
 pub struct ApplyButtonModel {
     pub on_apply: EventHandler<MouseEvent>,

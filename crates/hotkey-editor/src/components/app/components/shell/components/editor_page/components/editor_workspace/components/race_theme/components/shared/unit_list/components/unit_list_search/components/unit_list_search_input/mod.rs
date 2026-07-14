@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::UnitListSearchInputModel;
 
-/// The search text field in the unit list.
 #[component]
 pub fn UnitListSearchInput(props: UnitListSearchInputModel) -> Element {
     let value = props.value;

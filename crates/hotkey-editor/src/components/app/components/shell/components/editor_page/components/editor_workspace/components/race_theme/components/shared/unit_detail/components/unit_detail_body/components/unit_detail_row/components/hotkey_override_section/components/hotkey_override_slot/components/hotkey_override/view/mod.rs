@@ -2,7 +2,6 @@ use std::rc::Rc;
 use warcraft_keybinds::GridSlotId;
 use warcraft_keybinds::InspectorDetail;
 
-/// The published `View` contract mirroring [`HotkeyOverrideModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct HotkeyOverrideView {
     pub detail: InspectorDetail,

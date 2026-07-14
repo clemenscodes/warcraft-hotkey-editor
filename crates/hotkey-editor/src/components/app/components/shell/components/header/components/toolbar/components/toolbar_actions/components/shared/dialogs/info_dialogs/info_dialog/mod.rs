@@ -11,11 +11,6 @@ use model::InfoDialogConfig;
 use presentation::InfoDialogShell;
 use tw_macro::assert_component;
 
-/// The shared shell for the download and import info dialogs: a centered instruction block
-/// above a cancel/primary action row. Variants fill in the title, copy, warning, and
-/// handlers via `InfoDialogConfig`; this renders the reusable `WarcraftDialog`, handing it
-/// the isolated instruction-and-actions body region. The headless dialog owns the box and
-/// the title/close header.
 #[component]
 pub fn InfoDialog(props: InfoDialogConfig) -> Element {
     let InfoDialogShell {

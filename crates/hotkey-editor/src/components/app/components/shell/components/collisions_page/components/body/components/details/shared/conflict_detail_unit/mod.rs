@@ -11,8 +11,6 @@ use model::ConflictDetailUnitModel;
 use presentation::{ConflictDetailUnitPresentation, use_conflict_detail_unit};
 use style::CLASS;
 use tw_macro::assert_component;
-/// The clickable unit portrait in the detail header. It deep-links into the editor
-/// focused on its unit through the navigation read from context.
 #[component]
 pub fn ConflictDetailUnit(props: ConflictDetailUnitModel) -> Element {
     let ConflictDetailUnitPresentation {

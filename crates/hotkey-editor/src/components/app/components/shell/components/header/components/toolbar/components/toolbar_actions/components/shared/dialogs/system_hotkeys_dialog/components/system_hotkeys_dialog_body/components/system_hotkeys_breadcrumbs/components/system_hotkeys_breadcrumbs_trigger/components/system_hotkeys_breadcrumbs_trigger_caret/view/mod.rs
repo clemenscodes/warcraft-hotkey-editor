@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`SystemHotkeysBreadcrumbsTriggerCaretModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsTriggerCaretView {
     pub is_open: bool,

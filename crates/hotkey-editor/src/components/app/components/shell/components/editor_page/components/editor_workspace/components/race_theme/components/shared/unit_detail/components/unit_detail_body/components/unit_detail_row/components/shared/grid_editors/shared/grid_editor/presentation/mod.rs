@@ -12,10 +12,6 @@ use warcraft_keybinds::{
     COMMAND_GRID_TILE_COUNT, CommandGridRenderInput, GridBehavior, GridSlotId, RenderedTile,
 };
 
-/// The render-ready result the `GridEditor` body places: the twelve finished
-/// interactive tiles, whether this grid owns the in-progress drag, its caption, and
-/// the shared drag-follower signal it forwards to the overlay. It carries no logic —
-/// the body only destructures it and hands each value to a child.
 #[derive(Clone, PartialEq)]
 pub(crate) struct GridEditorPresentation {
     pub(super) tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
@@ -24,14 +20,6 @@ pub(crate) struct GridEditorPresentation {
     pub(super) drag_follower: Signal<Option<DragFollower>>,
 }
 
-/// Builds the grid editor's presentation. Called from the `GridEditor` body, so it
-/// runs in that component's own reactive scope — which is exactly what the
-/// `use_memo` below needs: only this closure subscribes to `loaded_keys` and the
-/// other grid-state signals, so `GridEditor` re-renders only when its own memoized
-/// `Vec<RenderedTile>` compares unequal, not whenever any sibling grid's slots
-/// change. The memoized tiles are then adapted into the finished `EditorTile`s
-/// (drag handlers and drag state overlaid by `EditorTile::grid`), and the follower
-/// visibility is derived from the shared drag signal.
 pub(crate) fn use_grid_editor<B: GridBehavior>(
     props: &GridEditorModel<B>,
 ) -> GridEditorPresentation {

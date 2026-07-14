@@ -1,7 +1,6 @@
 use super::view::ToolbarButtonIconView;
 use dioxus::prelude::*;
 
-/// The toolbar button's glyph, an inline SVG string injected as inner HTML.
 #[derive(Props, Clone, PartialEq)]
 pub struct ToolbarButtonIconModel {
     pub icon: &'static str,

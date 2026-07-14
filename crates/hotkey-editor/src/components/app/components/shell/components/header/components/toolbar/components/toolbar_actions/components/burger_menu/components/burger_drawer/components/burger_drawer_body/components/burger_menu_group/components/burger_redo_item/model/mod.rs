@@ -1,8 +1,6 @@
 use super::view::BurgerRedoItemView;
 use dioxus::prelude::*;
 
-/// The redo drawer row's props: the drawer's close handler, threaded from the drawer body so
-/// tapping the row runs the redo command and then closes the drawer.
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerRedoItemModel {
     pub on_close: EventHandler<MouseEvent>,

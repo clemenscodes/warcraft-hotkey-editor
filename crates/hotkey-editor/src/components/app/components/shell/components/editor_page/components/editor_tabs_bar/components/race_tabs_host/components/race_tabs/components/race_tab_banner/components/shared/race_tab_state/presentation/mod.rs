@@ -1,10 +1,6 @@
 use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::RaceTabBinding;
 use dioxus::prelude::*;
 
-/// A race tab's finished behaviour: whether it is the active tab, its display name, and
-/// the pointer/keyboard handlers. The click and keyboard handlers arrive already baked in
-/// the `RaceTabBinding` (the cascade lives behind them). The look picks the
-/// active-or-inactive component from `is_active`.
 pub(super) struct RaceTabBehavior {
     is_active: bool,
     label: String,

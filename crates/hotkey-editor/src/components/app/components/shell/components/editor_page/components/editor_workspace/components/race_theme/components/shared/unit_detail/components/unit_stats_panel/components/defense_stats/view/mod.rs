@@ -1,7 +1,6 @@
 use warcraft_api::DefenseType;
 use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
 
-/// The published `View` contract mirroring [`DefenseStatsModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct DefenseStatsView {
     pub armor: Armor,

@@ -2,10 +2,6 @@ use super::model::HelpDialogModel;
 use crate::persistence::onboarding_persistence;
 use dioxus::prelude::*;
 
-/// The help dialog's shaped wiring: the open value it drives, the change handler that mirrors
-/// the headless dialog's own close (escape, outside click) back to the trigger — WITHOUT
-/// recording the onboarding as seen, so a casual close leaves the guide to reopen next visit —
-/// and the footer dismiss handler, which DOES record the onboarding as seen before closing.
 pub(super) struct HelpDialogPresentation {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,

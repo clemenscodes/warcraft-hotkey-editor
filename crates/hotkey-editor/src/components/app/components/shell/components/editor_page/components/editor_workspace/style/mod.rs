@@ -1,9 +1,4 @@
 use tw_macro::tw;
-// The workspace is a grid: a single stacked column on mobile and tablet (the unit
-// list sits above the detail panel, both in flow), and a two-column sidebar-plus-
-// detail layout from laptop up (the unit list is absolutely positioned over the
-// first column by its own bands, so only the detail panel flows). The sidebar column
-// widths match the unit list's own per-band widths.
 
 classes! {
     base: tw![

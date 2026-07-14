@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The pinned footer bar below the scrolling guide body: it does not scroll (`flex-none`),
-// sits below the body separated by a gold rule (`border-t`), and right-aligns the dismiss
-// button. Mobile and tablet centre the button and tighten the horizontal padding.
 
 classes! {
     base: tw![

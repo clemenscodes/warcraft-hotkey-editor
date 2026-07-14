@@ -1,10 +1,6 @@
 use super::view::GridLayoutEditorDialogView;
 use dioxus::prelude::*;
 
-/// What the grid-layout editor needs: the open value it drives and the change handler
-/// mirroring the headless dialog's own close back to the trigger that owns the open signal.
-/// The grid, preferences, and nested picker are self-sourced from context, so nothing else
-/// is threaded.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridLayoutEditorDialogModel {
     pub open: bool,

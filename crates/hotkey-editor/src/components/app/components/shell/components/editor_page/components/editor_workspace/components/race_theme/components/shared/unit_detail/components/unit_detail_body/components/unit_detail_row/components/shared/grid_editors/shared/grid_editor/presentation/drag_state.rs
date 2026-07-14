@@ -12,7 +12,6 @@ pub(crate) struct DragOrigin {
     pub(crate) cursor_vertical_position: f64,
 }
 
-/// Latest pointer coords awaiting an animation-frame flush.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct DragMovePoint {
     pub(crate) client_horizontal: f64,
@@ -31,8 +30,6 @@ pub(crate) struct PendingDragData {
     pub(crate) tile_width: f64,
     pub(crate) tile_height: f64,
     pub(crate) tile_element: web_sys::Element,
-    /// The `.editor-grid` element the drag started in, so the hit-test can accept a drop
-    /// only within the same grid by comparing DOM elements — no `data-grid-id` read.
     pub(crate) grid_element: web_sys::Element,
     pub(crate) pointer_id: i32,
     pub(crate) last_cursor_horizontal_position: f64,
@@ -43,67 +40,42 @@ pub(crate) struct PendingDragData {
 pub(crate) type TouchScrollLock = Closure<dyn FnMut(web_sys::Event)>;
 pub(crate) type DragRafClosure = Closure<dyn FnMut(f64)>;
 thread_local! {
-    /// Set on a successful drag-end so the synthetic `click` that fires after
-    /// `pointerup` does not also re-select the source tile.
     pub(crate) static SUPPRESS_NEXT_CLICK: Cell<bool> = const { Cell::new(false) };
 
-    /// Set on a drag-end so the native `dblclick` that fires when the drag's
-    /// trailing click lands within the double-click window of a prior click does
-    /// not open the hotkey picker. Initiating a drag resets the double-click
-    /// trigger: cleared on every `pointerdown`, set when a drag actually moved,
-    /// consumed by the double-click handler.
     pub(crate) static SUPPRESS_NEXT_DOUBLE_CLICK: Cell<bool> = const {
         Cell::new(false)
     };
 
-    /// Cursor position at `pointerdown`. Used to decide whether the user
-    /// actually dragged (vs. just clicked) so we know whether to suppress the
-    /// trailing click.
     pub(crate) static DRAG_ORIGIN: Cell<Option<DragOrigin>> = const { Cell::new(None) };
 
-    /// Set true once the cursor has travelled past the movement threshold.
     pub(crate) static DID_DRAG_MOVE: Cell<bool> = const { Cell::new(false) };
 
-    /// Drag setup data captured at `pointerdown`, not yet committed to signals.
     pub(crate) static PENDING_DRAG: RefCell<Option<PendingDragData>> = const {
         RefCell::new(None)
     };
 
-    /// The `.editor-grid` element the active drag started in, captured when the drag
-    /// activates. `flush_drag_move` compares the grid element under the cursor to this by
-    /// JS reference so a drop is accepted only within the same grid — the structural
-    /// replacement for the old `data-grid-id` attribute read.
     pub(crate) static DRAG_SOURCE_GRID_ELEMENT: RefCell<Option<web_sys::Element>> = const {
         RefCell::new(None)
     };
 
-    /// Set when a touch/pen `pointerdown` fires so the compatibility `mouse`
-    /// `pointerdown` that browsers synthesise afterward is discarded.
     pub(crate) static TOUCH_STARTED: Cell<bool> = const { Cell::new(false) };
 
-    /// ID returned by `setTimeout` for the touch long-press timer.
     pub(crate) static TOUCH_LONG_PRESS_TIMER_ID: Cell<Option<i32>> = const {
         Cell::new(None)
     };
 
-    /// Holds the live long-press callback so it is dropped (not leaked) when the
-    /// timer fires or is cancelled. Replaces the previous `Closure::forget()`.
     pub(crate) static TOUCH_LONG_PRESS_CLOSURE: RefCell<Option<Closure<dyn FnMut()>>> = const {
         RefCell::new(None)
     };
 
-    /// Non-passive `touchmove` listener installed only while a touch drag is active.
     pub(crate) static TOUCH_SCROLL_LOCK: RefCell<Option<TouchScrollLock>> = const {
         RefCell::new(None)
     };
 
-    /// Latest pointer coords awaiting an animation-frame flush (client x, y).
     pub(crate) static LATEST_DRAG_MOVE: Cell<Option<DragMovePoint>> = const { Cell::new(None) };
 
-    /// Handle of the pending requestAnimationFrame, so it can be cancelled.
     pub(crate) static DRAG_RAF_HANDLE: Cell<Option<i32>> = const { Cell::new(None) };
 
-    /// The rAF callback closure, kept alive while a frame is pending.
     pub(crate) static DRAG_RAF_CLOSURE: RefCell<Option<DragRafClosure>> = const {
         RefCell::new(None)
     };

@@ -7,7 +7,6 @@ use presentation::use_hero_selection_row;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The three-slot hero-selection row.
 #[component]
 pub fn HeroSelectionRow() -> Element {
     let model = use_hero_selection_row();

@@ -25,8 +25,6 @@ use warcraft_keybinds::{
     SharedAbilityEntry, UnitCollisionEntry, UnitCollisionReport,
 };
 
-/// One ability resolved to an icon, display name, and object id. Two abilities
-/// can share an icon and name yet be distinct objects, so the id is shown too.
 #[derive(Clone, PartialEq)]
 pub struct AbilityIconView {
     object_id: WarcraftObjectId,
@@ -60,8 +58,6 @@ impl AbilityIconView {
     }
 }
 
-/// One unit resolved to its id, display name, and icon.  The id is kept so an
-/// icon click can deep-link into the editor focused on that unit.
 #[derive(Clone, PartialEq)]
 pub struct UnitIconView {
     unit_id: WarcraftObjectId,
@@ -96,9 +92,6 @@ impl UnitIconView {
     }
 }
 
-/// One ability participating in a conflict: the ability resolved to an icon,
-/// plus the full list of units that carry it (for the carriers dialog) and how
-/// many, used for the "+N more" hint.
 #[derive(Clone, PartialEq)]
 pub struct ConflictAbilityView {
     ability: AbilityIconView,
@@ -115,14 +108,11 @@ impl ConflictAbilityView {
         &self.carrier_unit_ids
     }
 
-    /// Carriers beyond the affected unit already shown on the conflict card.
     pub fn extra_count(&self) -> usize {
         self.carrier_count.saturating_sub(1)
     }
 }
 
-/// One conflict: a single affected unit whose two abilities land on the same
-/// cell — its own ability and the shared ability it clashes with.
 #[derive(Clone, PartialEq)]
 pub struct ConflictView {
     unit: UnitIconView,
@@ -144,18 +134,12 @@ impl ConflictView {
     }
 }
 
-/// Identity of a conflict by the two abilities that clash. Within one island
-/// the same mover/anchor pair can appear on many units (every unit that
-/// carries both abilities at the cell); they are the same collision with the
-/// same fix, so the display collapses them to a single card keyed by this.
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 struct AbilityPairKey {
     mover_object_id: WarcraftObjectId,
     anchor_object_id: WarcraftObjectId,
 }
 
-/// A single cross-unit collision island, flattened into display-ready data.
-/// All collision facts come from the domain crate; this only formats them.
 #[derive(Clone, PartialEq)]
 pub struct IslandView {
     key: String,
@@ -298,7 +282,6 @@ impl IslandView {
     }
 }
 
-/// Resolves a `GridSlotId` to its icon URL and display name via the database.
 struct AbilityResolution {
     icon_url: Option<String>,
     name: String,
@@ -316,8 +299,6 @@ impl From<GridSlotId> for AbilityResolution {
     }
 }
 
-/// Turns the domain's `CrossUnitCollisionReport` into the flat island list with its
-/// summary counts, sorted by collision count descending.
 impl From<&CrossUnitCollisionReport> for CollisionList<IslandView> {
     fn from(report: &CrossUnitCollisionReport) -> Self {
         let groups = report.position_groups();
@@ -331,8 +312,6 @@ impl From<&CrossUnitCollisionReport> for CollisionList<IslandView> {
     }
 }
 
-/// One hotkey conflict on a unit's command card: a hotkey letter shared by two
-/// or more abilities on the same card, resolved to display-ready icons.
 #[derive(Clone, PartialEq)]
 pub struct HotkeyConflictView {
     hotkey_label: String,
@@ -354,10 +333,6 @@ impl HotkeyConflictView {
     }
 }
 
-/// One unit that has collisions, flattened into display-ready data: the unit
-/// header, how many conflicts it holds, and the conflicts themselves. Generic over
-/// the conflict shape — shared-hotkey-letter clashes ([`HotkeyUnitView`]) or
-/// per-cell position clashes ([`UnitPositionUnitView`]).
 #[derive(Clone, PartialEq)]
 pub struct CollisionUnitView<Conflict> {
     key: String,
@@ -384,16 +359,10 @@ impl<Conflict> CollisionUnitView<Conflict> {
     }
 }
 
-/// A unit's shared-hotkey-letter collisions across its command cards.
 pub type HotkeyUnitView = CollisionUnitView<HotkeyConflictView>;
 
-/// A unit's per-cell position collisions (its own abilities clashing on a slot).
 pub type UnitPositionUnitView = CollisionUnitView<UnitPositionConflictView>;
 
-/// One unit's shared-hotkey-letter conflicts across its command cards, ordered by
-/// how many abilities clash on each letter (the widest clash first). A single entry
-/// yields many conflicts, so the conversion target is this named list, not a bare
-/// `Vec` (which no `From` may target across the orphan rule).
 #[derive(Clone, PartialEq)]
 struct HotkeyConflicts {
     conflicts: Vec<HotkeyConflictView>,
@@ -431,9 +400,6 @@ impl From<&UnitCollisionEntry> for HotkeyConflicts {
     }
 }
 
-/// Turns the domain's `UnitCollisionReport` into the flat list of units with hotkey
-/// collisions and its summary counts, sorted by collision count descending to mirror
-/// the position-collision sidebar.
 impl From<&UnitCollisionReport> for CollisionList<HotkeyUnitView> {
     fn from(report: &UnitCollisionReport) -> Self {
         let entries = report.entries();
@@ -462,8 +428,6 @@ impl From<&UnitCollisionReport> for CollisionList<HotkeyUnitView> {
     }
 }
 
-/// One per-unit position conflict: a command-card cell where two or more of a
-/// single unit's own abilities land on the same slot, resolved to icons.
 #[derive(Clone, PartialEq)]
 pub struct UnitPositionConflictView {
     coordinate: GridCoordinate,
@@ -485,10 +449,6 @@ impl UnitPositionConflictView {
     }
 }
 
-/// One unit's per-cell position conflicts across its command cards, ordered by how
-/// many of the unit's own abilities clash on each cell (widest clash first). Like
-/// [`HotkeyConflicts`], a single entry yields many conflicts, so the conversion
-/// target is this named list.
 #[derive(Clone, PartialEq)]
 struct UnitPositionConflicts {
     conflicts: Vec<UnitPositionConflictView>,
@@ -523,9 +483,6 @@ impl From<&UnitCollisionEntry> for UnitPositionConflicts {
     }
 }
 
-/// Turns the domain's `UnitCollisionReport` into the flat list of units whose own
-/// abilities collide on a command-card cell and its summary counts, sorted by
-/// collision count descending.
 impl From<&UnitCollisionReport> for CollisionList<UnitPositionUnitView> {
     fn from(report: &UnitCollisionReport) -> Self {
         let entries = report.entries();
@@ -554,17 +511,11 @@ impl From<&UnitCollisionReport> for CollisionList<UnitPositionUnitView> {
     }
 }
 
-/// The shaped Collisions page: the breadcrumb bar props and the resolved content
-/// for the active kind (empty prompt, all-clear, or the two-pane view), as data.
 pub(super) struct CollisionsPagePresentation {
     pub(super) breadcrumbs: Vec<BreadcrumbView>,
     pub(super) content: ContentModel,
 }
 
-/// Restores the active view and mirrors the incoming `?entry=` into the active kind's
-/// selection signal — the read side of the URL contract. Reactive on the route's `kind`
-/// and `entry` so it re-runs only when they change; the entry picks that write the route
-/// live at the sidebar mutation sites.
 fn use_route_reconcile(
     kind: CollisionKind,
     entry: Option<String>,
@@ -585,9 +536,6 @@ fn use_route_reconcile(
     }));
 }
 
-/// Keeps one kind's selection pointing at a live entry: when the list is non-empty
-/// and the current selection is missing or stale, it falls back to the first entry.
-/// Applied once per kind, replacing three hand-copied effects.
 fn use_valid_selection<View>(memo: Memo<CollisionList<View>>, selected: Signal<Option<String>>)
 where
     View: CollisionEntry + PartialEq + 'static,
@@ -613,8 +561,6 @@ where
     });
 }
 
-/// Computes the three collision lists (memoised on the loaded keys and layout),
-/// keeps each kind's selection valid, and shapes the breadcrumbs and active content.
 pub(super) fn use_collisions_page(props: &CollisionsPageModel) -> CollisionsPagePresentation {
     let view_navigation = use_view_navigation();
     let selection = use_collision_selection();

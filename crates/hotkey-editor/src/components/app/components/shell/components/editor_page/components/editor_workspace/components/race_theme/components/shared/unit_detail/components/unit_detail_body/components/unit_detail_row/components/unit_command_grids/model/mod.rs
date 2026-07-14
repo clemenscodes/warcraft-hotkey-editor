@@ -4,10 +4,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The unit's four command grids (command card, build menu, uprooted, research). Only
-/// the unit's per-menu identity is a prop; the shared editor signals the grids need are
-/// sourced from context by the component's hook, and their tiles' accent from
-/// `--race-color`.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCommandGridsModel {
     pub unit_id: WarcraftObjectId,

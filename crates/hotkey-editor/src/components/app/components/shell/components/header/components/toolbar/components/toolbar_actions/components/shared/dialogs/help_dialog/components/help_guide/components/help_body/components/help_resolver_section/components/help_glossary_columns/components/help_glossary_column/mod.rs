@@ -11,8 +11,6 @@ use model::HelpGlossaryColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One glossary: a stack of term-and-definition entries, one per item it is
-/// handed.
 #[component]
 pub fn HelpGlossaryColumn(props: HelpGlossaryColumnModel) -> Element {
     let entries = props.entries;

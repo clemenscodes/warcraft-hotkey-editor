@@ -7,10 +7,6 @@ use warcraft_keybinds::GridLayout;
 
 use crate::repository::grid_layout_repository::GridLayoutRepository;
 
-/// The application-layer service that owns the live selected [`GridLayout`] and is
-/// the only sanctioned way for the renderer to change it. `select` runs through
-/// [`Service::commit`], write-throughs to the repository, then updates the live
-/// signal, so localStorage never trails the selection.
 #[derive(Clone, Copy)]
 pub struct GridLayoutService {
     layout: Signal<GridLayout>,
@@ -21,12 +17,10 @@ impl GridLayoutService {
         Self { layout }
     }
 
-    /// A read-only, reactive view of the selected layout for the renderer.
     pub fn layout(&self) -> ReadSignal<GridLayout> {
         self.layout.into()
     }
 
-    /// The sanctioned mutation command: replace the selected layout and persist.
     pub fn select(&self, layout: GridLayout) {
         self.commit(|current| {
             *current = layout;

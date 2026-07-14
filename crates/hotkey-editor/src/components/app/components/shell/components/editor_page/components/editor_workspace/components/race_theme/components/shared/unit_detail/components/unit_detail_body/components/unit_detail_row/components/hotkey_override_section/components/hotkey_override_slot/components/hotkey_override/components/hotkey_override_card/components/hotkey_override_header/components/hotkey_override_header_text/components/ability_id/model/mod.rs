@@ -2,7 +2,6 @@ use super::view::AbilityIdView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The database object id shown under the name.
 #[derive(Props, Clone, PartialEq)]
 pub struct AbilityIdModel {
     pub object_id: WarcraftObjectId,

@@ -10,9 +10,6 @@ use model::OpenBreadcrumbsMenuModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The open look of the category menu: the small-viewport floating popover. Rendered
-/// by the dispatcher while the dropdown is open; owns its listbox root and stacks the
-/// popover-styled tabs vertically.
 #[component]
 pub fn OpenBreadcrumbsMenu(props: OpenBreadcrumbsMenuModel) -> Element {
     let tabs = props.tabs;

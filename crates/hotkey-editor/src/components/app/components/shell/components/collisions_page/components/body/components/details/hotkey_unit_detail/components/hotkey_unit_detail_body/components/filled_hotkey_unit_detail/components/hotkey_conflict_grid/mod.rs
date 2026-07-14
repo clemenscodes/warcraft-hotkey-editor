@@ -11,7 +11,6 @@ use model::HotkeyConflictGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The scrolling grid of shared-hotkey conflict cards for the selected unit.
 #[component]
 pub fn HotkeyConflictGrid(props: HotkeyConflictGridModel) -> Element {
     let conflicts = props.conflicts;

@@ -5,7 +5,6 @@ use warcraft_keybinds::GridSlotId;
 use super::state::{FirstResult, UnitListState};
 use crate::services::navigation::view_navigation::ViewNavigationContext;
 
-/// The categories the mobile tab bar shows, in display order.
 pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Hero,
     UnitKind::Soldier,
@@ -13,9 +12,6 @@ pub(super) const MOBILE_CATEGORY_ORDER: [UnitKind; 4] = [
     UnitKind::Building,
 ];
 
-/// The values the search box's keydown handler captures: the immediate query it
-/// reads, the clear handler, the first result to select on Enter, the navigation it
-/// routes that pick through, and the pure-UI signals (slot, category) it resets.
 pub(super) struct SearchKeydownInputs {
     pub(super) raw_query: Signal<String>,
     pub(super) on_clear: EventHandler<()>,
@@ -25,10 +21,6 @@ pub(super) struct SearchKeydownInputs {
     pub(super) active_category: Signal<UnitKind>,
 }
 
-/// The unit list's shaped view: the search box's bound value, placeholder, and
-/// handlers; the mobile tab row's category kinds; and the scroll region's category
-/// kinds — all as domain values. The two toggles read their own context, so they are
-/// rendered without any of this.
 pub(super) struct UnitListModel {
     pub(super) search_value: ReadSignal<String>,
     pub(super) search_placeholder: &'static str,
@@ -38,10 +30,6 @@ pub(super) struct UnitListModel {
     pub(super) category_kinds: Vec<UnitKind>,
 }
 
-/// Every computed intermediate the unit list's shaped view is built from. The hook
-/// wires the derived catalog state and the two shaped handlers into one of these; the
-/// model derives itself through the `From` impl below, so the hook never assembles the
-/// view by hand.
 pub(super) struct UnitListInputs {
     pub(super) state: UnitListState,
     pub(super) raw_query: Signal<String>,

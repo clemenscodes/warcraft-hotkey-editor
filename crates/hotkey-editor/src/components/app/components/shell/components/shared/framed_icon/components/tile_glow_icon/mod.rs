@@ -10,9 +10,6 @@ use model::TileGlowIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The glowing tile look of a framed icon: the tile-radius blue frame that lifts to a
-/// gold hover glow. Presentational — the dispatcher builds its props and renders it
-/// when the resolved look is `TileGlow`. Absent `source` draws the empty framed square.
 #[component]
 pub fn TileGlowIcon(props: TileGlowIconModel) -> Element {
     let Some(source) = props.source else {

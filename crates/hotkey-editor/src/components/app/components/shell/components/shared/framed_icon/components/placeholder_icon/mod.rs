@@ -10,10 +10,6 @@ use model::PlaceholderIconModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The empty-placeholder look of a framed icon: the hairline-radius blue frame filled
-/// with the panel surface. Presentational — the dispatcher builds its props and renders
-/// it when the resolved look is `Placeholder`. Absent `source` draws the empty framed
-/// square; a present `source` draws the covered image inside it.
 #[component]
 pub fn PlaceholderIcon(props: PlaceholderIconModel) -> Element {
     let Some(source) = props.source else {

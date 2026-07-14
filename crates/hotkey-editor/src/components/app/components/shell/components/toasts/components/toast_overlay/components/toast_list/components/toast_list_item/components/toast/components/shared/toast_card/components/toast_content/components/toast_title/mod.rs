@@ -9,7 +9,6 @@ use model::ToastTitleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The toast headline: the uppercase heading look tinted by `--toast-title`.
 #[component]
 pub fn ToastTitle(props: ToastTitleModel) -> Element {
     let title = props.title;

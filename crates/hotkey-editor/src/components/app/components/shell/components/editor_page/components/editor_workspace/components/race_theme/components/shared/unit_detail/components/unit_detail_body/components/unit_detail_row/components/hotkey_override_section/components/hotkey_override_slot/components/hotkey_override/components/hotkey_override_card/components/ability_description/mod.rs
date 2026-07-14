@@ -11,8 +11,6 @@ use tw_macro::assert_component;
 
 use model::AbilityDescriptionModel;
 
-/// The primary ubertip / tip text block for an ability or upgrade; renders nothing
-/// when there is no description.
 #[component]
 pub fn AbilityDescription(props: AbilityDescriptionModel) -> Element {
     let description_lines = props.description_lines;

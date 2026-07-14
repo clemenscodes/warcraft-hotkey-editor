@@ -11,7 +11,6 @@ use model::ToastListModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The ordered stack of live toasts, newest nearest the bottom edge.
 #[component]
 pub fn ToastList(props: ToastListModel) -> Element {
     let toasts = props.toasts;

@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`MutedStatGainModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct MutedStatGainView {
     pub text: String,

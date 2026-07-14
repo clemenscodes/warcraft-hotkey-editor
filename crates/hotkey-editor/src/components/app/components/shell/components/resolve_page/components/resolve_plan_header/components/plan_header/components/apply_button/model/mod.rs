@@ -1,8 +1,6 @@
 use super::view::ApplyButtonView;
 use dioxus::prelude::*;
 
-/// The Apply button that runs the cascade; disabled and labelled "Applying…"
-/// while a run is in flight.
 #[derive(Props, Clone, PartialEq)]
 pub struct ApplyButtonModel {
     pub running: bool,

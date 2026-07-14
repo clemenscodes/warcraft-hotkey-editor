@@ -10,9 +10,6 @@ use dioxus::prelude::*;
 use model::MoveNameModel;
 use tw_macro::assert_component;
 
-/// A moved/rival ability's name. A dispatcher: from whether it links to an owning unit
-/// it renders the clickable `LinkMoveName` xor the `PlainMoveName`; there is no
-/// `data-link` attribute.
 #[component]
 pub fn MoveName(props: MoveNameModel) -> Element {
     match props.is_link {

@@ -16,9 +16,6 @@ use model::CombatRowsModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The combat column's stat rows stacked beside its icon: the damage, range, speed, and
-/// damage-per-second rows, the attack-type row, and the damage matchup grid. It names
-/// its rows directly — each row owns its own look.
 #[component]
 pub fn CombatRows(props: CombatRowsModel) -> Element {
     let damage = props.damage;

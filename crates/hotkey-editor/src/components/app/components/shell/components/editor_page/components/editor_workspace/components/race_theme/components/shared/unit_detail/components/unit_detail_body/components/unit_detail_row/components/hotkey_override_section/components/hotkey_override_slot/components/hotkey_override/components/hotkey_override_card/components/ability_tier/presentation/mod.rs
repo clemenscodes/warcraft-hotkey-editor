@@ -3,8 +3,6 @@ use dioxus::prelude::*;
 use super::model::AbilityTierModel;
 use crate::services::editor_state::context::use_editor_state;
 
-/// The tier selector's finished data: the prev/next cycle handlers around the
-/// caption text.
 pub(super) struct AbilityTierPresentation {
     pub(super) on_prev: EventHandler<MouseEvent>,
     pub(super) on_next: EventHandler<MouseEvent>,

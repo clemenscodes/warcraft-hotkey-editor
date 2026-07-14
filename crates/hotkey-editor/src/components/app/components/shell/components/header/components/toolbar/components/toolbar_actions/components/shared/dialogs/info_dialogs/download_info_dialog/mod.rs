@@ -11,9 +11,6 @@ use model::DownloadInfoDialogModel;
 use presentation::{use_download_info_dialog, DownloadInfoDialogPresentation};
 use tw_macro::assert_component;
 
-/// Tells the player where CustomKeys.txt must go and confirms the download. A thin
-/// variant that reads the live document from the CustomKeys service and fills the shared
-/// `InfoDialog` shell with the download title, copy, warning, and confirm handler.
 #[component]
 pub fn DownloadInfoDialog(props: DownloadInfoDialogModel) -> Element {
     let DownloadInfoDialogPresentation {

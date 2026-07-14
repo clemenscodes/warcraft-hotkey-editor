@@ -9,9 +9,6 @@ use presentation::{TemplatesButtonPresentation, use_templates_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline templates action: the toolbar button that opens the layout-templates browser, and
-/// that browser dialog, mounted beneath it. It owns the browser's open signal locally, so the
-/// dialog is part of the button and travels with it.
 #[component]
 pub fn TemplatesButton() -> Element {
     let TemplatesButtonPresentation {

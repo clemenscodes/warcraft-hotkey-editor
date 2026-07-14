@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The ability / unit name heading in the hotkey-override section. Gold display face, ellipsized
-// on one line; smaller on the mobile panel.
 
 classes! {
     base: tw![

@@ -2,8 +2,6 @@ use super::view::PrimaryIntelligenceRowView;
 use dioxus::prelude::*;
 use warcraft_api::{AttributeStatistic, Gain};
 
-/// The primary intelligence row's input: the hero's intelligence at the selected level, its per-level
-/// growth, and its label — all shaped in the row's hook so the leaf only places them.
 #[derive(Props, Clone, PartialEq)]
 pub struct PrimaryIntelligenceRowModel {
     pub statistic: AttributeStatistic,

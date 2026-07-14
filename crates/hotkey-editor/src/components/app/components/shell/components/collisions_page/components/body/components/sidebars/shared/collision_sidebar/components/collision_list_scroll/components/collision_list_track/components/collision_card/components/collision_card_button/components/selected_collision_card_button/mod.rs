@@ -11,8 +11,6 @@ use model::SelectedCollisionCardButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The selected collision card surface: the card button in its selected look, composing the
-/// shared visual and meta line. Presentational — the dispatcher renders it.
 #[component]
 pub fn SelectedCollisionCardButton(props: SelectedCollisionCardButtonModel) -> Element {
     let onclick = props.onclick;

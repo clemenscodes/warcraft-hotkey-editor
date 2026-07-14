@@ -11,8 +11,6 @@ use model::SelectedUnitCardButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The selected unit card surface: the card button in its selected look, composing the shared
-/// portrait and text column. Presentational — the dispatcher renders it.
 #[component]
 pub fn SelectedUnitCardButton(props: SelectedUnitCardButtonModel) -> Element {
     let icon_path = props.icon_path.clone();

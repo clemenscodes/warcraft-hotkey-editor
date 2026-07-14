@@ -9,8 +9,6 @@ use model::ActiveMobileCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The active mobile category tab: the current category, wearing the race accent
-/// (border, text, glow read from the theme's `--race-color`). Presentational.
 #[component]
 pub fn ActiveMobileCategoryTab(props: ActiveMobileCategoryTabModel) -> Element {
     let label = props.label;

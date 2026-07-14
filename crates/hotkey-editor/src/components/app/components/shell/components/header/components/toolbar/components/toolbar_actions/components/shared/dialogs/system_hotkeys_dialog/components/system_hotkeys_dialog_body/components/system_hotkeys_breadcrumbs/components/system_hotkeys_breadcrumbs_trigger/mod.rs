@@ -12,7 +12,6 @@ use model::SystemHotkeysBreadcrumbsTriggerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The small-viewport dropdown trigger showing the active category.
 #[component]
 pub fn SystemHotkeysBreadcrumbsTrigger(props: SystemHotkeysBreadcrumbsTriggerModel) -> Element {
     let label_text = props.label.clone();

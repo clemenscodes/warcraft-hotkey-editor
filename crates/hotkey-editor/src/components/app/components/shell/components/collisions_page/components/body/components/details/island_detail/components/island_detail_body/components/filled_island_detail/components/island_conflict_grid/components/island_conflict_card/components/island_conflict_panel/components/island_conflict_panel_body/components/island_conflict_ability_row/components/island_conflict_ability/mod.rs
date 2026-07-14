@@ -18,10 +18,6 @@ use model::IslandConflictAbilityModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One ability column of an island conflict: a clickable icon over the name and id,
-/// with an optional "+N more" link. Both the icon and the link open this ability's
-/// carriers dialog. The column owns the open state and mounts the dialog's host beneath
-/// itself, so no ancestor knows the dialog exists.
 #[component]
 pub fn IslandConflictAbility(props: IslandConflictAbilityModel) -> Element {
     let IslandConflictAbilityPresentation {

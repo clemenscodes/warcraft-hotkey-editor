@@ -8,8 +8,6 @@ use std::collections::HashMap;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
 
-/// The upgraded-form picker body's shaped view: the explainer copy above the grid and the
-/// built grid config the embedded command grid edits.
 pub(super) struct HotkeyUpgradePositionPickerBodyPresentation {
     pub(super) explainer_text: String,
     pub(super) grid_config: GridEditorView,

@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Damage";
 
-/// The unit's attack damage range.
 #[component]
 pub fn DamageRow(props: DamageRowModel) -> Element {
     let value = props.value;

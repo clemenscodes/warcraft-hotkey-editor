@@ -2,7 +2,6 @@ use super::state::LayoutTileState;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridCoordinate;
 
-/// The published `View` contract mirroring [`LayoutTileModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct LayoutTileView {
     pub state: LayoutTileState,

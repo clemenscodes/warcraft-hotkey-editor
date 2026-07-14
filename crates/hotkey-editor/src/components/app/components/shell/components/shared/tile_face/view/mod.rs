@@ -4,11 +4,6 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use dioxus::prelude::*;
 use warcraft_keybinds::{ColumnIndex, GridCoordinate, HotkeyToken, RenderedTile, RowIndex};
 
-/// The tile painter's published contract (a `ddd::View`): the resting visual of a
-/// command-grid slot — its address, icon, label, hotkey, and the badge/tile states.
-/// No interaction: no handlers, no drag flags, no focus. The editor's
-/// `GridEditorTile` Host carries those and converts down into this; a read-only
-/// consumer (templates preview) builds it straight from a `RenderedTile`.
 #[derive(Props, Clone, PartialEq)]
 pub struct TileFaceView {
     #[props(default = GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))]
@@ -17,27 +12,18 @@ pub struct TileFaceView {
     pub icon: Option<String>,
     #[props(default)]
     pub label: String,
-    /// The hotkey; every tile always has one, shown as its badge.
     pub hotkey: HotkeyToken,
     #[props(default)]
     pub badge_state: HotkeyBadgeState,
     #[props(default)]
     pub state: GridTileState,
-    /// True while this tile is the lifted source of a drag. The editor Host sets it; the
-    /// read-only consumers (templates preview, gallery) leave it false.
     #[props(default)]
     pub is_dragging_source: bool,
-    /// True while the drag cursor hovers this tile. The editor Host sets it; the
-    /// read-only consumers leave it false.
     #[props(default)]
     pub is_drag_over: bool,
 }
 
 impl From<&RenderedTile> for TileFaceView {
-    /// The one adaptation the UI performs on a domain tile: a raw icon path becomes
-    /// an asset URL and the domain flags pick the widget's visual enums. No
-    /// decision is made here — this is pure paint, which the editor Host wraps with
-    /// behavior and the read-only consumers use as-is.
     fn from(rendered: &RenderedTile) -> Self {
         let coordinate = rendered.coordinate();
         let icon = rendered

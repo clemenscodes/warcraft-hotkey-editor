@@ -9,11 +9,6 @@ use crate::components::app::components::shell::components::shared::tooltip::{
 use dioxus::prelude::*;
 use warcraft_keybinds::{HotkeyToken, KeyCode};
 
-/// The letter cells a caller handed the picker, plus the conflict gate, shaped into one
-/// board column. The letter keyboard is a single column, so the picker builds exactly
-/// one; each cell becomes a [`KeyCell`] carrying its `KeyCode`, cap label, wide flag,
-/// visual state, whether it may be picked, and (for a conflict) the composed hover text
-/// with its placement and anchor.
 pub(super) struct LetterColumnInputs {
     pub(super) rows: Vec<Vec<KeyPickerCell>>,
     pub(super) allow_conflict_pick: bool,
@@ -71,11 +66,6 @@ impl From<LetterColumnInputs> for KeyColumn {
     }
 }
 
-/// The key picker's shaped, signal-free presentation: the built board columns, the
-/// current open value, the title, and the pick/close/open-change handlers. The dialog only
-/// places these. `on_open_change` drives the `WarcraftDialog` (its title/close header and
-/// escape/outside-click all flow through it); `on_close` is the board's keyboard-dismiss —
-/// both set the local open signal false (identical behaviour).
 pub(super) struct KeyPickerDialogPresentation {
     pub(super) open: bool,
     pub(super) title: String,
@@ -89,11 +79,6 @@ impl ddd::Presentation for KeyPickerDialogPresentation {
     type Model = KeyPickerDialogModel;
 }
 
-/// The picker's one effectful edge: mirrors the received open flag into a local signal
-/// the dialog shell can close (firing the caller's `on_close` via the effect when it
-/// does), locks the body scroll while open, builds the letter column, and adapts the
-/// board's `KeyCode` pick back to the caller's [`HotkeyToken`]. Focus and the focus-gap
-/// keyboard fallback belong to the board host, so nothing here listens or focuses.
 pub(super) fn use_key_picker_dialog_presentation(
     model: &KeyPickerDialogModel,
 ) -> KeyPickerDialogPresentation {

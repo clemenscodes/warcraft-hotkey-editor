@@ -1,7 +1,6 @@
 use super::view::IdleHeroLevelOptionView;
 use dioxus::prelude::*;
 
-/// The idle hero-level option's props: its label and select handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct IdleHeroLevelOptionModel {
     #[props(into)]

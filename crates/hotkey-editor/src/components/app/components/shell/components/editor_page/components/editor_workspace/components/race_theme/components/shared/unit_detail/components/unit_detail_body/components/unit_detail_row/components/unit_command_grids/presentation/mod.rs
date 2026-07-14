@@ -11,8 +11,6 @@ use dioxus::prelude::Signal;
 use std::rc::Rc;
 use warcraft_keybinds::{CustomKeys, GridLayout, GridSlotId};
 
-/// The four finished grid-editor configs: the always-present command card, and the
-/// build/uprooted/research menus when the unit has them.
 pub(super) struct UnitCommandGridsPresentation {
     pub(super) command_card: GridEditorView,
     pub(super) build_menu: Option<GridEditorView>,
@@ -21,8 +19,6 @@ pub(super) struct UnitCommandGridsPresentation {
 }
 
 impl UnitCommandGridsPresentation {
-    /// Shapes the four configs from the unit's per-menu identity (props) plus the
-    /// shared editor and drag signals, which the component's hook sources from context.
     pub(super) fn build(
         props: &UnitCommandGridsModel,
         loaded_keys: Signal<Option<CustomKeys>>,
@@ -81,8 +77,6 @@ impl UnitCommandGridsPresentation {
         }
     }
 
-    /// Builds one grid-editor config for the given menu, sharing the unit's editor
-    /// signals, the drag signals, and behavior flags.
     fn config(
         props: &UnitCommandGridsModel,
         loaded_keys: Signal<Option<CustomKeys>>,
@@ -114,9 +108,6 @@ impl UnitCommandGridsPresentation {
     }
 }
 
-/// Sources the shared editor and drag signals from context (rather than having them
-/// threaded down as props) and shapes the four grid configs, so the body only names the
-/// result.
 pub(super) fn use_unit_command_grids(
     props: &UnitCommandGridsModel,
 ) -> UnitCommandGridsPresentation {

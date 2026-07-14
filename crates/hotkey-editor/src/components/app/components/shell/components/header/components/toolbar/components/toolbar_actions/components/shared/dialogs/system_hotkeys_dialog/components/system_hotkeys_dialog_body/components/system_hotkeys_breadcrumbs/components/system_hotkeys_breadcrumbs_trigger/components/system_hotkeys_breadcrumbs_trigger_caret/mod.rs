@@ -10,9 +10,6 @@ use dioxus::prelude::*;
 use model::SystemHotkeysBreadcrumbsTriggerCaretModel;
 use tw_macro::assert_component;
 
-/// The trigger's caret glyph. A pure dispatcher: from the dropdown's open flag it
-/// renders the flipped look (`OpenBreadcrumbsTriggerCaret`) xor the resting look
-/// (`ClosedBreadcrumbsTriggerCaret`).
 #[component]
 pub fn SystemHotkeysBreadcrumbsTriggerCaret(
     props: SystemHotkeysBreadcrumbsTriggerCaretModel,
@@ -20,7 +17,7 @@ pub fn SystemHotkeysBreadcrumbsTriggerCaret(
     if props.is_open {
         rsx! {
             OpenBreadcrumbsTriggerCaret {
-            
+
 
 
             }
@@ -28,7 +25,7 @@ pub fn SystemHotkeysBreadcrumbsTriggerCaret(
     } else {
         rsx! {
             ClosedBreadcrumbsTriggerCaret {
-            
+
 
 
             }

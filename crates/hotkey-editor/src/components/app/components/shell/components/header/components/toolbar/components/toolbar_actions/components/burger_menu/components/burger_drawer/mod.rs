@@ -12,8 +12,6 @@ use model::BurgerDrawerModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The slide-in navigation drawer. Keeps the `burger-drawer` id/class the global
-/// scroll-lock and `aria-controls` hook off.
 #[component]
 pub fn BurgerDrawer(props: BurgerDrawerModel) -> Element {
     let on_close = props.on_close;

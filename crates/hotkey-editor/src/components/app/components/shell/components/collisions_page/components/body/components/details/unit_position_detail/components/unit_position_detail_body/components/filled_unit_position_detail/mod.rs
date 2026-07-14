@@ -14,8 +14,6 @@ use presentation::FilledUnitPositionDetailPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The populated position-collision detail pane: the selected unit's header over its
-/// position-conflict cards.
 #[component]
 pub fn FilledUnitPositionDetail(props: FilledUnitPositionDetailModel) -> Element {
     let FilledUnitPositionDetailPresentation {

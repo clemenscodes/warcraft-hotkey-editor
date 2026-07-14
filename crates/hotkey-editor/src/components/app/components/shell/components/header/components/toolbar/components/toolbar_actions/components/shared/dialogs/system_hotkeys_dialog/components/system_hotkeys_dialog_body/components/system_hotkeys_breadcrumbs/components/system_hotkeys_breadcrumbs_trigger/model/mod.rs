@@ -1,8 +1,6 @@
 use super::view::SystemHotkeysBreadcrumbsTriggerView;
 use dioxus::prelude::*;
 
-/// The mobile dropdown trigger's inputs: the active category caption, whether the
-/// dropdown is open (for aria and the caret), and the toggle handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysBreadcrumbsTriggerModel {
     #[props(into)]

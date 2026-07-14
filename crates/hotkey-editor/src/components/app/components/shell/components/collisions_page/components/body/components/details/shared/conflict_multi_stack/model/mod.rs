@@ -3,8 +3,6 @@ use super::super::conflict_marker::ConflictMarker;
 use super::view::ConflictMultiStackView;
 use dioxus::prelude::*;
 
-/// The multi-way clash layout: the conflict marker stacked above every clashing
-/// ability, or nothing when the clash is a two-ability pair.
 #[derive(Props, Clone, PartialEq)]
 pub struct ConflictMultiStackModel {
     pub(crate) abilities: Vec<ConflictAbilityData>,

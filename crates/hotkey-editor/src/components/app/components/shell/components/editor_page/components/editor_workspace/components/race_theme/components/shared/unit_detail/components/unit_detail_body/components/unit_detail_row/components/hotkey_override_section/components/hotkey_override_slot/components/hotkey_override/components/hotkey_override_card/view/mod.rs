@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The published `View` contract mirroring [`HotkeyOverrideCardModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct HotkeyOverrideCardView {
     pub name_text: String,

@@ -13,9 +13,6 @@ use model::ConflictPanelBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The conflict panel's body region: the role caption over exactly one of the two clash
-/// layouts (the pair row or the multi stack). Each layout renders itself away when it does
-/// not apply. Rendered inside the shared `PanelCard` surface, which owns the panel chrome.
 #[component]
 pub fn ConflictPanelBody(props: ConflictPanelBodyModel) -> Element {
     let models = props.models;

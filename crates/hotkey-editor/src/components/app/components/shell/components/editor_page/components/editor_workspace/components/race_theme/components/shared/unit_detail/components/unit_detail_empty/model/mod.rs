@@ -1,7 +1,6 @@
 use super::view::UnitDetailEmptyView;
 use dioxus::prelude::*;
 
-/// The message shown in the empty unit-detail card.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitDetailEmptyModel {
     #[props(into)]

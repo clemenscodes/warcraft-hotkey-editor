@@ -13,11 +13,6 @@ use model::BurgerMenuItemModel;
 pub use state::BurgerItemState;
 use tw_macro::assert_component;
 
-/// A single drawer row. A pure dispatcher: from the row's visual weight it renders
-/// the matching look — `IdleMenuItem` xor `ActiveMenuItem` xor `PrimaryMenuItem`.
-/// Each look owns the same `<button>` markup and its own weight styling; this
-/// dispatcher only names each look's fields from the shared `BurgerMenuItemModel`
-/// and renders the one the state selects.
 #[component]
 pub fn BurgerMenuItem(props: BurgerMenuItemModel) -> Element {
     let icon = props.icon;

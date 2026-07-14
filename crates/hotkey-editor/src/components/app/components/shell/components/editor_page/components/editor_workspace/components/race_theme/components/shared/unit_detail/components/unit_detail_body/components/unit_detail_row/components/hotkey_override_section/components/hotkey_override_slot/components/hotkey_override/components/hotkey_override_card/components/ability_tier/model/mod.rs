@@ -2,9 +2,6 @@ use super::view::AbilityTierView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// Tier-cycling footer inputs: the object being edited, the active/total tier counts,
-/// and the caption. The stored per-object tier overrides it cycles are read from editor
-/// context, so they are not a prop.
 #[derive(Props, Clone, PartialEq)]
 pub struct AbilityTierModel {
     pub object_id: WarcraftObjectId,

@@ -12,10 +12,6 @@ use model::UnitCategorySectionModel;
 use presentation::use_unit_category_section;
 use tw_macro::assert_component;
 
-/// One category of the unit list: a collapsible heading followed by the matching
-/// unit cards. The heading, collapsed state, and cards are all built by the
-/// composed hook (memoized on the catalog inputs); this component is a thin
-/// renderer with no own class.
 #[component]
 pub fn UnitCategorySection(props: UnitCategorySectionModel) -> Element {
     let model = use_unit_category_section(&props);

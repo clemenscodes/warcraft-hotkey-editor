@@ -3,10 +3,6 @@ use super::model::UploadInfoDialogModel;
 use crate::services::files::upload;
 use dioxus::prelude::*;
 
-/// The import dialog's shaped data: the open value it drives, the change handler
-/// mirroring the headless dialog's own close, the shared copy, and the cancel and
-/// choose-file handlers. The shared `InfoDialog` is placed with these as named
-/// fields.
 pub(super) struct UploadInfoDialogPresentation {
     pub(super) open: bool,
     pub(super) on_open_change: Callback<bool>,

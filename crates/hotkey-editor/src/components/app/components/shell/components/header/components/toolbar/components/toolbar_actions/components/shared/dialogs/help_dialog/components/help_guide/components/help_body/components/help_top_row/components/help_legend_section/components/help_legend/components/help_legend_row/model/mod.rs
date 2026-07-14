@@ -2,7 +2,6 @@ use super::view::HelpLegendRowView;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_guide::data::HelpLegendEntry;
 use dioxus::prelude::*;
 
-/// One legend row's only input: the legend entry to render.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpLegendRowModel {
     pub entry: HelpLegendEntry,

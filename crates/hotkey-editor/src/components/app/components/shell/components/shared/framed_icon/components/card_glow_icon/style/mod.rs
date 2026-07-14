@@ -1,7 +1,5 @@
 use tw_macro::tw;
 
-// The glowing card look: the shared framed base at the card radius, lifting to a gold
-// border plus soft glow when a non-disabled ancestor `.group` is hovered.
 classes! {
     base: tw![
         "size-full",

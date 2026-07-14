@@ -1,6 +1,5 @@
 use tw_macro::tw;
 
-// The `.conflict-ability-trigger` class is coupled to the e2e suite, written literally.
 classes! {
     base: tw![
         "conflict-ability-trigger",

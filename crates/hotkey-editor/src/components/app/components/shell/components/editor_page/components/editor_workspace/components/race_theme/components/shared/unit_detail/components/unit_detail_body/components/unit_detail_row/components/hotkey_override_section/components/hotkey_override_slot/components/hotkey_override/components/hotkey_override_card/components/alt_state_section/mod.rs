@@ -12,9 +12,6 @@ use model::AltStateSectionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The off-state block of a tile override: its header (label and controls) over any
-/// description lines. It owns its own block directly and delegates the header row to its
-/// child. Renders nothing when the tile has no alternate state.
 #[component]
 pub fn AltStateSection(props: AltStateSectionModel) -> Element {
     let AltStateSectionModel {

@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`AltStateHeaderModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct AltStateHeaderView {
     pub alt_name_text: Option<String>,

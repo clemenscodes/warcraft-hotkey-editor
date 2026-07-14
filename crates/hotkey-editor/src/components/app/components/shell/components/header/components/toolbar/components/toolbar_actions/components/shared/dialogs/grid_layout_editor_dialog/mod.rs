@@ -16,13 +16,6 @@ use presentation::GridLayoutEditorDialogPresentation;
 use presentation::use_grid_layout_editor_dialog;
 use tw_macro::assert_component;
 
-/// The global hotkey layout editor, opened by the trigger that owns its open signal (the
-/// centered grid-layout button or the burger drawer, each with its own instance). The
-/// presentation self-sources the grid and preference state from context and resolves the grid
-/// cells, picker state, and handlers; this mounts the reusable `WarcraftDialog` with the
-/// isolated grid-editor body region only while `open`, alongside the nested key picker (a
-/// second modal shown while a cell is being edited). The `on_open_change` guard makes opening
-/// the nested picker not dismiss the editor.
 #[component]
 pub fn GridLayoutEditorDialog(props: GridLayoutEditorDialogModel) -> Element {
     let GridLayoutEditorDialogPresentation {

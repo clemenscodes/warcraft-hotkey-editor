@@ -11,8 +11,6 @@ use tw_macro::assert_component;
 
 use model::AltStateLabelModel;
 
-/// The caption naming an off-state or upgraded form; renders nothing when the form
-/// has no distinct name.
 #[component]
 pub fn AltStateLabel(props: AltStateLabelModel) -> Element {
     let Some(text) = props.text else {

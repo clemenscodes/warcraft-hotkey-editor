@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// Phone/tablet: the five banners share one full-width row (no clumping, no
-// horizontal scroll), with a tighter gap and a little breathing room below.
 
 classes! {
     base: tw![

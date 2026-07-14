@@ -13,10 +13,6 @@ use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::HotkeyToken;
 use warcraft_keybinds::RowIndex;
 
-/// The signals, service, and snapshots every grid cell resolves against. Shared by
-/// all twelve cells the [`LayoutGridCells`] builder produces: the two snapshots
-/// decide each cell's letter and editing state, while the signals and service are
-/// what its drag/click handlers mutate.
 #[derive(Clone, Copy)]
 pub(super) struct GridCellContext {
     pub(super) grid_layout: Signal<GridLayout>,
@@ -28,10 +24,6 @@ pub(super) struct GridCellContext {
 }
 
 impl GridCellContext {
-    /// Resolve one grid cell at the given address: its visual state, the letter it
-    /// shows, and the five drag/click handlers. The drag-drop handler routes a cell
-    /// swap through the
-    /// [`GridLayoutService`](crate::services::grid_layout::service::GridLayoutService).
     fn cell(&self, coordinate: GridCoordinate) -> LayoutTileView {
         let mut editing_layout_tile = self.editing_layout_tile;
         let mut dragging_layout_tile = self.dragging_layout_tile;
@@ -98,9 +90,6 @@ impl GridCellContext {
     }
 }
 
-/// The twelve editable grid cells, resolved from a [`GridCellContext`] by mapping
-/// over the command-grid positions. Mirrors the key picker's board: one fielded
-/// carrier the body places, built from data rather than twelve copy-pasted blocks.
 pub(super) struct LayoutGridCells {
     pub(super) cells: Vec<LayoutTileView>,
 }
@@ -126,17 +115,12 @@ impl LayoutGridCells {
     }
 }
 
-/// The inputs the picker board resolves each key against: the current layout and the
-/// cell being edited.
 #[derive(Clone, Copy)]
 pub(super) struct LayoutPickerContext {
     pub(super) layout: GridLayout,
     pub(super) active_cell: GridCoordinate,
 }
 
-/// The QWERTY keyboard laid out as picker cells, each marked current / conflicting
-/// (naming the row and column it already occupies) / available. Mirrors the override
-/// panel's picker board.
 pub(super) struct LayoutPickerBoard {
     pub(super) rows: Vec<Vec<KeyPickerCell>>,
 }
@@ -188,10 +172,6 @@ use crate::services::editor_state::context::use_editor_state;
 use crate::services::grid_layout::context::use_grid_layout;
 use crate::services::grid_layout::context::use_grid_layout_service;
 
-/// Everything the layout editor's markup needs, already shaped: the dialog open
-/// state and guard, the panel header, the grid cells, the key-picker state, the
-/// toggle state, and every handler. The body only places these; all the work
-/// happens here.
 pub(super) struct GridLayoutEditorDialogPresentation {
     pub(super) is_open: bool,
     pub(super) on_open_change: Callback<bool>,
@@ -212,11 +192,6 @@ impl ddd::Presentation for GridLayoutEditorDialogPresentation {
     type Model = GridLayoutEditorDialogModel;
 }
 
-/// The apply / pick / picker-close / move-toggle handlers plus the toggle's current
-/// checked state. Owns the writes: apply routes the grid through the
-/// [`CustomKeysService`](crate::services::customkeys::service::CustomKeysService) and
-/// toasts the result; pick routes the chosen letter through the
-/// [`GridLayoutService`](crate::services::grid_layout::service::GridLayoutService).
 pub(super) struct LayoutActions {
     pub(super) on_apply: EventHandler<MouseEvent>,
     pub(super) on_pick: EventHandler<HotkeyToken>,
@@ -268,12 +243,6 @@ fn use_layout_actions(
         editing_layout_tile.set(None);
     });
     let on_picker_close = EventHandler::new(move |_event: ()| editing_layout_tile.set(None));
-    // The key picker is a second modal nested inside this one. When it mounts it
-    // takes focus, which makes the base dialog primitive fire a close on this
-    // outer dialog — that close must be ignored, or opening the picker would
-    // dismiss the whole editor and strand `editing_layout_tile` set, so the
-    // editor never reopens. Only a close that arrives while the picker is shut is
-    // a real dismiss; then we also clear the editing cell so the next open is clean.
     let on_dialog_open_change = Callback::new(move |is_open: bool| {
         if is_open {
             on_open_change.call(true);
@@ -301,9 +270,6 @@ fn use_layout_actions(
     }
 }
 
-/// Composes the layout editor's state and behavior. Resolves the twelve grid cells
-/// with their drag/click handlers, derives the key-picker rows from the current
-/// layout, and wires the apply, pick, and toggle handlers.
 pub(super) fn use_grid_layout_editor_dialog(
     props: &GridLayoutEditorDialogModel,
 ) -> GridLayoutEditorDialogPresentation {

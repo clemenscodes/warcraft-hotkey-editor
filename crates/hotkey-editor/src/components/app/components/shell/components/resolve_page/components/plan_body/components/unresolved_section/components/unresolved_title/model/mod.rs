@@ -1,7 +1,6 @@
 use super::view::UnresolvedTitleView;
 use dioxus::prelude::*;
 
-/// The unresolved-abilities section heading text.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnresolvedTitleModel {
     pub text: &'static str,

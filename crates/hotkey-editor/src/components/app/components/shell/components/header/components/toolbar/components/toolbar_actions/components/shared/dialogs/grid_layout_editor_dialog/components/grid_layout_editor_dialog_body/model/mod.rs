@@ -2,8 +2,6 @@ use super::components::grid_layout_editor_dialog_content::components::layout_gri
 use super::view::GridLayoutEditorDialogBodyView;
 use dioxus::prelude::*;
 
-/// The layout editor's scroll region data: the grid cells, the move-hotkey toggle
-/// state and handler, and the apply action, all threaded to the centered content.
 #[derive(Props, Clone, PartialEq)]
 pub struct GridLayoutEditorDialogBodyModel {
     pub cells: Vec<LayoutTileView>,

@@ -2,11 +2,6 @@ use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 
-/// The hero-level dropdown's shaped state: whether it is open, the current level caption,
-/// the toggle handler, the open signal the menu closes on select, and the backdrop's
-/// dismiss handler. The picker OWNS its open signal (no open-flag is threaded in) and
-/// SOURCES the selected level from editor context (no level signal is threaded in); it
-/// resets itself closed whenever the selected unit changes.
 pub(super) struct HeroLevelPickerView {
     pub(super) is_open: bool,
     pub(super) level_number: String,

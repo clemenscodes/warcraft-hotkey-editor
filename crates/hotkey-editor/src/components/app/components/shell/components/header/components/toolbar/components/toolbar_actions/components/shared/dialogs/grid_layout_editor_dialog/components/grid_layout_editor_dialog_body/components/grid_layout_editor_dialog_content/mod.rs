@@ -14,8 +14,6 @@ use model::GridLayoutEditorDialogContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The centered body column of the layout editor: the intro block above the
-/// editable grid, the move-hotkey toggle, and the apply action.
 #[component]
 pub fn GridLayoutEditorDialogContent(props: GridLayoutEditorDialogContentModel) -> Element {
     let cells = props.cells;
@@ -26,7 +24,7 @@ pub fn GridLayoutEditorDialogContent(props: GridLayoutEditorDialogContentModel) 
         div {
             class: CLASS,
             LayoutIntro {
-            
+
 
 
             }

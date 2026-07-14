@@ -11,8 +11,6 @@ use dioxus::prelude::*;
 use model::HotkeyOverrideSlotModel;
 use tw_macro::assert_component;
 
-/// The override slot: the override card for the selected tile, or the empty prompt
-/// when nothing is selected. A pure dispatcher with no class of its own.
 #[component]
 pub fn HotkeyOverrideSlot(props: HotkeyOverrideSlotModel) -> Element {
     let HotkeyOverrideSlotModel {

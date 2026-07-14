@@ -3,7 +3,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use warcraft_keybinds::AlternateFormBehavior;
 
-/// An alternate-form menu (an uprooted Ancient).
 #[component]
 pub fn AlternateFormGridEditor(props: GridEditorView) -> Element {
     rsx! {

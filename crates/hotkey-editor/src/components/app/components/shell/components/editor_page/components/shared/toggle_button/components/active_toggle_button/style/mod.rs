@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The shared gold pill lit as the active choice: the same chrome values as the idle
-// sibling plus the always-on gold accent (surface, border, text, glow). Shared values,
-// not a shared look — each look-component writes its own class list.
 
 classes! {
     base: tw![

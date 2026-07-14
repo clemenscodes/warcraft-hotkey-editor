@@ -1,9 +1,5 @@
 use tw_macro::tw;
 
-// The shared badge chrome (layout, sizing, border weight, type, shadow) written out in
-// full, plus this tone's own colour triple. Sibling tones share these *values*, never a
-// look: each writes its own list, so editing one never reaches the others.
-
 classes! {
     base: tw![
         "inline-flex",

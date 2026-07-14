@@ -12,7 +12,6 @@ use presentation::InfoActionsPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Every info dialog's right-aligned action row: the cancel and primary buttons.
 #[component]
 pub fn InfoActions(props: InfoActionsModel) -> Element {
     let InfoActionsPresentation {

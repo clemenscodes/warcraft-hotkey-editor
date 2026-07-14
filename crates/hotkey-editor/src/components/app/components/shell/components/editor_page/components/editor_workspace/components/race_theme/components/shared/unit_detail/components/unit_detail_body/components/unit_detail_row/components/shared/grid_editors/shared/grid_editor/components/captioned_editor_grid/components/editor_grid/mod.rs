@@ -11,10 +11,6 @@ use model::EditorGridModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The interactive command grid: the three-by-four square of editor tiles. A pure
-/// tile renderer that encodes the grid shape (shared with the preview and mini
-/// grids via the same utility values) and renders each finished `GridEditorTile`.
-/// It owns no behavior — `GridEditor` builds the tiles with their handlers.
 #[component]
 pub fn EditorGrid(props: EditorGridModel) -> Element {
     let tiles = props.tiles;

@@ -1,8 +1,4 @@
 use tw_macro::tw;
-// The title's font size is a container-query length off the brand host, and the line
-// never wraps — so title, gap, and flourishes are one fixed proportional composition
-// that scales with the host. It shrinks to fit instead of truncating; no ellipsis, no
-// per-band font clamps.
 
 classes! {
     base: tw![

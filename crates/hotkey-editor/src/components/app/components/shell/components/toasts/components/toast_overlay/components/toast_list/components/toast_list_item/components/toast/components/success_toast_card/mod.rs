@@ -14,9 +14,6 @@ use presentation::SuccessToastCardPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The success toast: a thin wrapper that publishes the success tint as CSS custom
-/// properties and renders the shared [`ToastCard`]. Its own root is `contents`, so it
-/// adds no box — only the colour vars the card's descendants read.
 #[component]
 pub fn SuccessToastCard(props: SuccessToastCardModel) -> Element {
     let SuccessToastCardPresentation {

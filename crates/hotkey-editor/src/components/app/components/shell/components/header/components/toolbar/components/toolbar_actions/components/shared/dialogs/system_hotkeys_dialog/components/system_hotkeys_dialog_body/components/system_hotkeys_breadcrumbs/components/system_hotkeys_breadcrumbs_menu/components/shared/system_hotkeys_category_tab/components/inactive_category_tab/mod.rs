@@ -9,7 +9,6 @@ use model::InactiveCategoryTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// An unselected category tab: dimmed gold, not the current page.
 #[component]
 pub fn InactiveCategoryTab(props: InactiveCategoryTabModel) -> Element {
     let label = props.label;

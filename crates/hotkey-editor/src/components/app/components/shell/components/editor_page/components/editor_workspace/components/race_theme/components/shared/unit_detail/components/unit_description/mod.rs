@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::UnitDescriptionModel;
 
-/// The unit's flavor text under the detail header.
 #[component]
 pub fn UnitDescription(props: UnitDescriptionModel) -> Element {
     let text = props.text;

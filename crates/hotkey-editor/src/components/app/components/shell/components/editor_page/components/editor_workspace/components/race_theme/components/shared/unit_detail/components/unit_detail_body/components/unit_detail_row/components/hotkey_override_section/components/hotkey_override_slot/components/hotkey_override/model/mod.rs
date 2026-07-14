@@ -10,19 +10,12 @@ use super::presentation::{AltContent, FieldVisibility, HotkeyFieldView, PickerTa
 use super::state::OverrideEditTarget;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::key_picker_dialog::KeyPickerCell;
 
-/// The per-tile override editor: the panel that edits the selected ability's hotkey,
-/// off-state, upgraded form, and command-card position. The shared editor signals it
-/// drives are sourced from context by the component's hook; only the inspected detail
-/// and its container slots are props.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyOverrideModel {
     pub detail: InspectorDetail,
     pub active_container_slots: Rc<[GridSlotId]>,
 }
 
-/// Everything the hotkey-override section body places, already shaped as domain values: the
-/// card's fields flattened, plus each picker dialog's own fields. The body names each
-/// child component and sets these fields directly — no child props are assembled here.
 pub(super) struct HotkeyOverridePresentation {
     pub(super) name_text: String,
     pub(super) object_id: WarcraftObjectId,
@@ -69,10 +62,6 @@ pub(super) struct HotkeyOverridePresentation {
     pub(super) upgrade_open: Signal<bool>,
 }
 
-/// The editing state of the hotkey-override section: which field the picker is open on, plus
-/// every handler that opens, commits, or closes it. Owns the `editing_target` signal
-/// and the assign-request effect; the commit handler runs the conflict check and
-/// routes the write through the [`CustomKeysService`](crate::services::customkeys).
 pub(super) struct OverrideEditing {
     pub(super) snapshot: Option<OverrideEditTarget>,
     pub(super) picker: PickerTarget,
@@ -84,7 +73,6 @@ pub(super) struct OverrideEditing {
     pub(super) on_close: EventHandler<()>,
 }
 
-/// The two off-form position pickers' open state and their open handlers.
 pub(super) struct PositionPickers {
     pub(super) alt_open: Signal<bool>,
     pub(super) upgrade_open: Signal<bool>,
@@ -92,10 +80,6 @@ pub(super) struct PositionPickers {
     pub(super) on_hotkey_upgrade_position_click: EventHandler<()>,
 }
 
-/// Every computed intermediate the hotkey-override section's props tree is built from. The
-/// hook wires the signals and derivations into one of these; the whole nested props
-/// tree then derives itself through the `From` impl below, so the hook never
-/// assembles a props struct by hand.
 pub(super) struct HotkeyOverrideInputs {
     pub(super) object_id: WarcraftObjectId,
     pub(super) upgrade_unit_id: Option<WarcraftObjectId>,

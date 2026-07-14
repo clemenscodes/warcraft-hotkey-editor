@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`ConflictUnitNameModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ConflictUnitNameView {
     pub text: String,

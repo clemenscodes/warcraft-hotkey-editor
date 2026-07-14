@@ -1,8 +1,4 @@
 use tw_macro::tw;
-// The preview's grid slot, sharing the captioned-grid shape: it establishes the
-// query container the grid and its tiles size against, and carries the responsive
-// width. Everything inside sizes in `cqi` off this width, so the whole grid is one
-// scalable shape.
 
 classes! {
     base: tw![

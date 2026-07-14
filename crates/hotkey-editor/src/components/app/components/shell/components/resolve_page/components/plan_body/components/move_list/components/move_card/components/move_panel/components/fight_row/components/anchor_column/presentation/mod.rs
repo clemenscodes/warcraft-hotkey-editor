@@ -2,9 +2,6 @@ use crate::components::app::components::shell::components::resolve_page::present
 use crate::services::carriers::InspectedAbility;
 use warcraft_api::WarcraftObjectId;
 
-/// The rival column's shaped state: the name-plate fields and the ability-icon fields.
-/// The rival is ringed gold when it wins its cell, which is every Fight (a Swap trades
-/// cells, so neither side "wins").
 pub(super) struct AnchorColumnPresentation {
     pub(super) name: String,
     pub(super) object_id: WarcraftObjectId,
@@ -16,8 +13,6 @@ pub(super) struct AnchorColumnPresentation {
 }
 
 impl AnchorColumnPresentation {
-    /// The rival column shaped from a move, or nothing when the move has no rival
-    /// (Spill/GapPull moves displace no anchor).
     pub(super) fn for_move(move_view: &MoveView) -> Option<Self> {
         let reason = move_view.reason();
         let anchor_ability = reason.other_ability()?;

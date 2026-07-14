@@ -3,9 +3,6 @@ use crate::components::app::components::shell::components::collisions_page::pres
 use crate::components::app::components::shell::components::collisions_page::presentation::UnitPositionConflictView;
 use warcraft_api::WarcraftObjectId;
 
-/// The populated position-collision detail pane's presentation: the selected unit, its
-/// collision count, the owning unit id, and the position conflicts. Built purely from
-/// the model — a shaping leaf, no effects.
 pub struct FilledUnitPositionDetailPresentation {
     pub(super) unit: UnitIconView,
     pub(super) count: usize,

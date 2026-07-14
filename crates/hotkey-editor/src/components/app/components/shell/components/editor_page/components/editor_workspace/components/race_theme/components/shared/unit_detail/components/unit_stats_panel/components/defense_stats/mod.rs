@@ -14,9 +14,6 @@ use presentation::DefenseFigures;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The defense column: the defense-type icon beside its stat rows and the defender's
-/// matchup grid, laid into the `defense` grid area. Always present; every unit has
-/// defense figures.
 #[component]
 pub fn DefenseStats(props: DefenseStatsModel) -> Element {
     let DefenseFigures {

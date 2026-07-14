@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::AbilityTierButtonModel;
 
-/// A prev/next arrow button in the tier-cycling footer.
 #[component]
 pub fn AbilityTierButton(props: AbilityTierButtonModel) -> Element {
     let aria_label = props.aria_label;

@@ -1,7 +1,6 @@
 use super::view::CategoryChevronView;
 use dioxus::prelude::*;
 
-/// Whether the category is collapsed, which points the chevron right vs down.
 #[derive(Props, Clone, PartialEq)]
 pub struct CategoryChevronModel {
     pub is_collapsed: bool,

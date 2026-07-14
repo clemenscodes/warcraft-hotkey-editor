@@ -9,9 +9,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::ManaRegenGainModel;
 
-/// The mana-regeneration gain: the human-blue accent, pushed to the row's end. A thin
-/// dispatcher — it renders the active look (`ActiveManaRegenGain`) xor the muted look
-/// (`MutedManaRegenGain`), per whether the unit regenerates mana.
 #[component]
 pub fn ManaRegenGain(props: ManaRegenGainModel) -> Element {
     let value = props.value;

@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`UnitListSearchInputModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UnitListSearchInputView {
     pub value: ReadSignal<String>,

@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`ClearLabelModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ClearLabelView {
     pub text: String,

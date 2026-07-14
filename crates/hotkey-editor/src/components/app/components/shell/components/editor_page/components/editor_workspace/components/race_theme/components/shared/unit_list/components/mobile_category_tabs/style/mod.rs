@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The mobile/tablet category tab row. Hidden on the sidebar; a full-width, single-row
-// flex strip of tabs on small screens.
 
 classes! {
     base: tw![

@@ -1,8 +1,6 @@
 use super::view::AbilityTierButtonView;
 use dioxus::prelude::*;
 
-/// A tier-cycling arrow button: its accessible label, the inline arrow SVG, and the
-/// click handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct AbilityTierButtonModel {
     pub aria_label: &'static str,

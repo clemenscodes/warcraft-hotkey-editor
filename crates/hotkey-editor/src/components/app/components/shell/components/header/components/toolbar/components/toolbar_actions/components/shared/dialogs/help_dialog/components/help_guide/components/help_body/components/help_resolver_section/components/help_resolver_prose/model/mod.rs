@@ -1,7 +1,6 @@
 use super::view::HelpResolverProseView;
 use dioxus::prelude::*;
 
-/// The prose's input: the walkthrough paragraphs.
 #[derive(Props, Clone, PartialEq)]
 pub struct HelpResolverProseModel {
     pub paragraphs: &'static [&'static str],

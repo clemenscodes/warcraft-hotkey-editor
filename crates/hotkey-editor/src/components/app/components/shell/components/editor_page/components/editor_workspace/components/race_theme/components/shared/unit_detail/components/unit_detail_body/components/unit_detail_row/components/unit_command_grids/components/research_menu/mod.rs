@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::ResearchMenuModel;
 
-/// The unit's research menu, when it has one; renders nothing otherwise.
 #[component]
 pub fn ResearchMenu(props: ResearchMenuModel) -> Element {
     let Some(config) = props.config else {

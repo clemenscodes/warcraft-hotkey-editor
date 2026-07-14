@@ -9,9 +9,6 @@ use presentation::{ExportButtonPresentation, use_export_button};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline download action: the toolbar button that opens the download-info dialog, and that
-/// dialog, mounted beneath it. It hides itself until a file is loaded, and owns the dialog's
-/// open signal locally, so the dialog is part of the button and travels with it.
 #[component]
 pub fn ExportButton() -> Element {
     let ExportButtonPresentation {

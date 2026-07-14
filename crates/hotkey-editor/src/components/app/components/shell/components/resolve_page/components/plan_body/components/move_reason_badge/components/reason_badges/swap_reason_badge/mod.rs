@@ -10,9 +10,6 @@ use model::SwapReasonBadgeModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The "Swap" reason badge: publishes the Swap accent colour and composes the base
-/// `ReasonBadge` pill with the domain label. It adds only its colour on top and never
-/// names the pill's classes.
 #[component]
 pub fn SwapReasonBadge(props: SwapReasonBadgeModel) -> Element {
     let label = props.label;

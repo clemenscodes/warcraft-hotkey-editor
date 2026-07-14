@@ -1,6 +1,5 @@
 use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
 
-/// The published `View` contract mirroring [`ConflictSlotModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ConflictSlotView {
     pub slot_label: String,

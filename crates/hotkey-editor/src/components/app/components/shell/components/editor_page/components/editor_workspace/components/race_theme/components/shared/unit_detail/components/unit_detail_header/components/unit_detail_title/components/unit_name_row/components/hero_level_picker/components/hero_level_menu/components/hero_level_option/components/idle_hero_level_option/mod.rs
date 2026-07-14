@@ -9,7 +9,6 @@ use model::IdleHeroLevelOptionModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle hero-level option button. Presentational — the dispatcher renders it.
 #[component]
 pub fn IdleHeroLevelOption(props: IdleHeroLevelOptionModel) -> Element {
     let label = props.label;

@@ -13,7 +13,6 @@ use presentation::HotkeyDetailHeaderPresentation;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The detail-pane header: the selected unit button beside its text meta column.
 #[component]
 pub fn HotkeyDetailHeader(props: HotkeyDetailHeaderModel) -> Element {
     let HotkeyDetailHeaderPresentation {

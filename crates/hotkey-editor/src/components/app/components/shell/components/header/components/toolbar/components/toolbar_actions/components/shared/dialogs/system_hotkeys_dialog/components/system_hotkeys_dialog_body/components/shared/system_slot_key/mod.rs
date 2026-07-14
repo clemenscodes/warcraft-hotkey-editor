@@ -10,10 +10,6 @@ use dioxus::prelude::*;
 use model::SystemSlotKeyModel;
 use tw_macro::assert_component;
 
-/// The bound-key glyph shown on a system hotkey slot. A pure dispatcher: from the
-/// slot's conflict flag it renders the matching look — `PlainSlotKey` (gold) xor
-/// `ConflictSlotKey` (danger-red). The glyph size is inherited from the parent size
-/// container, so both looks are size-agnostic.
 #[component]
 pub fn SystemSlotKey(props: SystemSlotKeyModel) -> Element {
     match props.conflict {

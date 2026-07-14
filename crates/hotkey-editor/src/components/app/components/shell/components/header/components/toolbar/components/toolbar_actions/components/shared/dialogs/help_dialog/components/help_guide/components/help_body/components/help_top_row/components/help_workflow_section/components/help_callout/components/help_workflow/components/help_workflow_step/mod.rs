@@ -12,8 +12,6 @@ use model::HelpWorkflowStepModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One step in the workflow list. A pure loop over its segments: a text run is
-/// printed, an icon segment renders an inline glyph.
 #[component]
 pub fn HelpWorkflowStep(props: HelpWorkflowStepModel) -> Element {
     rsx! {

@@ -1,7 +1,6 @@
 use super::view::UnitPortraitView;
 use dioxus::prelude::*;
 
-/// The unit portrait: its source (absent for units without an image) and alt text.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitPortraitModel {
     pub src: Option<String>,

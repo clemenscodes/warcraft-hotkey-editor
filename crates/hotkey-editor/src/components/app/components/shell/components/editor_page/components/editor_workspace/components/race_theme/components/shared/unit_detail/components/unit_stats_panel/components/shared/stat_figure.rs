@@ -1,28 +1,12 @@
-//! The presentation of each stat figure, keyed by its domain type.
-//!
-//! The value leaves (`StatValue`, `StatGain`) are generic over a domain figure and
-//! render it. Per COMPONENTS.md ("Types at the props boundary") the UI owns how it
-//! presents a normalized domain
-//! value, and `std::fmt::Display` cannot be implemented for these foreign figures in
-//! the renderer crate (the orphan rule), so this renderer-local presentation trait is
-//! the sanctioned home for the formatting. The domain keeps only the value and answers
-//! `is_zero` where a figure can be muted.
-
 use warcraft_api::{
     ArmorFigure as Armor, AttackRange, AttackSpeed, AttributeStatistic, DamagePerSecond,
     DamageRange, EffectiveHitPoints, Evasion, Gain, HitPoints, HitPointsRegen, Mana, ManaRegen,
 };
 use warcraft_api::{AttackType, DefenseType};
 
-/// A domain figure a stat's value leaf renders. It presents itself as text — the UI's
-/// job, since presentation never lives on the domain type — and says whether the leaf
-/// should render it muted.
 pub trait StatFigure: Copy + PartialEq + 'static {
-    /// The display string for this figure, formatted here at the leaf.
     fn display(&self) -> String;
 
-    /// Whether the leaf renders this figure muted. Where "muted" means the value is
-    /// zero (a mana of zero, a regeneration of zero), the domain type answers it.
     fn is_muted(&self) -> bool;
 }
 

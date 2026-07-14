@@ -1,7 +1,6 @@
 use super::view::OpenHeroLevelTriggerView;
 use dioxus::prelude::*;
 
-/// The open-look trigger's inputs: the current level caption and the toggle handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct OpenHeroLevelTriggerModel {
     #[props(into)]

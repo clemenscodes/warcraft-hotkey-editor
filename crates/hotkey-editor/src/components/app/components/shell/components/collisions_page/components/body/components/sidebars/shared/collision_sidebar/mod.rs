@@ -11,8 +11,6 @@ use model::CollisionSidebarModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The collision sidebar: the aside shell around the scrolling list of collision
-/// cards. It owns the chrome and hands the card data down into the scroll region.
 #[component]
 pub fn CollisionSidebar(props: CollisionSidebarModel) -> Element {
     let cards = props.cards;

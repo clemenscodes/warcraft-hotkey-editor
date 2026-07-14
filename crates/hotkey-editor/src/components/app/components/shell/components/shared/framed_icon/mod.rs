@@ -18,13 +18,6 @@ use model::FramedIconModel;
 use state::FramedIconStyle;
 use tw_macro::assert_component;
 
-/// The shared square-icon painter behind every ability and unit thumbnail across the
-/// collisions, resolve, editor, and shared-dialog pages. A pure dispatcher: from the
-/// resolved look it renders the matching per-look child — `TilePlainIcon` xor
-/// `TileGlowIcon` xor `ControlPlainIcon` xor `CardGlowIcon` xor `PlaceholderIcon`. Each
-/// look owns its own framed root and glow; this dispatcher only builds each look's props
-/// from the shared `FramedIconModel` and renders the one the look selects. Guarded —
-/// absent `src` renders nothing, unless `placeholder` draws the empty framed square.
 #[component]
 pub fn FramedIcon(props: FramedIconModel) -> Element {
     let look = FramedIconStyle::from(&props);

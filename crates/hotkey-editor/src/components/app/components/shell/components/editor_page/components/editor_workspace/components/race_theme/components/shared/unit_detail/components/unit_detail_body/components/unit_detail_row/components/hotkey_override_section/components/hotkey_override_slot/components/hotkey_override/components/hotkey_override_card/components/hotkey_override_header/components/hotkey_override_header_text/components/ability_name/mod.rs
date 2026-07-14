@@ -11,7 +11,6 @@ use tw_macro::assert_component;
 
 use model::AbilityNameModel;
 
-/// The ability / unit name heading in the hotkey-override section.
 #[component]
 pub fn AbilityName(props: AbilityNameModel) -> Element {
     let text = props.text;

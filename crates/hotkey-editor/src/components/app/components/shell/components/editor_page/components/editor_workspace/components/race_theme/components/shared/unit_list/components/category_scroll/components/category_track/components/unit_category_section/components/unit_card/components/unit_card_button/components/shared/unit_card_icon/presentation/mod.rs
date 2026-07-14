@@ -1,9 +1,6 @@
 use super::model::UnitCardIconModel;
 use crate::components::app::components::shell::components::shared::framed_icon::IconRadius;
 
-/// The framed portrait's presentation: the image source, alt text, and the fixed
-/// `FramedIcon` axes this slot draws with. Built purely from the model — a shaping
-/// leaf, no effects.
 pub struct UnitCardIconPresentation {
     pub(super) src: Option<String>,
     pub(super) alt: String,

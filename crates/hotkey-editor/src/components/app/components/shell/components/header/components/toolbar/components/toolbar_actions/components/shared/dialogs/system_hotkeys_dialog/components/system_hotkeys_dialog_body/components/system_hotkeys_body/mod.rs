@@ -10,11 +10,6 @@ use presentation::{use_system_hotkeys_body, SystemHotkeysBodyModel};
 use warcraft_api::SystemHotkeysCategory;
 use tw_macro::assert_component;
 
-/// Renders the editor for the active category. Inventory, hero selection, and
-/// control groups have bespoke editors; every other category is a plain list of
-/// key rows. A connected selector: it reads the active category from context, holds
-/// no class, and picks one child to render. Each editor reads the editing section and
-/// drag follower from the dialog state context itself, so nothing is threaded down.
 #[component]
 pub fn SystemHotkeysBody() -> Element {
     let SystemHotkeysBodyModel { active_category } = use_system_hotkeys_body();
@@ -23,7 +18,7 @@ pub fn SystemHotkeysBody() -> Element {
         SystemHotkeysCategory::Inventory => {
             rsx! {
                 InventoryHotkeysView {
-                
+
 
 
                 }
@@ -32,7 +27,7 @@ pub fn SystemHotkeysBody() -> Element {
         SystemHotkeysCategory::HeroSelection => {
             rsx! {
                 HeroSelectionHotkeysView {
-                
+
 
 
                 }
@@ -41,7 +36,7 @@ pub fn SystemHotkeysBody() -> Element {
         SystemHotkeysCategory::ControlGroups => {
             rsx! {
                 ControlGroupsHotkeysView {
-                
+
 
 
                 }

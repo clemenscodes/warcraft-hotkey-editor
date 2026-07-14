@@ -1,7 +1,6 @@
 use super::view::MoveHotkeyToggleView;
 use dioxus::prelude::*;
 
-/// The toggle's current value and the change handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct MoveHotkeyToggleModel {
     pub checked: bool,

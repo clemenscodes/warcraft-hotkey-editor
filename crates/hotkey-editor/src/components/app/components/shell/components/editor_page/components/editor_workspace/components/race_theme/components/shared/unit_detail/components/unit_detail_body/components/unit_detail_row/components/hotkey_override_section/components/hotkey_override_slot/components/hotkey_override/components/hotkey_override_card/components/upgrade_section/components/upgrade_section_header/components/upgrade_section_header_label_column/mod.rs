@@ -10,7 +10,6 @@ use model::UpgradeSectionHeaderLabelColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The label column of the upgraded-form header row: holds the "Upgraded form" label.
 #[component]
 pub fn UpgradeSectionHeaderLabelColumn(props: UpgradeSectionHeaderLabelColumnModel) -> Element {
     let UpgradeSectionHeaderLabelColumnModel { text } = props;

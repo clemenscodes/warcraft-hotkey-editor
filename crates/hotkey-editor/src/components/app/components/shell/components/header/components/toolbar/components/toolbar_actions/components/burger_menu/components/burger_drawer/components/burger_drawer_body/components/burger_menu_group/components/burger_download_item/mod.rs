@@ -9,9 +9,6 @@ use presentation::{BurgerDownloadItemPresentation, use_burger_download_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout download action: the drawer row that opens the download-info dialog, and
-/// that dialog, mounted beneath it. It hides itself until a file is loaded, and owns the
-/// dialog's open signal locally, so the dialog is part of the row and travels with it.
 #[component]
 pub fn BurgerDownloadItem() -> Element {
     let BurgerDownloadItemPresentation {

@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Attack Speed";
 
-/// The unit's attack cooldown, shown in seconds.
 #[component]
 pub fn AttackSpeedRow(props: AttackSpeedRowModel) -> Element {
     let value = props.value;

@@ -10,9 +10,6 @@ use model::CurrentKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The look for the key currently bound here: a filled gold panel with a steady glow. It
-/// owns its own button and shares only the shaped attributes and the conflict tooltip
-/// leaf.
 #[component]
 pub fn CurrentKey(props: CurrentKeyModel) -> Element {
     let CurrentKeyModel {

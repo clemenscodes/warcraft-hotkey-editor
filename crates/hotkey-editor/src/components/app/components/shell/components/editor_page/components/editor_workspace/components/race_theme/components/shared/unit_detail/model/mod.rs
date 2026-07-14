@@ -4,10 +4,6 @@ use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{GridSlotId, InspectorDetail};
 
-/// Every computed intermediate the loaded panel is built from. The hook resolves the
-/// selected unit, its slot containers, and the inspector detail into one of these; the
-/// domain model then derives itself through the `From` impl below, so the hook never
-/// assembles a props struct by hand.
 pub(super) struct UnitDetailInputs {
     pub(super) unit_id: WarcraftObjectId,
     pub(super) resolved_unit: ResolvedUnit,

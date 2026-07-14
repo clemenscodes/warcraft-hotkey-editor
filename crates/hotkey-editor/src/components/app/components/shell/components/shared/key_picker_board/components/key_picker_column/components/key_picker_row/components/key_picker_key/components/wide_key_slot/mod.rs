@@ -10,9 +10,6 @@ use model::WideKeySlotModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The sizing box for a wide-width picker key. A component owns its look; its parent
-/// owns its size — so the key's width lives here, and the color leaf inside fills the
-/// box. Oversized caps (`Space`, `Backspace`, the mouse side buttons) get this width.
 #[component]
 pub fn WideKeySlot(props: WideKeySlotModel) -> Element {
     let state = props.state;

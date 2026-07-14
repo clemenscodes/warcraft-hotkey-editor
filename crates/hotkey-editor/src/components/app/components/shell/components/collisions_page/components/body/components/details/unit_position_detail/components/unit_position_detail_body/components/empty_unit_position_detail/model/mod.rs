@@ -1,7 +1,6 @@
 use super::view::EmptyUnitPositionDetailView;
 use dioxus::prelude::*;
 
-/// The empty detail pane's model: the prompt to show.
 #[derive(Props, Clone, PartialEq)]
 pub struct EmptyUnitPositionDetailModel {
     #[props(into)]

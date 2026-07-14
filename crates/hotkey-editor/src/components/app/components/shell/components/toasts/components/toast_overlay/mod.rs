@@ -11,8 +11,6 @@ use model::ToastOverlayModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The fixed overlay anchoring the toast stack to the bottom-right of the
-/// viewport. Click-through itself; each toast re-enables pointer events.
 #[component]
 pub fn ToastOverlay(props: ToastOverlayModel) -> Element {
     let toasts = props.toasts;

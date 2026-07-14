@@ -13,8 +13,6 @@ use model::AnchorColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The rival column of a move card, shown only when the move has an anchor
-/// (Fight/Swap): the rival's name plate over its icon. Renders nothing otherwise.
 #[component]
 pub fn AnchorColumn(props: AnchorColumnModel) -> Element {
     let move_view = props.move_view;

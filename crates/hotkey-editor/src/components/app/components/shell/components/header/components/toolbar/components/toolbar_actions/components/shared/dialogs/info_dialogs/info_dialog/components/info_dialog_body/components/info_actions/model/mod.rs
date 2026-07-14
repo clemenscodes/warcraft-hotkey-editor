@@ -1,8 +1,6 @@
 use super::view::InfoActionsView;
 use dioxus::prelude::*;
 
-/// The action row's inputs: the primary button's label and handler, plus the
-/// cancel handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct InfoActionsModel {
     pub primary_label: &'static str,

@@ -11,10 +11,6 @@ use presentation::use_brand;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The app's wordmark: the title flanked by mirrored gold flourishes, the whole
-/// thing a button that returns to the editor. It wires its own return-to-editor
-/// click from the navigation context; the header only places it. The flourishes
-/// show in both the compact and full header layouts.
 #[component]
 pub fn Brand() -> Element {
     let onclick = use_brand();
@@ -25,7 +21,7 @@ pub fn Brand() -> Element {
             "aria-label": "Warcraft III Hotkey Editor \u{2014} return to editor",
             onclick,
             BrandDecorationLeading {
-            
+
 
 
             }
@@ -33,7 +29,7 @@ pub fn Brand() -> Element {
                 title: data::TITLE,
             }
             BrandDecorationTrailing {
-            
+
 
 
             }

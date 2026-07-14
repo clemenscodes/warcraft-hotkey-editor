@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`ConflictAbilityTriggerModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ConflictAbilityTriggerView {
     pub onclick: EventHandler<MouseEvent>,

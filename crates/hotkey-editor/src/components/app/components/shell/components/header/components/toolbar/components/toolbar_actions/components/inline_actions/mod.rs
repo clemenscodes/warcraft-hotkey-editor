@@ -14,9 +14,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The inline file-action buttons, shown at laptop width and up. Below that these
-/// same actions collapse into the burger drawer that sits beside this row. Pure
-/// layout — it threads no data; each button sources its own state.
 #[component]
 pub fn InlineActions() -> Element {
     rsx! {
@@ -25,47 +22,47 @@ pub fn InlineActions() -> Element {
             role: "toolbar",
             aria_label: "File actions",
             UndoButton {
-            
+
 
 
             }
             RedoButton {
-            
+
 
 
             }
             UploadButton {
-            
+
 
 
             }
             TemplatesButton {
-            
+
 
 
             }
             SystemHotkeysButton {
-            
+
 
 
             }
             ResolveButton {
-            
+
 
 
             }
             PreviewButton {
-            
+
 
 
             }
             ExportButton {
-            
+
 
 
             }
             HelpButton {
-            
+
 
 
             }

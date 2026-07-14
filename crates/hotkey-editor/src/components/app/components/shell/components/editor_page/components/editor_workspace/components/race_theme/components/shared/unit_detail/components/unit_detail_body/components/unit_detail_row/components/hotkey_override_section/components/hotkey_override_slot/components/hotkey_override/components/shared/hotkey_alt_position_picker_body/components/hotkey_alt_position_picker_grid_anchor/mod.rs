@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 use model::HotkeyAltPositionPickerGridAnchorModel;
 
-/// Centers and picker-restyles the embedded command grid inside a position picker.
 #[component]
 pub fn HotkeyAltPositionPickerGridAnchor(props: HotkeyAltPositionPickerGridAnchorModel) -> Element {
     let grid_config = GridEditorView::from(&props);

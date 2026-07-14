@@ -17,7 +17,6 @@ use tw_macro::assert_component;
 
 use model::HotkeyOverrideCardModel;
 
-/// The gold-edged card holding the hotkey-override section's header and ability sections.
 #[component]
 pub fn HotkeyOverrideCard(props: HotkeyOverrideCardModel) -> Element {
     let HotkeyOverrideCardModel {

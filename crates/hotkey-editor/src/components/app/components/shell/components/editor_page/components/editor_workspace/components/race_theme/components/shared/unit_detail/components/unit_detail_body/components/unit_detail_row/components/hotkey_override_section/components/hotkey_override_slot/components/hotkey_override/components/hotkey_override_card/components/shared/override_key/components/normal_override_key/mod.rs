@@ -10,10 +10,6 @@ use model::NormalOverrideKeyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The single-letter override key: the square capture button around the shared gold cap.
-/// The `OverrideKey` dispatcher renders it for an ordinary letter token; it wears its
-/// own square box and calls `on_activate` on click to start editing. Class
-/// `.normal-override-key` is load-bearing for the end-to-end selectors.
 #[component]
 pub fn NormalOverrideKey(props: NormalOverrideKeyModel) -> Element {
     let NormalOverrideKeyModel {

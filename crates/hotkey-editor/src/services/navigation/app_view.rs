@@ -1,11 +1,3 @@
-/// Which top-level page the app should render.
-///
-/// Backed by the `?view=` URL parameter so deep-linking and browser
-/// back/forward both work.  Each variant maps 1:1 to a query value:
-///
-/// - `Editor`          → `?view=editor`   (default if missing/invalid)
-/// - `Collisions { kind }` → `?view=collisions&kind=positions|hotkeys`
-/// - `Resolve`         → `?view=resolve`
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum AppView {
     Editor,
@@ -13,10 +5,6 @@ pub enum AppView {
     Resolve,
 }
 
-/// Which sub-page the collisions view should render.
-///
-/// Read from the `?kind=` URL parameter.  Defaults to `Positions` when
-/// `kind` is missing or unrecognized.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum CollisionKind {
     Positions,
@@ -25,13 +13,10 @@ pub enum CollisionKind {
 }
 
 impl AppView {
-    /// Canonical default when no view is selected.
     pub fn default_view() -> Self {
         Self::Editor
     }
 
-    /// Builds an `AppView` from the raw `view` and `kind` query strings.
-    /// Unknown values fall back to the editor.
     pub fn from_query_params(view_param: Option<&str>, kind_param: Option<&str>) -> Self {
         let view_value = view_param.unwrap_or("editor");
         match view_value {
@@ -44,7 +29,6 @@ impl AppView {
         }
     }
 
-    /// The string written to the `view` URL parameter.
     pub fn view_param(&self) -> &'static str {
         match self {
             Self::Editor => "editor",
@@ -53,8 +37,6 @@ impl AppView {
         }
     }
 
-    /// The string written to the `kind` URL parameter, if applicable.
-    /// `None` for views without a sub-kind.
     pub fn kind_param(&self) -> Option<&'static str> {
         match self {
             Self::Collisions { kind } => Some(kind.kind_param()),
@@ -72,8 +54,6 @@ impl CollisionKind {
         }
     }
 
-    /// The kind's canonical slug, written to the URL `kind` query parameter that
-    /// selects which collision sub-page — and its breadcrumb tab — is active.
     pub(crate) fn kind_param(self) -> &'static str {
         match self {
             Self::Positions => "positions",

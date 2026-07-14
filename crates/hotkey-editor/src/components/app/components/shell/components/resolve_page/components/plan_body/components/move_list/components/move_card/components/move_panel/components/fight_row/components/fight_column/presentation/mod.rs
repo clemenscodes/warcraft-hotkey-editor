@@ -4,9 +4,6 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The mover column's shaped state: the name-button fields (with the open-unit handler
-/// wired from the navigation context) and the ability-icon fields. The mover never wins
-/// its own cell, so the icon is not ringed.
 pub(super) struct FightColumnPresentation {
     pub(super) name: String,
     pub(super) object_id: WarcraftObjectId,
@@ -18,8 +15,6 @@ pub(super) struct FightColumnPresentation {
     pub(super) inspected: InspectedAbility,
 }
 
-/// Reads the navigation from context and shapes the mover column: its name button (which
-/// opens the mover's unit through that navigation) and its ability icon.
 pub(super) fn use_fight_column(props: &FightColumnModel) -> FightColumnPresentation {
     let view_navigation = use_view_navigation();
     let move_view = props.move_view.clone();

@@ -3,10 +3,6 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The unit card's selectable button surface's input: the portrait plus name/id it lays
-/// out, the selected flag the dispatcher reads to pick the look, and the click/keydown
-/// handlers the card wires onto its button. The accent colour is read from
-/// `--race-color`, so no race is threaded in.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardButtonModel {
     pub icon_path: Option<IconUrl>,

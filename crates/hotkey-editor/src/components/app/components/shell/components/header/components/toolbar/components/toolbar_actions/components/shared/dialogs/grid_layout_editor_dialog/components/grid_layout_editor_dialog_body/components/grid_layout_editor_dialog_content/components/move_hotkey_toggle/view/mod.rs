@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`MoveHotkeyToggleModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct MoveHotkeyToggleView {
     pub checked: bool,

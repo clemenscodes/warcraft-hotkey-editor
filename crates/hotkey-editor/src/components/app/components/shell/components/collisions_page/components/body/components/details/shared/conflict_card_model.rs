@@ -2,9 +2,6 @@ use super::conflict_marker::ConflictMarker;
 use super::conflict_pair_row::AbilityPair;
 use warcraft_api::WarcraftObjectId;
 
-/// One clashing ability as domain data: its display name, object id, icon, and the unit
-/// its icon deep-links to. Threaded into the pair row and the multi stack, which build
-/// each `ConflictAbility` leaf from these fields.
 #[derive(Clone, PartialEq)]
 pub(crate) struct ConflictAbilityData {
     pub(crate) name: String,
@@ -13,11 +10,6 @@ pub(crate) struct ConflictAbilityData {
     pub(crate) unit_id: WarcraftObjectId,
 }
 
-/// A conflict detail card's shaped body, shared by the hotkey and position cards: the
-/// role-label caption plus the pair-vs-multi presentation of the clashing abilities.
-/// Exactly one of the two layouts renders; the other guards itself away. A two-ability
-/// clash flanks the marker (pair row); any other count stacks above it (multi stack).
-/// Each card supplies only its own marker and shaped abilities; the split is shared here.
 #[derive(Clone, PartialEq)]
 pub(crate) struct ConflictCardModel {
     pub(crate) role_label: String,
@@ -26,17 +18,12 @@ pub(crate) struct ConflictCardModel {
     pub(crate) marker: ConflictMarker,
 }
 
-/// Which clash presentation a card uses: an exact pair (two abilities) or a multi-stack
-/// (any other count). Exactly one field is populated.
 struct ClashLayout {
     pair: Option<AbilityPair>,
     multi: Vec<ConflictAbilityData>,
 }
 
 impl ConflictCardModel {
-    /// Splits the shaped abilities around the clash marker into the pair-vs-multi
-    /// presentation: exactly two abilities become a pair row flanking the marker, any
-    /// other count a stack above it.
     pub(crate) fn new(
         role_label: String,
         marker: ConflictMarker,

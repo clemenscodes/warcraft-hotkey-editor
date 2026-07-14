@@ -11,8 +11,6 @@ use model::IdleCollisionCardButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The idle collision card surface: the card button in its idle look, composing the
-/// shared visual and meta line. Presentational — the dispatcher renders it.
 #[component]
 pub fn IdleCollisionCardButton(props: IdleCollisionCardButtonModel) -> Element {
     let onclick = props.onclick;

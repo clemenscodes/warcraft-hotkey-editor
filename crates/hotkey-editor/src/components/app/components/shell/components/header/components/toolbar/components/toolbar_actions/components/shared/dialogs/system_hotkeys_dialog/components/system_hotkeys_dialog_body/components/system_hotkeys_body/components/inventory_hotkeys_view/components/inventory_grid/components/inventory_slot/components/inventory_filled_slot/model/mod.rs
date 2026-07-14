@@ -5,10 +5,6 @@ use crate::components::app::components::shell::components::header::components::t
 use dioxus::prelude::*;
 use warcraft_keybinds::WarcraftObjectId;
 
-/// One inventory slot: its index and section, plus the shared drag signals the grid
-/// coordinates. The editing section comes from the dialog state context, and its
-/// binding + conflicts come from the CustomKeys query, so it holds neither the loaded
-/// keys nor a prebuilt binding map.
 #[derive(Props, Clone, PartialEq)]
 pub struct InventoryFilledSlotModel {
     pub slot_index: usize,

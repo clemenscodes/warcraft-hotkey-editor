@@ -3,9 +3,6 @@ use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The shaped ability: its deep-link trigger inputs (the icon source and alt plus the
-/// open-unit handler read from navigation context), its name, and its id. The
-/// dialog-free carriers deep-link is wired here, not in the body.
 pub(super) struct ConflictAbilityPresentation {
     pub(super) onclick: EventHandler<MouseEvent>,
     pub(super) icon_src: Option<String>,

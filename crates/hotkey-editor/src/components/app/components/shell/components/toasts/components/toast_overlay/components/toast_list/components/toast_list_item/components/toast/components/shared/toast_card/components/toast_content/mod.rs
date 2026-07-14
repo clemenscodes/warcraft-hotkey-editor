@@ -12,8 +12,6 @@ use model::ToastContentModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The text column of a toast: its title above the optional description. The title
-/// tint comes from `--toast-title`, set by the severity wrapper.
 #[component]
 pub fn ToastContent(props: ToastContentModel) -> Element {
     let title = props.title;

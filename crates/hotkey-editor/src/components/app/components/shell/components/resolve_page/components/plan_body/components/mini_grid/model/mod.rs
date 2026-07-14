@@ -2,7 +2,6 @@ use super::view::MiniGridView;
 use crate::components::app::components::shell::components::resolve_page::presentation::MiniGridPlacement;
 use dioxus::prelude::*;
 
-/// A tiny 4×3 command grid rendering each placed ability's icon into its cell.
 #[derive(Props, Clone, PartialEq)]
 pub struct MiniGridModel {
     pub placements: Vec<MiniGridPlacement>,

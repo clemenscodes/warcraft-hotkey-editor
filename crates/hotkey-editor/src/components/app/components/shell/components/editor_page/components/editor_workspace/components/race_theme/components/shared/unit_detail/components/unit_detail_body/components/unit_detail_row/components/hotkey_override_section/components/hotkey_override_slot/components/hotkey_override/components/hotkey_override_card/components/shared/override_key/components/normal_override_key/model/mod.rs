@@ -2,8 +2,6 @@ use super::view::NormalOverrideKeyView;
 use crate::components::app::components::shell::components::shared::editable_keycap::EditableKeycapState;
 use dioxus::prelude::*;
 
-/// The single-letter override key's input: the gold-cap glyph and its capture state, the
-/// button title, and the activation handler. Set by the `OverrideKey` dispatcher.
 #[derive(Props, Clone, PartialEq)]
 pub struct NormalOverrideKeyModel {
     #[props(into)]

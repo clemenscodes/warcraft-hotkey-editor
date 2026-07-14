@@ -10,12 +10,6 @@ use dioxus::prelude::*;
 use model::ToggleButtonModel;
 use tw_macro::assert_component;
 
-/// The shared labeled pill button (mode, search-field, catalog-visibility). A pure
-/// dispatcher: from whether it is the active button in its group it renders the one
-/// matching look — `ActiveToggleButton` xor `IdleToggleButton`. Each look owns its own
-/// `<button>` and writes the shared pill chrome values plus its own state accent; this
-/// dispatcher owns no class and there is no `data-active`, so the look follows the
-/// component, not an attribute.
 #[component]
 pub fn ToggleButton(props: ToggleButtonModel) -> Element {
     let label = props.label;

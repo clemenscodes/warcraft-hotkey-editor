@@ -13,9 +13,6 @@ use presentation::{BurgerRedoItemPresentation, use_burger_redo_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The compact-layout redo action: the drawer row that redoes one edit and then closes the
-/// drawer. Unlike the help row it mounts no dialog — it performs the redo command and dismisses
-/// the menu.
 #[component]
 pub fn BurgerRedoItem(props: BurgerRedoItemModel) -> Element {
     let BurgerRedoItemPresentation {

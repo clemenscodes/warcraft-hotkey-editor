@@ -3,10 +3,6 @@ use crate::components::app::components::shell::components::shared::icons::IconUr
 use dioxus::prelude::*;
 use warcraft_api::{UnitKind, WarcraftObjectId};
 
-/// One unit's own catalog data: its id, display name, portrait, and kind. The selection
-/// it drives (whether it is selected, the selected slot, the active category) is read
-/// from context by the card's hook, and its accent colour from `--race-color`, so
-/// neither is a prop.
 #[derive(Props, Clone, PartialEq)]
 pub struct UnitCardModel {
     pub unit_id: WarcraftObjectId,

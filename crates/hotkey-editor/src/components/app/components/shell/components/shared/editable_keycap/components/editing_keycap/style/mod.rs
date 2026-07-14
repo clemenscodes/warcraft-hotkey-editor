@@ -1,12 +1,5 @@
 use tw_macro::tw;
 
-// The pulsing gold key-cap surface, lit while its key picker is open. It shares the
-// resting cap's values verbatim (see `idle_keycap`) and appends the capture pulse —
-// gold fill, gold border and glyph, and the strong glow. It fills the box its host
-// button hands it (`size-full`); font *size* inherits from the host. Focus is a pseudo
-// of the *host* button, reflected through its `group/editable-keycap` marker. The corner
-// radius comes from the inherited `--keycap-radius` (panel when the host leaves it unset).
-
 classes! {
     base: tw![
         "size-full",

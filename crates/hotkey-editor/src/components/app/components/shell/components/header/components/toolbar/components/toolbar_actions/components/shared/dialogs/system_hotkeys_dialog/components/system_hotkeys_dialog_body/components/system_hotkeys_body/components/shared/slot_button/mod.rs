@@ -14,10 +14,6 @@ use model::SlotButtonModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// A big WC3 slot for the hero-selection and control-group layouts: a framed cell
-/// showing a caption and its bound key, edited on click via the system key picker.
-/// The host owns the focusable button and the cell's size; the framed `SystemSlot`
-/// draws the cell.
 #[component]
 pub fn SlotButton(props: SlotButtonModel) -> Element {
     let SlotButtonPresentation {

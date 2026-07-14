@@ -8,7 +8,6 @@ use dioxus::prelude::*;
 use tw_macro::assert_component;
 use model::BuildMenuModel;
 
-/// The unit's build menu, when it has one; renders nothing otherwise.
 #[component]
 pub fn BuildMenu(props: BuildMenuModel) -> Element {
     let Some(config) = props.config else {

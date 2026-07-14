@@ -13,7 +13,6 @@ use tw_macro::assert_component;
 
 const LABEL_TEXT: &str = "Armor";
 
-/// The unit's armor value.
 #[component]
 pub fn ArmorRow(props: ArmorRowModel) -> Element {
     let value = props.value;

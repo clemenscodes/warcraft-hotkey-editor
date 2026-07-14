@@ -12,8 +12,6 @@ use model::UnitDetailHeaderModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The unit detail header: the portrait beside the title column (name, id, and the
-/// optional hero level picker).
 #[component]
 pub fn UnitDetailHeader(props: UnitDetailHeaderModel) -> Element {
     let portrait_source = props.portrait_url;

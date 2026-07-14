@@ -1,9 +1,6 @@
 use super::view::DownloadInfoDialogView;
 use dioxus::prelude::*;
 
-/// What the download dialog needs: the open value it drives and the change handler
-/// mirroring the headless dialog's own close. The dialog reads the live document from
-/// the CustomKeys service itself, so no confirm handler is threaded in.
 #[derive(Props, Clone, PartialEq)]
 pub struct DownloadInfoDialogModel {
     pub open: bool,

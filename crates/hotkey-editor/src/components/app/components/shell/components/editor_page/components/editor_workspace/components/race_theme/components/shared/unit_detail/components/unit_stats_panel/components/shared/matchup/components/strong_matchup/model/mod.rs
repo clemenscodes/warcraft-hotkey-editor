@@ -2,7 +2,6 @@ use super::super::super::subject::MatchupSubject;
 use super::view::StrongMatchupView;
 use dioxus::prelude::*;
 
-/// The strong matchup cell: a success-green tint.
 #[derive(Props, Clone, PartialEq)]
 pub struct StrongMatchupModel {
     pub subject: MatchupSubject,

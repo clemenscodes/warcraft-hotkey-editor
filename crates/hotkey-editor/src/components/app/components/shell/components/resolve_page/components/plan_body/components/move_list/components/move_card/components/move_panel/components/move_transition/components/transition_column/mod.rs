@@ -10,7 +10,6 @@ use model::TransitionColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One side (from or to) of the transition block: a single mini grid of placements.
 #[component]
 pub fn TransitionColumn(props: TransitionColumnModel) -> Element {
     let placements = props.placements;

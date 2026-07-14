@@ -1,7 +1,6 @@
 use crate::components::app::components::shell::components::collisions_page::components::body::components::sidebars::shared::collision_sidebar::components::collision_list_scroll::components::collision_list_track::components::collision_card::state::CollisionCardContent;
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`IdleCollisionCardButtonModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct IdleCollisionCardButtonView {
     pub onclick: EventHandler<MouseEvent>,

@@ -1,7 +1,4 @@
 use tw_macro::tw;
-// The selected collision card surface: shared chrome values on the blue surface, wearing
-// the fixed collision-gold accent (border, text, glow) and publishing
-// `--coordinate-color: gold` for its coordinate. Shared values with the idle sibling.
 classes! {
     base: tw![
         "flex",

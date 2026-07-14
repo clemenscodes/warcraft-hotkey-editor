@@ -1,7 +1,6 @@
 use super::view::IdleMobileCategoryTabView;
 use dioxus::prelude::*;
 
-/// The idle mobile category tab's props: its label and the tap handler.
 #[derive(Props, Clone, PartialEq)]
 pub struct IdleMobileCategoryTabModel {
     pub label: &'static str,

@@ -10,9 +10,6 @@ use model::ClosedBreadcrumbsMenuModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The closed look of the category menu: the desktop tab bar (hidden on small
-/// viewports, where the trigger stands in). Rendered by the dispatcher while the
-/// dropdown is closed; owns its listbox root and lays the tabs out in a row.
 #[component]
 pub fn ClosedBreadcrumbsMenu(props: ClosedBreadcrumbsMenuModel) -> Element {
     let tabs = props.tabs;

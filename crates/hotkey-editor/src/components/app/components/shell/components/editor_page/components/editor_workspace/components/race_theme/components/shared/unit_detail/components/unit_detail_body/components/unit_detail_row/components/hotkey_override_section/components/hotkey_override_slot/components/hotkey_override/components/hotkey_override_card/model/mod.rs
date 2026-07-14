@@ -2,8 +2,6 @@ use super::view::HotkeyOverrideCardView;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// The override card owns the header and the four ability sections; every field its
-/// children place is threaded through here as a domain value by the panel's hook.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyOverrideCardModel {
     pub name_text: String,

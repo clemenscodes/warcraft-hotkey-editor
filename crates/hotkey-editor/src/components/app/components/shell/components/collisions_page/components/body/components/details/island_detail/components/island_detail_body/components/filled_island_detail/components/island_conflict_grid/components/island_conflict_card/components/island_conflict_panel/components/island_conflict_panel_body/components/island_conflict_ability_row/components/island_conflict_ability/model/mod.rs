@@ -3,10 +3,6 @@ use crate::services::carriers::InspectedAbility;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
-/// One ability of an island conflict: a big icon and name that open the carriers
-/// dialog, plus an optional "+N more" link when the ability is carried by more units
-/// than the one shown. `inspected` is the opaque identity this ability opens the dialog
-/// on — a name and a carrier-id list, resolved to views only by the dialog's host.
 #[derive(Props, Clone, PartialEq)]
 pub struct IslandConflictAbilityModel {
     #[props(into)]

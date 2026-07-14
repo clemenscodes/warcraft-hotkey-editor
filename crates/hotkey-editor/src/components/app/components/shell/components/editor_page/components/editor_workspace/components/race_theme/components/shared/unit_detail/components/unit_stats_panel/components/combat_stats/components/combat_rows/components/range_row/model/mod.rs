@@ -2,7 +2,6 @@ use super::view::RangeRowView;
 use dioxus::prelude::*;
 use warcraft_api::AttackRange;
 
-/// The range row's input: the attack's reach.
 #[derive(Props, Clone, PartialEq)]
 pub struct RangeRowModel {
     pub value: AttackRange,

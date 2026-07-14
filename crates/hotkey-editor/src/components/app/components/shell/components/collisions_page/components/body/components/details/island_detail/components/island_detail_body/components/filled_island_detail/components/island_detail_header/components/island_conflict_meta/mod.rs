@@ -10,8 +10,6 @@ use model::IslandConflictMetaModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The text meta column of the island detail header: the island's coordinate line and
-/// its collision count.
 #[component]
 pub fn IslandConflictMeta(props: IslandConflictMetaModel) -> Element {
     let coordinate = props.coordinate;

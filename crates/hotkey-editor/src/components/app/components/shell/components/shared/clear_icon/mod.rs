@@ -4,7 +4,6 @@ use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The gold "all clear" glyph shown for a conflict-free state.
 #[component]
 pub fn ClearIcon() -> Element {
     rsx! {

@@ -13,7 +13,6 @@ use model::FightColumnModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The stuck ability's column: its name plate stacked over its ability icon.
 #[component]
 pub fn FightColumn(props: FightColumnModel) -> Element {
     let unresolved_view = props.unresolved_view;

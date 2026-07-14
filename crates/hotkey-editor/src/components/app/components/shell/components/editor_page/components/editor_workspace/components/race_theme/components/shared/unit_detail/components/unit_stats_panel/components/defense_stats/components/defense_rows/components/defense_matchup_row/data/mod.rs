@@ -1,5 +1,3 @@
-//! The attack types a defender's matchup grid is shown against.
-
 use warcraft_api::AttackType;
 
 pub(super) const ALL_ATTACK_TYPES: [AttackType; 7] = [

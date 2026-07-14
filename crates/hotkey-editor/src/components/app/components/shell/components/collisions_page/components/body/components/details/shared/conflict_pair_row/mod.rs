@@ -14,8 +14,6 @@ pub use state::AbilityPair;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The two-ability layout for a shared-key clash: the two abilities flanking the key
-/// badge. It owns its own abilities row. Renders nothing when there is no pair.
 #[component]
 pub fn ConflictPairRow(props: ConflictPairRowModel) -> Element {
     let Some(pair) = props.pair else {

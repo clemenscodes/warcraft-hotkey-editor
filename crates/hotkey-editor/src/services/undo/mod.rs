@@ -12,29 +12,18 @@ use warcraft_keybinds::EditorHistory;
 use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
 
-/// Which direction a keyboard shortcut requested. Constructed by the window
-/// keydown listener installed at boot.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum UndoDirection {
     Undo,
     Redo,
 }
 
-/// A keyboard-shortcut request, carrying a monotonically increasing generation so
-/// each keypress is a distinct value (even repeats of the same direction). The
-/// window keydown listener only *sets* this signal; a reactive effect performs the
-/// undo/redo, where signal reads are valid.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 struct KeyboardUndoRequest {
     generation: u32,
     direction: UndoDirection,
 }
 
-/// The application-layer undo/redo service. It owns the live [`EditorHistory`]
-/// aggregate as a signal and is a [`Service`] over it; the pure timeline lives in
-/// the domain, persistence and compression live in the infrastructure layers, and
-/// this type keeps only the renderer glue: applying a restored snapshot back to the
-/// live keys/grid signals, the debounced persist, and the keyboard listener.
 #[derive(Clone, Copy)]
 pub struct UndoHistory {
     keys: Signal<Option<CustomKeys>>,
@@ -46,9 +35,6 @@ pub struct UndoHistory {
 }
 
 impl UndoHistory {
-    /// Custom hook: loads any persisted timeline, reseats its present on the actual
-    /// boot state (so the first capture-effect run is a no-op rather than a spurious
-    /// entry), and creates the history and keyboard signals.
     pub fn use_history(keys: Signal<Option<CustomKeys>>, grid_layout: Signal<GridLayout>) -> Self {
         let boot_present = snapshot_from_state(&keys, &grid_layout);
         let repository = EditorHistoryRepository;
@@ -68,9 +54,6 @@ impl UndoHistory {
         }
     }
 
-    /// Performs the latest pending keyboard request, if any is unhandled. Meant to
-    /// be driven from a reactive effect (it reads the request signal and the
-    /// stacks); the window listener only writes `keyboard_request`.
     pub(crate) fn handle_keyboard_request(&self) {
         let Some(request) = *self.keyboard_request.read() else {
             return;
@@ -94,12 +77,6 @@ impl UndoHistory {
         self.history.read().can_redo()
     }
 
-    /// Records a transition to `current`. A no-op when `current` equals the present
-    /// state (so restores never create new history) — and crucially, a no-op records
-    /// nothing *and persists nothing*. The boot capture effect fires one such no-op
-    /// on first render; were it to schedule a persist, a fresh visit that never
-    /// touched anything would still write an empty-stack blob after the debounce,
-    /// which a later reload would restore as "nothing to undo".
     pub(crate) fn record(&self, current: EditorSnapshot) {
         let mut aggregate = self.snapshot();
         let recorded = aggregate.record(current);
@@ -134,9 +111,6 @@ impl UndoHistory {
         }
     }
 
-    /// Debounced persistence: the compressed blob is only written ~1s after the
-    /// last change, so a burst of actions doesn't pay the compression cost each
-    /// time. A generation counter cancels superseded timers.
     fn schedule_persist(&self) {
         let mut persist_generation = self.persist_generation;
         let next_generation = persist_generation.peek().wrapping_add(1);
@@ -171,12 +145,6 @@ impl Service<EditorHistory> for UndoHistory {
     }
 
     fn snapshot(&self) -> EditorHistory {
-        // `peek`, not `read`: `commit` calls `snapshot` and then writes the
-        // `history` signal via `replace`. `record` runs inside the shell's
-        // reactive capture effect, so a subscribing `read` here would make that
-        // effect depend on `history` and re-fire on its own write — an infinite
-        // render loop. A snapshot is a point-in-time clone to mutate, never a
-        // subscription.
         self.history.peek().clone()
     }
 
@@ -185,10 +153,6 @@ impl Service<EditorHistory> for UndoHistory {
         history_signal.set(aggregate);
     }
 
-    /// Overridden to preserve the debounced write-through: the aggregate is
-    /// updated and the live signal replaced immediately, but the compressed blob is
-    /// persisted on a 1-second debounce (through the repository) rather than on
-    /// every keystroke.
     fn commit<Outcome>(&self, change: impl FnOnce(&mut EditorHistory) -> Outcome) -> Outcome {
         let mut aggregate = self.snapshot();
         let outcome = change(&mut aggregate);
@@ -212,10 +176,6 @@ fn snapshot_from_state(
 }
 
 impl UndoHistory {
-    /// Installs a window-level keydown listener for Ctrl/Cmd+Z (undo) and
-    /// Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y (redo). Suppressed while focus is in a text
-    /// field so the browser's native text undo keeps working there. The closure is
-    /// leaked for the page lifetime (one-time install at boot).
     pub(crate) fn install_keyboard_shortcuts(self) {
         use std::cell::Cell;
         use std::rc::Rc;

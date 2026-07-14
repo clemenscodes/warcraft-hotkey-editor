@@ -16,12 +16,6 @@ use presentation::use_carriers_dialog;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Connected wrapper for the carriers dialog: mounts it while the model names an ability,
-/// resolving that ability's carriers through the query. The trigger that opens the dialog
-/// holds the open state and renders this host directly beneath itself — so no page or other
-/// ancestor needs to know the dialog exists. It renders the reusable `WarcraftDialog`,
-/// handing it the isolated carriers grid as its body region; keeping the mount conditional
-/// here re-initialises the headless dialog each time it opens.
 #[component]
 pub fn CarriersDialog(props: CarriersDialogModel) -> Element {
     let dialog = use_carriers_dialog(&props);

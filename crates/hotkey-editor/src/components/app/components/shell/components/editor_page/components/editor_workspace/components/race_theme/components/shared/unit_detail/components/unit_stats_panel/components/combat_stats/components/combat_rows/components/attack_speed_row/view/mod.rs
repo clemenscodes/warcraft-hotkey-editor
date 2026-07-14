@@ -1,6 +1,5 @@
 use warcraft_api::AttackSpeed;
 
-/// The published `View` contract mirroring [`AttackSpeedRowModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct AttackSpeedRowView {
     pub value: AttackSpeed,

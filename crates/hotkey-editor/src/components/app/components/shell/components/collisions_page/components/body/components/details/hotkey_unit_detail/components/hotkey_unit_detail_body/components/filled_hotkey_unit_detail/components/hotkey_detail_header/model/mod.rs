@@ -2,8 +2,6 @@ use super::view::HotkeyDetailHeaderView;
 use crate::components::app::components::shell::components::collisions_page::presentation::UnitIconView;
 use dioxus::prelude::*;
 
-/// The detail-pane header row: the selected unit and its collision count. The header
-/// builds the unit button and the text meta column from the unit view.
 #[derive(Props, Clone, PartialEq)]
 pub struct HotkeyDetailHeaderModel {
     pub unit: UnitIconView,

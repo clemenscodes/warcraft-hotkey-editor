@@ -12,9 +12,6 @@ use model::AgilityRowModel;
 use presentation::{AgilityRowPresentation, use_agility_row};
 use tw_macro::assert_component;
 
-/// The hero's agility attribute row. A dispatcher: when agility is the hero's primary
-/// attribute it renders the glowing primary row, otherwise the resting regular row — each
-/// owns its own look, so there is no `data-primary` attribute.
 #[component]
 pub fn AgilityRow(props: AgilityRowModel) -> Element {
     let AgilityRowPresentation {

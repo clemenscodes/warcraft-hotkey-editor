@@ -1,7 +1,6 @@
 use super::view::StatIconFrameView;
 use dioxus::prelude::*;
 
-/// The square frame holding a stat column's icon.
 #[derive(Props, Clone, PartialEq)]
 pub struct StatIconFrameModel {
     pub src: Asset,

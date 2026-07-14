@@ -1,7 +1,6 @@
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use warcraft_api::{UnitKind, WarcraftObjectId};
 
-/// The published `View` contract mirroring [`UnitCardModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct UnitCardView {
     pub unit_id: WarcraftObjectId,

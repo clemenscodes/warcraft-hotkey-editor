@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`FooterLinkModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct FooterLinkView {
     pub label: &'static str,

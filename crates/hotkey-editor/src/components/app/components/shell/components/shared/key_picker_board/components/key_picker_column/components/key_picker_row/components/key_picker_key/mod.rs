@@ -13,11 +13,6 @@ use model::KeyPickerKeyModel;
 use presentation::KeyPickerKeyPresentation;
 use tw_macro::assert_component;
 
-/// A single key on the picker board: an on-screen keyboard button that assigns its key
-/// when clicked. It carries no look of its own — it is the dispatcher that derives the
-/// key's width from its cell and renders the matching sizing slot (`NarrowKeySlot` xor
-/// `WideKeySlot`). Each slot owns the key's width and fills it with the color leaf that
-/// owns the look. The body only chooses the width; the color is chosen further down.
 #[component]
 pub fn KeyPickerKey(props: KeyPickerKeyModel) -> Element {
     let presentation = KeyPickerKeyPresentation::from(&props);

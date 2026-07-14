@@ -1,7 +1,6 @@
 use super::view::SystemHotkeysSectionIntroView;
 use dioxus::prelude::*;
 
-/// The one-line caption introducing a category editor.
 #[derive(Props, Clone, PartialEq)]
 pub struct SystemHotkeysSectionIntroModel {
     #[props(into)]

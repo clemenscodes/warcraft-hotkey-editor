@@ -12,8 +12,6 @@ use model::MoveHotkeyToggleModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The labeled checkbox controlling whether moving an ability rewrites its hotkey
-/// to match the new cell.
 #[component]
 pub fn MoveHotkeyToggle(props: MoveHotkeyToggleModel) -> Element {
     let checked = props.checked;

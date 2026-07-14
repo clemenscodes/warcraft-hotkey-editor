@@ -1,4 +1,3 @@
-/// The published `View` contract mirroring [`StatLabelModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct StatLabelView {
     pub text: String,

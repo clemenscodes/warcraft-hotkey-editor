@@ -3,10 +3,6 @@ use crate::components::app::components::shell::components::header::components::t
 use crate::components::app::components::shell::components::shared::icons::ICON_GRID;
 use dioxus::prelude::*;
 
-/// The burger grid-layout row's shaped data: the fixed icon, its labels, its primary weight, its
-/// aria state, whether the editor is open, the toggle handler, and the change handler the
-/// mounted dialog mirrors its own close through. The open signal is local and owned here — the
-/// row is the button that opens the editor, so it owns the signal and the dialog travels with it.
 pub(super) struct BurgerLayoutItemPresentation {
     pub(super) icon: &'static str,
     pub(super) label: String,
@@ -19,10 +15,6 @@ pub(super) struct BurgerLayoutItemPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
-/// Owns the burger's own grid-layout editor open signal (closed until the row is tapped) and
-/// shapes the row: the toggle handler that opens or closes the editor, and the change handler
-/// the mounted dialog mirrors its own close through. Tapping the row does not close the drawer,
-/// so the row stays mounted to keep the dialog it owns alive.
 pub(super) fn use_burger_layout_item() -> BurgerLayoutItemPresentation {
     let mut open_signal = use_signal::<bool>(|| false);
     let open = open_signal();

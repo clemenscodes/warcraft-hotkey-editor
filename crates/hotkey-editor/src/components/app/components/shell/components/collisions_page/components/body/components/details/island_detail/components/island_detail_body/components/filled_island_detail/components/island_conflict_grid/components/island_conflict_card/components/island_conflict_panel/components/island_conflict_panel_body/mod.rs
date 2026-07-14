@@ -14,8 +14,6 @@ use model::IslandConflictPanelBodyModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The island conflict panel's body region: the affected unit heading its two clashing
-/// abilities. Rendered inside the shared `PanelCard` surface, which owns the panel chrome.
 #[component]
 pub fn IslandConflictPanelBody(props: IslandConflictPanelBodyModel) -> Element {
     let cards = props.cards;

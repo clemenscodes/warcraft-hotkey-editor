@@ -16,9 +16,6 @@ use model::UnresolvedRowModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// One unresolved ability card: the Stuck badge over the stuck ability, over the cell it
-/// is stuck on. It owns the orc-accented card surface directly and hands each region to
-/// its own child component.
 #[component]
 pub fn UnresolvedRow(props: UnresolvedRowModel) -> Element {
     let unresolved_view = props.unresolved_view;

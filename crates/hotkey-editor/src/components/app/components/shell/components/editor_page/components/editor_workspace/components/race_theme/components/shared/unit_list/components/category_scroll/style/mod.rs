@@ -1,6 +1,4 @@
 use tw_macro::tw;
-// The scroll region around the section track: vertical on the sidebar (the shell's
-// global gold scrollbar applies), horizontal snap carousel on small screens.
 
 classes! {
     base: tw![

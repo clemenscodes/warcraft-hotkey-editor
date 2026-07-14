@@ -14,7 +14,6 @@ pub(crate) struct DragOrigin {
     pub(crate) cursor_vertical_position: f64,
 }
 
-/// Latest pointer coords awaiting an animation-frame flush.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct DragMovePoint {
     pub(crate) client_horizontal: f64,
@@ -22,8 +21,6 @@ pub(crate) struct DragMovePoint {
 }
 
 impl DragMovePoint {
-    /// Applies this pending pointer position: moves the drag follower to it and
-    /// hit-tests the element underneath to pick (or clear) the current drop target.
     pub(crate) fn flush(
         self,
         mut drop_target: Signal<Option<WarcraftObjectId>>,
@@ -54,10 +51,6 @@ impl DragMovePoint {
             }
             return;
         };
-        // The target slot's section is its row-major position among the grid's slots:
-        // counting the cell's preceding siblings gives its slot index, which maps to the
-        // inventory section rendered there (the same order the grid builds them). No DOM
-        // attribute is read.
         let mut slot_index_under: usize = 0;
         let mut previous_sibling_option = cell_under.previous_element_sibling();
         while let Some(previous_sibling) = previous_sibling_option {
@@ -91,25 +84,19 @@ thread_local! {
     pub(crate) static DRAG_ORIGIN: Cell<Option<DragOrigin>> = const { Cell::new(None) };
     pub(crate) static DID_DRAG_MOVE: Cell<bool> = const { Cell::new(false) };
 
-    /// Latest pointer coords awaiting an animation-frame flush (client x, y).
     pub(crate) static LATEST_DRAG_MOVE: Cell<Option<DragMovePoint>> = const { Cell::new(None) };
 
-    /// Handle of the pending requestAnimationFrame, so it can be cancelled.
     pub(crate) static DRAG_RAF_HANDLE: Cell<Option<i32>> = const { Cell::new(None) };
 
-    /// The rAF callback closure, kept alive while a frame is pending.
     pub(crate) static DRAG_RAF_CLOSURE: RefCell<Option<DragRafClosure>> = const {
         RefCell::new(None)
     };
 
-    /// A begun-but-not-yet-promoted drag, awaiting the first past-threshold move.
     pub(crate) static PENDING_INVENTORY_DRAG: RefCell<Option<PendingInventoryDrag>> = const {
         RefCell::new(None)
     };
 }
 
-/// Cancels any pending animation frame and drops its state, so a stale
-/// frame cannot fire after the drag has ended.
 pub(crate) fn cancel_drag_raf() {
     if let Some(handle) = DRAG_RAF_HANDLE.with(|cell| cell.replace(None))
         && let Some(window) = web_sys::window()
@@ -162,9 +149,6 @@ pub struct InventoryDragSource {
     pub(crate) section_id: WarcraftObjectId,
 }
 
-/// The raw values one filled inventory cell needs: its index and section, plus the
-/// shared drag/drop signals the grid coordinates. A plain domain descriptor read by
-/// field access, never spread into a child component's props.
 #[derive(Clone, PartialEq)]
 pub(crate) struct InventoryFilledSlotEntry {
     pub(crate) slot_index: usize,
@@ -174,21 +158,11 @@ pub(crate) struct InventoryFilledSlotEntry {
     pub(crate) drag_follower: Signal<Option<InventoryDragFollower>>,
 }
 
-/// One finished grid position handed to a single `InventorySlot`: the filled cell's
-/// raw values when the position is occupied, or `None` for an empty placeholder. A
-/// plain domain descriptor read by field access.
 #[derive(Clone, PartialEq)]
 pub(crate) struct InventorySlotEntry {
     pub(crate) filled: Option<InventoryFilledSlotEntry>,
 }
 
-/// A drag that has begun (pointer down on a slot) but not yet crossed the movement
-/// threshold, so it is still ambiguous with a click. Held here until the first
-/// past-threshold move promotes it into a real drag — capturing the pointer and
-/// mounting the follower. Deferring the state change is what keeps a plain click from
-/// unmounting the slot content under the cursor: mutating the drag signals on
-/// pointerdown detaches the mousedown target, which makes the browser drop the click and
-/// swallow the click-to-edit gesture.
 pub(crate) struct PendingInventoryDrag {
     pub(crate) section_id: WarcraftObjectId,
     pub(crate) label: String,
@@ -200,17 +174,11 @@ pub(crate) struct PendingInventoryDrag {
     pub(crate) pointer_id: i32,
 }
 
-/// The grid's shaped setup: the inline `--wc3-slot-frame` variable that feeds every
-/// slot's border-image, and the six finished grid positions (filled cell or empty).
 pub(super) struct InventoryGridModel {
     pub(super) frame: String,
     pub(super) entries: Vec<InventorySlotEntry>,
 }
 
-/// Builds the grid's drag signals, gold-frame variable, and the six slot positions
-/// with their shared drag/drop state. The drag follower comes from the dialog state
-/// context; each filled slot resolves its own binding from the CustomKeys query, so
-/// the grid builds no binding map.
 pub(super) fn use_inventory_grid() -> InventoryGridModel {
     let dialog_state = use_system_hotkeys_dialog_state();
     let drag_follower = dialog_state.drag_follower();

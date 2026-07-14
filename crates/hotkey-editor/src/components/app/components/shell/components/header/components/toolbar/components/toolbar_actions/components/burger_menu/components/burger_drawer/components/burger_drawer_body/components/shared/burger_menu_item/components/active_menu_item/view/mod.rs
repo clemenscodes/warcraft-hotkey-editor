@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-/// The published `View` contract mirroring [`ActiveMenuItemModel`], threaded to this component as data.
 #[derive(Clone, PartialEq)]
 pub struct ActiveMenuItemView {
     pub icon: &'static str,

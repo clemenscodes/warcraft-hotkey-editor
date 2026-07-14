@@ -18,9 +18,6 @@ use warcraft_keybinds::{
     CustomKeys, GridLayout, GridSlotId, HotkeyTarget, HotkeyToken, InspectorDetail, Letter,
 };
 
-/// The four hotkey tokens this override can edit, resolved from the ability's own
-/// bindings with a fallback to whatever letter the active grid layout assigns to the
-/// ability's button position.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub(super) struct OverrideTokens {
     pub(super) hotkey: Option<HotkeyToken>,
@@ -29,8 +26,6 @@ pub(super) struct OverrideTokens {
     pub(super) upgrade: Option<HotkeyToken>,
 }
 
-/// The inputs that resolve the [`OverrideTokens`]: the inspected ability and the
-/// active grid layout its fallback letters come from.
 pub(super) struct OverrideTokensInputs<'a> {
     pub(super) detail: &'a InspectorDetail,
     pub(super) layout: GridLayout,
@@ -52,8 +47,6 @@ impl From<OverrideTokensInputs<'_>> for OverrideTokens {
     }
 }
 
-/// The off-state ("alt") name and description text, shared by the visibility
-/// calculation and the rendered alt-state section.
 #[derive(Clone, PartialEq, Eq, Debug, Default)]
 pub(super) struct AltContent {
     pub(super) name_text: Option<String>,
@@ -74,8 +67,6 @@ impl From<&InspectorDetail> for AltContent {
     }
 }
 
-/// Which of the hotkey-override section's editable fields are shown for this ability, given
-/// the research-context flag and whether it has an off-state.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub(super) struct FieldVisibility {
     pub(super) show_hotkey_field: bool,
@@ -85,8 +76,6 @@ pub(super) struct FieldVisibility {
     pub(super) is_info_only: bool,
 }
 
-/// The inputs that decide [`FieldVisibility`]: the inspected ability, the
-/// research-context flag, and its off-state content.
 pub(super) struct FieldVisibilityInputs<'a> {
     pub(super) detail: &'a InspectorDetail,
     pub(super) is_research_context: bool,
@@ -119,8 +108,6 @@ impl From<FieldVisibilityInputs<'_>> for FieldVisibility {
     }
 }
 
-/// The resolved upgrade-tier level: which of a multi-level ability's tiers is active,
-/// its name, its description lines, and the "Level N of M" label.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub(super) struct TierResolution {
     pub(super) total_tier_count: usize,
@@ -130,8 +117,6 @@ pub(super) struct TierResolution {
     pub(super) tier_label_text: String,
 }
 
-/// The inputs that resolve a [`TierResolution`]: the inspected ability, the stored
-/// tier index, and the research-context flag.
 pub(super) struct TierResolutionInputs<'a> {
     pub(super) detail: &'a InspectorDetail,
     pub(super) stored_tier_index: usize,
@@ -199,9 +184,6 @@ impl From<TierResolutionInputs<'_>> for TierResolution {
     }
 }
 
-/// The presentation of a single editable hotkey field: the label to show (an en dash
-/// when unbound), whether it is a special non-letter token, and whether it is the one
-/// currently being edited.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub(super) struct HotkeyFieldView {
     pub(super) label: String,
@@ -228,9 +210,6 @@ impl HotkeyFieldView {
     }
 }
 
-/// Which target the open picker is editing, resolved from the editing state: whether
-/// it is open, the research flag, the currently-bound token, the object the pick
-/// writes to (the upgraded unit for an upgrade edit), and the dialog title.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub(super) struct PickerTarget {
     pub(super) open: bool,
@@ -240,8 +219,6 @@ pub(super) struct PickerTarget {
     pub(super) title: String,
 }
 
-/// The inputs that resolve the [`PickerTarget`]: the editing snapshot, the ability's
-/// resolved tokens, the object the pick writes to, and its upgrade-form unit id.
 pub(super) struct PickerTargetInputs<'a> {
     pub(super) snapshot: Option<OverrideEditTarget>,
     pub(super) tokens: &'a OverrideTokens,
@@ -286,7 +263,6 @@ impl From<PickerTargetInputs<'_>> for PickerTarget {
     }
 }
 
-/// The inputs a [`PickerBoard`] needs to resolve each key's availability.
 #[derive(Clone, PartialEq, Debug)]
 pub(super) struct PickerContext {
     pub(super) layout: GridLayout,
@@ -296,8 +272,6 @@ pub(super) struct PickerContext {
     pub(super) is_research_context: bool,
 }
 
-/// The keyboard laid out as picker cells, each marked current / conflicting /
-/// available. Replaces the old fieldless `PickerRows` namespace.
 #[derive(Clone, PartialEq)]
 pub(super) struct PickerBoard {
     pub(super) rows: Vec<Vec<KeyPickerCell>>,
@@ -343,8 +317,6 @@ impl PickerBoard {
     }
 }
 
-/// The slot list a position picker offers: the edited slot pinned first, then every
-/// container slot except the ability's own current entry.
 #[derive(Clone, PartialEq, Debug, Default)]
 pub(super) struct OverridePickerSlots {
     pub(super) slots: Rc<[GridSlotId]>,
