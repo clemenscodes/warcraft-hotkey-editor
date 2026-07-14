@@ -22,10 +22,18 @@ pub fn RaceTabState(props: RaceTabBinding) -> Element {
     let onkeydown = behavior.onkeydown();
     match behavior.is_active() {
         true => rsx! {
-            ActiveRaceTab { label, onclick, onkeydown }
+            ActiveRaceTab {
+                label,
+                onclick,
+                onkeydown,
+            }
         },
         false => rsx! {
-            InactiveRaceTab { label, onclick, onkeydown }
+            InactiveRaceTab {
+                label,
+                onclick,
+                onkeydown,
+            }
         },
     }
 }

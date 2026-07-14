@@ -27,8 +27,16 @@ pub fn SearchFieldToggle() -> Element {
             class: CLASS,
             role: "group",
             aria_label: "Search by",
-            SearchFieldButton { label: data::UNIT, is_active: unit_is_active, on_select: select_unit }
-            SearchFieldButton { label: data::ABILITY, is_active: ability_is_active, on_select: select_ability }
+            SearchFieldButton {
+                label: data::UNIT,
+                is_active: unit_is_active,
+                on_select: select_unit,
+            }
+            SearchFieldButton {
+                label: data::ABILITY,
+                is_active: ability_is_active,
+                on_select: select_ability,
+            }
         }
     }
 }

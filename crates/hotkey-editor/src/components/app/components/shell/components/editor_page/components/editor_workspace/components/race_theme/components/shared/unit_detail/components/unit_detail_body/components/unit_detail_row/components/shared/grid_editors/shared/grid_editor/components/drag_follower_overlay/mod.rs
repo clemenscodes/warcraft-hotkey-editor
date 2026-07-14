@@ -15,7 +15,9 @@ use tw_macro::assert_component;
 pub fn DragFollowerOverlay(props: DragFollowerOverlayModel) -> Element {
     let presentation = use_drag_follower_overlay(&props);
     rsx! {
-        DragFollowerGhost { presentation }
+        DragFollowerGhost {
+            presentation,
+        }
     }
 }
 

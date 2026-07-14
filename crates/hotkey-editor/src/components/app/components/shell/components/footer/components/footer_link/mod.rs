@@ -22,7 +22,9 @@ pub fn FooterLink(props: FooterLinkModel) -> Element {
             href,
             target: "_blank",
             rel: "noopener noreferrer",
-            FooterLinkIcon { icon }
+            FooterLinkIcon {
+                icon,
+            }
             {label}
         }
     }

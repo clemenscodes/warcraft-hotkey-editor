@@ -15,7 +15,10 @@ use tw_macro::assert_component;
 pub fn HelpDismiss(props: HelpDismissModel) -> Element {
     let on_dismiss = props.on_dismiss;
     rsx! {
-        button { class: CLASS, r#type: "button", onclick: on_dismiss,
+        button {
+            class: CLASS,
+            r#type: "button",
+            onclick: on_dismiss,
             "Got it, don't show this again"
         }
     }

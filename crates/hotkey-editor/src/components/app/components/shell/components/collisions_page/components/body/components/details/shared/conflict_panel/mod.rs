@@ -19,7 +19,9 @@ pub fn ConflictPanel(props: ConflictPanelModel) -> Element {
     let models = vec![model];
     let body = ConflictPanelBodyView { models };
     rsx! {
-        PanelCard::<ConflictPanelBodyView> { body }
+        PanelCard::<ConflictPanelBodyView> {
+            body,
+        }
     }
 }
 

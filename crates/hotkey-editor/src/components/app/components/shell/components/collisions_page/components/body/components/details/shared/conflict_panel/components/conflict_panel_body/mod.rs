@@ -29,8 +29,12 @@ pub fn ConflictPanelBody(props: ConflictPanelBodyModel) -> Element {
         rsx! {
             div {
                 class: CLASS,
-                ConflictCardCaption { text: role_label }
-                ConflictPairRow { pair }
+                ConflictCardCaption {
+                    text: role_label,
+                }
+                ConflictPairRow {
+                    pair,
+                }
                 ConflictMultiStack {
                     abilities: multi,
                     marker,
@@ -39,7 +43,9 @@ pub fn ConflictPanelBody(props: ConflictPanelBodyModel) -> Element {
         }
     } else {
         rsx! {
-            div { class: CLASS }
+            div {
+                class: CLASS,
+            }
         }
     }
 }

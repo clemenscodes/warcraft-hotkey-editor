@@ -17,7 +17,11 @@ impl Render for PreviewTextareaHostView {
     type Output = Element;
     fn render(&self) -> Self::Output {
         rsx! {
-            PreviewTextareaHost {}
+            PreviewTextareaHost {
+            
+
+
+            }
         }
     }
 }

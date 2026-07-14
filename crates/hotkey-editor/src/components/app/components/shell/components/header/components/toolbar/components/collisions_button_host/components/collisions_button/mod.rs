@@ -41,7 +41,9 @@ pub fn CollisionsButton(props: CollisionsButtonModel) -> Element {
                 onclick,
             }
             if collision_count > 0 {
-                CollisionsButtonBadge { label: count_label }
+                CollisionsButtonBadge {
+                    label: count_label,
+                }
             }
         }
     }

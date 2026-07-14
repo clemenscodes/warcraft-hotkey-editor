@@ -31,9 +31,17 @@ pub fn ToastCard(props: ToastCardModel) -> Element {
             role: "alertdialog",
             "aria-modal": "false",
             tabindex: "0",
-            ToastIcon { icon }
-            ToastContent { title, description }
-            ToastClose { id, on_remove }
+            ToastIcon {
+                icon,
+            }
+            ToastContent {
+                title,
+                description,
+            }
+            ToastClose {
+                id,
+                on_remove,
+            }
         }
     }
 }

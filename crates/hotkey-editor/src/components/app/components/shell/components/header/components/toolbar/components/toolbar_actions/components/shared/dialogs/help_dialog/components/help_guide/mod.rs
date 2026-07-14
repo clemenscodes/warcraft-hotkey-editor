@@ -23,7 +23,9 @@ pub fn HelpGuide() -> Element {
     rsx! {
         div {
             class: CLASS,
-            HelpBody { content }
+            HelpBody {
+                content,
+            }
         }
     }
 }

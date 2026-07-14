@@ -23,14 +23,20 @@ pub fn Button(props: ButtonModel) -> Element {
             let onclick = props.onclick;
             let label = props.label.clone();
             rsx! {
-                PrimaryButton { onclick, label }
+                PrimaryButton {
+                    onclick,
+                    label,
+                }
             }
         }
         ButtonVariant::Secondary => {
             let onclick = props.onclick;
             let label = props.label.clone();
             rsx! {
-                SecondaryButton { onclick, label }
+                SecondaryButton {
+                    onclick,
+                    label,
+                }
             }
         }
     }

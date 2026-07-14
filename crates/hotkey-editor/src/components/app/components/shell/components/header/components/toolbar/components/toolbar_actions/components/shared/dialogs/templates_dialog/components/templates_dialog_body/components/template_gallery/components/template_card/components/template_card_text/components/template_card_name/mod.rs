@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn TemplateCardName(props: TemplateCardNameModel) -> Element {
     let name = props.name.clone();
     rsx! {
-        h3 { class: CLASS, {name} }
+        h3 {
+            class: CLASS,
+            {name}
+        }
     }
 }
 

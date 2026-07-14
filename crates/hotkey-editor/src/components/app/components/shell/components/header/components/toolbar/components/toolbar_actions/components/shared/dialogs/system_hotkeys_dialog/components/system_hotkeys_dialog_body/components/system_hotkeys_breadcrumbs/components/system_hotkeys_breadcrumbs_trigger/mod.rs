@@ -26,8 +26,12 @@ pub fn SystemHotkeysBreadcrumbsTrigger(props: SystemHotkeysBreadcrumbsTriggerMod
             aria_haspopup: "listbox",
             aria_expanded: is_open,
             onclick: on_toggle,
-            SystemHotkeysBreadcrumbsTriggerLabel { text: label_text }
-            SystemHotkeysBreadcrumbsTriggerCaret { is_open: caret_is_open }
+            SystemHotkeysBreadcrumbsTriggerLabel {
+                text: label_text,
+            }
+            SystemHotkeysBreadcrumbsTriggerCaret {
+                is_open: caret_is_open,
+            }
         }
     }
 }

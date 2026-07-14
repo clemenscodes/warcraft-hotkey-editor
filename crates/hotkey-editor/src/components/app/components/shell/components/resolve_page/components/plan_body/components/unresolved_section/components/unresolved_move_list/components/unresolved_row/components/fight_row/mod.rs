@@ -18,7 +18,9 @@ pub fn FightRow(props: FightRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            FightColumn { unresolved_view }
+            FightColumn {
+                unresolved_view,
+            }
         }
     }
 }

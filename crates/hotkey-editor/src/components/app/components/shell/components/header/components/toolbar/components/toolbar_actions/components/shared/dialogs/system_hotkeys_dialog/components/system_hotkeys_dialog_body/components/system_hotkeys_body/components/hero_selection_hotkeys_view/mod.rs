@@ -18,8 +18,14 @@ pub fn HeroSelectionHotkeysView() -> Element {
     rsx! {
         div {
             class: CLASS,
-            SystemHotkeysSectionIntro { text: caption }
-            HeroSelectionRow {}
+            SystemHotkeysSectionIntro {
+                text: caption,
+            }
+            HeroSelectionRow {
+            
+
+
+            }
         }
     }
 }

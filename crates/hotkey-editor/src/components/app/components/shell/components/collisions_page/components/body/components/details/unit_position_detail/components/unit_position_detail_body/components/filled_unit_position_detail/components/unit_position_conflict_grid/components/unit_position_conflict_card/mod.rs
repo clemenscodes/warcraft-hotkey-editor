@@ -21,7 +21,9 @@ pub fn UnitPositionConflictCard(props: UnitPositionConflictCardModel) -> Element
     rsx! {
         div {
             class: CLASS,
-            ConflictPanel { model }
+            ConflictPanel {
+                model,
+            }
         }
     }
 }

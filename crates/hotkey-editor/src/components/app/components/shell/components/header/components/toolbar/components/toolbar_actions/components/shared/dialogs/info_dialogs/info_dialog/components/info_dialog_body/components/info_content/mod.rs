@@ -20,10 +20,19 @@ pub fn InfoContent(props: InfoContentModel) -> Element {
     let intro = props.intro;
     let warning = props.warning;
     rsx! {
-        div { class: CLASS,
-            InfoIntro { intro }
-            InfoFilename {}
-            InfoWarning { warning }
+        div {
+            class: CLASS,
+            InfoIntro {
+                intro,
+            }
+            InfoFilename {
+            
+
+
+            }
+            InfoWarning {
+                warning,
+            }
         }
     }
 }

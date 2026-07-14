@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn LayoutIntroLine(props: LayoutIntroLineModel) -> Element {
     let line = props.line;
     rsx! {
-        p { class: CLASS, {line} }
+        p {
+            class: CLASS,
+            {line}
+        }
     }
 }
 

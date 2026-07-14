@@ -20,8 +20,12 @@ pub fn UnitPositionsContent(props: UnitPositionsContentModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitCardsSidebar { units: sidebar_units }
-            UnitPositionDetail { units: detail_units }
+            UnitCardsSidebar {
+                units: sidebar_units,
+            }
+            UnitPositionDetail {
+                units: detail_units,
+            }
         }
     }
 }

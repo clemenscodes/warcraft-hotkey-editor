@@ -30,7 +30,10 @@ pub fn EditorPage(props: EditorPageModel) -> Element {
     let body = EditorWorkspaceView;
     let frame = EditorPageFrame { header, body };
     rsx! {
-        Page { class: CLASS, frame }
+        Page {
+            class: CLASS,
+            frame,
+        }
     }
 }
 

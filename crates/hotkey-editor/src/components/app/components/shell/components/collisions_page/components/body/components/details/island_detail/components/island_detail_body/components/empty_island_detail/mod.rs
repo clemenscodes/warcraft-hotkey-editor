@@ -15,7 +15,11 @@ pub fn EmptyIslandDetail(props: EmptyIslandDetailModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            p { {props.prompt} }
+            p {
+
+
+                {props.prompt}
+            }
         }
     }
 }

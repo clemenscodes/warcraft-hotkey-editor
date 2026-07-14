@@ -37,7 +37,9 @@ pub fn UnitDetailRow(props: UnitDetailRowModel) -> Element {
                 uprooted_menu_slots,
                 research_menu_slots,
             }
-            HotkeyOverrideSection { override_target }
+            HotkeyOverrideSection {
+                override_target,
+            }
         }
     }
 }

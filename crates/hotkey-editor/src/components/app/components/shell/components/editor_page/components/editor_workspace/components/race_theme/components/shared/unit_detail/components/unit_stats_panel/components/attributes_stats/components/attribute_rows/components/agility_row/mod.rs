@@ -24,11 +24,19 @@ pub fn AgilityRow(props: AgilityRowModel) -> Element {
     } = use_agility_row(&props);
     if props.is_primary {
         rsx! {
-            PrimaryAgilityRow { statistic, growth, label }
+            PrimaryAgilityRow {
+                statistic,
+                growth,
+                label,
+            }
         }
     } else {
         rsx! {
-            RegularAgilityRow { statistic, growth, label }
+            RegularAgilityRow {
+                statistic,
+                growth,
+                label,
+            }
         }
     }
 }

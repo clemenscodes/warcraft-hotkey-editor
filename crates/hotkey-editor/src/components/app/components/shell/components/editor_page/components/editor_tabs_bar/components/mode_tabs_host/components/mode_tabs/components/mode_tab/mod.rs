@@ -18,7 +18,12 @@ pub fn ModeTab(props: ModeTabModel) -> Element {
     let onclick = props.onclick;
     let onkeydown = props.onkeydown;
     rsx! {
-        ToggleButton { label, active, onclick, onkeydown }
+        ToggleButton {
+            label,
+            active,
+            onclick,
+            onkeydown,
+        }
     }
 }
 

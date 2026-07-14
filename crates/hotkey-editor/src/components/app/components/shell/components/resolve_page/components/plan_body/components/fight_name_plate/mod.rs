@@ -17,8 +17,13 @@ pub fn FightNamePlate(props: FightNamePlateModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MoveName { text: name, is_link: false }
-            ObjectId { text: object_id_value }
+            MoveName {
+                text: name,
+                is_link: false,
+            }
+            ObjectId {
+                text: object_id_value,
+            }
         }
     }
 }

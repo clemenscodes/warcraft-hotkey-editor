@@ -29,7 +29,7 @@ pub fn TemplatesDialog(props: TemplatesDialogModel) -> Element {
     let body = TemplatesDialogBodyView { cards };
     rsx! {
         if open {
-            WarcraftDialog::<TemplatesDialogBodyView, Empty> {
+            WarcraftDialog::<TemplatesDialogBodyView,Empty> {
                 title: data::TITLE,
                 body,
                 open: true,

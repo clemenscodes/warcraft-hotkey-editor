@@ -27,7 +27,8 @@ pub fn TemplateCardPreviews(props: TemplateCardPreviewsModel) -> Element {
         tiles: research_tiles,
     } = research_preview(&resolved);
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             PreviewHeadedGrid {
                 heading: command_heading,
                 tiles: command_tiles,

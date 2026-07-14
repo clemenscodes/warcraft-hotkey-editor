@@ -37,7 +37,7 @@ pub fn KeyPickerDialog(props: KeyPickerDialogModel) -> Element {
     };
     rsx! {
         if open {
-            WarcraftDialog::<KeyPickerBodyView, Empty> {
+            WarcraftDialog::<KeyPickerBodyView,Empty> {
                 title,
                 body,
                 open: true,

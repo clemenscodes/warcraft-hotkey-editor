@@ -21,8 +21,13 @@ pub fn IslandDetailHeader(props: IslandDetailHeaderModel) -> Element {
     rsx! {
         header {
             class: CLASS,
-            MiniGrid { coordinate }
-            IslandConflictMeta { coordinate, count }
+            MiniGrid {
+                coordinate,
+            }
+            IslandConflictMeta {
+                coordinate,
+                count,
+            }
         }
     }
 }

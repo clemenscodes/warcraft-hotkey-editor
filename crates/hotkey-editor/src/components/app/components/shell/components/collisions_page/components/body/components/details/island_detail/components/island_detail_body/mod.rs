@@ -22,11 +22,15 @@ pub fn IslandDetailBody(props: IslandDetailBodyModel) -> Element {
     let selected_island = use_collision_selection().selected_island();
     if let Some(island) = presentation::selected(&props, selected_island) {
         rsx! {
-            FilledIslandDetail { island }
+            FilledIslandDetail {
+                island,
+            }
         }
     } else {
         rsx! {
-            EmptyIslandDetail { prompt: presentation::EMPTY_PROMPT }
+            EmptyIslandDetail {
+                prompt: presentation::EMPTY_PROMPT,
+            }
         }
     }
 }

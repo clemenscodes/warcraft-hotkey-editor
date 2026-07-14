@@ -24,11 +24,20 @@ pub fn HelpLegendRow(props: HelpLegendRowModel) -> Element {
         description,
     } = HelpLegendRowPresentation::from(&props);
     rsx! {
-        li { class: CLASS,
-            HelpLegendIcon { icon }
+        li {
+            class: CLASS,
+            HelpLegendIcon {
+                icon,
+            }
             span {
-                HelpLegendLabel { label }
-                HelpLegendDescription { description }
+
+
+                HelpLegendLabel {
+                    label,
+                }
+                HelpLegendDescription {
+                    description,
+                }
             }
         }
     }

@@ -23,7 +23,7 @@ pub fn UnitListSearchInput(props: UnitListSearchInputModel) -> Element {
             class: CLASS,
             r#type: "search",
             placeholder,
-            value: value,
+            value,
             oninput: move |event| on_input.call(event),
             onkeydown: move |event| on_keydown.call(event),
         }

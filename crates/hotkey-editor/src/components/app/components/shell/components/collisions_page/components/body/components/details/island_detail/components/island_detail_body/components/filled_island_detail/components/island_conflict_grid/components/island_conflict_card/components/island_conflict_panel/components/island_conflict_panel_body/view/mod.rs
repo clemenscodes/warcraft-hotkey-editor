@@ -21,7 +21,9 @@ impl Render for IslandConflictPanelBodyView {
     fn render(&self) -> Self::Output {
         let cards = self.cards.clone();
         rsx! {
-            IslandConflictPanelBody { cards }
+            IslandConflictPanelBody {
+                cards,
+            }
         }
     }
 }

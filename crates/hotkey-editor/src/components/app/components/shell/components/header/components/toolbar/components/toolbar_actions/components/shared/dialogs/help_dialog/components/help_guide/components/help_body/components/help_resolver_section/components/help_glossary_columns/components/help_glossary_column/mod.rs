@@ -17,7 +17,8 @@ use tw_macro::assert_component;
 pub fn HelpGlossaryColumn(props: HelpGlossaryColumnModel) -> Element {
     let entries = props.entries;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for (index, item) in entries.iter().copied().enumerate() {
                 HelpGlossaryEntry {
                     key: "{index}",

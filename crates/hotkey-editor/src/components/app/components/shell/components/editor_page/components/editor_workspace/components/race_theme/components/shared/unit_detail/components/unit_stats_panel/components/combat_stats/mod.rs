@@ -34,8 +34,17 @@ pub fn CombatStats(props: CombatStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame { src: icon_src, alt: icon_alt }
-            CombatRows { damage, range, speed, damage_per_second, attack_type }
+            StatIconFrame {
+                src: icon_src,
+                alt: icon_alt,
+            }
+            CombatRows {
+                damage,
+                range,
+                speed,
+                damage_per_second,
+                attack_type,
+            }
         }
     }
 }

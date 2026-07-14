@@ -19,7 +19,12 @@ pub fn CatalogVisibilityButton(props: CatalogVisibilityButtonModel) -> Element {
     let title = Some(props.title);
     let onclick = props.on_toggle;
     rsx! {
-        ToggleButton { label, active, title, onclick }
+        ToggleButton {
+            label,
+            active,
+            title,
+            onclick,
+        }
     }
 }
 

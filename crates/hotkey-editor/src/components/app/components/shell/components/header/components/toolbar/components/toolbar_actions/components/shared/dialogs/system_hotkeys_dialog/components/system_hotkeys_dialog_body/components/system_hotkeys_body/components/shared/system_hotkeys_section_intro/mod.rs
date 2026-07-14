@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn SystemHotkeysSectionIntro(props: SystemHotkeysSectionIntroModel) -> Element {
     let text = props.text;
     rsx! {
-        p { class: CLASS, {text} }
+        p {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

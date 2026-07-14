@@ -17,7 +17,9 @@ pub fn MoveTransition(props: MoveTransitionModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MiniGrid { placements }
+            MiniGrid {
+                placements,
+            }
         }
     }
 }

@@ -27,11 +27,21 @@ pub fn DefenseRows(props: DefenseRowsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            ArmorRow { value: armor }
-            DefenseTypeRow { value: defense_type }
-            EffectiveHitPointsRow { value: effective_hit_points }
-            EvasionRow { value: evasion }
-            DefenseMatchupRow { defense_type }
+            ArmorRow {
+                value: armor,
+            }
+            DefenseTypeRow {
+                value: defense_type,
+            }
+            EffectiveHitPointsRow {
+                value: effective_hit_points,
+            }
+            EvasionRow {
+                value: evasion,
+            }
+            DefenseMatchupRow {
+                defense_type,
+            }
         }
     }
 }

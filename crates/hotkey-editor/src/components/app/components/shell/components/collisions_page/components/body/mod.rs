@@ -22,30 +22,42 @@ pub fn Body(props: BodyModel) -> Element {
     match props.content {
         ContentModel::Empty(message) => {
             rsx! {
-                EmptyState { message }
+                EmptyState {
+                    message,
+                }
             }
         }
         ContentModel::Clear => {
             rsx! {
-                ClearState {}
+                ClearState {
+                
+
+
+                }
             }
         }
         ContentModel::Positions(pane) => {
             let islands = pane.islands().to_vec();
             rsx! {
-                PositionsContent { islands }
+                PositionsContent {
+                    islands,
+                }
             }
         }
         ContentModel::Hotkeys(pane) => {
             let units = pane.units().to_vec();
             rsx! {
-                HotkeysContent { units }
+                HotkeysContent {
+                    units,
+                }
             }
         }
         ContentModel::UnitPositions(pane) => {
             let units = pane.units().to_vec();
             rsx! {
-                UnitPositionsContent { units }
+                UnitPositionsContent {
+                    units,
+                }
             }
         }
     }

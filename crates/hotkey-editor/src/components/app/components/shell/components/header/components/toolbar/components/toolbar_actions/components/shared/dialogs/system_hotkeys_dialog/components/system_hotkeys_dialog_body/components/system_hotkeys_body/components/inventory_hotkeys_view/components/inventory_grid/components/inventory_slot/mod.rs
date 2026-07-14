@@ -16,7 +16,11 @@ use tw_macro::assert_component;
 pub fn InventorySlot(props: InventorySlotModel) -> Element {
     let Some(filled) = props.filled else {
         return rsx! {
-            InventoryEmptySlot {}
+            InventoryEmptySlot {
+            
+
+
+            }
         };
     };
     let slot_index = filled.slot_index;

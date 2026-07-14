@@ -17,7 +17,9 @@ pub fn InlineConflictPosition(props: InlineConflictPositionModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            MiniGrid { coordinate }
+            MiniGrid {
+                coordinate,
+            }
         }
     }
 }

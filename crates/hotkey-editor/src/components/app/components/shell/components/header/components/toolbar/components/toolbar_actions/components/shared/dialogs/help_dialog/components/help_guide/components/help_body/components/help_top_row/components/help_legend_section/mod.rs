@@ -17,9 +17,14 @@ use tw_macro::assert_component;
 pub fn HelpLegendSection(props: HelpLegendSectionModel) -> Element {
     let rows = props.rows;
     rsx! {
-        section { class: CLASS,
-            HelpSectionTitle { title: "Button legend" }
-            HelpLegend { rows }
+        section {
+            class: CLASS,
+            HelpSectionTitle {
+                title: "Button legend",
+            }
+            HelpLegend {
+                rows,
+            }
         }
     }
 }

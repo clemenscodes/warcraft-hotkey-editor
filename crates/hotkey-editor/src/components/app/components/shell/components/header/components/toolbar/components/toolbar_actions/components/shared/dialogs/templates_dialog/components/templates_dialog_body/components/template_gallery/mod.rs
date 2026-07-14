@@ -16,7 +16,8 @@ use tw_macro::assert_component;
 pub fn TemplateGallery(props: TemplateGalleryModel) -> Element {
     let cards = props.cards;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for card in cards {
                 TemplateCard {
                     key: "{card.name}",

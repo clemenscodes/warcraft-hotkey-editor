@@ -24,8 +24,13 @@ pub fn IdleCollisionCardButton(props: IdleCollisionCardButtonModel) -> Element {
             class: CLASS,
             r#type: "button",
             onclick,
-            CollisionCardLeading { content: visual_content }
-            CollisionCardMeta { content, count }
+            CollisionCardLeading {
+                content: visual_content,
+            }
+            CollisionCardMeta {
+                content,
+                count,
+            }
         }
     }
 }

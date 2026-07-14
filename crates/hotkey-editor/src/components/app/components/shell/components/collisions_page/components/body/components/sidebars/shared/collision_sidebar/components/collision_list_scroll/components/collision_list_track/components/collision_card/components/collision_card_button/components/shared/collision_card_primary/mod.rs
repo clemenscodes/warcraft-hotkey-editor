@@ -18,11 +18,17 @@ use model::CollisionCardPrimaryModel;
 pub fn CollisionCardPrimary(props: CollisionCardPrimaryModel) -> Element {
     match props.content {
         CollisionCardContent::Unit { name, unit_id, .. } => rsx! {
-            ConflictUnitName { text: name }
-            ConflictObjectId { object_id: unit_id }
+            ConflictUnitName {
+                text: name,
+            }
+            ConflictObjectId {
+                object_id: unit_id,
+            }
         },
         CollisionCardContent::Island { coordinate } => rsx! {
-            Coordinate { coordinate }
+            Coordinate {
+                coordinate,
+            }
         },
     }
 }

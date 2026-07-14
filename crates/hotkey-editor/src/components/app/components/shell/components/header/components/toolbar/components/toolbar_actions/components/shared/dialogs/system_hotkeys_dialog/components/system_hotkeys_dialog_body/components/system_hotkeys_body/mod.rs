@@ -22,22 +22,36 @@ pub fn SystemHotkeysBody() -> Element {
     match active {
         SystemHotkeysCategory::Inventory => {
             rsx! {
-                InventoryHotkeysView {}
+                InventoryHotkeysView {
+                
+
+
+                }
             }
         }
         SystemHotkeysCategory::HeroSelection => {
             rsx! {
-                HeroSelectionHotkeysView {}
+                HeroSelectionHotkeysView {
+                
+
+
+                }
             }
         }
         SystemHotkeysCategory::ControlGroups => {
             rsx! {
-                ControlGroupsHotkeysView {}
+                ControlGroupsHotkeysView {
+                
+
+
+                }
             }
         }
         other_category => {
             rsx! {
-                SystemHotkeysListView { category: other_category }
+                SystemHotkeysListView {
+                    category: other_category,
+                }
             }
         }
     }

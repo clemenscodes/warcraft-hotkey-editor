@@ -19,7 +19,9 @@ pub fn SpillReasonBadge(props: SpillReasonBadgeModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            ReasonBadge { label }
+            ReasonBadge {
+                label,
+            }
         }
     }
 }

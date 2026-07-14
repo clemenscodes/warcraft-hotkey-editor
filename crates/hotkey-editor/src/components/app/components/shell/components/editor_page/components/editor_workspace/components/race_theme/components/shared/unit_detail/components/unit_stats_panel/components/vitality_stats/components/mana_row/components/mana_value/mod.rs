@@ -19,11 +19,15 @@ pub fn ManaValue(props: ManaValueModel) -> Element {
     let text = value.display();
     if is_muted {
         rsx! {
-            MutedManaValue { text }
+            MutedManaValue {
+                text,
+            }
         }
     } else {
         rsx! {
-            ActiveManaValue { text }
+            ActiveManaValue {
+                text,
+            }
         }
     }
 }

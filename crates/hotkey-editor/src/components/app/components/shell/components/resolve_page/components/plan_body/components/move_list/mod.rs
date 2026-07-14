@@ -24,7 +24,9 @@ pub fn MoveList(props: MoveListModel) -> Element {
         div {
             class: CLASS,
             for move_view in moves {
-                MoveCard { move_view }
+                MoveCard {
+                    move_view,
+                }
             }
         }
     }

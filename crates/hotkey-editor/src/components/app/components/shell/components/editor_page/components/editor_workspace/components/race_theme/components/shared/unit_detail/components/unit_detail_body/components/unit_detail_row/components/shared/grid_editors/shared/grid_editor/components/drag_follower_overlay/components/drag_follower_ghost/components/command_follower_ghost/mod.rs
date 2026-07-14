@@ -28,7 +28,10 @@ pub fn CommandFollowerGhost(props: CommandFollowerGhostModel) -> Element {
         div {
             class: CLASS,
             style,
-            FollowerIcon { src, alt }
+            FollowerIcon {
+                src,
+                alt,
+            }
             FollowerBadge {
                 letter,
                 state: badge_state,

@@ -26,11 +26,31 @@ pub fn MoveReasonBadge(props: MoveReasonBadgeModel) -> Element {
             class: CLASS,
             {
                 match kind {
-                    ReasonKind::Fight => rsx! { FightReasonBadge { label } },
-                    ReasonKind::GapPull => rsx! { GapPullReasonBadge { label } },
-                    ReasonKind::Spill => rsx! { SpillReasonBadge { label } },
-                    ReasonKind::Swap => rsx! { SwapReasonBadge { label } },
-                    ReasonKind::Stuck => rsx! { StuckReasonBadge { label } },
+                    ReasonKind::Fight => rsx! {
+                        FightReasonBadge {
+                            label,
+                        }
+                    },
+                    ReasonKind::GapPull => rsx! {
+                        GapPullReasonBadge {
+                            label,
+                        }
+                    },
+                    ReasonKind::Spill => rsx! {
+                        SpillReasonBadge {
+                            label,
+                        }
+                    },
+                    ReasonKind::Swap => rsx! {
+                        SwapReasonBadge {
+                            label,
+                        }
+                    },
+                    ReasonKind::Stuck => rsx! {
+                        StuckReasonBadge {
+                            label,
+                        }
+                    },
                 }
             }
         }

@@ -22,7 +22,10 @@ pub fn MoveHotkeyToggle(props: MoveHotkeyToggleModel) -> Element {
     rsx! {
         label {
             class: CLASS,
-            MoveHotkeyCheckbox { checked, on_toggle }
+            MoveHotkeyCheckbox {
+                checked,
+                on_toggle,
+            }
             {label}
         }
     }

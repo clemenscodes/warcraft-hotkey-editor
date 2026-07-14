@@ -15,7 +15,9 @@ pub fn UprootedMenu(props: UprootedMenuModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        AlternateFormGridEditor { ..config }
+        AlternateFormGridEditor {
+            ..config,
+        }
     }
 }
 

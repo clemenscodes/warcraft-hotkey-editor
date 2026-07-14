@@ -16,7 +16,10 @@ use model::AbilityTierLabelModel;
 pub fn AbilityTierLabel(props: AbilityTierLabelModel) -> Element {
     let text = props.text;
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

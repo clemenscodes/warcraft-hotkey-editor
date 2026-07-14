@@ -23,7 +23,9 @@ pub fn PreviewTextareaHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            PreviewTextarea { text }
+            PreviewTextarea {
+                text,
+            }
         }
     }
 }

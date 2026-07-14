@@ -24,7 +24,7 @@ pub fn PreviewDialog(props: PreviewDialogModel) -> Element {
     let body = PreviewTextareaHostView;
     rsx! {
         if open {
-            WarcraftDialog::<PreviewTextareaHostView, Empty> {
+            WarcraftDialog::<PreviewTextareaHostView,Empty> {
                 title: data::TITLE,
                 body,
                 open: true,

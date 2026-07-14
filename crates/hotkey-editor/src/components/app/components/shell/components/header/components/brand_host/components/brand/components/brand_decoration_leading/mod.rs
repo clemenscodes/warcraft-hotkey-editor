@@ -9,7 +9,14 @@ use tw_macro::assert_component;
 #[component]
 pub fn BrandDecorationLeading() -> Element {
     rsx! {
-        span { class: CLASS, BrandDecorationHost {} }
+        span {
+            class: CLASS,
+            BrandDecorationHost {
+            
+
+
+            }
+        }
     }
 }
 

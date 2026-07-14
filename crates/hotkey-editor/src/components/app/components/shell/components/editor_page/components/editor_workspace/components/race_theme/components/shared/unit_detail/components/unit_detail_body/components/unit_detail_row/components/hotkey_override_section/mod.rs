@@ -24,8 +24,13 @@ pub fn HotkeyOverrideSection(props: HotkeyOverrideSectionModel) -> Element {
     rsx! {
         aside {
             class: CLASS,
-            GridHeading { heading: HEADING }
-            HotkeyOverrideSlot { detail, active_container_slots }
+            GridHeading {
+                heading: HEADING,
+            }
+            HotkeyOverrideSlot {
+                detail,
+                active_container_slots,
+            }
         }
     }
 }

@@ -21,8 +21,12 @@ pub fn FightRow(props: FightRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            FightColumn { move_view: mover_view }
-            AnchorColumn { move_view }
+            FightColumn {
+                move_view: mover_view,
+            }
+            AnchorColumn {
+                move_view,
+            }
         }
     }
 }

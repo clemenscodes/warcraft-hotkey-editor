@@ -18,7 +18,10 @@ pub fn InfoWarning(props: InfoWarningModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        p { class: CLASS, "{warning}" }
+        p {
+            class: CLASS,
+            "{warning}"
+        }
     }
 }
 

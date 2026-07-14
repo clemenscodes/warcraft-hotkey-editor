@@ -37,8 +37,12 @@ pub fn PrimaryMenuItem(props: PrimaryMenuItemModel) -> Element {
             aria_label,
             disabled,
             onclick,
-            BurgerMenuItemIcon { svg: icon }
-            BurgerMenuItemLabel { text: label }
+            BurgerMenuItemIcon {
+                svg: icon,
+            }
+            BurgerMenuItemLabel {
+                text: label,
+            }
         }
     }
 }

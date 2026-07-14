@@ -21,9 +21,17 @@ pub fn TemplateCard(props: TemplateCardModel) -> Element {
     let resolved = props.resolved.clone();
     let TemplateCardPresentation { onclick } = TemplateCardPresentation::from(&props);
     rsx! {
-        button { class: CLASS, r#type: "button", onclick,
-            TemplateCardText { name, description }
-            TemplateCardPreviews { resolved }
+        button {
+            class: CLASS,
+            r#type: "button",
+            onclick,
+            TemplateCardText {
+                name,
+                description,
+            }
+            TemplateCardPreviews {
+                resolved,
+            }
         }
     }
 }

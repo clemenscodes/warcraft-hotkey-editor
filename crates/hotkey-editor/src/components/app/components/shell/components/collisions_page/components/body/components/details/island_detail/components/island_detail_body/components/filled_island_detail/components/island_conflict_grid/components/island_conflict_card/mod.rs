@@ -26,7 +26,11 @@ pub fn IslandConflictCard(props: IslandConflictCardModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            IslandConflictPanel { unit, own_ability, shared_ability }
+            IslandConflictPanel {
+                unit,
+                own_ability,
+                shared_ability,
+            }
         }
     }
 }

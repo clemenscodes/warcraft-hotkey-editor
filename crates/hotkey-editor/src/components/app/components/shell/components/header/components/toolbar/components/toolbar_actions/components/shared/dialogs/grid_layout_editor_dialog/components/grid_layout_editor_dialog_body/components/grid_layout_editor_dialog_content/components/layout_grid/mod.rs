@@ -16,7 +16,8 @@ use tw_macro::assert_component;
 pub fn LayoutGrid(props: LayoutGridModel) -> Element {
     let cells = props.cells;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for cell in cells {
                 LayoutTile {
                     state: cell.state,

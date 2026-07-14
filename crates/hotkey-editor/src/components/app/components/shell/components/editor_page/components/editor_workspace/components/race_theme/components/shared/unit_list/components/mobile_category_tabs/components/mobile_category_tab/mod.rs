@@ -24,10 +24,16 @@ pub fn MobileCategoryTab(props: MobileCategoryTabModel) -> Element {
     let onclick = model.onclick();
     match is_active {
         true => rsx! {
-            ActiveMobileCategoryTab { label, onclick }
+            ActiveMobileCategoryTab {
+                label,
+                onclick,
+            }
         },
         false => rsx! {
-            IdleMobileCategoryTab { label, onclick }
+            IdleMobileCategoryTab {
+                label,
+                onclick,
+            }
         },
     }
 }

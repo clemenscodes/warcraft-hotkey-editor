@@ -33,8 +33,12 @@ pub fn ConflictAbility(props: ConflictAbilityModel) -> Element {
                 icon_src,
                 icon_alt,
             }
-            ConflictAbilityName { text: name }
-            ConflictObjectId { object_id: ability_id }
+            ConflictAbilityName {
+                text: name,
+            }
+            ConflictObjectId {
+                object_id: ability_id,
+            }
         }
     }
 }

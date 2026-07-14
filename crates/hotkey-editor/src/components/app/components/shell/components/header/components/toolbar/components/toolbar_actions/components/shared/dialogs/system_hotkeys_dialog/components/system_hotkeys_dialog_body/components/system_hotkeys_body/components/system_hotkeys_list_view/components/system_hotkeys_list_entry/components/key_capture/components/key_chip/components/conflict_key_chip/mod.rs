@@ -24,7 +24,10 @@ pub fn ConflictKeyChip(props: ConflictKeyChipModel) -> Element {
             r#type: "button",
             onclick,
             {label}
-            Tooltip { text, placement }
+            Tooltip {
+                text,
+                placement,
+            }
         }
     }
 }

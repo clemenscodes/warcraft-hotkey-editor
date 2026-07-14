@@ -17,7 +17,11 @@ impl Render for EditorWorkspaceView {
     type Output = Element;
     fn render(&self) -> Self::Output {
         rsx! {
-            EditorWorkspace {}
+            EditorWorkspace {
+            
+
+
+            }
         }
     }
 }

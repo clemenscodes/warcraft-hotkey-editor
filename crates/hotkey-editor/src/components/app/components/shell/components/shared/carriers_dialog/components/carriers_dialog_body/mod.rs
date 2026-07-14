@@ -19,7 +19,9 @@ pub fn CarriersDialogBody(props: CarriersDialogBodyModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CarriersGrid { carriers }
+            CarriersGrid {
+                carriers,
+            }
         }
     }
 }

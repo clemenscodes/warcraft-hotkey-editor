@@ -35,7 +35,10 @@ pub fn AttributesStats(props: AttributesStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame { src: icon_src, alt: icon_alt }
+            StatIconFrame {
+                src: icon_src,
+                alt: icon_alt,
+            }
             AttributeRows {
                 strength,
                 strength_is_primary,

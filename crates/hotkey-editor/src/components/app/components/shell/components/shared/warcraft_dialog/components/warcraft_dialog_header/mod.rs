@@ -20,7 +20,10 @@ pub fn WarcraftDialogHeader(props: WarcraftDialogHeaderModel) -> Element {
     let on_close = props.on_close;
     let handle_close = EventHandler::new(move |()| on_close.call(()));
     rsx! {
-        DialogHeader { title, on_close: handle_close }
+        DialogHeader {
+            title,
+            on_close: handle_close,
+        }
     }
 }
 

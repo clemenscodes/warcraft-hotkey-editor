@@ -21,8 +21,12 @@ pub fn UnresolvedSection(props: UnresolvedSectionModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnresolvedTitle { text: data::TITLE }
-            UnresolvedMoveList { unresolved }
+            UnresolvedTitle {
+                text: data::TITLE,
+            }
+            UnresolvedMoveList {
+                unresolved,
+            }
         }
     }
 }

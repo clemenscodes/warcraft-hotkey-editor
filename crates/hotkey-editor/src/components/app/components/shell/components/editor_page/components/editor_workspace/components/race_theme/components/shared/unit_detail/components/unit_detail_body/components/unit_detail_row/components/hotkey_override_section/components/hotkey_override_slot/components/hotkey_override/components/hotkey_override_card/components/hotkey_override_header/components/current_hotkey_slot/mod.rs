@@ -28,12 +28,20 @@ pub fn CurrentHotkeySlot(props: CurrentHotkeySlotModel) -> Element {
             on_activate,
         } = key_cell;
         return rsx! {
-            OverrideKey { label, is_editing, is_special, title, on_activate }
+            OverrideKey {
+                label,
+                is_editing,
+                is_special,
+                title,
+                on_activate,
+            }
         };
     }
     if let Some(text) = dispatch.info_text {
         return rsx! {
-            UnbindableNote { text }
+            UnbindableNote {
+                text,
+            }
         };
     }
     rsx! {}

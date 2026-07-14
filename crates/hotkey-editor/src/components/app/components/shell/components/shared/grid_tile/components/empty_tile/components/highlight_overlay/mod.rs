@@ -18,7 +18,9 @@ pub fn HighlightOverlay(props: HighlightOverlayModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

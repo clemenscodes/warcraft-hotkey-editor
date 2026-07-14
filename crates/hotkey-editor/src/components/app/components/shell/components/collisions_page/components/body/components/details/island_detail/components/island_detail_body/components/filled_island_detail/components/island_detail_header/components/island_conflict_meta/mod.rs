@@ -19,8 +19,12 @@ pub fn IslandConflictMeta(props: IslandConflictMetaModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            Coordinate { coordinate }
-            CollisionCount { count }
+            Coordinate {
+                coordinate,
+            }
+            CollisionCount {
+                count,
+            }
         }
     }
 }

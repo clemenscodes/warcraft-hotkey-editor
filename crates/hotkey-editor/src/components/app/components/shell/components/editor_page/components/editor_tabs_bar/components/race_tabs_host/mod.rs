@@ -21,7 +21,10 @@ pub fn RaceTabsHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            RaceTabs { active_race, on_select }
+            RaceTabs {
+                active_race,
+                on_select,
+            }
         }
     }
 }

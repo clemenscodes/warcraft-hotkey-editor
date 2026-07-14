@@ -21,7 +21,11 @@ pub fn EditorWorkspace() -> Element {
     rsx! {
         div {
             class,
-            RaceTheme {}
+            RaceTheme {
+            
+
+
+            }
         }
     }
 }

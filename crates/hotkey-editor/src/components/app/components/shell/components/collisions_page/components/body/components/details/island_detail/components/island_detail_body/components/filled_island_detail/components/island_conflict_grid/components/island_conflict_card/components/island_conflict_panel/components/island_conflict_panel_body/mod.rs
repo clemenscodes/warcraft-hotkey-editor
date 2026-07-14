@@ -33,13 +33,22 @@ pub fn IslandConflictPanelBody(props: IslandConflictPanelBodyModel) -> Element {
         rsx! {
             div {
                 class: CLASS,
-                IslandConflictUnit { unit_id, icon_url, name }
-                IslandConflictAbilityRow { own_ability, shared_ability }
+                IslandConflictUnit {
+                    unit_id,
+                    icon_url,
+                    name,
+                }
+                IslandConflictAbilityRow {
+                    own_ability,
+                    shared_ability,
+                }
             }
         }
     } else {
         rsx! {
-            div { class: CLASS }
+            div {
+                class: CLASS,
+            }
         }
     }
 }

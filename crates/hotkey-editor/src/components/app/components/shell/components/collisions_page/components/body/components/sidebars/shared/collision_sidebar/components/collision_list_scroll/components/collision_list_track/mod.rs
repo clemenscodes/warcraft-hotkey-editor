@@ -19,7 +19,12 @@ pub fn CollisionListTrack(props: CollisionListTrackModel) -> Element {
         div {
             class: CLASS,
             for CollisionCardData { is_selected, onclick, count, content } in cards {
-                CollisionCard { is_selected, onclick, count, content }
+                CollisionCard {
+                    is_selected,
+                    onclick,
+                    count,
+                    content,
+                }
             }
         }
     }

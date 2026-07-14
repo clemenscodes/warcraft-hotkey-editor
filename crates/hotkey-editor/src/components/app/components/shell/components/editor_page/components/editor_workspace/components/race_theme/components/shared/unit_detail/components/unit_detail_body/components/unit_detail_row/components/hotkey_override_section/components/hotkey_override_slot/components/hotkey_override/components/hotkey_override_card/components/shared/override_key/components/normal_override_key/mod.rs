@@ -27,7 +27,10 @@ pub fn NormalOverrideKey(props: NormalOverrideKeyModel) -> Element {
             class: CLASS,
             title,
             onclick: move |_event| on_activate.call(()),
-            EditableKeycap { label, state }
+            EditableKeycap {
+                label,
+                state,
+            }
         }
     }
 }

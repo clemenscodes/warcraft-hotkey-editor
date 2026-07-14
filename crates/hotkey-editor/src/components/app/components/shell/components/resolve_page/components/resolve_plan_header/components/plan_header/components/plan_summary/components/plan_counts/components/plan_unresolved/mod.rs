@@ -10,7 +10,12 @@ use tw_macro::assert_component;
 #[component]
 pub fn PlanUnresolved(props: PlanUnresolvedModel) -> Element {
     let count = props.count;
-    rsx! { span { class: CLASS, "{count} unresolved" } }
+    rsx! {
+        span {
+            class: CLASS,
+            "{count} unresolved"
+        }
+    }
 }
 
 assert_component!(PlanUnresolved);

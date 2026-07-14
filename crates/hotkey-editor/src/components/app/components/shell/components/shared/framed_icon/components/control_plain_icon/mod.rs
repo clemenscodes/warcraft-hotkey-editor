@@ -17,14 +17,19 @@ use tw_macro::assert_component;
 pub fn ControlPlainIcon(props: ControlPlainIconModel) -> Element {
     let Some(source) = props.source else {
         return rsx! {
-            div { class: CLASS }
+            div {
+                class: CLASS,
+            }
         };
     };
     let alt = props.alt;
     rsx! {
         div {
             class: CLASS,
-            FramedIconImage { source, alt }
+            FramedIconImage {
+                source,
+                alt,
+            }
         }
     }
 }

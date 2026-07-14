@@ -21,10 +21,14 @@ pub fn UnitCardId(props: UnitCardIdModel) -> Element {
     let unit_id = props.unit_id;
     match props.state() {
         UnitCardIdState::Normal => rsx! {
-            NormalUnitCardId { unit_id }
+            NormalUnitCardId {
+                unit_id,
+            }
         },
         UnitCardIdState::Selected => rsx! {
-            SelectedUnitCardId { unit_id }
+            SelectedUnitCardId {
+                unit_id,
+            }
         },
     }
 }

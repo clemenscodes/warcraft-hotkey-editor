@@ -20,8 +20,12 @@ pub fn HotkeysContent(props: HotkeysContentModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitCardsSidebar { units: sidebar_units }
-            HotkeyUnitDetail { units: detail_units }
+            UnitCardsSidebar {
+                units: sidebar_units,
+            }
+            HotkeyUnitDetail {
+                units: detail_units,
+            }
         }
     }
 }

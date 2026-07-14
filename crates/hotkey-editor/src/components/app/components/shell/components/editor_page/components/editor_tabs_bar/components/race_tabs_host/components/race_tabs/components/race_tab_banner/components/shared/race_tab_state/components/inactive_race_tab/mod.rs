@@ -18,7 +18,11 @@ pub fn InactiveRaceTab(props: InactiveRaceTabModel) -> Element {
     let onclick = props.onclick;
     let onkeydown = props.onkeydown;
     rsx! {
-        RaceTab { label, onclick, onkeydown }
+        RaceTab {
+            label,
+            onclick,
+            onkeydown,
+        }
     }
 }
 

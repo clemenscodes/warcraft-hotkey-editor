@@ -19,7 +19,9 @@ pub fn StuckReasonBadge(props: StuckReasonBadgeModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            ReasonBadge { label }
+            ReasonBadge {
+                label,
+            }
         }
     }
 }

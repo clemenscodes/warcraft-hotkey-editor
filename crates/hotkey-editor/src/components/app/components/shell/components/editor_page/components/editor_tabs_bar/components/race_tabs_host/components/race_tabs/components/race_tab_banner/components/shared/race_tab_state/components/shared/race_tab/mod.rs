@@ -28,7 +28,9 @@ pub fn RaceTab(props: RaceTabModel) -> Element {
             class: CLASS,
             onclick,
             onkeydown,
-            RaceTabLabel { label }
+            RaceTabLabel {
+                label,
+            }
         }
     }
 }

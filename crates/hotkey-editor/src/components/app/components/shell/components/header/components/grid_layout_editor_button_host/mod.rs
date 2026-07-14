@@ -22,7 +22,10 @@ pub fn GridLayoutEditorButtonHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            GridLayoutEditorButton { is_open, onclick }
+            GridLayoutEditorButton {
+                is_open,
+                onclick,
+            }
             GridLayoutEditorDialog {
                 open: is_open,
                 on_open_change,

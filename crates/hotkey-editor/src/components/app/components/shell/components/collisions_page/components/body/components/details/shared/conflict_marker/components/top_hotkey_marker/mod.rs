@@ -17,7 +17,9 @@ pub fn TopHotkeyMarker(props: TopHotkeyMarkerModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            ConflictHotkeyKey { text: label }
+            ConflictHotkeyKey {
+                text: label,
+            }
         }
     }
 }

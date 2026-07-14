@@ -20,7 +20,11 @@ pub fn ToastList(props: ToastListModel) -> Element {
         ol {
             class: CLASS,
             for record in toasts {
-                ToastListItem { key: "{record.id()}", record, on_remove }
+                ToastListItem {
+                    key: "{record.id()}",
+                    record,
+                    on_remove,
+                }
             }
         }
     }

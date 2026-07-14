@@ -19,11 +19,15 @@ pub fn HitPointsRegenGain(props: HitPointsRegenGainModel) -> Element {
     let text = value.display();
     if is_muted {
         rsx! {
-            MutedHitPointsRegenGain { text }
+            MutedHitPointsRegenGain {
+                text,
+            }
         }
     } else {
         rsx! {
-            ActiveHitPointsRegenGain { text }
+            ActiveHitPointsRegenGain {
+                text,
+            }
         }
     }
 }

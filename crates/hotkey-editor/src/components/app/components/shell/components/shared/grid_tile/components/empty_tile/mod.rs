@@ -32,10 +32,18 @@ pub fn EmptyTile(props: EmptyTileModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            DropTargetOverlay { active: drop_target_active }
-            BlockedDropTargetOverlay { active: blocked_drop_target_active }
-            HighlightOverlay { active: highlight_active }
-            DragOverRing { active: is_drag_over }
+            DropTargetOverlay {
+                active: drop_target_active,
+            }
+            BlockedDropTargetOverlay {
+                active: blocked_drop_target_active,
+            }
+            HighlightOverlay {
+                active: highlight_active,
+            }
+            DragOverRing {
+                active: is_drag_over,
+            }
         }
     }
 }

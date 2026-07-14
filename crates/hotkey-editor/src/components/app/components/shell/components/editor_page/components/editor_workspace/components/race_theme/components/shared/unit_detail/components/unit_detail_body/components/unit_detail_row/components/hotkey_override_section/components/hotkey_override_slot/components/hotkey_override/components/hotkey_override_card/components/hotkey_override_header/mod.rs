@@ -33,8 +33,12 @@ pub fn HotkeyOverrideHeader(props: HotkeyOverrideHeaderModel) -> Element {
         is_info_only,
     } = props;
     rsx! {
-        div { class: CLASS,
-            HotkeyOverrideHeaderText { name_text, object_id }
+        div {
+            class: CLASS,
+            HotkeyOverrideHeaderText {
+                name_text,
+                object_id,
+            }
             CurrentHotkeySlot {
                 show_hotkey_field,
                 hotkey_label,

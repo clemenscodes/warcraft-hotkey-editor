@@ -20,10 +20,17 @@ pub fn HelpResolverSection(props: HelpResolverSectionModel) -> Element {
     let paragraphs = props.prose;
     let columns = props.glossary;
     rsx! {
-        section { class: CLASS,
-            HelpSectionTitle { title: "What the resolver is doing" }
-            HelpResolverProse { paragraphs }
-            HelpGlossaryColumns { columns }
+        section {
+            class: CLASS,
+            HelpSectionTitle {
+                title: "What the resolver is doing",
+            }
+            HelpResolverProse {
+                paragraphs,
+            }
+            HelpGlossaryColumns {
+                columns,
+            }
         }
     }
 }

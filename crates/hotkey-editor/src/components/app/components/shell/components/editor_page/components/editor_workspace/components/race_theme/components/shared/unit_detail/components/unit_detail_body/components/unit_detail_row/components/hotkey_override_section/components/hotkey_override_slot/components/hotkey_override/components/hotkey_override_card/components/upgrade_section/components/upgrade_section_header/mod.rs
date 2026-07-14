@@ -31,7 +31,9 @@ pub fn UpgradeSectionHeader(props: UpgradeSectionHeaderModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UpgradeSectionHeaderLabelColumn { text: label_text }
+            UpgradeSectionHeaderLabelColumn {
+                text: label_text,
+            }
             AltStatePositionButton {
                 title: position_title,
                 aria_label: "Edit upgraded-form button position",

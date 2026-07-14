@@ -19,7 +19,9 @@ pub fn TemplatesDialogBody(props: TemplatesDialogBodyModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            TemplateGallery { cards }
+            TemplateGallery {
+                cards,
+            }
         }
     }
 }

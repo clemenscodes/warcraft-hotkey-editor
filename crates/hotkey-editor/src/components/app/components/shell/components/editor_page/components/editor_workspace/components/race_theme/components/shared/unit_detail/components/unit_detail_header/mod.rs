@@ -23,8 +23,15 @@ pub fn UnitDetailHeader(props: UnitDetailHeaderModel) -> Element {
     rsx! {
         header {
             class: CLASS,
-            UnitPortrait { src: portrait_source, alt: unit_name }
-            UnitDetailTitle { unit_name, unit_id, has_hero_attributes }
+            UnitPortrait {
+                src: portrait_source,
+                alt: unit_name,
+            }
+            UnitDetailTitle {
+                unit_name,
+                unit_id,
+                has_hero_attributes,
+            }
         }
     }
 }

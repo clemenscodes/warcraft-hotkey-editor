@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn PlainMoveName(props: PlainMoveNameModel) -> Element {
     let text = props.text;
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

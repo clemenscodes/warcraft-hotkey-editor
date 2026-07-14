@@ -21,7 +21,10 @@ pub fn CollisionsButtonHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            CollisionsButton { summary, onclick }
+            CollisionsButton {
+                summary,
+                onclick,
+            }
         }
     }
 }

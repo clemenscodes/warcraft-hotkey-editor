@@ -19,7 +19,9 @@ pub fn CollisionSidebar(props: CollisionSidebarModel) -> Element {
     rsx! {
         aside {
             class: CLASS,
-            CollisionListScroll { cards }
+            CollisionListScroll {
+                cards,
+            }
         }
     }
 }

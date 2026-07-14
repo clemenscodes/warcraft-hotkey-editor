@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn MutedManaValue(props: MutedManaValueModel) -> Element {
     let text = props.text;
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

@@ -16,9 +16,13 @@ use tw_macro::assert_component;
 #[component]
 pub fn HelpWorkflow(props: HelpWorkflowModel) -> Element {
     rsx! {
-        ol { class: CLASS,
+        ol {
+            class: CLASS,
             for (index, segments) in props.steps.iter().copied().enumerate() {
-                HelpWorkflowStep { key: "{index}", segments }
+                HelpWorkflowStep {
+                    key: "{index}",
+                    segments,
+                }
             }
         }
     }

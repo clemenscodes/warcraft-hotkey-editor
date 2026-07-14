@@ -18,10 +18,14 @@ pub fn ConflictPosition(props: ConflictPositionModel) -> Element {
     let coordinate = props.coordinate;
     match props.is_top {
         true => rsx! {
-            TopConflictPosition { coordinate }
+            TopConflictPosition {
+                coordinate,
+            }
         },
         false => rsx! {
-            InlineConflictPosition { coordinate }
+            InlineConflictPosition {
+                coordinate,
+            }
         },
     }
 }

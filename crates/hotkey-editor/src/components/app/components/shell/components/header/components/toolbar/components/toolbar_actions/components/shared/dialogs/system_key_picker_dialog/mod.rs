@@ -41,7 +41,7 @@ pub fn SystemKeyPickerDialog(props: SystemKeyPickerDialogModel) -> Element {
     };
     rsx! {
         if open {
-            WarcraftDialog::<SystemKeyPickerDialogBodyView, Empty> {
+            WarcraftDialog::<SystemKeyPickerDialogBodyView,Empty> {
                 title,
                 body,
                 open: true,

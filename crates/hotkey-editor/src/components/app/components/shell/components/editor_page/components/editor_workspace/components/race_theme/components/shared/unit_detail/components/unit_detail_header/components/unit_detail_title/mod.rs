@@ -21,8 +21,13 @@ pub fn UnitDetailTitle(props: UnitDetailTitleModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitNameRow { unit_name, has_hero_attributes }
-            UnitId { unit_id }
+            UnitNameRow {
+                unit_name,
+                has_hero_attributes,
+            }
+            UnitId {
+                unit_id,
+            }
         }
     }
 }

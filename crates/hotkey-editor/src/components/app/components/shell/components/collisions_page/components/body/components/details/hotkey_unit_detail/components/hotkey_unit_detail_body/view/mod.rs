@@ -21,7 +21,9 @@ impl Render for HotkeyUnitDetailBodyView {
     fn render(&self) -> Self::Output {
         let units = self.units.clone();
         rsx! {
-            HotkeyUnitDetailBody { units }
+            HotkeyUnitDetailBody {
+                units,
+            }
         }
     }
 }

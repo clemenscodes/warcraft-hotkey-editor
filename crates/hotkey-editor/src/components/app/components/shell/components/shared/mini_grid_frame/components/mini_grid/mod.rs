@@ -18,7 +18,8 @@ use tw_macro::assert_component;
 pub fn MiniGrid(props: MiniGridModel) -> Element {
     let tiles = props.tiles;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for tile in tiles {
                 GridTile {
                     coordinate: tile.coordinate,

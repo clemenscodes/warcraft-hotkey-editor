@@ -37,7 +37,7 @@ pub fn CarriersDialog(props: CarriersDialogModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            WarcraftDialog::<CarriersDialogBodyView, Empty> {
+            WarcraftDialog::<CarriersDialogBodyView,Empty> {
                 title,
                 body,
                 open: true,

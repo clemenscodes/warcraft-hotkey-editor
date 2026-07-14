@@ -26,7 +26,9 @@ pub fn InteractiveSurface(props: InteractiveSurfaceModel) -> Element {
             aria_pressed: props.aria_pressed,
             disabled: props.disabled,
             onclick: props.onclick,
-            ToolbarButtonIcon { icon }
+            ToolbarButtonIcon {
+                icon,
+            }
         }
     }
 }

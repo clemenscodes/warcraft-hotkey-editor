@@ -31,8 +31,12 @@ pub fn HeroLevelPicker() -> Element {
                 onclick: toggle,
             }
             if is_open {
-                HeroLevelMenu { level_picker_open }
-                HeroLevelBackdrop { onclick: dismiss }
+                HeroLevelMenu {
+                    level_picker_open,
+                }
+                HeroLevelBackdrop {
+                    onclick: dismiss,
+                }
             }
         }
     }

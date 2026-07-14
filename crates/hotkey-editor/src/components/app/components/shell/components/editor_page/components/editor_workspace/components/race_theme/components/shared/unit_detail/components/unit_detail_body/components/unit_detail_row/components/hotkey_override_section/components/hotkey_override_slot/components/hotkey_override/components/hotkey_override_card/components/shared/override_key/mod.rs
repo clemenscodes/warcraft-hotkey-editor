@@ -32,11 +32,21 @@ pub fn OverrideKey(props: OverrideKeyModel) -> Element {
     };
     if is_special {
         rsx! {
-            SpecialOverrideKey { label, state, title, on_activate }
+            SpecialOverrideKey {
+                label,
+                state,
+                title,
+                on_activate,
+            }
         }
     } else {
         rsx! {
-            NormalOverrideKey { label, state, title, on_activate }
+            NormalOverrideKey {
+                label,
+                state,
+                title,
+                on_activate,
+            }
         }
     }
 }

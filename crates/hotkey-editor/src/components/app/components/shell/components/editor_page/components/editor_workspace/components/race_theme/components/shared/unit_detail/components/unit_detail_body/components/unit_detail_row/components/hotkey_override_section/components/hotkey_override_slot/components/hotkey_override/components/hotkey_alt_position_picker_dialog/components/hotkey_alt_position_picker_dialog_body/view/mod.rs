@@ -28,7 +28,10 @@ impl Render for HotkeyAltPositionPickerDialogBodyView {
         let object_id = self.object_id;
         let picker_slots = self.picker_slots.clone();
         rsx! {
-            HotkeyAltPositionPickerDialogBody { object_id, picker_slots }
+            HotkeyAltPositionPickerDialogBody {
+                object_id,
+                picker_slots,
+            }
         }
     }
 }

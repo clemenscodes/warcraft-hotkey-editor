@@ -24,11 +24,19 @@ pub fn StrengthRow(props: StrengthRowModel) -> Element {
     } = use_strength_row(&props);
     if props.is_primary {
         rsx! {
-            PrimaryStrengthRow { statistic, growth, label }
+            PrimaryStrengthRow {
+                statistic,
+                growth,
+                label,
+            }
         }
     } else {
         rsx! {
-            RegularStrengthRow { statistic, growth, label }
+            RegularStrengthRow {
+                statistic,
+                growth,
+                label,
+            }
         }
     }
 }

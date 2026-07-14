@@ -21,7 +21,9 @@ pub fn UnitCardsSidebar<Conflict: Clone + PartialEq + SelectedCollisionUnit + 's
 ) -> Element {
     let UnitCardsSidebarPresentation { cards, .. } = use_unit_cards_sidebar_presentation(&props);
     rsx! {
-        CollisionSidebar { cards }
+        CollisionSidebar {
+            cards,
+        }
     }
 }
 

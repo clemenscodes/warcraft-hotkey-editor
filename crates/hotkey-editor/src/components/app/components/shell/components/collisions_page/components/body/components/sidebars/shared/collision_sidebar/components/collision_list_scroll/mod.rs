@@ -19,7 +19,9 @@ pub fn CollisionListScroll(props: CollisionListScrollModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CollisionListTrack { cards }
+            CollisionListTrack {
+                cards,
+            }
         }
     }
 }

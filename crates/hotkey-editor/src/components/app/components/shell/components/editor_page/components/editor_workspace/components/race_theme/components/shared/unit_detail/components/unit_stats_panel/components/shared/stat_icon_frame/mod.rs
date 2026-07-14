@@ -19,7 +19,10 @@ pub fn StatIconFrame(props: StatIconFrameModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconImg { src, alt }
+            StatIconImg {
+                src,
+                alt,
+            }
         }
     }
 }

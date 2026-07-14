@@ -26,7 +26,11 @@ impl Render for SystemKeyPickerDialogBodyView {
         let on_pick = self.on_pick;
         let on_close = self.on_close;
         rsx! {
-            SystemKeyPickerDialogBody { columns, on_pick, on_close }
+            SystemKeyPickerDialogBody {
+                columns,
+                on_pick,
+                on_close,
+            }
         }
     }
 }

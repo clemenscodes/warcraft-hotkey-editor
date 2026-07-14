@@ -20,16 +20,55 @@ use tw_macro::assert_component;
 #[component]
 pub fn InlineActions() -> Element {
     rsx! {
-        div { class: CLASS, role: "toolbar", aria_label: "File actions",
-            UndoButton {}
-            RedoButton {}
-            UploadButton {}
-            TemplatesButton {}
-            SystemHotkeysButton {}
-            ResolveButton {}
-            PreviewButton {}
-            ExportButton {}
-            HelpButton {}
+        div {
+            class: CLASS,
+            role: "toolbar",
+            aria_label: "File actions",
+            UndoButton {
+            
+
+
+            }
+            RedoButton {
+            
+
+
+            }
+            UploadButton {
+            
+
+
+            }
+            TemplatesButton {
+            
+
+
+            }
+            SystemHotkeysButton {
+            
+
+
+            }
+            ResolveButton {
+            
+
+
+            }
+            PreviewButton {
+            
+
+
+            }
+            ExportButton {
+            
+
+
+            }
+            HelpButton {
+            
+
+
+            }
         }
     }
 }

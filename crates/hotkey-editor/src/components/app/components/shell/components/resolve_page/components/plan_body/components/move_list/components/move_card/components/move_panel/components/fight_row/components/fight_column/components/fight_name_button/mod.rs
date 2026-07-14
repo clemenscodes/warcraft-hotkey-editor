@@ -22,8 +22,13 @@ pub fn FightNameButton(props: FightNameButtonModel) -> Element {
             r#type: "button",
             disabled: !has_unit,
             onclick,
-            MoveName { text: name, is_link: has_unit }
-            ObjectId { text: object_id_value }
+            MoveName {
+                text: name,
+                is_link: has_unit,
+            }
+            ObjectId {
+                text: object_id_value,
+            }
         }
     }
 }

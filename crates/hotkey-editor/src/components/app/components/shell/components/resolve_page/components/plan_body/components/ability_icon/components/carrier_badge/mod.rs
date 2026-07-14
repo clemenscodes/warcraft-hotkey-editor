@@ -18,10 +18,14 @@ pub fn CarrierBadge(props: CarrierBadgeModel) -> Element {
     let count = props.count;
     match props.is_winner {
         true => rsx! {
-            WinnerCarrierBadge { count }
+            WinnerCarrierBadge {
+                count,
+            }
         },
         false => rsx! {
-            LosingCarrierBadge { count }
+            LosingCarrierBadge {
+                count,
+            }
         },
     }
 }

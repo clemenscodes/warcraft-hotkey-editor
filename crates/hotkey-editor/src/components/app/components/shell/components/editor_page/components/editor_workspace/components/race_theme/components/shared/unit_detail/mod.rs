@@ -25,7 +25,9 @@ pub fn UnitDetail() -> Element {
         UnitDetailView::Loaded(model) => *model,
         UnitDetailView::Empty(message) => {
             return rsx! {
-                UnitDetailEmpty { message }
+                UnitDetailEmpty {
+                    message,
+                }
             };
         }
     };
@@ -44,10 +46,24 @@ pub fn UnitDetail() -> Element {
     rsx! {
         section {
             class: CLASS,
-            UnitDetailHeader { unit_name, unit_id, portrait_url, has_hero_attributes }
-            UnitDescription { text: description_text }
-            UnitStatsPanel { combat, hero_attributes, evasion }
-            UnitDetailBody { grid_slots, override_target }
+            UnitDetailHeader {
+                unit_name,
+                unit_id,
+                portrait_url,
+                has_hero_attributes,
+            }
+            UnitDescription {
+                text: description_text,
+            }
+            UnitStatsPanel {
+                combat,
+                hero_attributes,
+                evasion,
+            }
+            UnitDetailBody {
+                grid_slots,
+                override_target,
+            }
         }
     }
 }

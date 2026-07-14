@@ -21,8 +21,12 @@ pub fn NeutralMatchup(props: NeutralMatchupModel) -> Element {
         div {
             class: CLASS,
             title,
-            MatchupLabel { subject }
-            MatchupValue { multiplier }
+            MatchupLabel {
+                subject,
+            }
+            MatchupValue {
+                multiplier,
+            }
         }
     }
 }

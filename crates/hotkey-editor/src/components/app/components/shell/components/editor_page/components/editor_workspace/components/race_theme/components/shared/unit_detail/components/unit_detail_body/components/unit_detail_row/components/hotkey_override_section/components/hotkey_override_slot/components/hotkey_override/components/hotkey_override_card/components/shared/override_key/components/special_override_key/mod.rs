@@ -28,7 +28,10 @@ pub fn SpecialOverrideKey(props: SpecialOverrideKeyModel) -> Element {
             class: CLASS,
             title,
             onclick: move |_event| on_activate.call(()),
-            EditableKeycap { label, state }
+            EditableKeycap {
+                label,
+                state,
+            }
         }
     }
 }

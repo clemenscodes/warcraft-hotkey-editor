@@ -9,7 +9,14 @@ use tw_macro::assert_component;
 #[component]
 pub fn DialogHeaderDecorationTrailing() -> Element {
     rsx! {
-        span { class: CLASS, DialogHeaderDecoration {} }
+        span {
+            class: CLASS,
+            DialogHeaderDecoration {
+            
+
+
+            }
+        }
     }
 }
 

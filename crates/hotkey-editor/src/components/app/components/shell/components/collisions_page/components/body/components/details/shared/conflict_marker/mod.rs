@@ -23,10 +23,14 @@ pub fn ConflictMarker(props: ConflictMarkerModel) -> Element {
     match props.marker {
         ConflictMarker::Hotkey { label } => match is_top {
             true => rsx! {
-                TopHotkeyMarker { label }
+                TopHotkeyMarker {
+                    label,
+                }
             },
             false => rsx! {
-                InlineHotkeyMarker { label }
+                InlineHotkeyMarker {
+                    label,
+                }
             },
         },
         ConflictMarker::Position { coordinate } => rsx! {

@@ -42,7 +42,10 @@ pub fn KeyPickerBoard(props: KeyPickerBoardModel) -> Element {
                 {
                     let rows = column.into_rows();
                     rsx! {
-                        KeyPickerColumn { rows, on_pick }
+                        KeyPickerColumn {
+                            rows,
+                            on_pick,
+                        }
                     }
                 }
             }

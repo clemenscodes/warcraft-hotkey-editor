@@ -48,7 +48,7 @@ pub fn GridLayoutEditorDialog(props: GridLayoutEditorDialogModel) -> Element {
     };
     rsx! {
         if is_open {
-            WarcraftDialog::<GridLayoutEditorDialogBodyView, Empty> {
+            WarcraftDialog::<GridLayoutEditorDialogBodyView,Empty> {
                 title,
                 body,
                 open: true,

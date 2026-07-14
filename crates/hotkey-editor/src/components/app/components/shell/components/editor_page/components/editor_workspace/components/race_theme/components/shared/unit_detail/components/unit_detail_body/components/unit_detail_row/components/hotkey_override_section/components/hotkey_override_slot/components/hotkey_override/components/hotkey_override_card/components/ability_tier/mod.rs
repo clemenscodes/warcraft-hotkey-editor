@@ -39,7 +39,9 @@ pub fn AbilityTier(props: AbilityTierModel) -> Element {
                 icon: ICON_TIER_PREV,
                 on_click: on_prev,
             }
-            AbilityTierLabel { text: tier_label_text }
+            AbilityTierLabel {
+                text: tier_label_text,
+            }
             AbilityTierButton {
                 aria_label: "Next level",
                 icon: ICON_TIER_NEXT,

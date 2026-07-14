@@ -44,7 +44,9 @@ pub fn AltStateSection(props: AltStateSectionModel) -> Element {
                 on_hotkey_activate,
             }
             for text in alt_description_lines {
-                AltStateLine { text }
+                AltStateLine {
+                    text,
+                }
             }
         }
     }

@@ -17,11 +17,20 @@ pub fn Footer() -> Element {
     let tail = credit.tail;
     let heart = credit.heart;
     rsx! {
-        footer { class: CLASS,
-            FooterCredit { lead, tail, heart }
+        footer {
+            class: CLASS,
+            FooterCredit {
+                lead,
+                tail,
+                heart,
+            }
             for (index, link) in data::LINKS.iter().enumerate() {
                 if index > 0 {
-                    FooterSeparator {}
+                    FooterSeparator {
+                    
+
+
+                    }
                 }
                 FooterLink {
                     label: link.label,
@@ -29,7 +38,9 @@ pub fn Footer() -> Element {
                     icon: link.icon,
                 }
             }
-            FooterDisclaimer { text: data::DISCLAIMER }
+            FooterDisclaimer {
+                text: data::DISCLAIMER,
+            }
         }
     }
 }

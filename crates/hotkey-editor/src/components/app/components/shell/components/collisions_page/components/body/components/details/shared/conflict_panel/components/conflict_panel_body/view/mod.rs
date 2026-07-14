@@ -22,7 +22,9 @@ impl Render for ConflictPanelBodyView {
     fn render(&self) -> Self::Output {
         let models = self.models.clone();
         rsx! {
-            ConflictPanelBody { models }
+            ConflictPanelBody {
+                models,
+            }
         }
     }
 }

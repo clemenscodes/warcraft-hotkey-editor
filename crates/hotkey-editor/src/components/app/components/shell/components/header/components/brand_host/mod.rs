@@ -16,7 +16,11 @@ pub fn BrandHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            Brand {}
+            Brand {
+            
+
+
+            }
         }
     }
 }

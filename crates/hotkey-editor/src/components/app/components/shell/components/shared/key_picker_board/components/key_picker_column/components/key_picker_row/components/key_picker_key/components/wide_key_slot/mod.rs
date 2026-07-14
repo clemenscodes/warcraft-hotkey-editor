@@ -23,7 +23,8 @@ pub fn WideKeySlot(props: WideKeySlotModel) -> Element {
     let tooltip_placement = props.tooltip_placement;
     let tooltip_anchor = props.tooltip_anchor;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             ColorKey {
                 state,
                 label,

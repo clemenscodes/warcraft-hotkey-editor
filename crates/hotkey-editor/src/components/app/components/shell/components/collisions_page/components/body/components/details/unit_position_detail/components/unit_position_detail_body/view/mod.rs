@@ -21,7 +21,9 @@ impl Render for UnitPositionDetailBodyView {
     fn render(&self) -> Self::Output {
         let units = self.units.clone();
         rsx! {
-            UnitPositionDetailBody { units }
+            UnitPositionDetailBody {
+                units,
+            }
         }
     }
 }

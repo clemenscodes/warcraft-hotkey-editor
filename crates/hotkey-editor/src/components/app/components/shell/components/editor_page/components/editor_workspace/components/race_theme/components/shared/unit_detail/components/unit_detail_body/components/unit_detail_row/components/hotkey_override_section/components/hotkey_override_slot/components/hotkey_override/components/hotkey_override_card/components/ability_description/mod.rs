@@ -20,9 +20,14 @@ pub fn AbilityDescription(props: AbilityDescriptionModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for description_line in description_lines {
-                p { {description_line} }
+                p {
+
+
+                    {description_line}
+                }
             }
         }
     }

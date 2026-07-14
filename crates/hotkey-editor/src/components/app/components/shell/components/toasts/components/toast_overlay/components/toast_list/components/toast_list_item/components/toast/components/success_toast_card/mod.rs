@@ -28,7 +28,13 @@ pub fn SuccessToastCard(props: SuccessToastCardModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            ToastCard { icon: ICON, title, description, id, on_remove }
+            ToastCard {
+                icon: ICON,
+                title,
+                description,
+                id,
+                on_remove,
+            }
         }
     }
 }

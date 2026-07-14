@@ -10,7 +10,9 @@ use tw_macro::assert_component;
 #[component]
 pub fn ActiveAccent() -> Element {
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

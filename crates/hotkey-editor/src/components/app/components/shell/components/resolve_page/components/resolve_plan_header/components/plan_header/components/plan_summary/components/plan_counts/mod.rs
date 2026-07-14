@@ -21,7 +21,9 @@ pub fn PlanCounts(props: PlanCountsModel) -> Element {
             "{moves_text}"
             if unresolved_count > 0 {
                 " · "
-                PlanUnresolved { count: unresolved_count }
+                PlanUnresolved {
+                    count: unresolved_count,
+                }
             }
         }
     }

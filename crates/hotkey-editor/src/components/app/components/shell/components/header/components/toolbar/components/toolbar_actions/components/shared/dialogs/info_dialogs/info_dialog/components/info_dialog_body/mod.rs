@@ -24,8 +24,15 @@ pub fn InfoDialogBody(props: InfoDialogBodyModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            InfoContent { intro, warning }
-            InfoActions { primary_label, on_primary, on_cancel }
+            InfoContent {
+                intro,
+                warning,
+            }
+            InfoActions {
+                primary_label,
+                on_primary,
+                on_cancel,
+            }
         }
     }
 }

@@ -21,8 +21,12 @@ pub fn ToastContent(props: ToastContentModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            ToastTitle { title }
-            ToastDescription { description }
+            ToastTitle {
+                title,
+            }
+            ToastDescription {
+                description,
+            }
         }
     }
 }

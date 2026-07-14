@@ -16,8 +16,16 @@ pub fn NightelfRaceTheme() -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitList {}
-            UnitDetail {}
+            UnitList {
+            
+
+
+            }
+            UnitDetail {
+            
+
+
+            }
         }
     }
 }

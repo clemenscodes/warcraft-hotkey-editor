@@ -20,7 +20,10 @@ pub fn ToastListItem(props: ToastListItemModel) -> Element {
     rsx! {
         li {
             class: CLASS,
-            Toast { record, on_remove }
+            Toast {
+                record,
+                on_remove,
+            }
         }
     }
 }

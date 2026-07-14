@@ -21,7 +21,9 @@ impl Render for CarriersDialogBodyView {
     fn render(&self) -> Self::Output {
         let carriers = self.carriers.clone();
         rsx! {
-            CarriersDialogBody { carriers }
+            CarriersDialogBody {
+                carriers,
+            }
         }
     }
 }

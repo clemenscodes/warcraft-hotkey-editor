@@ -24,7 +24,10 @@ pub fn NormalKeyChip(props: NormalKeyChipModel) -> Element {
             r#type: "button",
             onclick,
             {label}
-            Tooltip { text, placement }
+            Tooltip {
+                text,
+                placement,
+            }
         }
     }
 }

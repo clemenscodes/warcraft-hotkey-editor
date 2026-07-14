@@ -9,7 +9,10 @@ use tw_macro::assert_component;
 #[component]
 pub fn InfoFilename() -> Element {
     rsx! {
-        div { class: CLASS, "{FILENAME}" }
+        div {
+            class: CLASS,
+            "{FILENAME}"
+        }
     }
 }
 

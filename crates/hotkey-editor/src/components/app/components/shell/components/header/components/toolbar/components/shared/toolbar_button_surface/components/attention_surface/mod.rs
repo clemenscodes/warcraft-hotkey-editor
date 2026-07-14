@@ -27,7 +27,9 @@ pub fn AttentionSurface(props: AttentionSurfaceModel) -> Element {
             aria_pressed: props.aria_pressed,
             disabled: props.disabled,
             onclick: props.onclick,
-            ToolbarButtonIcon { icon }
+            ToolbarButtonIcon {
+                icon,
+            }
         }
     }
 }

@@ -20,8 +20,12 @@ pub fn SystemHotkeysListEntry(props: SystemHotkeysListEntryModel) -> Element {
     rsx! {
         li {
             class: CLASS,
-            SystemHotkeysListEntryLabel { text }
-            KeyCapture { section_id }
+            SystemHotkeysListEntryLabel {
+                text,
+            }
+            KeyCapture {
+                section_id,
+            }
         }
     }
 }

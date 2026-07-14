@@ -18,7 +18,9 @@ pub fn UnitPositionDetail(props: UnitPositionDetailModel) -> Element {
     let units = props.units;
     let body = UnitPositionDetailBodyView { units };
     rsx! {
-        DetailCard::<UnitPositionDetailBodyView> { body }
+        DetailCard::<UnitPositionDetailBodyView> {
+            body,
+        }
     }
 }
 

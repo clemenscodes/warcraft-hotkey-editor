@@ -15,7 +15,10 @@ use tw_macro::assert_component;
 pub fn HelpBodyText(props: HelpBodyTextModel) -> Element {
     let text = props.text.clone();
     rsx! {
-        p { class: CLASS, {text} }
+        p {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

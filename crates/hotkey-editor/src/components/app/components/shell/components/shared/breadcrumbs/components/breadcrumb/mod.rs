@@ -22,7 +22,11 @@ pub fn Breadcrumb(props: BreadcrumbModel) -> Element {
             let count = props.count;
             let onclick = props.onclick;
             rsx! {
-                ActiveBreadcrumb { label, count, onclick }
+                ActiveBreadcrumb {
+                    label,
+                    count,
+                    onclick,
+                }
             }
         }
         false => {
@@ -30,7 +34,11 @@ pub fn Breadcrumb(props: BreadcrumbModel) -> Element {
             let count = props.count;
             let onclick = props.onclick;
             rsx! {
-                IdleBreadcrumb { label, count, onclick }
+                IdleBreadcrumb {
+                    label,
+                    count,
+                    onclick,
+                }
             }
         }
     }

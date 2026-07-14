@@ -26,8 +26,12 @@ pub fn HotkeyAltPositionPickerBody(props: HotkeyAltPositionPickerBodyModel) -> E
     rsx! {
         div {
             class: CLASS,
-            HotkeyAltPositionPickerExplainer { text: explainer_text }
-            HotkeyAltPositionPickerGridAnchor { grid_config }
+            HotkeyAltPositionPickerExplainer {
+                text: explainer_text,
+            }
+            HotkeyAltPositionPickerGridAnchor {
+                grid_config,
+            }
         }
     }
 }

@@ -25,8 +25,12 @@ pub fn IdleBreadcrumb(props: IdleBreadcrumbModel) -> Element {
             r#type: "button",
             "aria-current": "false",
             onclick,
-            BreadcrumbLabel { text }
-            BreadcrumbCount { count }
+            BreadcrumbLabel {
+                text,
+            }
+            BreadcrumbCount {
+                count,
+            }
         }
     }
 }

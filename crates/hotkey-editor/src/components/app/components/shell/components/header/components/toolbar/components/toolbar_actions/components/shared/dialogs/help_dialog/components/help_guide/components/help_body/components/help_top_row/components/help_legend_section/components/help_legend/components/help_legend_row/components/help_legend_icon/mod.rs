@@ -15,7 +15,11 @@ use tw_macro::assert_component;
 pub fn HelpLegendIcon(props: HelpLegendIconModel) -> Element {
     let icon = props.icon;
     rsx! {
-        span { class: CLASS, aria_hidden: "true", dangerous_inner_html: icon }
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+            dangerous_inner_html: icon,
+        }
     }
 }
 

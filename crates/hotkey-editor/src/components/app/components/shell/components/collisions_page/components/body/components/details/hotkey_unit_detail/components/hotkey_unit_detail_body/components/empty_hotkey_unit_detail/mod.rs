@@ -15,7 +15,11 @@ pub fn EmptyHotkeyUnitDetail(props: EmptyHotkeyUnitDetailModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            p { {props.prompt} }
+            p {
+
+
+                {props.prompt}
+            }
         }
     }
 }

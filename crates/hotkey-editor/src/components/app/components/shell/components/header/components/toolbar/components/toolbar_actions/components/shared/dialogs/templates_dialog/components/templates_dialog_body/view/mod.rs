@@ -21,7 +21,9 @@ impl Render for TemplatesDialogBodyView {
     fn render(&self) -> Self::Output {
         let cards = self.cards.clone();
         rsx! {
-            TemplatesDialogBody { cards }
+            TemplatesDialogBody {
+                cards,
+            }
         }
     }
 }

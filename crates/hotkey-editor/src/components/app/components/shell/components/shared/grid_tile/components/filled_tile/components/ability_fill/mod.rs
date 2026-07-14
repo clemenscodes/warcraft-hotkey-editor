@@ -17,7 +17,9 @@ pub fn AbilityFill(props: AbilityFillModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

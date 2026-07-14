@@ -13,7 +13,11 @@ use tw_macro::assert_component;
 pub fn FooterHeart(props: FooterHeartModel) -> Element {
     let svg = props.svg;
     rsx! {
-        span { class: CLASS, aria_hidden: "true", dangerous_inner_html: svg }
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+            dangerous_inner_html: svg,
+        }
     }
 }
 

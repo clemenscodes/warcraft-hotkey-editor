@@ -16,8 +16,11 @@ use tw_macro::assert_component;
 pub fn HelpCallout(props: HelpCalloutModel) -> Element {
     let steps = props.steps;
     rsx! {
-        div { class: CLASS,
-            HelpWorkflow { steps }
+        div {
+            class: CLASS,
+            HelpWorkflow {
+                steps,
+            }
         }
     }
 }

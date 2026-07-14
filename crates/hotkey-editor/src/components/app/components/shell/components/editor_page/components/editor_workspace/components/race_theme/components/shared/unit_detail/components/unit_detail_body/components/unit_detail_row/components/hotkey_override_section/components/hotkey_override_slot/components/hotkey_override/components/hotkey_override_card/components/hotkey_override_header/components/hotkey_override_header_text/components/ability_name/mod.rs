@@ -16,7 +16,10 @@ use model::AbilityNameModel;
 pub fn AbilityName(props: AbilityNameModel) -> Element {
     let text = props.text;
     rsx! {
-        h3 { class: CLASS, {text} }
+        h3 {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

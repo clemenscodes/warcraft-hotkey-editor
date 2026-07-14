@@ -22,11 +22,15 @@ pub fn SystemHotkeysBreadcrumbsMenu(props: SystemHotkeysBreadcrumbsMenuModel) ->
     let tabs = use_system_hotkeys_breadcrumbs_menu(&props);
     if props.is_open {
         rsx! {
-            OpenBreadcrumbsMenu { tabs }
+            OpenBreadcrumbsMenu {
+                tabs,
+            }
         }
     } else {
         rsx! {
-            ClosedBreadcrumbsMenu { tabs }
+            ClosedBreadcrumbsMenu {
+                tabs,
+            }
         }
     }
 }

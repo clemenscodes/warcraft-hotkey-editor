@@ -25,8 +25,12 @@ pub fn ActiveBreadcrumb(props: ActiveBreadcrumbModel) -> Element {
             r#type: "button",
             "aria-current": "page",
             onclick,
-            BreadcrumbLabel { text }
-            BreadcrumbCount { count }
+            BreadcrumbLabel {
+                text,
+            }
+            BreadcrumbCount {
+                count,
+            }
         }
     }
 }

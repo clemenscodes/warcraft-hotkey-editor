@@ -65,7 +65,9 @@ pub fn GridEditorTile(props: GridEditorTileModel) -> Element {
                 is_dragging_source,
                 is_drag_over,
             }
-            DraggableMarker { active }
+            DraggableMarker {
+                active,
+            }
         }
     }
 }

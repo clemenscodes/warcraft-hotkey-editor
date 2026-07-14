@@ -17,7 +17,9 @@ pub fn DraggableMarker(props: DraggableMarkerModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

@@ -17,7 +17,11 @@ pub fn FooterLinkIcon(props: FooterLinkIconModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        span { class: CLASS, aria_hidden: "true", dangerous_inner_html: svg }
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+            dangerous_inner_html: svg,
+        }
     }
 }
 

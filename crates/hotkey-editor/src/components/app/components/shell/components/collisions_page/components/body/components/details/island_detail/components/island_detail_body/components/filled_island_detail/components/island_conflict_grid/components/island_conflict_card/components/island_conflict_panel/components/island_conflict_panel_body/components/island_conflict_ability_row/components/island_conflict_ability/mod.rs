@@ -36,11 +36,22 @@ pub fn IslandConflictAbility(props: IslandConflictAbilityModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            ConflictAbilityTrigger { onclick, icon_src, icon_alt }
-            ConflictAbilityName { text: ability_name }
-            ConflictObjectId { object_id: ability_id }
+            ConflictAbilityTrigger {
+                onclick,
+                icon_src,
+                icon_alt,
+            }
+            ConflictAbilityName {
+                text: ability_name,
+            }
+            ConflictObjectId {
+                object_id: ability_id,
+            }
             if extra_count > 0 {
-                ConflictMore { count: extra_count, onclick }
+                ConflictMore {
+                    count: extra_count,
+                    onclick,
+                }
             }
         }
         CarriersDialog {

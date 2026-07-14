@@ -19,7 +19,9 @@ pub fn DropTargetOverlay(props: DropTargetOverlayModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

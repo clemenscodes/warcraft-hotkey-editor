@@ -20,9 +20,14 @@ pub fn PreviewHeadedGrid(props: PreviewHeadedGridModel) -> Element {
     let heading = props.heading;
     let tiles = props.tiles;
     rsx! {
-        div { class: CLASS,
-            GridHeading { heading }
-            PreviewGrid { tiles }
+        div {
+            class: CLASS,
+            GridHeading {
+                heading,
+            }
+            PreviewGrid {
+                tiles,
+            }
         }
     }
 }

@@ -18,7 +18,9 @@ pub fn CarriersGrid(props: CarriersGridModel) -> Element {
         div {
             class: CLASS,
             for carrier in carriers {
-                CarrierCard { carrier }
+                CarrierCard {
+                    carrier,
+                }
             }
         }
     }

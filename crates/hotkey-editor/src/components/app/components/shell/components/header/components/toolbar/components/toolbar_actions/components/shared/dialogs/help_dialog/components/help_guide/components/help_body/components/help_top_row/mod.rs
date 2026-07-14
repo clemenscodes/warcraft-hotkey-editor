@@ -20,9 +20,14 @@ pub fn HelpTopRow(props: HelpTopRowModel) -> Element {
     let steps = content.workflow();
     let rows = content.legend();
     rsx! {
-        div { class: CLASS,
-            HelpWorkflowSection { steps }
-            HelpLegendSection { rows }
+        div {
+            class: CLASS,
+            HelpWorkflowSection {
+                steps,
+            }
+            HelpLegendSection {
+                rows,
+            }
         }
     }
 }

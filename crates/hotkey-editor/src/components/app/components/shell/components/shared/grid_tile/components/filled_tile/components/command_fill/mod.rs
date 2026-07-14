@@ -17,7 +17,9 @@ pub fn CommandFill(props: CommandFillModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

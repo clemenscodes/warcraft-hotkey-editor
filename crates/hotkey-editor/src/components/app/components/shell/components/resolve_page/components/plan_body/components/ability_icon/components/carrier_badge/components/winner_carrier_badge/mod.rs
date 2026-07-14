@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn WinnerCarrierBadge(props: WinnerCarrierBadgeModel) -> Element {
     let count = props.count;
     rsx! {
-        span { class: CLASS, "{count}" }
+        span {
+            class: CLASS,
+            "{count}"
+        }
     }
 }
 

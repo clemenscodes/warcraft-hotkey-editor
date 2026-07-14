@@ -29,15 +29,34 @@ pub fn Shell() -> Element {
     let toasts = toast_model.records();
     let on_remove = toast_model.on_remove();
     rsx! {
-        Head {}
+        Head {
+        
+
+
+        }
         div {
             class: CLASS,
             onkeydown: handle_keydown,
-            Header {}
-            Outlet::<Route> {}
-            Footer {}
+            Header {
+            
+
+
+            }
+            Outlet::<Route> {
+            
+
+
+            }
+            Footer {
+            
+
+
+            }
         }
-        ToastOverlay { toasts, on_remove }
+        ToastOverlay {
+            toasts,
+            on_remove,
+        }
     }
 }
 

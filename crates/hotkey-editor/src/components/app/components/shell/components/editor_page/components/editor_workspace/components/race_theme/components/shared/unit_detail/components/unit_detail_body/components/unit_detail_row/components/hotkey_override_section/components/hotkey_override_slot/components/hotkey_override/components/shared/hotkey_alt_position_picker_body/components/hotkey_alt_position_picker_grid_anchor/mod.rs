@@ -18,7 +18,12 @@ use model::HotkeyAltPositionPickerGridAnchorModel;
 pub fn HotkeyAltPositionPickerGridAnchor(props: HotkeyAltPositionPickerGridAnchorModel) -> Element {
     let grid_config = GridEditorView::from(&props);
     rsx! {
-        div { class: CLASS, CommandGridEditor { ..grid_config } }
+        div {
+            class: CLASS,
+            CommandGridEditor {
+                ..grid_config,
+            }
+        }
     }
 }
 

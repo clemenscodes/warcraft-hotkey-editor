@@ -19,8 +19,15 @@ pub fn PlanSummary(props: PlanSummaryModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            PlanTitle {}
-            PlanCounts { moves_text, unresolved_count }
+            PlanTitle {
+            
+
+
+            }
+            PlanCounts {
+                moves_text,
+                unresolved_count,
+            }
         }
     }
 }

@@ -17,9 +17,12 @@ pub fn FooterCredit(props: FooterCreditModel) -> Element {
     let tail = props.tail;
     let heart = props.heart;
     rsx! {
-        span { class: CLASS,
+        span {
+            class: CLASS,
             {lead}
-            FooterHeart { svg: heart }
+            FooterHeart {
+                svg: heart,
+            }
             {tail}
         }
     }

@@ -17,7 +17,9 @@ use tw_macro::assert_component;
 pub fn OpenBreadcrumbsMenu(props: OpenBreadcrumbsMenuModel) -> Element {
     let tabs = props.tabs;
     rsx! {
-        div { class: CLASS, role: "listbox",
+        div {
+            class: CLASS,
+            role: "listbox",
             for descriptor in tabs {
                 SystemHotkeysCategoryTab {
                     category: descriptor.category,

@@ -27,9 +27,15 @@ pub fn HitPointsRegenRow(props: HitPointsRegenRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            RegenLabel { text: LABEL_TEXT }
-            RegenQualifier { text: qualifier }
-            HitPointsRegenGain { value }
+            RegenLabel {
+                text: LABEL_TEXT,
+            }
+            RegenQualifier {
+                text: qualifier,
+            }
+            HitPointsRegenGain {
+                value,
+            }
         }
     }
 }

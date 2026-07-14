@@ -23,7 +23,9 @@ impl Render for BodyView {
     fn render(&self) -> Self::Output {
         let content = self.content.clone();
         rsx! {
-            Body { content }
+            Body {
+                content,
+            }
         }
     }
 }

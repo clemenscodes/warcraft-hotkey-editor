@@ -22,9 +22,15 @@ pub fn PrimaryStrengthRow(props: PrimaryStrengthRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            PrimaryAttributeLabel { text: label }
-            StatValue { value: statistic }
-            StatGain { value: growth }
+            PrimaryAttributeLabel {
+                text: label,
+            }
+            StatValue {
+                value: statistic,
+            }
+            StatGain {
+                value: growth,
+            }
         }
     }
 }

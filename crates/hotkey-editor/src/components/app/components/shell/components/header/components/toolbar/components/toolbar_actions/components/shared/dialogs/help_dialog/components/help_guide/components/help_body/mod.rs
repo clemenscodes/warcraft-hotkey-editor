@@ -20,8 +20,11 @@ pub fn HelpBody(props: HelpBodyModel) -> Element {
     let prose = content.resolver_prose();
     let glossary = content.glossary();
     rsx! {
-        div { class: CLASS,
-            HelpTopRow { content }
+        div {
+            class: CLASS,
+            HelpTopRow {
+                content,
+            }
             HelpResolverSection {
                 prose,
                 glossary,

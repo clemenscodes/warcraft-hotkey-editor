@@ -28,16 +28,28 @@ pub fn Toast(props: ToastModel) -> Element {
     let on_remove = props.on_remove;
     match toast_type {
         ToastType::Success => rsx! {
-            SuccessToastCard { record, on_remove }
+            SuccessToastCard {
+                record,
+                on_remove,
+            }
         },
         ToastType::Error => rsx! {
-            ErrorToastCard { record, on_remove }
+            ErrorToastCard {
+                record,
+                on_remove,
+            }
         },
         ToastType::Warning => rsx! {
-            WarningToastCard { record, on_remove }
+            WarningToastCard {
+                record,
+                on_remove,
+            }
         },
         ToastType::Info => rsx! {
-            InfoToastCard { record, on_remove }
+            InfoToastCard {
+                record,
+                on_remove,
+            }
         },
     }
 }

@@ -20,7 +20,9 @@ pub fn DraggingSourceGhost(props: DraggingSourceGhostModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

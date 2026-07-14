@@ -38,7 +38,10 @@ pub fn LayoutTile(props: LayoutTileModel) -> Element {
             ondragover,
             ondrop,
             onclick,
-            EditableKeycap { label, state: keycap_state }
+            EditableKeycap {
+                label,
+                state: keycap_state,
+            }
         }
     }
 }

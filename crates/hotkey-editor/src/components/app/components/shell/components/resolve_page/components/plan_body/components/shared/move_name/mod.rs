@@ -19,13 +19,17 @@ pub fn MoveName(props: MoveNameModel) -> Element {
         true => {
             let text = props.text;
             rsx! {
-                LinkMoveName { text }
+                LinkMoveName {
+                    text,
+                }
             }
         }
         false => {
             let text = props.text;
             rsx! {
-                PlainMoveName { text }
+                PlainMoveName {
+                    text,
+                }
             }
         }
     }

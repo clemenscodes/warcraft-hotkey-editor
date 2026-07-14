@@ -16,7 +16,10 @@ pub fn TileLabel(props: TileLabelModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

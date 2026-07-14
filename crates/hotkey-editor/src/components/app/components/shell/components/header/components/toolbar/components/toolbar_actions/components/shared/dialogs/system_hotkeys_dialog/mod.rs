@@ -32,7 +32,7 @@ pub fn SystemHotkeysDialog(props: SystemHotkeysDialogModel) -> Element {
     let body = SystemHotkeysDialogBodyView;
     rsx! {
         if open {
-            WarcraftDialog::<SystemHotkeysDialogBodyView, Empty> {
+            WarcraftDialog::<SystemHotkeysDialogBodyView,Empty> {
                 title,
                 body,
                 open: true,

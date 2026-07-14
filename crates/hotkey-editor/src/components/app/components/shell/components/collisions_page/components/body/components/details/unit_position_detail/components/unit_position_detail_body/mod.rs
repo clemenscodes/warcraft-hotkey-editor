@@ -22,11 +22,15 @@ pub fn UnitPositionDetailBody(props: UnitPositionDetailBodyModel) -> Element {
     let selected_unit = use_collision_selection().selected_unit_position();
     if let Some(unit_view) = presentation::selected(&props, selected_unit) {
         rsx! {
-            FilledUnitPositionDetail { unit_view }
+            FilledUnitPositionDetail {
+                unit_view,
+            }
         }
     } else {
         rsx! {
-            EmptyUnitPositionDetail { prompt: presentation::EMPTY_PROMPT }
+            EmptyUnitPositionDetail {
+                prompt: presentation::EMPTY_PROMPT,
+            }
         }
     }
 }

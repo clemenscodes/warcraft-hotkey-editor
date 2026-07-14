@@ -23,9 +23,13 @@ pub fn PlanBody(props: PlanBodyModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MoveList { section }
+            MoveList {
+                section,
+            }
             if has_unresolved {
-                UnresolvedSection { unresolved }
+                UnresolvedSection {
+                    unresolved,
+                }
             }
         }
     }

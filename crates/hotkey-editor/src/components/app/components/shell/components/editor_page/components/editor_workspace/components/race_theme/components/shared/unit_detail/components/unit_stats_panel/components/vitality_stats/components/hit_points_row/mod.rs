@@ -23,8 +23,12 @@ pub fn HitPointsRow(props: HitPointsRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatLabel { text: LABEL_TEXT }
-            HitPointsValue { value }
+            StatLabel {
+                text: LABEL_TEXT,
+            }
+            HitPointsValue {
+                value,
+            }
         }
     }
 }

@@ -17,7 +17,8 @@ pub fn TileBadge(props: TileBadgeModel) -> Element {
     let letter = props.letter;
     let state = props.state;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             HotkeyBadge {
                 letter,
                 state,

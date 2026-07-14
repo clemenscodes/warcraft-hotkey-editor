@@ -26,9 +26,16 @@ pub fn IslandConflictUnit(props: IslandConflictUnitModel) -> Element {
             class: CLASS,
             r#type: "button",
             onclick: model.onclick,
-            ConflictUnitIcon { src: model.icon_src, alt: model.icon_alt }
-            IslandConflictUnitName { text: model.name }
-            ConflictObjectId { object_id: model.unit_id }
+            ConflictUnitIcon {
+                src: model.icon_src,
+                alt: model.icon_alt,
+            }
+            IslandConflictUnitName {
+                text: model.name,
+            }
+            ConflictObjectId {
+                object_id: model.unit_id,
+            }
         }
     }
 }

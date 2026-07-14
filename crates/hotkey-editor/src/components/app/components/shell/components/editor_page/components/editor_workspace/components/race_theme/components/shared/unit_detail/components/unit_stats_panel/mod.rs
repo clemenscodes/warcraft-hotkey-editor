@@ -39,10 +39,24 @@ pub fn UnitStatsPanel(props: UnitStatsPanelModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            VitalityStats { hit_points, hit_points_regen, mana, mana_regen }
-            CombatStats { attack }
-            DefenseStats { armor, defense_type, effective_hit_points, evasion }
-            AttributesStats { hero }
+            VitalityStats {
+                hit_points,
+                hit_points_regen,
+                mana,
+                mana_regen,
+            }
+            CombatStats {
+                attack,
+            }
+            DefenseStats {
+                armor,
+                defense_type,
+                effective_hit_points,
+                evasion,
+            }
+            AttributesStats {
+                hero,
+            }
         }
     }
 }

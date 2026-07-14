@@ -25,7 +25,9 @@ pub fn SlotContents(props: SlotContentsModel) -> Element {
     let tooltip_text = props.tooltip_text;
     let tooltip_placement = props.tooltip_placement;
     rsx! {
-        SystemSlotLabel { text: slot_label }
+        SystemSlotLabel {
+            text: slot_label,
+        }
         SystemSlotKey {
             label: key_label,
             conflict,

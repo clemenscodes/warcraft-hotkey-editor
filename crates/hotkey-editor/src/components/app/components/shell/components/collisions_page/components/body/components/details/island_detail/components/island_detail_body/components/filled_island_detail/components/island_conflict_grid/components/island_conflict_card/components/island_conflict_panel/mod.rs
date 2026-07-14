@@ -27,7 +27,9 @@ pub fn IslandConflictPanel(props: IslandConflictPanelModel) -> Element {
     let cards = vec![card];
     let body = IslandConflictPanelBodyView { cards };
     rsx! {
-        PanelCard::<IslandConflictPanelBodyView> { body }
+        PanelCard::<IslandConflictPanelBodyView> {
+            body,
+        }
     }
 }
 

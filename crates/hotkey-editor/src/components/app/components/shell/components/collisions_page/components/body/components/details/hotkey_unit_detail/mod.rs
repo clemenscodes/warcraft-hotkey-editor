@@ -18,7 +18,9 @@ pub fn HotkeyUnitDetail(props: HotkeyUnitDetailModel) -> Element {
     let units = props.units;
     let body = HotkeyUnitDetailBodyView { units };
     rsx! {
-        DetailCard::<HotkeyUnitDetailBodyView> { body }
+        DetailCard::<HotkeyUnitDetailBodyView> {
+            body,
+        }
     }
 }
 

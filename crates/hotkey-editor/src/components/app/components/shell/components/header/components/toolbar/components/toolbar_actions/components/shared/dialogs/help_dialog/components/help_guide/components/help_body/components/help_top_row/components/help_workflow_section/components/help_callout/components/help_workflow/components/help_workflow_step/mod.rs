@@ -17,13 +17,17 @@ use tw_macro::assert_component;
 #[component]
 pub fn HelpWorkflowStep(props: HelpWorkflowStepModel) -> Element {
     rsx! {
-        li { class: CLASS,
+        li {
+            class: CLASS,
             for (index, segment) in props.segments.iter().copied().enumerate() {
                 {
                     match segment {
                         HelpSegment::Text { content } => rsx! { "{content}" },
                         HelpSegment::Icon { svg } => rsx! {
-                            HelpInlineIcon { key: "{index}", icon: svg }
+                            HelpInlineIcon {
+                                key: "{index}",
+                                icon: svg,
+                            }
                         },
                     }
                 }

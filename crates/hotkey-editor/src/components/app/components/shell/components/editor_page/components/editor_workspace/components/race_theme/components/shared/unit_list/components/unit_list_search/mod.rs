@@ -24,8 +24,17 @@ pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitListSearchIcon {}
-            UnitListSearchInput { value, placeholder, on_input, on_keydown }
+            UnitListSearchIcon {
+            
+
+
+            }
+            UnitListSearchInput {
+                value,
+                placeholder,
+                on_input,
+                on_keydown,
+            }
         }
     }
 }

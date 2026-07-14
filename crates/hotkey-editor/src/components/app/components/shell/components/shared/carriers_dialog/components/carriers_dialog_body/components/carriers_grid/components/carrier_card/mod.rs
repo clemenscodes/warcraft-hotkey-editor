@@ -35,8 +35,12 @@ pub fn CarrierCard(props: CarrierCardModel) -> Element {
                 src: icon_src,
                 alt: icon_alt,
             }
-            CarrierCardName { text: name }
-            CarrierObjectId { unit_id }
+            CarrierCardName {
+                text: name,
+            }
+            CarrierObjectId {
+                unit_id,
+            }
         }
     }
 }

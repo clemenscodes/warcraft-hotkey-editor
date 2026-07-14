@@ -27,7 +27,9 @@ pub fn AltStateHeader(props: AltStateHeaderModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            AltStateHeaderLabelColumn { text: alt_name_text }
+            AltStateHeaderLabelColumn {
+                text: alt_name_text,
+            }
             AltStateControls {
                 show,
                 hotkey_label,

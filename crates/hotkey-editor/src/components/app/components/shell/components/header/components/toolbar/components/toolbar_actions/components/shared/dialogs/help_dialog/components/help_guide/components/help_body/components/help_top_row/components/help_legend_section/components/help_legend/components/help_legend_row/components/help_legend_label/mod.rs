@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn HelpLegendLabel(props: HelpLegendLabelModel) -> Element {
     let label = props.label.clone();
     rsx! {
-        span { class: CLASS, {label} }
+        span {
+            class: CLASS,
+            {label}
+        }
     }
 }
 

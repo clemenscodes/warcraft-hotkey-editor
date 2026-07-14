@@ -30,8 +30,16 @@ pub fn DefenseStats(props: DefenseStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatIconFrame { src: icon_src, alt: icon_alt }
-            DefenseRows { armor, defense_type, effective_hit_points, evasion }
+            StatIconFrame {
+                src: icon_src,
+                alt: icon_alt,
+            }
+            DefenseRows {
+                armor,
+                defense_type,
+                effective_hit_points,
+                evasion,
+            }
         }
     }
 }

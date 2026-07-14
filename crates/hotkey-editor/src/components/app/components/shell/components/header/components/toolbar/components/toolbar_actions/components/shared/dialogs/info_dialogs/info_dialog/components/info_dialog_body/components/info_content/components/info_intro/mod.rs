@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn InfoIntro(props: InfoIntroModel) -> Element {
     let intro = props.intro;
     rsx! {
-        p { class: CLASS, "{intro}" }
+        p {
+            class: CLASS,
+            "{intro}"
+        }
     }
 }
 

@@ -36,19 +36,25 @@ pub fn Tooltip(props: TooltipModel) -> Element {
             TooltipAnchor::Left => {
                 let text = props.text.clone();
                 rsx! {
-                    AboveLeftTooltip { text }
+                    AboveLeftTooltip {
+                        text,
+                    }
                 }
             }
             TooltipAnchor::Center => {
                 let text = props.text.clone();
                 rsx! {
-                    AboveCenterTooltip { text }
+                    AboveCenterTooltip {
+                        text,
+                    }
                 }
             }
             TooltipAnchor::Right => {
                 let text = props.text.clone();
                 rsx! {
-                    AboveRightTooltip { text }
+                    AboveRightTooltip {
+                        text,
+                    }
                 }
             }
         },
@@ -56,19 +62,25 @@ pub fn Tooltip(props: TooltipModel) -> Element {
             TooltipAnchor::Left => {
                 let text = props.text.clone();
                 rsx! {
-                    BelowLeftTooltip { text }
+                    BelowLeftTooltip {
+                        text,
+                    }
                 }
             }
             TooltipAnchor::Center => {
                 let text = props.text.clone();
                 rsx! {
-                    BelowCenterTooltip { text }
+                    BelowCenterTooltip {
+                        text,
+                    }
                 }
             }
             TooltipAnchor::Right => {
                 let text = props.text.clone();
                 rsx! {
-                    BelowRightTooltip { text }
+                    BelowRightTooltip {
+                        text,
+                    }
                 }
             }
         },

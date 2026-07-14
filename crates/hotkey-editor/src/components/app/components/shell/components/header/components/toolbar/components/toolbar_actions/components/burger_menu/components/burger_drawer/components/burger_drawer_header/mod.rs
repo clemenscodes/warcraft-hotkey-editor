@@ -15,8 +15,11 @@ use tw_macro::assert_component;
 pub fn BurgerDrawerHeader(props: BurgerDrawerHeaderModel) -> Element {
     let onclick = props.onclick;
     rsx! {
-        div { class: CLASS,
-            BurgerClose { onclick }
+        div {
+            class: CLASS,
+            BurgerClose {
+                onclick,
+            }
         }
     }
 }

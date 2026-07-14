@@ -8,7 +8,10 @@ use tw_macro::assert_component;
 #[component]
 pub fn InventoryEmptySlot() -> Element {
     rsx! {
-        div { class: CLASS, "—" }
+        div {
+            class: CLASS,
+            "—"
+        }
     }
 }
 

@@ -26,7 +26,9 @@ pub fn ClearSurface(props: ClearSurfaceModel) -> Element {
             aria_pressed: props.aria_pressed,
             disabled: props.disabled,
             onclick: props.onclick,
-            ToolbarButtonIcon { icon }
+            ToolbarButtonIcon {
+                icon,
+            }
         }
     }
 }

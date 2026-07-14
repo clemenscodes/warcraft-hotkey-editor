@@ -25,10 +25,21 @@ pub fn GridLayoutEditorDialogContent(props: GridLayoutEditorDialogContentModel) 
     rsx! {
         div {
             class: CLASS,
-            LayoutIntro {}
-            LayoutGrid { cells }
-            MoveHotkeyToggle { checked: toggle_checked, on_toggle }
-            ApplyButton { on_apply }
+            LayoutIntro {
+            
+
+
+            }
+            LayoutGrid {
+                cells,
+            }
+            MoveHotkeyToggle {
+                checked: toggle_checked,
+                on_toggle,
+            }
+            ApplyButton {
+                on_apply,
+            }
         }
     }
 }

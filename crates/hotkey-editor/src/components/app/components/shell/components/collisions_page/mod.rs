@@ -34,7 +34,10 @@ pub fn CollisionsPage(props: CollisionsPageModel) -> Element {
     let body = BodyView { content };
     let frame = CollisionsPageFrame { header, body };
     rsx! {
-        Page { class: CLASS, frame }
+        Page {
+            class: CLASS,
+            frame,
+        }
     }
 }
 

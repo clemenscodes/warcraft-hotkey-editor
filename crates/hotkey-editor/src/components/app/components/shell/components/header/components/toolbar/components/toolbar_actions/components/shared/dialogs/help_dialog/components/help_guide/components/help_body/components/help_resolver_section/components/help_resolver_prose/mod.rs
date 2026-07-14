@@ -15,9 +15,13 @@ use tw_macro::assert_component;
 #[component]
 pub fn HelpResolverProse(props: HelpResolverProseModel) -> Element {
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for (index, paragraph) in props.paragraphs.iter().copied().enumerate() {
-                HelpBodyText { key: "{index}", text: paragraph }
+                HelpBodyText {
+                    key: "{index}",
+                    text: paragraph,
+                }
             }
         }
     }

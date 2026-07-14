@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn TemplateCardDescription(props: TemplateCardDescriptionModel) -> Element {
     let description = props.description.clone();
     rsx! {
-        p { class: CLASS, {description} }
+        p {
+            class: CLASS,
+            {description}
+        }
     }
 }
 

@@ -19,7 +19,9 @@ pub fn IslandConflictGrid(props: IslandConflictGridModel) -> Element {
         div {
             class: CLASS,
             for conflict in conflicts {
-                IslandConflictCard { conflict }
+                IslandConflictCard {
+                    conflict,
+                }
             }
         }
     }

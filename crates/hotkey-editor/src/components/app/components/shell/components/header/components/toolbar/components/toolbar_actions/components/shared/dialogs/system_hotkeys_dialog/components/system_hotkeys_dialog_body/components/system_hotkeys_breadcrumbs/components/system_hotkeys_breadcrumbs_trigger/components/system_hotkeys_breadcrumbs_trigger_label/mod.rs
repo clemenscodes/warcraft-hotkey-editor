@@ -16,7 +16,10 @@ pub fn SystemHotkeysBreadcrumbsTriggerLabel(
 ) -> Element {
     let text = props.text;
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

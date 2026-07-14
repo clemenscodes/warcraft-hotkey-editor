@@ -19,7 +19,10 @@ pub fn UnitDetailBody(props: UnitDetailBodyModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitDetailRow { grid_slots, override_target }
+            UnitDetailRow {
+                grid_slots,
+                override_target,
+            }
         }
     }
 }

@@ -18,7 +18,9 @@ pub fn IslandDetail(props: IslandDetailModel) -> Element {
     let islands = props.islands;
     let body = IslandDetailBodyView { islands };
     rsx! {
-        DetailCard::<IslandDetailBodyView> { body }
+        DetailCard::<IslandDetailBodyView> {
+            body,
+        }
     }
 }
 

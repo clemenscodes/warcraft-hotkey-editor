@@ -13,7 +13,10 @@ use tw_macro::assert_component;
 pub fn BrandTitle(props: BrandTitleModel) -> Element {
     let title = props.title;
     rsx! {
-        h1 { class: CLASS, {title} }
+        h1 {
+            class: CLASS,
+            {title}
+        }
     }
 }
 

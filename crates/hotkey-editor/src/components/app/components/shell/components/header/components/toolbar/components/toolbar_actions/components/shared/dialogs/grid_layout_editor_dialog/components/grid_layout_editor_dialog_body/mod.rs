@@ -22,7 +22,12 @@ pub fn GridLayoutEditorDialogBody(props: GridLayoutEditorDialogBodyModel) -> Ele
     rsx! {
         div {
             class: CLASS,
-            GridLayoutEditorDialogContent { cells, toggle_checked, on_toggle, on_apply }
+            GridLayoutEditorDialogContent {
+                cells,
+                toggle_checked,
+                on_toggle,
+                on_apply,
+            }
         }
     }
 }

@@ -19,8 +19,16 @@ pub fn EditorTabsBar() -> Element {
     rsx! {
         div {
             class: CLASS,
-            ModeTabsHost {}
-            RaceTabsHost {}
+            ModeTabsHost {
+            
+
+
+            }
+            RaceTabsHost {
+            
+
+
+            }
         }
     }
 }

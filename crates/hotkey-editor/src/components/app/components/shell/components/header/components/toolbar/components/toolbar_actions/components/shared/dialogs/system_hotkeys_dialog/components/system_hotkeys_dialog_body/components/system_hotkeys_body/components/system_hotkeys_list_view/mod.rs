@@ -18,7 +18,8 @@ pub fn SystemHotkeysListView(props: SystemHotkeysListViewModel) -> Element {
     let category = props.category;
     let entries = category.entries();
     rsx! {
-        ul { class: CLASS,
+        ul {
+            class: CLASS,
             for entry in entries {
                 SystemHotkeysListEntry {
                     key: "{entry.section_id()}",

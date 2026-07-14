@@ -15,7 +15,10 @@ use tw_macro::assert_component;
 pub fn HelpLegendDescription(props: HelpLegendDescriptionModel) -> Element {
     let description = props.description.clone();
     rsx! {
-        span { class: CLASS, " {description}" }
+        span {
+            class: CLASS,
+            " {description}"
+        }
     }
 }
 

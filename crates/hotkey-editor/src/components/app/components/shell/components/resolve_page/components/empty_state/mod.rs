@@ -12,7 +12,9 @@ pub fn EmptyState() -> Element {
     rsx! {
         section {
             class: CLASS,
-            EmptyMessage { text: data::UPLOAD_PROMPT }
+            EmptyMessage {
+                text: data::UPLOAD_PROMPT,
+            }
         }
     }
 }

@@ -19,7 +19,9 @@ pub fn SwapReasonBadge(props: SwapReasonBadgeModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            ReasonBadge { label }
+            ReasonBadge {
+                label,
+            }
         }
     }
 }

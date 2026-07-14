@@ -16,7 +16,10 @@ use model::UnitDetailEmptyModel;
 pub fn UnitDetailEmpty(props: UnitDetailEmptyModel) -> Element {
     let message = props.message;
     rsx! {
-        section { class: CLASS, {message} }
+        section {
+            class: CLASS,
+            {message}
+        }
     }
 }
 

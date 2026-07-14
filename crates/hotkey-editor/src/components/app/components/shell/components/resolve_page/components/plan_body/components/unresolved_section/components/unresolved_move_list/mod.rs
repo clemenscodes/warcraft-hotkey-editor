@@ -19,7 +19,9 @@ pub fn UnresolvedMoveList(props: UnresolvedMoveListModel) -> Element {
         div {
             class: CLASS,
             for unresolved_view in unresolved {
-                UnresolvedRow { unresolved_view }
+                UnresolvedRow {
+                    unresolved_view,
+                }
             }
         }
     }

@@ -22,8 +22,12 @@ pub fn ManaRegenRow(props: ManaRegenRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            RegenLabel { text: LABEL_TEXT }
-            ManaRegenGain { value }
+            RegenLabel {
+                text: LABEL_TEXT,
+            }
+            ManaRegenGain {
+                value,
+            }
         }
     }
 }

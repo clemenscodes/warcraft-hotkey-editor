@@ -19,9 +19,13 @@ pub fn KeyPickerColumn(props: KeyPickerColumnModel) -> Element {
     let rows = props.rows;
     let on_pick = props.on_pick;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for keys in rows {
-                KeyPickerRow { keys, on_pick }
+                KeyPickerRow {
+                    keys,
+                    on_pick,
+                }
             }
         }
     }

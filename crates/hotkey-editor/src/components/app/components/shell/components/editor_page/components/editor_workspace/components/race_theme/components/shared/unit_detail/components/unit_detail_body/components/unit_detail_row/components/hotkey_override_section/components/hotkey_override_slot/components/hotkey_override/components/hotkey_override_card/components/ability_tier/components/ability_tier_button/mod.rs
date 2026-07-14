@@ -22,7 +22,10 @@ pub fn AbilityTierButton(props: AbilityTierButtonModel) -> Element {
             class: CLASS,
             aria_label,
             onclick: on_click,
-            span { aria_hidden: "true", dangerous_inner_html: icon }
+            span {
+                aria_hidden: "true",
+                dangerous_inner_html: icon,
+            }
         }
     }
 }

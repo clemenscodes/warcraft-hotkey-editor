@@ -18,8 +18,14 @@ pub fn ControlGroupsHotkeysView() -> Element {
     rsx! {
         div {
             class: CLASS,
-            SystemHotkeysSectionIntro { text: caption }
-            ControlGroupsRow {}
+            SystemHotkeysSectionIntro {
+                text: caption,
+            }
+            ControlGroupsRow {
+            
+
+
+            }
         }
     }
 }

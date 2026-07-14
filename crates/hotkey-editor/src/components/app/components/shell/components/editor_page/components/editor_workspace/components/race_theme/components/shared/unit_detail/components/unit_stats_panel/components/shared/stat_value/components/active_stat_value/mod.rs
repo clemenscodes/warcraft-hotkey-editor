@@ -15,7 +15,10 @@ use tw_macro::assert_component;
 pub fn ActiveStatValue(props: ActiveStatValueModel) -> Element {
     let text = props.text;
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

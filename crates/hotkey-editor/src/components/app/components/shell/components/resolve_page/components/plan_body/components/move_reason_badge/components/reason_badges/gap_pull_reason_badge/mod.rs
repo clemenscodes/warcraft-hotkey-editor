@@ -19,7 +19,9 @@ pub fn GapPullReasonBadge(props: GapPullReasonBadgeModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            ReasonBadge { label }
+            ReasonBadge {
+                label,
+            }
         }
     }
 }

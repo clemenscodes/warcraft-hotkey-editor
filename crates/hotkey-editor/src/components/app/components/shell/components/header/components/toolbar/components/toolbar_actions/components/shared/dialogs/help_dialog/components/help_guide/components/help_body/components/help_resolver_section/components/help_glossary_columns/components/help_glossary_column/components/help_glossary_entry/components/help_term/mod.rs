@@ -14,7 +14,10 @@ use tw_macro::assert_component;
 pub fn HelpTerm(props: HelpTermModel) -> Element {
     let term = props.term.clone();
     rsx! {
-        p { class: CLASS, {term} }
+        p {
+            class: CLASS,
+            {term}
+        }
     }
 }
 

@@ -30,8 +30,12 @@ pub fn UnresolvedRow(props: UnresolvedRowModel) -> Element {
                 kind: ReasonKind::Stuck,
                 label: data::STUCK_LABEL,
             }
-            FightRow { unresolved_view }
-            MoveTransition { placements }
+            FightRow {
+                unresolved_view,
+            }
+            MoveTransition {
+                placements,
+            }
         }
     }
 }

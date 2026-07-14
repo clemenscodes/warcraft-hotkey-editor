@@ -27,7 +27,9 @@ pub fn InventoryGrid() -> Element {
             class: CLASS,
             style: model.frame,
             for InventorySlotEntry { filled } in model.entries {
-                InventorySlot { filled }
+                InventorySlot {
+                    filled,
+                }
             }
         }
     }

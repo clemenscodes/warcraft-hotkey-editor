@@ -7,7 +7,11 @@ use tw_macro::assert_component;
 #[component]
 pub fn FooterSeparator() -> Element {
     rsx! {
-        span { class: CLASS, aria_hidden: "true", "\u{00b7}" }
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+            "\u{00b7}"
+        }
     }
 }
 

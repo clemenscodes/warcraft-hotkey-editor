@@ -10,7 +10,10 @@ use tw_macro::assert_component;
 #[component]
 pub fn UnitListSearchIcon() -> Element {
     rsx! {
-        span { class: CLASS, dangerous_inner_html: ICON_SEARCH }
+        span {
+            class: CLASS,
+            dangerous_inner_html: ICON_SEARCH,
+        }
     }
 }
 

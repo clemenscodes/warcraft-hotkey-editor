@@ -39,13 +39,28 @@ pub fn FilledTile(props: FilledTileModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            AbilityFill { active: ability_active }
-            CommandFill { active: command_active }
-            SelectionRing { selected }
-            TileIcon { src: icon_source, alt: icon_alt }
-            TileLabel { text: label_text }
-            DraggingSourceGhost { active: is_dragging_source }
-            DragOverRing { active: is_drag_over }
+            AbilityFill {
+                active: ability_active,
+            }
+            CommandFill {
+                active: command_active,
+            }
+            SelectionRing {
+                selected,
+            }
+            TileIcon {
+                src: icon_source,
+                alt: icon_alt,
+            }
+            TileLabel {
+                text: label_text,
+            }
+            DraggingSourceGhost {
+                active: is_dragging_source,
+            }
+            DragOverRing {
+                active: is_drag_over,
+            }
         }
     }
 }

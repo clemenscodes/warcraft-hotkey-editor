@@ -17,7 +17,9 @@ pub fn AltStateHeaderLabelColumn(props: AltStateHeaderLabelColumnModel) -> Eleme
     rsx! {
         div {
             class: CLASS,
-            AltStateLabel { text }
+            AltStateLabel {
+                text,
+            }
         }
     }
 }

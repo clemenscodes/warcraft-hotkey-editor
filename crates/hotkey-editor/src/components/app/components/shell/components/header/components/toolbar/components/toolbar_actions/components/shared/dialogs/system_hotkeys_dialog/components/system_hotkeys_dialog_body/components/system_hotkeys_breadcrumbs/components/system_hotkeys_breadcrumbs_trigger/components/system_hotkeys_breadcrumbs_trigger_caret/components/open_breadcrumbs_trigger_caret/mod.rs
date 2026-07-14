@@ -8,7 +8,11 @@ use tw_macro::assert_component;
 #[component]
 pub fn OpenBreadcrumbsTriggerCaret() -> Element {
     rsx! {
-        span { class: CLASS, aria_hidden: "true", "\u{25BE}" }
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+            "\u{25BE}"
+        }
     }
 }
 

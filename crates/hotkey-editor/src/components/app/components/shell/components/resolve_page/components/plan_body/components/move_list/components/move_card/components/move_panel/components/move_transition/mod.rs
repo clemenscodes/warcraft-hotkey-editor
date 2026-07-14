@@ -21,9 +21,17 @@ pub fn MoveTransition(props: MoveTransitionModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            TransitionColumn { placements: from_placements }
-            MoveArrow {}
-            TransitionColumn { placements: to_placements }
+            TransitionColumn {
+                placements: from_placements,
+            }
+            MoveArrow {
+            
+
+
+            }
+            TransitionColumn {
+                placements: to_placements,
+            }
         }
     }
 }

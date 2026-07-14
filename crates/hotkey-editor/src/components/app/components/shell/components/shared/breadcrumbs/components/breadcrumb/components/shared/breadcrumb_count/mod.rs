@@ -10,7 +10,12 @@ use tw_macro::assert_component;
 #[component]
 pub fn BreadcrumbCount(props: BreadcrumbCountModel) -> Element {
     let count = props.count;
-    rsx! { span { class: CLASS, "{count}" } }
+    rsx! {
+        span {
+            class: CLASS,
+            "{count}"
+        }
+    }
 }
 
 assert_component!(BreadcrumbCount);

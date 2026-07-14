@@ -17,31 +17,31 @@ pub fn Head() -> Element {
         }
         document::Meta {
             name: "theme-color",
-            content: "#050a1a"
+            content: "#050a1a",
         }
         document::Meta {
             name: "twitter:card",
-            content: "summary_large_image"
+            content: "summary_large_image",
         }
         document::Meta {
             property: "og:type",
-            content: "website"
+            content: "website",
         }
         document::Meta {
             property: "og:title",
-            content: "Warcraft III Hotkey Editor"
+            content: "Warcraft III Hotkey Editor",
         }
         document::Meta {
             property: "og:description",
-            content: OG_DESCRIPTION
+            content: OG_DESCRIPTION,
         }
         document::Meta {
             property: "og:image",
-            content: OG_IMAGE
+            content: OG_IMAGE,
         }
         document::Meta {
             property: "og:url",
-            content: OG_URL
+            content: OG_URL,
         }
         document::Link {
             rel: "preload",
@@ -52,7 +52,7 @@ pub fn Head() -> Element {
         }
         document::Link {
             rel: "apple-touch-icon",
-            href: "icon-192.png"
+            href: "icon-192.png",
         }
         document::Link {
             rel: "icon",
@@ -65,7 +65,7 @@ pub fn Head() -> Element {
             href: FAVICON,
         }
         document::Stylesheet {
-            href: TAILWIND_STYLES
+            href: TAILWIND_STYLES,
         }
         document::Script {
             src: KEYBOARD_NAVIGATION_SCRIPT,

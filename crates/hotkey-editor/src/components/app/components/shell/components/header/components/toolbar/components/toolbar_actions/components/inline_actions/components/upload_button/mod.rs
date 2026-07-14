@@ -28,7 +28,9 @@ pub fn UploadButton() -> Element {
     rsx! {
         div {
             class: CLASS,
-            UploadButtonInput { on_change }
+            UploadButtonInput {
+                on_change,
+            }
             ToolbarButton {
                 icon,
                 aria_label,

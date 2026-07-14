@@ -37,8 +37,14 @@ pub fn AbilityIcon(props: AbilityIconModel) -> Element {
             disabled,
             title,
             onclick,
-            FightIcon { src: icon_src, alt: icon_alt }
-            CarrierBadge { count, is_winner }
+            FightIcon {
+                src: icon_src,
+                alt: icon_alt,
+            }
+            CarrierBadge {
+                count,
+                is_winner,
+            }
         }
         CarriersDialog {
             ability: open_state.read().clone(),

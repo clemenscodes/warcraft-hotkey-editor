@@ -45,7 +45,11 @@ pub fn IslandConflictAbilityRow(props: IslandConflictAbilityRowModel) -> Element
                 extra_count: own_extra,
                 inspected: own_inspected,
             }
-            ConflictSeparator {}
+            ConflictSeparator {
+            
+
+
+            }
             IslandConflictAbility {
                 ability_name: shared_name,
                 ability_id: shared_id,

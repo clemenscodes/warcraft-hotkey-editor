@@ -21,9 +21,14 @@ pub fn CaptionedEditorGrid(props: CaptionedEditorGridModel) -> Element {
     let heading = props.heading;
     let tiles = props.tiles;
     rsx! {
-        div { class: CLASS,
-            GridHeading { heading }
-            EditorGrid { tiles }
+        div {
+            class: CLASS,
+            GridHeading {
+                heading,
+            }
+            EditorGrid {
+                tiles,
+            }
         }
     }
 }

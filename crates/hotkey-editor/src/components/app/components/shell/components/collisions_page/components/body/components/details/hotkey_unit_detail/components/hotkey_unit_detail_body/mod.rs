@@ -21,11 +21,15 @@ pub fn HotkeyUnitDetailBody(props: HotkeyUnitDetailBodyModel) -> Element {
     let selected_unit = use_collision_selection().selected_hotkey_unit();
     if let Some(unit_view) = presentation::selected(&props, selected_unit) {
         rsx! {
-            FilledHotkeyUnitDetail { unit_view }
+            FilledHotkeyUnitDetail {
+                unit_view,
+            }
         }
     } else {
         rsx! {
-            EmptyHotkeyUnitDetail { prompt: presentation::EMPTY_PROMPT }
+            EmptyHotkeyUnitDetail {
+                prompt: presentation::EMPTY_PROMPT,
+            }
         }
     }
 }

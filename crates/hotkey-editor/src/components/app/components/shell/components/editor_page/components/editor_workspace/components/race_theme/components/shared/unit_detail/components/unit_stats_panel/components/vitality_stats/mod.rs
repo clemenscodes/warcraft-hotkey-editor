@@ -27,10 +27,18 @@ pub fn VitalityStats(props: VitalityStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            HitPointsRow { value: hit_points }
-            HitPointsRegenRow { value: hit_points_regen }
-            ManaRow { value: mana }
-            ManaRegenRow { value: mana_regen }
+            HitPointsRow {
+                value: hit_points,
+            }
+            HitPointsRegenRow {
+                value: hit_points_regen,
+            }
+            ManaRow {
+                value: mana,
+            }
+            ManaRegenRow {
+                value: mana_regen,
+            }
         }
     }
 }

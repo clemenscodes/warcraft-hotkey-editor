@@ -7,7 +7,9 @@ use warcraft_keybinds::CommandBehavior;
 #[component]
 pub fn CommandGridEditor(props: GridEditorView) -> Element {
     rsx! {
-        GridEditor::<CommandBehavior> { config: props }
+        GridEditor::<CommandBehavior> {
+            config: props,
+        }
     }
 }
 

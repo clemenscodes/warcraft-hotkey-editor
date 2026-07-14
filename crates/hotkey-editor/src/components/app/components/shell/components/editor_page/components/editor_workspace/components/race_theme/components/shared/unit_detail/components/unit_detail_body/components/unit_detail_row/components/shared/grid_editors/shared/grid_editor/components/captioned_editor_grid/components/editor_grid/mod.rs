@@ -19,27 +19,28 @@ use tw_macro::assert_component;
 pub fn EditorGrid(props: EditorGridModel) -> Element {
     let tiles = props.tiles;
     rsx! {
-        div { class: CLASS,
+        div {
+            class: CLASS,
             for EditorTile {
-                coordinate,
-                icon,
-                label,
-                hotkey,
-                badge_state,
-                state,
-                is_dragging_source,
-                is_drag_over,
-                is_focusable,
-                draggable,
-                onkeydown,
-                onpointerdown,
-                onpointermove,
-                onpointerup,
-                onpointercancel,
-                onlostpointercapture,
-                onclick,
-                ondoubleclick,
-            } in tiles {
+        coordinate,
+        icon,
+        label,
+        hotkey,
+        badge_state,
+        state,
+        is_dragging_source,
+        is_drag_over,
+        is_focusable,
+        draggable,
+        onkeydown,
+        onpointerdown,
+        onpointermove,
+        onpointerup,
+        onpointercancel,
+        onlostpointercapture,
+        onclick,
+        ondoubleclick,
+    } in tiles {
                 GridEditorTile {
                     coordinate,
                     icon,

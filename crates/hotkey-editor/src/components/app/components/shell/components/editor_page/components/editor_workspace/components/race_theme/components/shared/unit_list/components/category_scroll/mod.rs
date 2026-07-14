@@ -20,7 +20,9 @@ pub fn CategoryScroll(props: CategoryScrollModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CategoryTrack { sections }
+            CategoryTrack {
+                sections,
+            }
         }
     }
 }

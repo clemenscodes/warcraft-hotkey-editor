@@ -20,13 +20,17 @@ pub fn SystemSlotKey(props: SystemSlotKeyModel) -> Element {
         false => {
             let label = props.label.clone();
             rsx! {
-                PlainSlotKey { label }
+                PlainSlotKey {
+                    label,
+                }
             }
         }
         true => {
             let label = props.label.clone();
             rsx! {
-                ConflictSlotKey { label }
+                ConflictSlotKey {
+                    label,
+                }
             }
         }
     }

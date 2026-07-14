@@ -19,7 +19,9 @@ pub fn DragOverRing(props: DragOverRingModel) -> Element {
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

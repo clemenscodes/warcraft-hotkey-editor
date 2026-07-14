@@ -20,8 +20,12 @@ pub fn DefenseTypeRow(props: DefenseTypeRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatLabel { text: LABEL_TEXT }
-            StatValue { value }
+            StatLabel {
+                text: LABEL_TEXT,
+            }
+            StatValue {
+                value,
+            }
         }
     }
 }

@@ -17,7 +17,11 @@ pub fn SearchFieldButton(props: SearchFieldButtonModel) -> Element {
     let active = props.is_active;
     let onclick = props.on_select;
     rsx! {
-        ToggleButton { label, active, onclick }
+        ToggleButton {
+            label,
+            active,
+            onclick,
+        }
     }
 }
 

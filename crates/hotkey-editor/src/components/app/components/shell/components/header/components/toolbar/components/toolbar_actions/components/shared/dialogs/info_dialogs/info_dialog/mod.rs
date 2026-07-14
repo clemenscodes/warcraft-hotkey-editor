@@ -37,7 +37,7 @@ pub fn InfoDialog(props: InfoDialogConfig) -> Element {
     };
     rsx! {
         if open {
-            WarcraftDialog::<InfoDialogBodyView, Empty> {
+            WarcraftDialog::<InfoDialogBodyView,Empty> {
                 title,
                 body,
                 open: true,

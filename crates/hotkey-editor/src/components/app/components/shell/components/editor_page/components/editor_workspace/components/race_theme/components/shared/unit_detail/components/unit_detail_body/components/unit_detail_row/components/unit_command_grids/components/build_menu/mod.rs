@@ -15,7 +15,9 @@ pub fn BuildMenu(props: BuildMenuModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        CommandGridEditor { ..config }
+        CommandGridEditor {
+            ..config,
+        }
     }
 }
 

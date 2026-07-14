@@ -21,7 +21,9 @@ pub fn MiniGrid(props: MiniGridModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MiniGridFrame { tiles }
+            MiniGridFrame {
+                tiles,
+            }
         }
     }
 }

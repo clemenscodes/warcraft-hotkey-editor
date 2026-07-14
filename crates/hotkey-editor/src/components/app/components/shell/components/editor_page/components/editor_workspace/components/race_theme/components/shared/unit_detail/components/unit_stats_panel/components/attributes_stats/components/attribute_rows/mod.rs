@@ -27,9 +27,18 @@ pub fn AttributeRows(props: AttributeRowsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StrengthRow { statistic: strength, is_primary: strength_is_primary }
-            AgilityRow { statistic: agility, is_primary: agility_is_primary }
-            IntelligenceRow { statistic: intelligence, is_primary: intelligence_is_primary }
+            StrengthRow {
+                statistic: strength,
+                is_primary: strength_is_primary,
+            }
+            AgilityRow {
+                statistic: agility,
+                is_primary: agility_is_primary,
+            }
+            IntelligenceRow {
+                statistic: intelligence,
+                is_primary: intelligence_is_primary,
+            }
         }
     }
 }

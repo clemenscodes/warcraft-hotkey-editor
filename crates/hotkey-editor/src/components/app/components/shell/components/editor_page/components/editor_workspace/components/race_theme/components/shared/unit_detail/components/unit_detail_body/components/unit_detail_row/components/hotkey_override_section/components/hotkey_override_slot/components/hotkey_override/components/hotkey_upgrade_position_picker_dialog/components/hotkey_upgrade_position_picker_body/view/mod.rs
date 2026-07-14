@@ -25,7 +25,10 @@ impl Render for HotkeyUpgradePositionPickerBodyView {
         let upgrade_unit_id = self.upgrade_unit_id;
         let picker_slots = self.picker_slots.clone();
         rsx! {
-            HotkeyUpgradePositionPickerBody { upgrade_unit_id, picker_slots }
+            HotkeyUpgradePositionPickerBody {
+                upgrade_unit_id,
+                picker_slots,
+            }
         }
     }
 }

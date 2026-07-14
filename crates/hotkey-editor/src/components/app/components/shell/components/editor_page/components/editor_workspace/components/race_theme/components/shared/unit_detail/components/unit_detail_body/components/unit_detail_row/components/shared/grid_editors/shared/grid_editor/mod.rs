@@ -30,9 +30,16 @@ pub(crate) fn GridEditor<B: GridBehavior>(props: GridEditorModel<B>) -> Element 
         drag_follower,
     } = use_grid_editor(&props);
     rsx! {
-        div { class: CLASS,
-            CaptionedEditorGrid { heading, tiles }
-            DragFollowerOverlay { drag_follower, visible }
+        div {
+            class: CLASS,
+            CaptionedEditorGrid {
+                heading,
+                tiles,
+            }
+            DragFollowerOverlay {
+                drag_follower,
+                visible,
+            }
         }
     }
 }

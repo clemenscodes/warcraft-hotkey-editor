@@ -23,7 +23,11 @@ pub fn CollisionCardButton(props: CollisionCardButtonModel) -> Element {
             let count = props.count;
             let content = props.content;
             rsx! {
-                SelectedCollisionCardButton { onclick, count, content }
+                SelectedCollisionCardButton {
+                    onclick,
+                    count,
+                    content,
+                }
             }
         }
         false => {
@@ -31,7 +35,11 @@ pub fn CollisionCardButton(props: CollisionCardButtonModel) -> Element {
             let count = props.count;
             let content = props.content;
             rsx! {
-                IdleCollisionCardButton { onclick, count, content }
+                IdleCollisionCardButton {
+                    onclick,
+                    count,
+                    content,
+                }
             }
         }
     }

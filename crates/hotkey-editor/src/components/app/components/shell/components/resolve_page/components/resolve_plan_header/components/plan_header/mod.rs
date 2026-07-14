@@ -21,8 +21,14 @@ pub fn PlanHeader(props: PlanHeaderModel) -> Element {
     rsx! {
         header {
             class: CLASS,
-            PlanSummary { moves_text, unresolved_count }
-            ApplyButton { running, onclick: on_apply }
+            PlanSummary {
+                moves_text,
+                unresolved_count,
+            }
+            ApplyButton {
+                running,
+                onclick: on_apply,
+            }
         }
     }
 }

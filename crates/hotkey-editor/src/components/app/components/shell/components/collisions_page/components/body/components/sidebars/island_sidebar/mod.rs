@@ -17,7 +17,9 @@ use tw_macro::assert_component;
 pub fn IslandSidebar(props: IslandSidebarModel) -> Element {
     let IslandSidebarPresentation { cards } = use_island_sidebar_presentation(&props);
     rsx! {
-        CollisionSidebar { cards }
+        CollisionSidebar {
+            cards,
+        }
     }
 }
 

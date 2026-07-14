@@ -22,9 +22,15 @@ pub fn PrimaryIntelligenceRow(props: PrimaryIntelligenceRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            PrimaryAttributeLabel { text: label }
-            StatValue { value: statistic }
-            StatGain { value: growth }
+            PrimaryAttributeLabel {
+                text: label,
+            }
+            StatValue {
+                value: statistic,
+            }
+            StatGain {
+                value: growth,
+            }
         }
     }
 }

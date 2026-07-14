@@ -23,7 +23,9 @@ pub fn BurgerDrawer(props: BurgerDrawerModel) -> Element {
             id: "burger-drawer",
             role: "navigation",
             aria_label: "Menu",
-            BurgerDrawerHeader { onclick: on_close }
+            BurgerDrawerHeader {
+                onclick: on_close,
+            }
             BurgerDrawerBody {
                 on_close,
             }

@@ -21,7 +21,9 @@ pub fn HelpFooter(props: HelpFooterModel) -> Element {
     rsx! {
         footer {
             class: CLASS,
-            HelpDismiss { on_dismiss }
+            HelpDismiss {
+                on_dismiss,
+            }
         }
     }
 }

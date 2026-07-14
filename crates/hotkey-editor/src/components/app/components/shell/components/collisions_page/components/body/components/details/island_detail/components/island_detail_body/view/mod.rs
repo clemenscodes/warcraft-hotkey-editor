@@ -21,7 +21,9 @@ impl Render for IslandDetailBodyView {
     fn render(&self) -> Self::Output {
         let islands = self.islands.clone();
         rsx! {
-            IslandDetailBody { islands }
+            IslandDetailBody {
+                islands,
+            }
         }
     }
 }

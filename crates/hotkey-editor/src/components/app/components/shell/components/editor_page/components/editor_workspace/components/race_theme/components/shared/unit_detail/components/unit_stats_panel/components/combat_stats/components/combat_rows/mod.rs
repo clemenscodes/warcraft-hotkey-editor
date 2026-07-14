@@ -29,12 +29,24 @@ pub fn CombatRows(props: CombatRowsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            DamageRow { value: damage }
-            RangeRow { value: range }
-            AttackSpeedRow { value: speed }
-            DamagePerSecondRow { value: damage_per_second }
-            AttackTypeRow { value: attack_type }
-            DamageMatchupRow { attack_type }
+            DamageRow {
+                value: damage,
+            }
+            RangeRow {
+                value: range,
+            }
+            AttackSpeedRow {
+                value: speed,
+            }
+            DamagePerSecondRow {
+                value: damage_per_second,
+            }
+            AttackTypeRow {
+                value: attack_type,
+            }
+            DamageMatchupRow {
+                attack_type,
+            }
         }
     }
 }

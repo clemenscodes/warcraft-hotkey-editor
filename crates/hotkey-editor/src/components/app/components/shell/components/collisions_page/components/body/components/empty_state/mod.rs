@@ -18,7 +18,9 @@ pub fn EmptyState(props: EmptyStateModel) -> Element {
     rsx! {
         section {
             class: CLASS,
-            EmptyMessage { text: message }
+            EmptyMessage {
+                text: message,
+            }
         }
     }
 }

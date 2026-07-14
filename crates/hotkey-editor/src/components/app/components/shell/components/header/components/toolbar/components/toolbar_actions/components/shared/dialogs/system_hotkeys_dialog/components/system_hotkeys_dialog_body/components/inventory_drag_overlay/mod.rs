@@ -27,7 +27,10 @@ pub fn InventoryDragOverlay(props: InventoryDragOverlayModel) -> Element {
         div {
             class: CLASS,
             style: placement,
-            SystemSlotKey { label, conflict }
+            SystemSlotKey {
+                label,
+                conflict,
+            }
         }
     }
 }

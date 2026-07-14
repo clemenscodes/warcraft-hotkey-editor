@@ -16,8 +16,16 @@ pub fn NeutralRaceTheme() -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitList {}
-            UnitDetail {}
+            UnitList {
+            
+
+
+            }
+            UnitDetail {
+            
+
+
+            }
         }
     }
 }

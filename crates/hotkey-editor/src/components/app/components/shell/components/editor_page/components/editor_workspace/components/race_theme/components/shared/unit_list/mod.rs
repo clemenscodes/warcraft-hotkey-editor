@@ -44,16 +44,28 @@ pub fn UnitList() -> Element {
     rsx! {
         aside {
             class: CLASS,
-            SearchFieldToggle {}
-            CatalogVisibilityToggle {}
+            SearchFieldToggle {
+            
+
+
+            }
+            CatalogVisibilityToggle {
+            
+
+
+            }
             UnitListSearch {
                 value: search_value,
                 placeholder: search_placeholder,
                 on_input,
                 on_keydown,
             }
-            MobileCategoryTabs { tabs: mobile_categories }
-            CategoryScroll { sections: category_kinds }
+            MobileCategoryTabs {
+                tabs: mobile_categories,
+            }
+            CategoryScroll {
+                sections: category_kinds,
+            }
         }
     }
 }

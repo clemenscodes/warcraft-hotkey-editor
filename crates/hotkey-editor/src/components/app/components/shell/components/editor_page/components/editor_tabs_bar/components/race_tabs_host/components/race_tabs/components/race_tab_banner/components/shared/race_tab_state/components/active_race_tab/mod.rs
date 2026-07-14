@@ -24,8 +24,16 @@ pub fn ActiveRaceTab(props: ActiveRaceTabModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            RaceTab { label, onclick, onkeydown }
-            ActiveAccent {}
+            RaceTab {
+                label,
+                onclick,
+                onkeydown,
+            }
+            ActiveAccent {
+            
+
+
+            }
         }
     }
 }

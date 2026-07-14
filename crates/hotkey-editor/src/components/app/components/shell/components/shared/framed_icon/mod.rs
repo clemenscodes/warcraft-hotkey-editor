@@ -36,35 +36,50 @@ pub fn FramedIcon(props: FramedIconModel) -> Element {
             let source = props.src.clone();
             let alt = props.alt.clone();
             rsx! {
-                TilePlainIcon { source, alt }
+                TilePlainIcon {
+                    source,
+                    alt,
+                }
             }
         }
         FramedIconStyle::TileGlow => {
             let source = props.src.clone();
             let alt = props.alt.clone();
             rsx! {
-                TileGlowIcon { source, alt }
+                TileGlowIcon {
+                    source,
+                    alt,
+                }
             }
         }
         FramedIconStyle::ControlPlain => {
             let source = props.src.clone();
             let alt = props.alt.clone();
             rsx! {
-                ControlPlainIcon { source, alt }
+                ControlPlainIcon {
+                    source,
+                    alt,
+                }
             }
         }
         FramedIconStyle::CardGlow => {
             let source = props.src.clone();
             let alt = props.alt.clone();
             rsx! {
-                CardGlowIcon { source, alt }
+                CardGlowIcon {
+                    source,
+                    alt,
+                }
             }
         }
         FramedIconStyle::Placeholder => {
             let source = props.src.clone();
             let alt = props.alt.clone();
             rsx! {
-                PlaceholderIcon { source, alt }
+                PlaceholderIcon {
+                    source,
+                    alt,
+                }
             }
         }
     }

@@ -22,9 +22,14 @@ pub fn HotkeyOverrideHeaderText(props: HotkeyOverrideHeaderTextModel) -> Element
         object_id,
     } = props;
     rsx! {
-        div { class: CLASS,
-            AbilityName { text: name_text }
-            AbilityId { object_id }
+        div {
+            class: CLASS,
+            AbilityName {
+                text: name_text,
+            }
+            AbilityId {
+                object_id,
+            }
         }
     }
 }

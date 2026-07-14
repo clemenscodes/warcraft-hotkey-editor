@@ -15,7 +15,9 @@ pub fn ResearchMenu(props: ResearchMenuModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        ResearchGridEditor { ..config }
+        ResearchGridEditor {
+            ..config,
+        }
     }
 }
 

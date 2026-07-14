@@ -21,11 +21,15 @@ pub fn StatGain<Figure: StatFigure>(props: StatGainModel<Figure>) -> Element {
     let text = value.display();
     if is_muted {
         rsx! {
-            MutedStatGain { text }
+            MutedStatGain {
+                text,
+            }
         }
     } else {
         rsx! {
-            ActiveStatGain { text }
+            ActiveStatGain {
+                text,
+            }
         }
     }
 }

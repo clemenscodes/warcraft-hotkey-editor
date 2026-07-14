@@ -24,11 +24,19 @@ pub fn IntelligenceRow(props: IntelligenceRowModel) -> Element {
     } = use_intelligence_row(&props);
     if props.is_primary {
         rsx! {
-            PrimaryIntelligenceRow { statistic, growth, label }
+            PrimaryIntelligenceRow {
+                statistic,
+                growth,
+                label,
+            }
         }
     } else {
         rsx! {
-            RegularIntelligenceRow { statistic, growth, label }
+            RegularIntelligenceRow {
+                statistic,
+                growth,
+                label,
+            }
         }
     }
 }

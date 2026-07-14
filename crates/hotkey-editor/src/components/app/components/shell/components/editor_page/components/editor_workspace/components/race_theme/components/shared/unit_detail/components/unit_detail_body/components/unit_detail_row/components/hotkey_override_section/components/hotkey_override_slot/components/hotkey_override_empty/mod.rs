@@ -16,8 +16,13 @@ use model::HotkeyOverrideEmptyModel;
 pub fn HotkeyOverrideEmpty(props: HotkeyOverrideEmptyModel) -> Element {
     let message = props.message;
     rsx! {
-        div { class: CLASS,
-            p { {message} }
+        div {
+            class: CLASS,
+            p {
+
+
+                {message}
+            }
         }
     }
 }

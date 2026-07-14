@@ -16,7 +16,10 @@ use model::AltStateLineModel;
 pub fn AltStateLine(props: AltStateLineModel) -> Element {
     let text = props.text;
     rsx! {
-        p { class: CLASS, {text} }
+        p {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

@@ -17,7 +17,9 @@ pub fn UpgradeSectionHeaderLabelColumn(props: UpgradeSectionHeaderLabelColumnMod
     rsx! {
         div {
             class: CLASS,
-            AltStateLabel { text }
+            AltStateLabel {
+                text,
+            }
         }
     }
 }

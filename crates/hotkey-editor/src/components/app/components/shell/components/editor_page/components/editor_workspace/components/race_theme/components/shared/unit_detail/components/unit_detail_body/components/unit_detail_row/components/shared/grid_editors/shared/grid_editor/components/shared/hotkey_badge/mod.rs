@@ -23,17 +23,23 @@ pub fn HotkeyBadge(props: HotkeyBadgeModel) -> Element {
     match props.state {
         HotkeyBadgeState::Normal => {
             rsx! {
-                NormalHotkeyBadge { letter }
+                NormalHotkeyBadge {
+                    letter,
+                }
             }
         }
         HotkeyBadgeState::Passive => {
             rsx! {
-                PassiveHotkeyBadge { letter }
+                PassiveHotkeyBadge {
+                    letter,
+                }
             }
         }
         HotkeyBadgeState::Conflict => {
             rsx! {
-                ConflictHotkeyBadge { letter }
+                ConflictHotkeyBadge {
+                    letter,
+                }
             }
         }
     }

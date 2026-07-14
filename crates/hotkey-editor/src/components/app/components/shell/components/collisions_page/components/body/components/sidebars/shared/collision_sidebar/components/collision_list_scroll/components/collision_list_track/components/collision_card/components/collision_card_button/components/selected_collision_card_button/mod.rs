@@ -24,8 +24,13 @@ pub fn SelectedCollisionCardButton(props: SelectedCollisionCardButtonModel) -> E
             class: CLASS,
             r#type: "button",
             onclick,
-            CollisionCardLeading { content: visual_content }
-            CollisionCardMeta { content, count }
+            CollisionCardLeading {
+                content: visual_content,
+            }
+            CollisionCardMeta {
+                content,
+                count,
+            }
         }
     }
 }

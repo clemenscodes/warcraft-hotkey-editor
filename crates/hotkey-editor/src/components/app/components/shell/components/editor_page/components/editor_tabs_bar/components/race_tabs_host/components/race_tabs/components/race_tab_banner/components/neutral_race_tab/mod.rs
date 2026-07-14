@@ -20,7 +20,12 @@ pub fn NeutralRaceTab(props: RaceTabBinding) -> Element {
     rsx! {
         div {
             class: CLASS,
-            RaceTabState { is_active, label, onclick, onkeydown }
+            RaceTabState {
+                is_active,
+                label,
+                onclick,
+                onkeydown,
+            }
         }
     }
 }

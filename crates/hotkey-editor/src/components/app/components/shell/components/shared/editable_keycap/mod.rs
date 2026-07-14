@@ -25,13 +25,17 @@ pub fn EditableKeycap(props: EditableKeycapModel) -> Element {
         EditableKeycapState::Editing => {
             let label = props.label.clone();
             rsx! {
-                EditingKeycap { label }
+                EditingKeycap {
+                    label,
+                }
             }
         }
         EditableKeycapState::Idle => {
             let label = props.label.clone();
             rsx! {
-                IdleKeycap { label }
+                IdleKeycap {
+                    label,
+                }
             }
         }
     }

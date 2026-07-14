@@ -19,8 +19,12 @@ pub fn CollisionCardMeta(props: CollisionCardMetaModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CollisionCardPrimary { content }
-            CollisionCount { count }
+            CollisionCardPrimary {
+                content,
+            }
+            CollisionCount {
+                count,
+            }
         }
     }
 }

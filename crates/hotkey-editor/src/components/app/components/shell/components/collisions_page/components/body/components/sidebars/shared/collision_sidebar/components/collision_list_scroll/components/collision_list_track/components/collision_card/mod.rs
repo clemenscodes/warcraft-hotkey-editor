@@ -28,7 +28,12 @@ pub fn CollisionCard(props: CollisionCardModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CollisionCardButton { is_selected, onclick, count, content }
+            CollisionCardButton {
+                is_selected,
+                onclick,
+                count,
+                content,
+            }
         }
     }
 }

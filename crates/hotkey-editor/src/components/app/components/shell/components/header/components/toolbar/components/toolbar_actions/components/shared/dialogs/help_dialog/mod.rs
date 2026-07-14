@@ -30,7 +30,7 @@ pub fn HelpDialog(props: HelpDialogModel) -> Element {
     let footer = HelpFooterView { on_dismiss };
     rsx! {
         if open {
-            WarcraftDialog::<HelpGuideView, HelpFooterView> {
+            WarcraftDialog::<HelpGuideView,HelpFooterView> {
                 title: data::TITLE,
                 body,
                 footer,

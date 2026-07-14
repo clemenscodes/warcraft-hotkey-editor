@@ -17,8 +17,12 @@ pub fn FollowerBadge(props: FollowerBadgeModel) -> Element {
     let letter = props.letter;
     let state = props.state;
     rsx! {
-        div { class: CLASS,
-            HotkeyBadge { letter, state }
+        div {
+            class: CLASS,
+            HotkeyBadge {
+                letter,
+                state,
+            }
         }
     }
 }

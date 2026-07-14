@@ -20,7 +20,9 @@ pub fn HotkeyConflictCard(props: HotkeyConflictCardModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            ConflictPanel { model }
+            ConflictPanel {
+                model,
+            }
         }
     }
 }

@@ -19,7 +19,9 @@ pub fn FightReasonBadge(props: FightReasonBadgeModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            ReasonBadge { label }
+            ReasonBadge {
+                label,
+            }
         }
     }
 }

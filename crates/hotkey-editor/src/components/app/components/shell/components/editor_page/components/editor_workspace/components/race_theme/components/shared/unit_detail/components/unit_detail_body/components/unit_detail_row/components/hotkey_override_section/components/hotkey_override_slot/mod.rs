@@ -22,11 +22,16 @@ pub fn HotkeyOverrideSlot(props: HotkeyOverrideSlotModel) -> Element {
     let Some(detail) = detail else {
         let message = data::EMPTY_PROMPT.to_string();
         return rsx! {
-            HotkeyOverrideEmpty { message }
+            HotkeyOverrideEmpty {
+                message,
+            }
         };
     };
     rsx! {
-        HotkeyOverride { detail, active_container_slots }
+        HotkeyOverride {
+            detail,
+            active_container_slots,
+        }
     }
 }
 

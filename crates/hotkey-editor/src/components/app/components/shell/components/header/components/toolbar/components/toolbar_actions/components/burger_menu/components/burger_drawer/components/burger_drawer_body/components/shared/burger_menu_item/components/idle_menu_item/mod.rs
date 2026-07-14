@@ -36,8 +36,12 @@ pub fn IdleMenuItem(props: IdleMenuItemModel) -> Element {
             aria_label,
             disabled,
             onclick,
-            BurgerMenuItemIcon { svg: icon }
-            BurgerMenuItemLabel { text: label }
+            BurgerMenuItemIcon {
+                svg: icon,
+            }
+            BurgerMenuItemLabel {
+                text: label,
+            }
         }
     }
 }

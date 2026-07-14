@@ -19,12 +19,17 @@ pub fn CollisionCardLeading(props: CollisionCardLeadingModel) -> Element {
     match props.content {
         CollisionCardContent::Unit { icon_url, name, .. } => {
             rsx! {
-                HotkeyUnitRowIcon { icon_url, alt: name }
+                HotkeyUnitRowIcon {
+                    icon_url,
+                    alt: name,
+                }
             }
         }
         CollisionCardContent::Island { coordinate } => {
             rsx! {
-                MiniGrid { coordinate }
+                MiniGrid {
+                    coordinate,
+                }
             }
         }
     }

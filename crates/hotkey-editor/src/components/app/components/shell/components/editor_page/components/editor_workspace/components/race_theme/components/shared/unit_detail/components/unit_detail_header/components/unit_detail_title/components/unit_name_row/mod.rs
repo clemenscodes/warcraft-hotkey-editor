@@ -20,9 +20,15 @@ pub fn UnitNameRow(props: UnitNameRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitName { text: unit_name }
+            UnitName {
+                text: unit_name,
+            }
             if has_hero_attributes {
-                HeroLevelPicker {}
+                HeroLevelPicker {
+                
+
+
+                }
             }
         }
     }

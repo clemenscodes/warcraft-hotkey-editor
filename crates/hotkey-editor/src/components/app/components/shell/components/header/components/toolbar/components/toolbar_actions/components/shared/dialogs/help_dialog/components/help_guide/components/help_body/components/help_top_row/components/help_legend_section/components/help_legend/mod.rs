@@ -17,7 +17,8 @@ use tw_macro::assert_component;
 pub fn HelpLegend(props: HelpLegendModel) -> Element {
     let rows = props.rows;
     rsx! {
-        ul { class: CLASS,
+        ul {
+            class: CLASS,
             for (index, entry) in rows.iter().copied().enumerate() {
                 HelpLegendRow {
                     key: "{index}",

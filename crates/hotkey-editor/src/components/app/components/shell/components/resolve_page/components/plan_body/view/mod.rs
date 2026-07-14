@@ -25,7 +25,10 @@ impl Render for PlanBodyView {
         let section = self.section.clone();
         let unresolved = self.unresolved.clone();
         rsx! {
-            PlanBody { section, unresolved }
+            PlanBody {
+                section,
+                unresolved,
+            }
         }
     }
 }

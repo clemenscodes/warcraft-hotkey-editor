@@ -19,7 +19,10 @@ pub fn AltStateLabel(props: AltStateLabelModel) -> Element {
         return rsx! {};
     };
     rsx! {
-        p { class: CLASS, {text} }
+        p {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

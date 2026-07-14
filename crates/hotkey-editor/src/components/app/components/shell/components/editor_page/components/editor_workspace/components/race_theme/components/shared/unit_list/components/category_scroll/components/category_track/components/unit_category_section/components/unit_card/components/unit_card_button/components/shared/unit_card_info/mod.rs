@@ -21,8 +21,13 @@ pub fn UnitCardInfo(props: UnitCardInfoModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            UnitCardName { text: display_name }
-            UnitCardId { unit_id, is_selected }
+            UnitCardName {
+                text: display_name,
+            }
+            UnitCardId {
+                unit_id,
+                is_selected,
+            }
         }
     }
 }

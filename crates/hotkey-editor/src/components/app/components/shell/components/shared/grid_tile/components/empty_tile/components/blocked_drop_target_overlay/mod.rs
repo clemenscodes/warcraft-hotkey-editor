@@ -18,7 +18,9 @@ pub fn BlockedDropTargetOverlay(props: BlockedDropTargetOverlayModel) -> Element
         return rsx! {};
     }
     rsx! {
-        div { class: CLASS }
+        div {
+            class: CLASS,
+        }
     }
 }
 

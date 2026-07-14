@@ -28,10 +28,18 @@ pub fn UnitCommandGrids(props: UnitCommandGridsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CommandGridEditor { ..model.command_card }
-            BuildMenu { config: build_menu }
-            UprootedMenu { config: uprooted }
-            ResearchMenu { config: research }
+            CommandGridEditor {
+                ..model.command_card,
+            }
+            BuildMenu {
+                config: build_menu,
+            }
+            UprootedMenu {
+                config: uprooted,
+            }
+            ResearchMenu {
+                config: research,
+            }
         }
     }
 }

@@ -30,9 +30,17 @@ pub fn MovePanel(props: MovePanelModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MoveReasonBadge { kind: reason_kind, label: reason_label }
-            FightRow { move_view }
-            MoveTransition { from_placements, to_placements }
+            MoveReasonBadge {
+                kind: reason_kind,
+                label: reason_label,
+            }
+            FightRow {
+                move_view,
+            }
+            MoveTransition {
+                from_placements,
+                to_placements,
+            }
         }
     }
 }

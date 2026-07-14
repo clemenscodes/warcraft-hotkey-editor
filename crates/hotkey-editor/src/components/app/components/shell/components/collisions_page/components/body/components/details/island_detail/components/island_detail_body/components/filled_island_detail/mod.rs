@@ -26,8 +26,13 @@ pub fn FilledIslandDetail(props: FilledIslandDetailModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            IslandDetailHeader { coordinate, count }
-            IslandConflictGrid { conflicts }
+            IslandDetailHeader {
+                coordinate,
+                count,
+            }
+            IslandConflictGrid {
+                conflicts,
+            }
         }
     }
 }

@@ -17,7 +17,9 @@ pub fn TopConflictPosition(props: TopConflictPositionModel) -> Element {
     rsx! {
         span {
             class: CLASS,
-            MiniGrid { coordinate }
+            MiniGrid {
+                coordinate,
+            }
         }
     }
 }

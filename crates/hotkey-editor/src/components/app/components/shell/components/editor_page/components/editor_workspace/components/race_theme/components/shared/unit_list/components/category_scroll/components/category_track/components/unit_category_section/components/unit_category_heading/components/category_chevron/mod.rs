@@ -18,7 +18,10 @@ pub fn CategoryChevron(props: CategoryChevronModel) -> Element {
         "\u{25bc}"
     };
     rsx! {
-        span { class: CLASS, {glyph} }
+        span {
+            class: CLASS,
+            {glyph}
+        }
     }
 }
 

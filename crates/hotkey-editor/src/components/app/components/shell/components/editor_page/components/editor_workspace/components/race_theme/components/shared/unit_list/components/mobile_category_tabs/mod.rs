@@ -23,7 +23,10 @@ pub fn MobileCategoryTabs(props: MobileCategoryTabsModel) -> Element {
             role: "tablist",
             aria_label: "Unit categories",
             for kind in props.tabs {
-                MobileCategoryTab { key: "{unit_kind_key(kind)}", kind }
+                MobileCategoryTab {
+                    key: "{unit_kind_key(kind)}",
+                    kind,
+                }
             }
         }
     }

@@ -21,11 +21,17 @@ pub fn HeroLevelTrigger(props: HeroLevelTriggerModel) -> Element {
     let onclick = props.onclick;
     if props.is_open {
         rsx! {
-            OpenHeroLevelTrigger { number, onclick }
+            OpenHeroLevelTrigger {
+                number,
+                onclick,
+            }
         }
     } else {
         rsx! {
-            ClosedHeroLevelTrigger { number, onclick }
+            ClosedHeroLevelTrigger {
+                number,
+                onclick,
+            }
         }
     }
 }

@@ -21,7 +21,10 @@ impl Render for WarcraftDialogHeaderView {
         let title = self.title.clone();
         let on_close = self.on_close;
         rsx! {
-            WarcraftDialogHeader { title, on_close }
+            WarcraftDialogHeader {
+                title,
+                on_close,
+            }
         }
     }
 }

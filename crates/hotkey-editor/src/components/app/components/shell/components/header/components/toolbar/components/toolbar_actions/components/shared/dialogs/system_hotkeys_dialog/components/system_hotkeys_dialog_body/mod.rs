@@ -27,9 +27,17 @@ pub fn SystemHotkeysDialogBody() -> Element {
     rsx! {
         div {
             class: CLASS,
-            SystemHotkeysBreadcrumbs { active_category }
-            SystemHotkeysBody {}
-            InventoryDragOverlay { drag_follower }
+            SystemHotkeysBreadcrumbs {
+                active_category,
+            }
+            SystemHotkeysBody {
+            
+
+
+            }
+            InventoryDragOverlay {
+                drag_follower,
+            }
         }
     }
 }

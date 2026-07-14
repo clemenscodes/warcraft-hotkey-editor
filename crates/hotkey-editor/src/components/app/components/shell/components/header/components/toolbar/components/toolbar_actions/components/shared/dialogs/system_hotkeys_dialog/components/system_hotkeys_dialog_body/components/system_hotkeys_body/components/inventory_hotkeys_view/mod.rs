@@ -18,8 +18,14 @@ pub fn InventoryHotkeysView() -> Element {
     rsx! {
         div {
             class: CLASS,
-            SystemHotkeysSectionIntro { text: caption }
-            InventoryGrid {}
+            SystemHotkeysSectionIntro {
+                text: caption,
+            }
+            InventoryGrid {
+            
+
+
+            }
         }
     }
 }

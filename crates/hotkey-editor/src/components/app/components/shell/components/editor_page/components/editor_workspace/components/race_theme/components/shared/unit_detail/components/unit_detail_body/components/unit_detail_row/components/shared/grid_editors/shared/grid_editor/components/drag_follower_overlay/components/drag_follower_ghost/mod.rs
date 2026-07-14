@@ -26,12 +26,16 @@ pub fn DragFollowerGhost(props: DragFollowerGhostModel) -> Element {
     match presentation.state {
         GhostState::Default => {
             rsx! {
-                AbilityFollowerGhost { presentation }
+                AbilityFollowerGhost {
+                    presentation,
+                }
             }
         }
         GhostState::Command => {
             rsx! {
-                CommandFollowerGhost { presentation }
+                CommandFollowerGhost {
+                    presentation,
+                }
             }
         }
     }

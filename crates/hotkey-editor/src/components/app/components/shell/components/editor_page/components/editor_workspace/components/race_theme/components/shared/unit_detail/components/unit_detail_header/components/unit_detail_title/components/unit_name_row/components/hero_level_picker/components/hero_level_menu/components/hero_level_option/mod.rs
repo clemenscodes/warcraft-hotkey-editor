@@ -23,10 +23,16 @@ pub fn HeroLevelOption(props: HeroLevelOptionModel) -> Element {
     let onclick = presentation.onclick();
     match presentation.is_active() {
         true => rsx! {
-            ActiveHeroLevelOption { label, onclick }
+            ActiveHeroLevelOption {
+                label,
+                onclick,
+            }
         },
         false => rsx! {
-            IdleHeroLevelOption { label, onclick }
+            IdleHeroLevelOption {
+                label,
+                onclick,
+            }
         },
     }
 }

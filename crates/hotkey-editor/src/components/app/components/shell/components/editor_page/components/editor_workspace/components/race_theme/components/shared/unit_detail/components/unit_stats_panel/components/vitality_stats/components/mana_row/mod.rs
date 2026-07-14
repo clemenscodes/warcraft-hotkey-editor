@@ -22,8 +22,12 @@ pub fn ManaRow(props: ManaRowModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            StatLabel { text: LABEL_TEXT }
-            ManaValue { value }
+            StatLabel {
+                text: LABEL_TEXT,
+            }
+            ManaValue {
+                value,
+            }
         }
     }
 }

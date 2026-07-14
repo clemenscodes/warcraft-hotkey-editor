@@ -25,13 +25,25 @@ pub fn Matchup(props: MatchupModel) -> Element {
     let title = props.title;
     match props.strength {
         MatchupStrength::Strong => rsx! {
-            StrongMatchup { subject, multiplier, title }
+            StrongMatchup {
+                subject,
+                multiplier,
+                title,
+            }
         },
         MatchupStrength::Weak => rsx! {
-            WeakMatchup { subject, multiplier, title }
+            WeakMatchup {
+                subject,
+                multiplier,
+                title,
+            }
         },
         MatchupStrength::Neutral => rsx! {
-            NeutralMatchup { subject, multiplier, title }
+            NeutralMatchup {
+                subject,
+                multiplier,
+                title,
+            }
         },
     }
 }

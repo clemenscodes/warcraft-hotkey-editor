@@ -16,7 +16,10 @@ use tw_macro::assert_component;
 pub fn MutedStatValue(props: MutedStatValueModel) -> Element {
     let text = props.text;
     rsx! {
-        span { class: CLASS, {text} }
+        span {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

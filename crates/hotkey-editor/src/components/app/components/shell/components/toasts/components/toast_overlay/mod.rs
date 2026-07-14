@@ -23,7 +23,10 @@ pub fn ToastOverlay(props: ToastOverlayModel) -> Element {
             role: "region",
             "aria-label": "notifications",
             tabindex: "-1",
-            ToastList { toasts, on_remove }
+            ToastList {
+                toasts,
+                on_remove,
+            }
         }
     }
 }

@@ -20,8 +20,12 @@ pub fn PositionsContent(props: PositionsContentModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            IslandSidebar { islands: sidebar_islands }
-            IslandDetail { islands: detail_islands }
+            IslandSidebar {
+                islands: sidebar_islands,
+            }
+            IslandDetail {
+                islands: detail_islands,
+            }
         }
     }
 }

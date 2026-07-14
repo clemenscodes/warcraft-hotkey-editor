@@ -15,7 +15,11 @@ pub fn EmptyUnitPositionDetail(props: EmptyUnitPositionDetailModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            p { {props.prompt} }
+            p {
+
+
+                {props.prompt}
+            }
         }
     }
 }

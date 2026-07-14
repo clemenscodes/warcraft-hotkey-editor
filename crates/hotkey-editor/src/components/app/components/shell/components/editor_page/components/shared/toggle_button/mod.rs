@@ -24,10 +24,20 @@ pub fn ToggleButton(props: ToggleButtonModel) -> Element {
     let onkeydown = props.onkeydown;
     match props.active {
         true => rsx! {
-            ActiveToggleButton { label, title, onclick, onkeydown }
+            ActiveToggleButton {
+                label,
+                title,
+                onclick,
+                onkeydown,
+            }
         },
         false => rsx! {
-            IdleToggleButton { label, title, onclick, onkeydown }
+            IdleToggleButton {
+                label,
+                title,
+                onclick,
+                onkeydown,
+            }
         },
     }
 }

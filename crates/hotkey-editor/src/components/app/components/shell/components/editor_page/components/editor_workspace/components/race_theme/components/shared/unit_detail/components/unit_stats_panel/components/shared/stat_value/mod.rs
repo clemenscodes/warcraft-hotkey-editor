@@ -22,11 +22,15 @@ pub fn StatValue<Figure: StatFigure>(props: StatValueModel<Figure>) -> Element {
     let text = value.display();
     if is_muted {
         rsx! {
-            MutedStatValue { text }
+            MutedStatValue {
+                text,
+            }
         }
     } else {
         rsx! {
-            ActiveStatValue { text }
+            ActiveStatValue {
+                text,
+            }
         }
     }
 }

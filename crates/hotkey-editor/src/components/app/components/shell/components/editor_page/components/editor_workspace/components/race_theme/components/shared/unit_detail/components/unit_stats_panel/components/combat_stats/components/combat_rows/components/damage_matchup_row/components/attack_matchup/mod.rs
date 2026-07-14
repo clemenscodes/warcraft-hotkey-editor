@@ -20,7 +20,12 @@ pub fn AttackMatchup(props: AttackMatchupModel) -> Element {
         strength,
     } = use_attack_matchup(&props);
     rsx! {
-        Matchup { subject, multiplier, title, strength }
+        Matchup {
+            subject,
+            multiplier,
+            title,
+            strength,
+        }
     }
 }
 

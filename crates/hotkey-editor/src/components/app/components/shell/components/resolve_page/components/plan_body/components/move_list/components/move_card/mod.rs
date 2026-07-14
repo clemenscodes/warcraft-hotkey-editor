@@ -20,7 +20,9 @@ pub fn MoveCard(props: MoveCardModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MovePanel { move_view }
+            MovePanel {
+                move_view,
+            }
         }
     }
 }

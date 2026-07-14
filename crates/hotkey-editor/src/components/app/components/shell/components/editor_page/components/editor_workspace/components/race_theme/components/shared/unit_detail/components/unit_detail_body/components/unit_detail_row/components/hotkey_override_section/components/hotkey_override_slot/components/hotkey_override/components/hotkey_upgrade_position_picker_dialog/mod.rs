@@ -40,7 +40,7 @@ pub fn HotkeyUpgradePositionPickerDialog(props: HotkeyUpgradePositionPickerDialo
     rsx! {
         div {
             class: CLASS,
-            WarcraftDialog::<HotkeyUpgradePositionPickerBodyView, Empty> {
+            WarcraftDialog::<HotkeyUpgradePositionPickerBodyView,Empty> {
                 title,
                 body,
                 open: true,

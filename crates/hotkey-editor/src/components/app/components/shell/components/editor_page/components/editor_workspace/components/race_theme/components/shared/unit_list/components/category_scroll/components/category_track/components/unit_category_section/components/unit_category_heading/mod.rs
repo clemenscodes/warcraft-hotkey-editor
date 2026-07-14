@@ -21,7 +21,9 @@ pub fn UnitCategoryHeading(props: UnitCategoryHeadingModel) -> Element {
         button {
             class: CLASS,
             onclick: on_toggle,
-            CategoryChevron { is_collapsed }
+            CategoryChevron {
+                is_collapsed,
+            }
             {label}
         }
     }

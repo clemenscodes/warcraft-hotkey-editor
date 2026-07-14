@@ -16,7 +16,10 @@ use model::HotkeyAltPositionPickerExplainerModel;
 pub fn HotkeyAltPositionPickerExplainer(props: HotkeyAltPositionPickerExplainerModel) -> Element {
     let text = props.text;
     rsx! {
-        p { class: CLASS, {text} }
+        p {
+            class: CLASS,
+            {text}
+        }
     }
 }
 

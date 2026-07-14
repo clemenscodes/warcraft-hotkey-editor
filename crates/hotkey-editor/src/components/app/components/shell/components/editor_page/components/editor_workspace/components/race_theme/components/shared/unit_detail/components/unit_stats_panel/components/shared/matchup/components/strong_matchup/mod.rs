@@ -21,8 +21,12 @@ pub fn StrongMatchup(props: StrongMatchupModel) -> Element {
         div {
             class: CLASS,
             title,
-            MatchupLabel { subject }
-            MatchupValue { multiplier }
+            MatchupLabel {
+                subject,
+            }
+            MatchupValue {
+                multiplier,
+            }
         }
     }
 }

@@ -30,8 +30,18 @@ pub fn CatalogVisibilityToggle() -> Element {
             class: CLASS,
             role: "group",
             aria_label: "Catalog visibility",
-            CatalogVisibilityButton { label: "No abilities", title: "Show units without abilities (for stats)", is_active: abilityless_is_active, on_toggle: toggle_abilityless }
-            CatalogVisibilityButton { label: "All variants", title: "List every tier / upgrade variant separately", is_active: variants_is_active, on_toggle: toggle_variants }
+            CatalogVisibilityButton {
+                label: "No abilities",
+                title: "Show units without abilities (for stats)",
+                is_active: abilityless_is_active,
+                on_toggle: toggle_abilityless,
+            }
+            CatalogVisibilityButton {
+                label: "All variants",
+                title: "List every tier / upgrade variant separately",
+                is_active: variants_is_active,
+                on_toggle: toggle_variants,
+            }
         }
     }
 }

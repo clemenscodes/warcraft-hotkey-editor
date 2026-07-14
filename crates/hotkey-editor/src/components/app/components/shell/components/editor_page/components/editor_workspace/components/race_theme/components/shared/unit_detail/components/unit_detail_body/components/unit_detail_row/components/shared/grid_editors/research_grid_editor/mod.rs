@@ -7,7 +7,9 @@ use warcraft_keybinds::ResearchBehavior;
 #[component]
 pub fn ResearchGridEditor(props: GridEditorView) -> Element {
     rsx! {
-        GridEditor::<ResearchBehavior> { config: props }
+        GridEditor::<ResearchBehavior> {
+            config: props,
+        }
     }
 }
 

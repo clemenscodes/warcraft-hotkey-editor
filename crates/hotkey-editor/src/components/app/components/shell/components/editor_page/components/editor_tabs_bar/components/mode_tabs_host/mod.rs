@@ -20,7 +20,10 @@ pub fn ModeTabsHost() -> Element {
     rsx! {
         div {
             class: CLASS,
-            ModeTabs { unit_mode, on_select }
+            ModeTabs {
+                unit_mode,
+                on_select,
+            }
         }
     }
 }

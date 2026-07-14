@@ -17,7 +17,9 @@ pub fn TransitionColumn(props: TransitionColumnModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            MiniGrid { placements }
+            MiniGrid {
+                placements,
+            }
         }
     }
 }

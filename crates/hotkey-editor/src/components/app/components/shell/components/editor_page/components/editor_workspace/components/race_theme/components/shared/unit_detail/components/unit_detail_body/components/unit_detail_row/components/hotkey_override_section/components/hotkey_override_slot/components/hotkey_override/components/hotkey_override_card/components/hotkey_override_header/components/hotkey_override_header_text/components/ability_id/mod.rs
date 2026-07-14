@@ -15,7 +15,10 @@ use model::AbilityIdModel;
 #[component]
 pub fn AbilityId(props: AbilityIdModel) -> Element {
     rsx! {
-        code { class: CLASS, {props.object_id.value()} }
+        code {
+            class: CLASS,
+            {props.object_id.value()}
+        }
     }
 }
 

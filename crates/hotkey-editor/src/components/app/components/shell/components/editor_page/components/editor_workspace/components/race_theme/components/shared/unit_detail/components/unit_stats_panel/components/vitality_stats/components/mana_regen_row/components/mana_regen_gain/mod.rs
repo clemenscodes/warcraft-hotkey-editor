@@ -19,11 +19,15 @@ pub fn ManaRegenGain(props: ManaRegenGainModel) -> Element {
     let text = value.display();
     if is_muted {
         rsx! {
-            MutedManaRegenGain { text }
+            MutedManaRegenGain {
+                text,
+            }
         }
     } else {
         rsx! {
-            ActiveManaRegenGain { text }
+            ActiveManaRegenGain {
+                text,
+            }
         }
     }
 }

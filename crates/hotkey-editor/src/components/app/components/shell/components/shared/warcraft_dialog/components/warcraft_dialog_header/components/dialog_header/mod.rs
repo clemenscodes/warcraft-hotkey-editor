@@ -22,11 +22,24 @@ pub fn DialogHeader(props: DialogHeaderModel) -> Element {
     let on_close = props.on_close;
     let onclick = EventHandler::new(move |_event: MouseEvent| on_close.call(()));
     rsx! {
-        header { class: CLASS,
-            DialogHeaderDecorationLeading {}
-            DialogTitle { title }
-            DialogHeaderDecorationTrailing {}
-            DialogClose { onclick }
+        header {
+            class: CLASS,
+            DialogHeaderDecorationLeading {
+            
+
+
+            }
+            DialogTitle {
+                title,
+            }
+            DialogHeaderDecorationTrailing {
+            
+
+
+            }
+            DialogClose {
+                onclick,
+            }
         }
     }
 }

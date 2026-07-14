@@ -18,9 +18,14 @@ use tw_macro::assert_component;
 pub fn HelpWorkflowSection(props: HelpWorkflowSectionModel) -> Element {
     let steps = props.steps;
     rsx! {
-        section { class: CLASS,
-            HelpSectionTitle { title: "The workflow" }
-            HelpCallout { steps }
+        section {
+            class: CLASS,
+            HelpSectionTitle {
+                title: "The workflow",
+            }
+            HelpCallout {
+                steps,
+            }
         }
     }
 }

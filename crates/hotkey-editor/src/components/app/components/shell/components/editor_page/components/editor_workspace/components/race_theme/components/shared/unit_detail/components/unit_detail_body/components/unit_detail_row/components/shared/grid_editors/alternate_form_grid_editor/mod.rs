@@ -7,7 +7,9 @@ use warcraft_keybinds::AlternateFormBehavior;
 #[component]
 pub fn AlternateFormGridEditor(props: GridEditorView) -> Element {
     rsx! {
-        GridEditor::<AlternateFormBehavior> { config: props }
+        GridEditor::<AlternateFormBehavior> {
+            config: props,
+        }
     }
 }
 

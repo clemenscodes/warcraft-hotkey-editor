@@ -22,9 +22,15 @@ pub fn ConflictMeta(props: ConflictMetaModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            ConflictUnitName { text: name }
-            ConflictObjectId { object_id: unit_id }
-            CollisionCount { count }
+            ConflictUnitName {
+                text: name,
+            }
+            ConflictObjectId {
+                object_id: unit_id,
+            }
+            CollisionCount {
+                count,
+            }
         }
     }
 }

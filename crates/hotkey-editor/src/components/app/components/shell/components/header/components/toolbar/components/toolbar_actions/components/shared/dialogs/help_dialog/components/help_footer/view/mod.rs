@@ -21,7 +21,9 @@ impl Render for HelpFooterView {
     fn render(&self) -> Self::Output {
         let on_dismiss = self.on_dismiss;
         rsx! {
-            HelpFooter { on_dismiss }
+            HelpFooter {
+                on_dismiss,
+            }
         }
     }
 }

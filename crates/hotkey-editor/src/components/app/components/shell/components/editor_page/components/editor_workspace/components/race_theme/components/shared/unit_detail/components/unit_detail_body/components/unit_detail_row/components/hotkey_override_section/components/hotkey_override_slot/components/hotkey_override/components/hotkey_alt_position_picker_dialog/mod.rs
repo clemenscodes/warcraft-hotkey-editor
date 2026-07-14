@@ -39,7 +39,7 @@ pub fn HotkeyAltPositionPickerDialog(props: HotkeyAltPositionPickerDialogModel) 
     rsx! {
         div {
             class: CLASS,
-            WarcraftDialog::<HotkeyAltPositionPickerDialogBodyView, Empty> {
+            WarcraftDialog::<HotkeyAltPositionPickerDialogBodyView,Empty> {
                 title,
                 body,
                 open: true,

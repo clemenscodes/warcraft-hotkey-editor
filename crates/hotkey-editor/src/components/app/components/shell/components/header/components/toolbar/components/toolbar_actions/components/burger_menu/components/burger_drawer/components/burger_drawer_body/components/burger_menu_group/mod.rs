@@ -31,15 +31,45 @@ pub fn BurgerMenuGroup(props: BurgerMenuGroupModel) -> Element {
             class: CLASS,
             role: "menu",
             aria_label: "File actions",
-            BurgerUndoItem { on_close }
-            BurgerRedoItem { on_close }
-            BurgerUploadItem {}
-            BurgerTemplatesItem {}
-            BurgerSystemHotkeysItem {}
-            BurgerResolveItem { on_close }
-            BurgerPreviewItem {}
-            BurgerDownloadItem {}
-            BurgerHelpItem {}
+            BurgerUndoItem {
+                on_close,
+            }
+            BurgerRedoItem {
+                on_close,
+            }
+            BurgerUploadItem {
+            
+
+
+            }
+            BurgerTemplatesItem {
+            
+
+
+            }
+            BurgerSystemHotkeysItem {
+            
+
+
+            }
+            BurgerResolveItem {
+                on_close,
+            }
+            BurgerPreviewItem {
+            
+
+
+            }
+            BurgerDownloadItem {
+            
+
+
+            }
+            BurgerHelpItem {
+            
+
+
+            }
         }
     }
 }

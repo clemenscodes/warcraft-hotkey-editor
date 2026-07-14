@@ -21,7 +21,10 @@ pub fn DamageMatchupRow(props: DamageMatchupRowModel) -> Element {
         div {
             class: CLASS,
             for defense_type in DISPLAYED_DEFENSE_TYPES {
-                AttackMatchup { defense_type, attack_type }
+                AttackMatchup {
+                    defense_type,
+                    attack_type,
+                }
             }
         }
     }

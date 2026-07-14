@@ -21,7 +21,9 @@ impl Render for CollisionsBreadcrumbsView {
     fn render(&self) -> Self::Output {
         let breadcrumbs = self.breadcrumbs.clone();
         rsx! {
-            CollisionsBreadcrumbs { breadcrumbs }
+            CollisionsBreadcrumbs {
+                breadcrumbs,
+            }
         }
     }
 }
