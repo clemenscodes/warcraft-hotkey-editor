@@ -1,38 +1,30 @@
-mod presentation;
 mod style;
 
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::TemplatesDialog;
 use dioxus::prelude::*;
-use presentation::{use_templates_button, TemplatesButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Toolbar button that opens the layout templates browser, carrying the dialog it
-/// opens. The button flips the shared open signal and the co-located host renders the
-/// dialog for the desktop trigger; the burger renders its own copy for the compact
-/// layout.
+/// One inline file-action button. It reads its action from the shared toolbar-action set
+/// and renders the button; the action's icon, label, and behaviour live once in that set.
 #[component]
 pub fn TemplatesButton() -> Element {
-    let TemplatesButtonModel {
-        icon,
-        aria_label,
-        aria_haspopup,
-        aria_expanded,
-        onclick,
-    } = use_templates_button();
+    let actions = use_toolbar_actions();
+    let action = actions.get(ToolbarActionKind::Templates);
     rsx! {
         div {
             class: CLASS,
             ToolbarButton {
-                icon,
-                aria_label,
-                aria_haspopup,
-                aria_expanded,
-                onclick,
+                icon: action.icon,
+                aria_label: action.aria_label,
+                disabled: action.disabled,
+                aria_haspopup: action.aria_haspopup,
+                aria_expanded: action.expanded,
+                aria_pressed: action.pressed,
+                onclick: action.onclick,
             }
         }
-        TemplatesDialog {}
     }
 }
 

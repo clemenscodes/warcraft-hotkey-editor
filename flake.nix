@@ -204,7 +204,7 @@
           fileset = pkgs.lib.fileset.unions [
             (craneLib.fileset.commonCargoSources ./.)
             ./crates/hotkey-editor/Dioxus.toml
-            ./crates/hotkey-editor/tailwind.input.css
+            ./crates/hotkey-editor/tailwind.css
             ./crates/hotkey-editor/assets
             ./crates/hotkey-editor/public
           ];
@@ -284,7 +284,7 @@
             pnameSuffix = "-bundle";
             buildPhaseCargoCommand = ''
               cd crates/hotkey-editor
-              tailwindcss -i tailwind.input.css -o assets/tailwind.css --minify
+              tailwindcss -i tailwind.css -o assets/tailwind.css --minify
               dx build --release --platform web --offline --package hotkey-editor
             '';
             installPhaseCommand = ''

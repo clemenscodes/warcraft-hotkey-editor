@@ -31,7 +31,7 @@ target explicit rather than relying on the default.
 
 ### 3. Font: `swap` + preload
 
-- `tailwind.input.css` sets `font-display: swap` on Friz Quadrata (was `block`,
+- `tailwind.css` sets `font-display: swap` on Friz Quadrata (was `block`,
   which Lighthouse flags — it hides text until the face loads).
 - `document_head/mod.rs` preloads the `.ttf` (`rel="preload" as="font"
   crossorigin`), so the swap window is tiny. `crossorigin` is required even

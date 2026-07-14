@@ -14,6 +14,8 @@ pub struct OverlayState {
     help_open: Signal<bool>,
     layout_dialog_open: Signal<bool>,
     templates_dialog_open: Signal<bool>,
+    upload_info_open: Signal<bool>,
+    download_info_open: Signal<bool>,
 }
 
 impl OverlayState {
@@ -23,6 +25,8 @@ impl OverlayState {
         help_open: Signal<bool>,
         layout_dialog_open: Signal<bool>,
         templates_dialog_open: Signal<bool>,
+        upload_info_open: Signal<bool>,
+        download_info_open: Signal<bool>,
     ) -> Self {
         Self {
             preview_open,
@@ -30,7 +34,17 @@ impl OverlayState {
             help_open,
             layout_dialog_open,
             templates_dialog_open,
+            upload_info_open,
+            download_info_open,
         }
+    }
+
+    pub fn upload_info_open(&self) -> Signal<bool> {
+        self.upload_info_open
+    }
+
+    pub fn download_info_open(&self) -> Signal<bool> {
+        self.download_info_open
     }
 
     pub fn preview_open(&self) -> Signal<bool> {

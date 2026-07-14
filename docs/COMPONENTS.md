@@ -719,7 +719,7 @@ rule, from which the rest follows: **share *values*, never *looks*.**
 > system is the point.
 
 - **The design vocabulary is global, on purpose — and mandatory.** The `@theme`
-  block in `crates/hotkey-editor/tailwind.input.css` owns the shared design
+  block in `crates/hotkey-editor/tailwind.css` owns the shared design
   vocabulary: the color palette, the type scale (`--text-*`), the radius scale
   (`--radius-*`), the shadow set (`--shadow-*`), the line-heights
   (`--leading-*`), the recurring surface gradients (`bg-panel-*`), and the font —
@@ -758,7 +758,7 @@ value earns a new token (and then everyone reuses it), never a one-off.
 ## Responsive bands
 
 Layout uses six named bands plus an always-on `BASE`, defined once in
-`tailwind.input.css`. The names are honest device/resolution classes, not
+`tailwind.css`. The names are honest device/resolution classes, not
 marketing terms — there is no `wide` or `ultrawide` width band, because those are
 aspect ratios (21:9 / 32:9), not widths:
 
@@ -773,7 +773,7 @@ aspect ratios (21:9 / 32:9), not widths:
 | `uhd` | `≥ 3840px` | 4K |
 
 The six bands are **disjoint width ranges** (`@custom-variant` in
-`tailwind.input.css`), not min-width breakpoints: **nothing inherits across
+`tailwind.css`), not min-width breakpoints: **nothing inherits across
 bands**. A `mobile:` style never leaks up to desktop, and a `laptop:` style never
 leaks down to a phone — each band paints only its own range.
 

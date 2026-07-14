@@ -20,7 +20,7 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:[--focus-color:var(--color-warcraft-highlight)]",
         "kb-focus:shadow-focus",
-        "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-deep)_70%,transparent)_100%)]",
+        "[background:linear-gradient(135deg,color-mix(in_oklab,var(--color-warcraft-gold)_25%,transparent)_0%,color-mix(in_oklab,var(--color-warcraft-gold-dark)_70%,transparent)_100%)]",
         "text-warcraft-gold",
     ],
     mobile: tw![

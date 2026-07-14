@@ -1,37 +1,30 @@
-mod presentation;
 mod style;
 
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::HelpDialog;
 use dioxus::prelude::*;
-use presentation::{use_help_button, HelpButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Toolbar button that opens the onboarding help dialog, carrying the dialog it opens.
-/// The button flips the shared open signal and the co-located host renders the dialog
-/// for the desktop trigger; the burger renders its own copy for the compact layout.
+/// One inline file-action button. It reads its action from the shared toolbar-action set
+/// and renders the button; the action's icon, label, and behaviour live once in that set.
 #[component]
 pub fn HelpButton() -> Element {
-    let HelpButtonModel {
-        icon,
-        aria_label,
-        aria_haspopup,
-        aria_expanded,
-        onclick,
-    } = use_help_button();
+    let actions = use_toolbar_actions();
+    let action = actions.get(ToolbarActionKind::Help);
     rsx! {
         div {
             class: CLASS,
             ToolbarButton {
-                icon,
-                aria_label,
-                aria_haspopup,
-                aria_expanded,
-                onclick,
+                icon: action.icon,
+                aria_label: action.aria_label,
+                disabled: action.disabled,
+                aria_haspopup: action.aria_haspopup,
+                aria_expanded: action.expanded,
+                aria_pressed: action.pressed,
+                onclick: action.onclick,
             }
         }
-        HelpDialog {}
     }
 }
 

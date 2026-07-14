@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-@source "../../gallery/src";
 @source "./src/**/*.rs";
 
 @custom-variant mobile (@media (width < 768px));
@@ -40,7 +39,6 @@
   --color-race-orc: #ff7a7a;
   --color-race-nightelf: #5fdada;
   --color-race-undead: #c79bff;
-  --color-warcraft-gold-deep: #4a3d14;
 
   --color-warcraft-success: #6dd49a;
   --color-warcraft-danger: #ff5a5a;
@@ -101,12 +99,6 @@
 @utility bg-panel-gold { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-gold) 32%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent) 100%); }
 @utility bg-panel-header { background-image: radial-gradient( ellipse 90% 60% at 50% 0%, var(--color-warcraft-blue-deep) 0%, transparent 60%), linear-gradient( 180deg, var(--color-warcraft-bg-mid) 0%, var(--color-warcraft-bg-base) 100%); }
 @utility bg-panel-toast { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-bg-mid) 97%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-bg-base) 97%, transparent) 100%); }
-
-/* Race banner surface — the editor race tabs. Parametric off `--race-color` (set
-   per race to a `--color-race-*` token, the same way glows set `--glow-color`) and
-   `--banner-strength`, the top-of-gradient mix of that colour over bg-base: bright
-   race colours fade in at 25%, the dark `-strong` race colours (orc, neutral) sit at
-   the 100% default. One utility, one knob per race. */
 @utility bg-race-banner { background-image: linear-gradient( 180deg, color-mix(in oklab, var(--race-color) var(--banner-strength, 100%), var(--color-warcraft-bg-base)) 0%, var(--color-warcraft-bg-base) 100%); }
 
 @utility shadow-glow-soft { box-shadow: 0 0 8px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.48); }

@@ -1,32 +1,28 @@
-mod presentation;
 mod style;
 
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
-use presentation::{use_resolve_button, ResolveButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Toolbar button that navigates to the Resolve page, where the cascade plan is
-/// previewed and applied. Reads the live document and router from context: disabled
-/// until a file is loaded, clicking routes to the Resolve page. Its slot is hidden below
-/// laptop, where the burger drawer offers the action instead.
+/// One inline file-action button. It reads its action from the shared toolbar-action set
+/// and renders the button; the action's icon, label, and behaviour live once in that set.
 #[component]
 pub fn ResolveButton() -> Element {
-    let ResolveButtonModel {
-        icon,
-        aria_label,
-        disabled,
-        onclick,
-    } = use_resolve_button();
+    let actions = use_toolbar_actions();
+    let action = actions.get(ToolbarActionKind::Resolve);
     rsx! {
         div {
             class: CLASS,
             ToolbarButton {
-                icon,
-                aria_label,
-                disabled,
-                onclick,
+                icon: action.icon,
+                aria_label: action.aria_label,
+                disabled: action.disabled,
+                aria_haspopup: action.aria_haspopup,
+                aria_expanded: action.expanded,
+                aria_pressed: action.pressed,
+                onclick: action.onclick,
             }
         }
     }

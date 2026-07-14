@@ -1,28 +1,17 @@
-use crate::components::app::components::shell::components::shared::icons::ICON_UPLOAD;
 use crate::components::app::components::shell::components::toasts::{ToastOptions, use_toast};
 use crate::services::customkeys::context::{use_custom_keys_service, use_upload_status};
 use crate::services::customkeys::upload_status::UploadStatus;
 use dioxus::prelude::*;
 
-/// The upload button's shaped view: the info dialog signal, the two handlers, and the
-/// toolbar button's icon and label.
-pub(super) struct UploadButtonModel {
-    pub(super) info_open: Signal<bool>,
-    pub(super) on_file_change: EventHandler<FormEvent>,
-    pub(super) on_open_info: EventHandler<MouseEvent>,
-    pub(super) icon: &'static str,
-    pub(super) aria_label: &'static str,
-}
-
-/// Reads the document service and the upload status from context itself, reads the
-/// chosen file, imports it through the sanctioned service command, and reports via
-/// toast — all here so the body stays pure RSX and nothing is threaded in.
-pub(super) fn use_upload_button() -> UploadButtonModel {
+/// The file-import handler for the hidden upload input: reads the chosen file, imports it
+/// through the sanctioned service command, and reports the outcome via toast. The visible
+/// button (icon, label, click) comes from the shared toolbar-action set; this owns only the
+/// import.
+pub(super) fn use_upload_file_import() -> EventHandler<FormEvent> {
     let custom_keys_service = use_custom_keys_service();
     let mut upload_status = use_upload_status();
     let toast_api = use_toast();
-    let mut info_open = use_signal(|| false);
-    let on_file_change = EventHandler::new(move |event: FormEvent| {
+    EventHandler::new(move |event: FormEvent| {
         let files = event.files();
         let Some(first_file) = files.into_iter().next() else {
             upload_status.set(UploadStatus::Error("No file selected".into()));
@@ -55,13 +44,5 @@ pub(super) fn use_upload_button() -> UploadButtonModel {
                 }
             }
         });
-    });
-    let on_open_info = EventHandler::new(move |_event: MouseEvent| info_open.set(true));
-    UploadButtonModel {
-        info_open,
-        on_file_change,
-        on_open_info,
-        icon: ICON_UPLOAD,
-        aria_label: "Upload CustomKeys.txt",
-    }
+    })
 }

@@ -22,12 +22,16 @@ pub(crate) fn use_overlay_state_provider() -> OverlayState {
     let help_open = use_signal::<bool>(|| !onboarding_persistence::has_been_seen());
     let layout_dialog_open = use_signal::<bool>(|| false);
     let templates_dialog_open = use_signal::<bool>(|| false);
+    let upload_info_open = use_signal::<bool>(|| false);
+    let download_info_open = use_signal::<bool>(|| false);
     let overlay_state = OverlayState::new(
         preview_open,
         system_hotkeys_open,
         help_open,
         layout_dialog_open,
         templates_dialog_open,
+        upload_info_open,
+        download_info_open,
     );
     use_context_provider(|| overlay_state);
     overlay_state

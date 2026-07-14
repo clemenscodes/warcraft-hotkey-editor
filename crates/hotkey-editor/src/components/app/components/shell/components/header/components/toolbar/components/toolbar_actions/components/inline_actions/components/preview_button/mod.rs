@@ -1,49 +1,28 @@
-pub mod components;
-mod data;
-mod presentation;
 mod style;
 
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
-use crate::components::app::components::shell::components::shared::warcraft_dialog::WarcraftDialog;
-use components::preview_textarea_host::PreviewTextareaHostView;
 use dioxus::prelude::*;
-use dioxus_kit::frame::Empty;
-use presentation::{use_preview_button, PreviewButtonModel};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Toolbar button that toggles the export preview, carrying the preview dialog it opens.
-/// The button flips the shared open signal; the co-located `WarcraftDialog` — a sibling of
-/// the (laptop-and-up) button slot, so it stays mounted even where that slot is hidden and
-/// the burger flips the same signal — renders the isolated preview content as its body
-/// region.
+/// One inline file-action button. It reads its action from the shared toolbar-action set
+/// and renders the button; the action's icon, label, and behaviour live once in that set.
 #[component]
 pub fn PreviewButton() -> Element {
-    let PreviewButtonModel {
-        icon,
-        aria_label,
-        aria_pressed,
-        onclick,
-        open,
-        on_open_change,
-    } = use_preview_button();
-    let body = PreviewTextareaHostView;
+    let actions = use_toolbar_actions();
+    let action = actions.get(ToolbarActionKind::Preview);
     rsx! {
         div {
             class: CLASS,
             ToolbarButton {
-                icon,
-                aria_label,
-                aria_pressed,
-                onclick,
-            }
-        }
-        if open {
-            WarcraftDialog::<PreviewTextareaHostView, Empty> {
-                title: data::TITLE,
-                body,
-                open: true,
-                on_open_change,
+                icon: action.icon,
+                aria_label: action.aria_label,
+                disabled: action.disabled,
+                aria_haspopup: action.aria_haspopup,
+                aria_expanded: action.expanded,
+                aria_pressed: action.pressed,
+                onclick: action.onclick,
             }
         }
     }

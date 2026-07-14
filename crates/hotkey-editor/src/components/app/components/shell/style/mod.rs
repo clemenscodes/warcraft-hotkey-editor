@@ -4,7 +4,7 @@ use tw_macro::tw;
 // every edge. It sets no inter-section spacing: each section (header, the view, footer)
 // owns its own spacing, so the shell never reaches across the wall to space its children.
 // It also owns the app-wide foundational resets that used to live as global rules in
-// tailwind.input.css: they are `.app`-scoped, so they are inline descendant utilities on
+// tailwind.css: they are `.app`-scoped, so they are inline descendant utilities on
 // this root, not global CSS.
 
 // Phone/tablet: full-bleed with no padding at all (the shell spans the whole viewport and

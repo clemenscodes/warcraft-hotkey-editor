@@ -2,38 +2,30 @@ pub mod components;
 mod presentation;
 mod style;
 
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::upload_info_dialog::UploadInfoDialog;
 use components::upload_button_input::UploadButtonInput;
 use dioxus::prelude::*;
-use presentation::{use_upload_button, UploadButtonModel};
+use presentation::use_upload_file_import;
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// The toolbar's import control: a hidden file input plus the visible upload button
-/// that opens the "how to import" dialog. Sources the document service and the
-/// upload status from context itself, so nothing is threaded in.
+/// The inline import control: a hidden file input plus the upload button. The button (icon,
+/// label, click) comes from the shared toolbar-action set; clicking flips the shared
+/// upload-info signal. This owns only the hidden input and its file-import handler.
 #[component]
 pub fn UploadButton() -> Element {
-    let UploadButtonModel {
-        info_open: mut open,
-        on_file_change: on_change,
-        on_open_info: onclick,
-        icon,
-        aria_label,
-    } = use_upload_button();
+    let actions = use_toolbar_actions();
+    let action = actions.get(ToolbarActionKind::Upload);
+    let on_change = use_upload_file_import();
     rsx! {
         div {
             class: CLASS,
             UploadButtonInput { on_change }
             ToolbarButton {
-                icon,
-                aria_label,
-                onclick,
-            }
-            UploadInfoDialog {
-                open: *open.read(),
-                on_open_change: Callback::new(move |value: bool| open.set(value)),
+                icon: action.icon,
+                aria_label: action.aria_label,
+                onclick: action.onclick,
             }
         }
     }

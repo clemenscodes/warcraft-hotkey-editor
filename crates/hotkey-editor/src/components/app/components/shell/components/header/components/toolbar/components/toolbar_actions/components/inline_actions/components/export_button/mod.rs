@@ -1,40 +1,27 @@
-mod presentation;
 mod style;
 
-use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::presentation::{use_toolbar_actions, ToolbarActionKind};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::inline_actions::components::shared::toolbar_button::ToolbarButton;
 use dioxus::prelude::*;
-use presentation::{use_export_button, ExportButtonPresentation};
 use style::CLASS;
 use tw_macro::assert_component;
 
-/// Toolbar button that downloads the current `CustomKeys.txt`, with its info dialog.
-/// Reads the live document from context and hides itself until a file is loaded, since
-/// there is nothing to export otherwise. Clicking opens the download info dialog; the
-/// download itself is owned by `DownloadInfoDialog`.
+/// The inline download button. It reads its action from the shared toolbar-action set and
+/// hides itself until a file is loaded; clicking flips the shared download-info signal.
 #[component]
 pub fn ExportButton() -> Element {
-    let ExportButtonPresentation {
-        visible,
-        info_open: mut open,
-        icon,
-        aria_label,
-        onclick,
-    } = use_export_button();
-    if !visible {
+    let actions = use_toolbar_actions();
+    let action = actions.get(ToolbarActionKind::Download);
+    if action.hidden {
         return rsx! {};
     }
     rsx! {
         div {
             class: CLASS,
             ToolbarButton {
-                icon,
-                aria_label,
-                onclick,
-            }
-            DownloadInfoDialog {
-                open: *open.read(),
-                on_open_change: Callback::new(move |value: bool| open.set(value)),
+                icon: action.icon,
+                aria_label: action.aria_label,
+                onclick: action.onclick,
             }
         }
     }

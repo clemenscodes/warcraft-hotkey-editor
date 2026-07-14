@@ -305,9 +305,9 @@ tailwind/build  →  dx/build   (production bundle)
 tailwind/build  →  playwright/test  (e2e, because run.mjs starts dx serve directly)
 ```
 
-`tailwind/build` runs `tailwindcss -i tailwind.input.css -o assets/tailwind.css
+`tailwind/build` runs `tailwindcss -i tailwind.css -o assets/tailwind.css
 --minify` from `crates/hotkey-editor/`. Moon caches it on inputs
-(`tailwind.input.css`, `styles/**`, `src/**/*.rs`) so it only re-runs when
+(`tailwind.css`, `styles/**`, `src/**/*.rs`) so it only re-runs when
 those files change.
 
 ### End-to-end tests
