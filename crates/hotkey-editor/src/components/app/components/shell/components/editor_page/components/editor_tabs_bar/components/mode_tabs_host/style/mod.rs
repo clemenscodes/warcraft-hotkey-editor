@@ -2,6 +2,9 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "contents",
+        "@container",
+        "w-full",
+        "min-w-0",
+        "order-last",
     ],
 }

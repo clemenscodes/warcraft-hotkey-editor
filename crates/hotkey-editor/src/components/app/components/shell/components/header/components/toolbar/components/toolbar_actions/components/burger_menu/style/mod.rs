@@ -18,7 +18,7 @@ classes! {
         "rounded-tile",
         "text-warcraft-text-secondary",
         "cursor-pointer",
-        "transition-[border-color,color,background,box-shadow]",
+        "transition-interactive",
         "hover:border-warcraft-gold",
         "hover:text-warcraft-gold",
         "hover:bg-panel-gold-active",

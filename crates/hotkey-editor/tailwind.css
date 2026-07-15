@@ -86,10 +86,21 @@
   --shadow-edge: 0 1px 0 color-mix(in oklab, var(--color-warcraft-shadow) 70%, transparent), 0 2px 0 color-mix(in oklab, var(--color-warcraft-gold) 10%, transparent);
   --shadow-drop-top: 0 -4px 16px color-mix(in oklab, var(--color-warcraft-shadow) 40%, transparent);
   --shadow-drawer: -6px 0 40px color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent);
+  --shadow-tile-focus: 0 0 0 0.52cqi var(--color-warcraft-gold), 0 0 3.1cqi color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent);
+  --shadow-tile-highlight: 0 0 7cqi color-mix(in oklab, var(--color-warcraft-gold) 50%, transparent);
+
+  --drop-shadow-edge: 0 1px 0 color-mix(in oklab, var(--color-warcraft-shadow) 70%, transparent);
+  --drop-shadow-bevel: 0 1px 2px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent);
+  --drop-shadow-drop: 1px 1px 0 var(--color-warcraft-shadow);
+  --drop-shadow-heart: 0 0 0.3em color-mix(in oklab, var(--color-race-orc) 35%, transparent);
+  --drop-shadow-raised-glow: 0 8px 24px color-mix(in oklab, var(--color-warcraft-shadow) 60%, transparent), 0 0 16px color-mix(in oklab, var(--color-warcraft-gold) 60%, transparent);
 
   --text-shadow-drop: 1px 1px 0 var(--color-warcraft-shadow);
   --text-shadow-glow: 1px 1px 0 var(--color-warcraft-shadow), 0 0 12px color-mix(in oklab, var(--color-warcraft-gold) 55%, transparent);
   --text-shadow-outline: 1px 1px 0 var(--color-warcraft-shadow), -1px 1px 0 var(--color-warcraft-shadow), 1px -1px 0 var(--color-warcraft-shadow), -1px -1px 0 var(--color-warcraft-shadow);
+  --text-shadow-title: 1px 1px 0 color-mix(in oklab, var(--color-warcraft-shadow) 92%, transparent), 0 0 14px color-mix(in oklab, var(--color-warcraft-gold) 18%, transparent);
+  --text-shadow-badge: 1.25cqi 1.25cqi 0 color-mix(in oklab, var(--color-warcraft-shadow) 95%, transparent), -1.25cqi 1.25cqi 0 color-mix(in oklab, var(--color-warcraft-shadow) 95%, transparent), 1.25cqi -1.25cqi 0 color-mix(in oklab, var(--color-warcraft-shadow) 95%, transparent), -1.25cqi -1.25cqi 0 color-mix(in oklab, var(--color-warcraft-shadow) 95%, transparent), 0 0 3.75cqi color-mix(in oklab, var(--color-warcraft-shadow) 95%, transparent);
+  --text-shadow-tab: 0.04em 0.04em 0 var(--color-warcraft-shadow), -0.04em 0.04em 0 var(--color-warcraft-shadow), 0.04em -0.04em 0 var(--color-warcraft-shadow), -0.04em -0.04em 0 var(--color-warcraft-shadow), 0 0 0.31em color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent);
 }
 
 @utility bg-panel-gold-resting { background-image: linear-gradient( 180deg, color-mix(in oklab, var(--color-warcraft-gold-dark) 55%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent) 100%); }
@@ -100,6 +111,7 @@
 @utility bg-panel-header { background-image: radial-gradient( ellipse 90% 60% at 50% 0%, var(--color-warcraft-blue-deep) 0%, transparent 60%), linear-gradient( 180deg, var(--color-warcraft-bg-mid) 0%, var(--color-warcraft-bg-base) 100%); }
 @utility bg-panel-toast { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-bg-mid) 97%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-bg-base) 97%, transparent) 100%); }
 @utility bg-race-banner { background-image: linear-gradient( 180deg, color-mix(in oklab, var(--race-color) var(--banner-strength, 100%), var(--color-warcraft-bg-base)) 0%, var(--color-warcraft-bg-base) 100%); }
+@utility bg-scrim-bottom { background-image: linear-gradient(180deg, color-mix(in oklab, var(--color-warcraft-shadow) 0%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-shadow) 0%, transparent) 45%, color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent) 75%, color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent) 100%); }
 
 @utility shadow-glow-soft { box-shadow: 0 0 8px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.48); }
 @utility shadow-glow { box-shadow: 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55); }
@@ -118,6 +130,12 @@
 @utility duration-fast { --tw-duration: 0.12s; }
 @utility duration-base { --tw-duration: 0.15s; }
 @utility duration-slow { --tw-duration: 0.2s; }
+
+@utility transition-interactive {
+  transition-property: border-color, color, background, box-shadow;
+  transition-timing-function: var(--default-transition-timing-function);
+  transition-duration: var(--default-transition-duration);
+}
 
 html {
   background-color: var(--color-warcraft-bg-base);

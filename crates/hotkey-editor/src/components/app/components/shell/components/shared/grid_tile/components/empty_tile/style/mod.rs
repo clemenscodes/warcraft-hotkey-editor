@@ -21,6 +21,6 @@ classes! {
         "has-[.blocked-drop-target-overlay]:border-dashed",
         "has-[.blocked-drop-target-overlay]:cursor-not-allowed",
         "has-[.highlight-overlay]:border-warcraft-gold",
-        "has-[.highlight-overlay]:[box-shadow:0_0_7cqi_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+        "has-[.highlight-overlay]:shadow-tile-highlight",
     ],
 }

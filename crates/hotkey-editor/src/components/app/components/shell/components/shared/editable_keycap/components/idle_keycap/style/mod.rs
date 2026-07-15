@@ -15,7 +15,7 @@ classes! {
         "uppercase",
         "leading-none",
         "text-center",
-        "transition-[box-shadow,border-color,background,color]",
+        "transition-interactive",
         "duration-base",
         "rounded-(--keycap-radius,var(--radius-panel))",
         "hover:border-warcraft-gold",

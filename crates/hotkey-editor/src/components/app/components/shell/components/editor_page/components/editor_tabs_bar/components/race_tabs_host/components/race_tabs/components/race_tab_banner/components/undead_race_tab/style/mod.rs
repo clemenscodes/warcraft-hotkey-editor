@@ -9,4 +9,8 @@ classes! {
         "[--banner-strength:25%]",
         "[--banner-image:url('/warcraft-hotkey-editor/webui/common/dark-banner-undead.png')]",
     ],
+    mobile: tw![
+        "mobile:flex-[0_0_40cqi]",
+        "mobile:snap-start",
+    ],
 }

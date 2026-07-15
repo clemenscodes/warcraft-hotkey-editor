@@ -4,14 +4,9 @@ classes! {
     base: tw![
         "@container",
         "flex",
-        "items-stretch",
+        "flex-col",
+        "gap-2.5",
+        "min-w-0",
         "flex-none",
-        "gap-10",
-        "min-h-36",
-    ],
-    mobile: tw![
-        "mobile:flex-col",
-        "mobile:min-h-0",
-        "mobile:gap-2.5",
     ],
 }

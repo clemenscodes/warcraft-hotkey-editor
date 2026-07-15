@@ -3,8 +3,8 @@ classes! {
     base: tw![
         "flex",
         "flex-col",
-        "gap-6",
         "flex-[1_1_0]",
         "min-h-0",
+        "min-w-0",
     ],
 }

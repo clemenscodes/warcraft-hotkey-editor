@@ -26,7 +26,7 @@ classes! {
         "checked:after:border-warcraft-gold",
         "checked:after:[border-width:0_0.3rem_0.3rem_0]",
         "checked:after:rotate-45",
-        "checked:after:filter-[drop-shadow(1px_1px_0_var(--color-warcraft-shadow))]",
+        "checked:after:drop-shadow-drop",
         "kb-focus:outline-none",
         "kb-focus:shadow-focus",
     ],

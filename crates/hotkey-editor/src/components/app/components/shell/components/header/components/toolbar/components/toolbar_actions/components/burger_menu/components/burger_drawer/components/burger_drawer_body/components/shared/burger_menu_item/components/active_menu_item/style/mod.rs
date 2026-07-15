@@ -15,7 +15,7 @@ classes! {
         "tracking-label",
         "text-left",
         "cursor-pointer",
-        "transition-[border-color,color,background,box-shadow]",
+        "transition-interactive",
         "hover:border-warcraft-gold",
         "hover:text-warcraft-gold",
         "hover:bg-panel-gold-active",

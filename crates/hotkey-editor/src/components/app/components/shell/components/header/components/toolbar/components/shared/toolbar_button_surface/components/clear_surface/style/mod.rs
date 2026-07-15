@@ -11,7 +11,7 @@ classes! {
         "rounded-[15cqi]",
         "cursor-pointer",
         "bg-panel-gold-resting",
-        "transition-[border-color,color,background,box-shadow]",
+        "transition-interactive",
         "focus:outline-none",
         "kb-focus:border-white",
         "kb-focus:text-white",

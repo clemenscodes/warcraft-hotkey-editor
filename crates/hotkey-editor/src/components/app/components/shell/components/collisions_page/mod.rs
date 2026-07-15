@@ -1,6 +1,5 @@
 pub mod components;
 mod data;
-mod frame;
 mod model;
 pub mod presentation;
 mod view;
@@ -8,11 +7,10 @@ mod view;
 pub use view::CollisionsPageView;
 mod style;
 
+use super::shared::warcraft_page::WarcraftPage;
 use components::body::BodyView;
 use components::collisions_breadcrumbs::CollisionsBreadcrumbsView;
 use dioxus::prelude::*;
-use dioxus_kit::frame::Page;
-use frame::CollisionsPageFrame;
 use model::CollisionsPageModel;
 use presentation::use_collisions_page;
 use style::CLASS;
@@ -25,11 +23,13 @@ pub fn CollisionsPage(props: CollisionsPageModel) -> Element {
     let content = model.content;
     let header = CollisionsBreadcrumbsView { breadcrumbs };
     let body = BodyView { content };
-    let frame = CollisionsPageFrame { header, body };
     rsx! {
-        Page {
+        div {
             class: CLASS,
-            frame,
+            WarcraftPage::<CollisionsBreadcrumbsView, BodyView> {
+                header,
+                body,
+            }
         }
     }
 }

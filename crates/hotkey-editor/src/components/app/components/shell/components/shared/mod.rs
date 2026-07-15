@@ -15,3 +15,4 @@ pub mod mini_grid_frame;
 pub mod tile_face;
 pub mod tooltip;
 pub mod warcraft_dialog;
+pub mod warcraft_page;

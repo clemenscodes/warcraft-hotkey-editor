@@ -1,5 +1,82 @@
 # cqi/fill cascade sweep — handoff
 
+> # 🛑 GROUND TRUTH — READ FIRST. THIS OVERRIDES EVERY OTHER LINE IN THIS FILE. 🛑
+>
+> ## REALLY, ACTUALLY, ONLY `shell/header` AND `shell/footer` ARE DONE.
+>
+> Nothing else is converted. **Not** `grid_editors`, **not** `unit_detail`, **not**
+> `unit_stats_panel`, **not** `resolve_page`, **not** `editor_page`, **not** any
+> dialog, page, panel, or leaf. The two — and only two — correct, verified,
+> role-model trees are:
+>
+> - `components/app/components/shell/components/header`
+> - `components/app/components/shell/components/footer`
+>
+> **Every claim anywhere below that some OTHER subsystem is "DONE", "PROVEN",
+> "converted", "survived the reset correct", or is a "role model" is STALE and
+> FALSE.** It describes work that was `git reset --hard`-reverted (see the AGENT #5
+> post-mortem). The "proven method" section that used to sit here has been DELETED
+> for exactly this reason — it was never proven; it was reverted.
+>
+> If a component OTHER than header/footer currently contains `cqi` or `@container`,
+> that is **leftover BROKEN state from a reverted attempt — NOT converted work.**
+> `grep cqi` proves nothing (AGENT #4). The rendered browser layout is the only
+> signal (AGENT #5). Convert every non-header/footer component against the
+> header/footer trees ONLY, one at a time, browser-verified.
+
+> # 📖 THE SANCTIONED PLAYBOOK — RE-READ THE HEADER, TOP-LEVEL → LEAF, BEFORE EVERY CONVERSION
+>
+> There is no method to invent and none to remember. **The method IS `shell/header`.**
+> Before you convert a single component, you **Read the header tree IN FULL** (Read
+> tool, no offset, no limit) — from the top-level `Header` component all the way down
+> to the `brand_host` leaves — and mirror it. Do NOT work from this handoff's prose or
+> from your memory of the header; **open the actual files, every time.** If your
+> conversion's shape does not match the header's, the header is right.
+>
+> ### The exact reading path — walk it top to leaf, every file
+>
+> **Top level — the one absolute knob:**
+> - `header/mod.rs` — the top component. Renders `BrandHost`, `GridLayoutEditorButtonHost`,
+>   `Toolbar`. Owns **no leaf size**.
+> - `header/style/mod.rs` — the ONE absolute length in the whole subtree: the per-band
+>   bar height (`@container` + `laptop:min-h-18 … uhd:min-h-34`). Nothing below carries
+>   an absolute length.
+>
+> **Then each of the three child chains, host → leaf, in full. `brand_host` is THE
+> exemplar spine — read every file in it:**
+> - `header/components/brand_host/mod.rs` + `…/style/mod.rs` — the **Host**: `@container`
+>   + its **bespoke** box (`w-[26cqi]` + per-band). Renders `Brand`. (Parameterless host:
+>   empty `view/`+`model/`.)
+> - `…/brand_host/components/brand/` — the **leaf**: `mod.rs`, `style/mod.rs` (`size-full`,
+>   **no `@container` of its own**, interior in `cqi`/`em`), plus `view/`, `model/`,
+>   `presentation/`, `data/`. Read all of them.
+>   - `brand/components/brand_title/` (`mod`, `style`, `view`, `model`)
+>   - `brand/components/brand_decoration_leading/`, `brand/components/brand_decoration_trailing/`
+>   - `brand/components/shared/brand_decoration_host/` → `…/components/brand_decoration/` —
+>     a **shared leaf** (≥2 renderers ⇒ `shared/`), itself an `@container` host over its leaf.
+> - `header/components/grid_layout_editor_button_host/…` — Host `@container h-full aspect-39/10`;
+>   leaf fills and draws in `cqi`. Read it as the second host shape.
+> - `header/components/toolbar/…` — the button spine (also listed in §1):
+>   `toolbar → toolbar_actions → inline_actions → shared/toolbar_button →
+>   toolbar_button_surface / toolbar_button_icon`. Read it for the fill-all-the-way-down
+>   cascade and the `cqi` drawing leaf.
+>
+> ### What every level teaches you (this IS the cascade you copy)
+> - **Top owns exactly ONE absolute size, per band.** Every layer below carries none.
+> - **Each intermediate is itself an `@container` and FILLS** (`h-full`/`w-full`/
+>   `size-full`/`min-w-0`) — it passes size down, it does not set its own.
+> - **Each Host's box is BESPOKE** — `brand_host` `w-[26cqi]`, grid button `aspect-39/10`,
+>   collisions button `aspect-square w-9`. **There is no uniform box** (that is the AGENT #5
+>   revert). You read the header to see what box THIS component needs.
+> - **The LEAF is a drawing**: `size-full`, and every interior length in `cqi` off its own
+>   box (or `em` for text — the footer axis). No `px`/`rem`/`vw` inside a leaf.
+> - `directory == component == class`; render-tree == directory-tree; the `super::` test
+>   passes at every node. Confirm it on your new tree the way the header's holds.
+>
+> **The gate on your own work:** does your converted subtree look like `brand_host`'s —
+> a per-band box-owner at the top, fill all the way down, a `cqi`/`em` leaf at the
+> bottom? If not, it is wrong. Re-read the header and fix it before the browser check.
+
 ## 🔨 THE IRON RULE — memorize it, it is the entire task
 
 > **A component's `style` contains `cqi`? Then it MUST be WRAPPED by a PARENT
@@ -62,78 +139,6 @@ owner has SOLE authority on what is broken; `unit_stats_panel` IS broken — do 
 
 ---
 
-## ✅ PROVEN METHOD (verified in-browser 2026-07-14) — READ THIS FIRST, THEN EXECUTE
-
-The method below is **proven**: `resolve_page`'s `ability_icon_host` and full
-move-card interior were converted with it and verified **size-neutral at desktop +
-scaling at mobile** in the live browser. Mirror it exactly. Do NOT re-derive it.
-
-### Ground truth corrections (the older banners below are STALE)
-- **`resolve_page` is a real unconverted target** (0 `@container`, 0 `cqi`,
-  ~27 fixed-px style files). Its move-card cascade is now DONE + verified. Remaining:
-  the `unresolved_*` variant (mirror of the move variant), `mini_grid` (add
-  `@container`; it renders the already-`cqi` shared `GridTile`), and page chrome.
-- **Do NOT measure progress by grepping `cqi`.** Judge by rendered layout.
-
-### The Host recipe (copy `header/components/brand_host` + `unit_stats_panel/…/stat_icon_frame_host`)
-A scaling **leaf** gets a `<leaf>_host/` wrapper:
-- `<leaf>_host/mod.rs`: `#[component] fn <Leaf>Host(props: <Leaf>HostModel)` → renders
-  `div { class: CLASS, <Leaf> { ..named fields } }`. Parameterless host → empty
-  `view/`+`model/` like `brand_host` (renders `<Leaf> {}`).
-- `<leaf>_host/style/mod.rs`: `"@container"` + the **definite box** — either a
-  per-band size (`size-18` + `mobile:size-14`) OR fill (`w-full`/`size-full`/`h-full`).
-- `<leaf>_host/view|model/mod.rs`: ddd `View`/`Model` carrying the leaf's fields
-  (mirror `stat_icon_frame_host`), `#[props(into)]` on `String` fields.
-- `<leaf>_host/components/mod.rs`: `pub mod <leaf>;` — and **`git mv` the leaf dir
-  under `components/`.** Leaf `style` → `size-full` (drop its own size/`flex-none`;
-  the host owns those). Leaf interior lengths → `cqi`.
-- **Rewire every render site**: import `…::<leaf>_host::<Leaf>Host`, render
-  `<Leaf>Host { ..same named fields }`. (Grep the crate for the leaf name.)
-- Update the parent `components/mod.rs`: `pub mod <leaf>;` → `pub mod <leaf>_host;`.
-
-### Containers (mirror `unit_stats_panel`: EVERY container is its own `@container`)
-Add `"@container"` as the **first** class of every container that has definite
-width (it already fills via `w-full`/`flex-[1_1_0]`/grid-track — safe, no collapse).
-Convert its own gap/padding px → `cqi`. Leave `min-w-0`/`*-full`/`max-w-[50%]` etc.
-
-### ⚠️ THE CONTENT-BOX RULE (this is the subtle part — get it right)
-An element's `cqi` resolves off the **nearest ANCESTOR `@container`'s CONTENT box**
-(border-box minus that ancestor's own padding+border), **never off itself**
-(gotcha #2). So:
-
-> `cqi = round(100 × px / ancestorContentWidth, 2)`, where `ancestorContentWidth`
-> is the nearest `@container` ancestor's **content-box** width.
-
-Example: a card panel is `@container` and 941px border-box with `px-[2.55cqi]`
-(≈24px) padding → its **content box is 891px**. A child's `gap-6` (24px) is
-`24/891 = 2.69cqi`, NOT `24/941`. Elements off a padding-less container (grid track,
-`w-full` row) use its border-box = content-box. **Verify each value in the browser.**
-
-### Card/text subsystems: TYPE/RADIUS/BORDER stay tokens
-Only **gaps, padding, icon-box sizes, and badge/overlay dims** become `cqi`. Keep
-`text-*`, `leading-*`, `rounded-*`, `border` (hairline), and colors as design tokens
-(the footer/`unit_stats_panel` rule). Per-band type overrides (`mobile:text-sm`) stay.
-
-### Page-level band scaffolds stay per-band
-Top-of-page layout (per-band widths, `grid-cols-*`, gaps on `editor_page`-style
-scaffolds, the plan header/body/list gutters) is "absolute size at the top per band"
-— leave it. The cascade applies to the **card/panel interiors and their leaves.**
-
-### 🔧 TOOLING (or you will chase ghosts)
-- The dev server's `tailwindcss --watch` is **inotify-blind to newly-created dirs**
-  in this filesystem. After editing/adding classes, run
-  **`touch crates/hotkey-editor/tailwind.css`** to force a full CSS rebuild — else
-  your new `cqi` classes are silently absent and the browser shows 0/unset values.
-  Then reload the page (a stale first read right after edit is a hot-reload race —
-  reload again).
-- `moon run :check` = compile check (fast, ~6s, has a build lock so concurrent
-  runs serialize). `moon run :dev` is the USER's (a hook blocks agents; it is
-  already running). `moon run :ci` is the final gate (USER-run, ~7min).
-- Reference widths measured live for `resolve_page` (at 1920 desktop, 2-col grid):
-  `move_card` 941, `move_panel` content-box 891, `fight_row` 891, `fight_column` 434,
-  `ability_icon` host 72 (mobile 56).
-
----
 
 
 > ## ☠️ AGENT #4 FUCKUP (2026-07-14) — `grep cqi` IS A LIE. DO NOT MEASURE PROGRESS WITH IT. ☠️
@@ -163,6 +168,47 @@ scaffolds, the plan header/body/list gutters) is "absolute size at the top per b
 > in the browser, verify size-neutral), then the next. Do NOT grep-to-declare, do NOT
 > audit other subsystems to call them done, do NOT trust any "COMPLETE" memory or banner.
 
+> ## ☠️ AGENT #5 FUCKUP (2026-07-15) — MASS SWARM + UNIFORM HOST BOX = WHOLE APP BROKEN, REVERTED AGAIN ☠️
+>
+> I hit every documented trap above at once, added two new ones, and got the **entire
+> renderer `git`-nuked a second time.** Every mistake was already written here; I treated
+> this handoff as a summary instead of the law. Do not.
+>
+> - **I invented a fake "Phase 1: just wrap the leaf, leave it unchanged, defer `cqi` to a
+>   later phase" split. THERE IS NO SUCH SPLIT.** The transformation is ATOMIC per component
+>   (IRON RULE + "The transformation, mechanically"): in ONE change the Host gets `@container`
+>   + **that component's real box**, the leaf becomes `size-full` + its interior in `cqi`
+>   measured off the host, and you **browser-verify it**. A host wrapping an *unedited* leaf
+>   is not progress — it is broken. Wrapping ≠ converting.
+> - **I gave all 227 hosts the SAME box `@container size-full min-w-0`.** THERE IS NO UNIFORM
+>   BOX. `size-full` forces every wrapped component to fill a block, which **collapses the
+>   ones already sized right** and mis-boxes the rest → the app rendered destroyed (unit
+>   list icons shrunk to nothing, names truncated to one char, main pane empty). The header
+>   proves each box is bespoke: `brand_host` `@container w-[26cqi]`+per-band; `grid_layout_button`
+>   `@container h-full aspect-39/10`; `collisions_button` `@container h-full aspect-square w-9`.
+>   A template applied at scale is guaranteed collapse.
+> - **`moon run :check` / clippy / tests were GREEN the entire time the app was wrecked.**
+>   Compile gates say NOTHING about this task. **The ONLY signal is rendered layout in the
+>   browser, per component.** I built 243 hosts, went 13/14 green on `:ci`, and never once
+>   opened the browser until the owner sent a screenshot of the wreckage. If you have not
+>   browser-verified a conversion, YOU HAVE NOT DONE IT.
+> - **I re-ran the `grep cqi` = "~half already done" trap** (AGENT #4 above, verbatim) and
+>   concluded the sweep was mostly complete. A component being container-sized at its TOP says
+>   NOTHING about the ~100 nested components inside it (e.g. `unit_card` is per-band container-
+>   sized, but its `unit_card_button` → `unit_card_name`/icon children are all still fixed-px).
+>   **Only `shell/header` + `shell/footer` are done. Full stop.**
+> - **A blind fan-out CANNOT do this task.** "Value-only fan-out is what broke everything"
+>   (§0) — and so is uniform-BOX fan-out. If you fan out, each agent converts **ONE component
+>   FULLY** (its real box + leaf fill + `cqi` measured off the live host width + browser-
+>   verified), never "wrap a batch of leaves with a template." The coordinator measures host
+>   widths and hands agents the numbers. There is no mechanical shortcut around per-component
+>   measurement and in-browser verification.
+>
+> **The single gate that would have caught all of it:** after converting a component, OPEN
+> THE BROWSER (Playwright MCP, `http://localhost:8123/warcraft-hotkey-editor/`, at multiple
+> bands) and confirm it renders size-neutral and matches header quality — BEFORE the next
+> component. Green `:check` with a broken screen is the *default* outcome here, not success.
+>
 > ## 🛑🛑 THE TASK IS TO *CONVERT* COMPONENTS. NOT AUDIT. NOT VERIFY. CONVERT. 🛑🛑
 >
 > **THREE agents in a row have now failed this the same way: they procrastinated —
@@ -175,11 +221,13 @@ scaffolds, the plan header/body/list gutters) is "absolute size at the top per b
 > - A prior session did a BROKEN cqi sweep (value-only, no `@container` hosts). It was
 >   **reverted with `git reset --hard`.** The app is therefore back in the
 >   **PRE-sweep state: fixed `px`/`rem` spacing and sizing across the whole renderer.**
-> - **A handful of subsystems survived the reset already correct** — `shell/header`,
->   `shell/footer`, `grid_editors/*`, and the `unit_detail`/`unit_stats_panel` chain.
->   These are the ROLE MODELS. They are **not** the finish line — they are ~76 of ~499
->   style files. **The other ~261 style files are STILL fixed-px and MUST be converted.**
-> - **Your job:** convert those ~261 components to the fill+`cqi` cascade, CORRECTLY
+> - **ONLY `shell/header` and `shell/footer` survived the reset correct.** They are the
+>   sole ROLE MODELS and the finish-line reference — nothing else. Any `cqi`/`@container`
+>   still sitting in `grid_editors`, `unit_detail`, `unit_stats_panel`, `resolve_page`,
+>   or any other subsystem is **leftover BROKEN state from the reverted sweep, NOT
+>   converted work.** `grep cqi` proves nothing. **Every component except header and
+>   footer — nested to the leaves — is STILL unconverted and MUST be converted.**
+> - **Your job:** convert every non-header/footer component to the fill+`cqi` cascade, CORRECTLY
 >   (host-first, measured, verified), exactly like the header. Subsystem by subsystem,
 >   writing real code, until the whole app scales like the header. That is the entire
 >   task. It is large. It takes many turns. Do it anyway.
@@ -340,6 +388,17 @@ drawing at the leaf, each leaf sitting under a definite-width `@container` host.
 4. **`items-center` leaves a filling child's height indefinite; `items-stretch` makes it
    definite.** Rows whose children fill by height MUST be `items-stretch`.
 
+**Two facts salvaged from the deleted "proven method" section (these were never
+false — only its "already done" claims were):**
+- **`cqi` resolves off the ancestor `@container`'s CONTENT box** (border-box minus
+  that ancestor's own padding/border), never off itself:
+  `cqi = round(100 × px / ancestorContentWidth, 2)`. A padding-less container
+  (grid track, `w-full` row) has content-box = border-box. Verify each value live.
+- **After editing/adding classes, run `touch crates/hotkey-editor/tailwind.css`** —
+  the dev server's `tailwindcss --watch` is inotify-blind to newly-created dirs on
+  this filesystem, so new `cqi` classes silently never generate and the browser
+  shows 0/unset. Then reload the page.
+
 ## 3. The Host pattern (spec-compliant)
 
 To add `FooHost` around leaf `Foo` (leaf nests UNDER the host — render tree == dir tree):
@@ -374,7 +433,8 @@ fractions; intrinsic shape (tap-target `min-h-[44px]`, prose `max-w-[90rem]`, ha
 ## 5. Subsystem state (as of this reverted session's investigation)
 
 - **`shell/header`, `shell/footer`** — DONE, role models. Do not edit.
-- **`grid_editors/*`** — role model, has its `@container` hosts. Reference it.
+- **`grid_editors/*`** — **NOT a verified role model** (only header/footer are). Any
+  `@container`/`cqi` here is reverted leftover — treat it as **unconverted**.
 - **`editor_page` / `editor_workspace` / `mode_tabs`** — use per-band widths/grid-cols +
   per-band gaps. That is CORRECT (bands are absolute-size-at-the-top). Do NOT `cqi`-ify
   these scaffolds.

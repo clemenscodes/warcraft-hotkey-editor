@@ -13,7 +13,7 @@ classes! {
         "text-warcraft-text-secondary",
         "bg-panel-gold-resting",
         "cursor-pointer",
-        "transition-[border-color,color,background,box-shadow]",
+        "transition-interactive",
         "duration-base",
         "ease-[ease]",
         "hover:border-warcraft-gold",

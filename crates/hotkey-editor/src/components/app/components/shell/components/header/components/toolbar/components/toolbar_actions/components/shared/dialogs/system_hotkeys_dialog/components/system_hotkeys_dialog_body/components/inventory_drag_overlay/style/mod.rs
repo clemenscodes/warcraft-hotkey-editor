@@ -14,7 +14,7 @@ classes! {
         "[border-image-source:var(--wc3-slot-frame)]",
         "[border-image-slice:12_fill]",
         "[border-image-repeat:stretch]",
-        "filter-[drop-shadow(0_8px_24px_color-mix(in_oklab,var(--color-warcraft-shadow)_60%,transparent))_drop-shadow(0_0_16px_color-mix(in_oklab,var(--color-warcraft-gold)_60%,transparent))]",
+        "drop-shadow-raised-glow",
     ],
     mobile: tw![
         "mobile:border-8",
