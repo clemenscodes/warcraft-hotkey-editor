@@ -11,6 +11,12 @@ classes! {
         "min-h-0",
         "min-w-0",
     ],
+    mobile: tw![
+        "mobile:flex-none",
+    ],
+    tablet: tw![
+        "tablet:flex-none",
+    ],
     laptop: tw![
         "laptop:gap-6",
     ],

@@ -85,9 +85,9 @@ test.describe("Variant unit dedup (#27 upgrade-swaps + #28 tiers)", () => {
 
   test("'All variants' expands the Clockwerk Goblin group to all four ids", async ({ page }) => {
     await browseRace(page, "neutral");
-    const allVariants = page.getByRole("button", { name: "All variants" });
+    const allVariants = page.getByRole("switch", { name: "All variants" });
     await allVariants.click();
-    await expect(allVariants).toHaveAttribute("aria-pressed", "true");
+    await expect(allVariants).toHaveAttribute("aria-checked", "true");
     const ids = await visibleUnitIds(page);
     expect(ids).toContain("ncg1");
     expect(ids).toContain("ncg2");

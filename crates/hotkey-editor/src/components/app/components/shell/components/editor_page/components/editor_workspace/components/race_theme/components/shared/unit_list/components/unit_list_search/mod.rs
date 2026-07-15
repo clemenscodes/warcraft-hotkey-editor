@@ -7,6 +7,7 @@ mod style;
 
 use dioxus::prelude::*;
 
+use components::search_scope_picker::SearchScopePicker;
 use components::unit_list_search_icon::UnitListSearchIcon;
 use components::unit_list_search_input::UnitListSearchInput;
 use style::CLASS;
@@ -23,6 +24,7 @@ pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
     rsx! {
         div {
             class: CLASS,
+            SearchScopePicker {}
             UnitListSearchIcon {}
             UnitListSearchInput {
                 value,

@@ -5,6 +5,6 @@ classes! {
         "@container",
         "w-full",
         "min-w-0",
-        "h-40",
+        "h-28",
     ],
 }

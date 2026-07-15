@@ -4,10 +4,8 @@ classes! {
     base: tw![
         "flex",
         "flex-row",
-        "gap-2",
-        "[&>button]:min-h-[6.7rem]!",
-    ],
-    mobile: tw![
-        "mobile:[&>button]:min-h-14!",
+        "items-center",
+        "gap-3",
+        "min-w-0",
     ],
 }

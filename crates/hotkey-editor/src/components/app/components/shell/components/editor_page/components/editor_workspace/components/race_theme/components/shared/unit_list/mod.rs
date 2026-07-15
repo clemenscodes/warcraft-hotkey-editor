@@ -4,10 +4,8 @@ mod presentation;
 mod state;
 mod style;
 
-use components::catalog_visibility_toggle::CatalogVisibilityToggle;
 use components::category_scroll::CategoryScroll;
-use components::mobile_category_tabs::MobileCategoryTabs;
-use components::search_field_toggle::SearchFieldToggle;
+use components::unit_controls::UnitControls;
 use components::unit_list_search::UnitListSearch;
 use dioxus::prelude::*;
 use model::UnitListModel;
@@ -38,16 +36,14 @@ pub fn UnitList() -> Element {
     rsx! {
         aside {
             class: CLASS,
-            SearchFieldToggle {}
-            CatalogVisibilityToggle {}
+            UnitControls {
+                tabs: mobile_categories,
+            }
             UnitListSearch {
                 value: search_value,
                 placeholder: search_placeholder,
                 on_input,
                 on_keydown,
-            }
-            MobileCategoryTabs {
-                tabs: mobile_categories,
             }
             CategoryScroll {
                 sections: category_kinds,

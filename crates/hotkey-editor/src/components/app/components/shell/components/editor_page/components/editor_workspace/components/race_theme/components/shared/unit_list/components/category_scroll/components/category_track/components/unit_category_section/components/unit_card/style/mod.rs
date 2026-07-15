@@ -2,20 +2,9 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
+        "h-full",
         "w-full",
-    ],
-    mobile: tw![
-        "mobile:flex-[1_0_auto]",
-        "mobile:w-[min(54cqi,260px)]",
-        "mobile:h-full",
-        "mobile:@container-size",
-        "mobile:snap-start",
-    ],
-    tablet: tw![
-        "tablet:flex-[1_0_auto]",
-        "tablet:w-[min(54cqi,260px)]",
-        "tablet:h-full",
-        "tablet:@container-size",
-        "tablet:snap-start",
+        "@container-size",
+        "snap-start",
     ],
 }

@@ -3,8 +3,13 @@ use tw_macro::tw;
 classes! {
     base: tw![
         "@container",
-        "w-full",
-        "min-w-0",
-        "order-last",
+        "flex-none",
+        "w-[16rem]",
+    ],
+    mobile: tw![
+        "mobile:w-full",
+    ],
+    tablet: tw![
+        "tablet:w-full",
     ],
 }

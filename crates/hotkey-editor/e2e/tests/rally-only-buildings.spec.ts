@@ -36,9 +36,9 @@ test.describe("Rally-only buildings are hidden by default", () => {
 
   test("the 'No abilities' toggle reveals the rally-only buildings", async ({ page }) => {
     await browseNeutralCampaign(page);
-    const noAbilities = page.getByRole("button", { name: "No abilities" });
+    const noAbilities = page.getByRole("switch", { name: "No abilities" });
     await noAbilities.click();
-    await expect(noAbilities).toHaveAttribute("aria-pressed", "true");
+    await expect(noAbilities).toHaveAttribute("aria-checked", "true");
     for (const unitId of RALLY_ONLY_BUILDINGS) {
       await expect(
         unitCardById(page, unitId),

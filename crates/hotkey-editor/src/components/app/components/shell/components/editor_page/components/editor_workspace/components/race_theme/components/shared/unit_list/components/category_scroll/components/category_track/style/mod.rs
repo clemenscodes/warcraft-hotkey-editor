@@ -2,28 +2,12 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "flex",
-        "flex-col",
+        "grid",
+        "grid-rows-2",
+        "grid-flow-col",
+        "auto-cols-[16rem]",
         "gap-2",
-    ],
-    mobile: tw![
-        "mobile:flex-row",
-        "mobile:flex-nowrap",
-        "mobile:w-max",
-        "mobile:min-w-full",
-        "mobile:items-stretch",
-        "mobile:h-full",
-        "mobile:px-1.5",
-        "mobile:py-0",
-    ],
-    tablet: tw![
-        "tablet:flex-row",
-        "tablet:flex-nowrap",
-        "tablet:w-max",
-        "tablet:min-w-full",
-        "tablet:items-stretch",
-        "tablet:h-full",
-        "tablet:px-1.5",
-        "tablet:py-0",
+        "h-full",
+        "px-1.5",
     ],
 }
