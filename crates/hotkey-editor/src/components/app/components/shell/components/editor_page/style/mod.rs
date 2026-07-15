@@ -11,7 +11,7 @@ classes! {
         "min-w-0",
     ],
     mobile: tw![
-        "mobile:flex-none",
+        "mobile:hidden",
     ],
     tablet: tw![
         "tablet:flex-none",

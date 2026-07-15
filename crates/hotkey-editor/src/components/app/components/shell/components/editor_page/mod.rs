@@ -9,6 +9,7 @@ mod style;
 
 use components::editor_tabs_bar::EditorTabsBarView;
 use components::editor_workspace::EditorWorkspaceView;
+use components::mobile_editor::MobileEditor;
 use dioxus::prelude::*;
 use dioxus_kit::frame::Page;
 use frame::EditorPageFrame;
@@ -28,6 +29,7 @@ pub fn EditorPage(props: EditorPageModel) -> Element {
             class: CLASS,
             frame,
         }
+        MobileEditor {}
     }
 }
 
