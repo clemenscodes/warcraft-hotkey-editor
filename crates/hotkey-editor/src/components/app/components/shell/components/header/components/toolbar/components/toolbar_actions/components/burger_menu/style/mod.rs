@@ -6,12 +6,10 @@ classes! {
         "items-center",
         "justify-center",
         "shrink-0",
-        "self-center",
+        "@container",
+        "h-full",
+        "aspect-square",
         "p-0",
-        "w-9",
-        "h-9",
-        "min-w-9",
-        "min-h-9",
         "bg-panel-gold-resting",
         "border",
         "border-warcraft-gold-border",
@@ -28,8 +26,13 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:shadow-focus",
     ],
-    laptop: tw![
-        "laptop:hidden",
+    mobile: tw![
+        "mobile:w-9",
+        "mobile:h-9",
+    ],
+    tablet: tw![
+        "tablet:w-9",
+        "tablet:h-9",
     ],
     desktop: tw![
         "desktop:hidden",

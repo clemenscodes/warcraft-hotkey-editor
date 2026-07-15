@@ -7,9 +7,6 @@ classes! {
         "justify-center",
         "h-full",
     ],
-    laptop: tw![
-        "laptop:flex",
-    ],
     desktop: tw![
         "desktop:flex",
     ],

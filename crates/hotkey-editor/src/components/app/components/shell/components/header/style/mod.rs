@@ -67,7 +67,7 @@ classes! {
         "desktop:grid",
         "desktop:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
         "desktop:items-stretch",
-        "desktop:min-h-24",
+        "desktop:min-h-20",
         "desktop:gap-[1cqi]",
         "desktop:py-[0.7cqi]",
     ],
