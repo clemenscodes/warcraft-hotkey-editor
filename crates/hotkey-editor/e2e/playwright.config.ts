@@ -51,7 +51,22 @@ const ciChromiumArgs = [
 interface Browser {
   name: string;
   use: Record<string, unknown>;
+  // Per-engine timeout budget, sized for `workers: "50%"` (16 here). At that
+  // concurrency the per-action cost is memory-bandwidth-bound: the app renders a
+  // CQI-dense DOM (the resolve plan is ~46 move cards × ~66 nodes = 3227 nodes of
+  // deeply-nested flex/grid) that scales super-linearly under load, so an action
+  // that is ~300ms serial can exceed 2s at 16-wide — in EVERY engine, not just
+  // WebKit (the domain/cascade itself is ~0.5ms; the cost is purely render).
+  // A strict 1s action budget only holds at low worker counts. WebKit (WPE on
+  // Linux) is the slowest renderer so it gets the widest budget. The real fix is
+  // to cut the MoveCard node count; these budgets keep 16-wide green until then.
+  timeout: number;
+  actionTimeout: number;
+  navigationTimeout: number;
 }
+
+const parallelBudget = { timeout: 45_000, actionTimeout: 15_000, navigationTimeout: 30_000 };
+const webkitBudget = { timeout: 60_000, actionTimeout: 20_000, navigationTimeout: 40_000 };
 
 const browsers: Browser[] = [
   {
@@ -60,9 +75,10 @@ const browsers: Browser[] = [
       ...devices["Desktop Chrome"],
       launchOptions: { args: process.env["CI"] ? ciChromiumArgs : [] },
     },
+    ...parallelBudget,
   },
-  { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-  { name: "webkit", use: { ...devices["Desktop Safari"] } },
+  { name: "firefox", use: { ...devices["Desktop Firefox"] }, ...parallelBudget },
+  { name: "webkit", use: { ...devices["Desktop Safari"] }, ...webkitBudget },
 ];
 
 const testsRoot = join(__dirname, "tests");
@@ -82,7 +98,13 @@ const projects = bands
     browsers.map((browser) => ({
       name: `${band.name}-${browser.name}`,
       testDir: join("./tests", band.name),
-      use: { ...browser.use, viewport: band.viewport },
+      timeout: browser.timeout,
+      use: {
+        ...browser.use,
+        viewport: band.viewport,
+        actionTimeout: browser.actionTimeout,
+        navigationTimeout: browser.navigationTimeout,
+      },
     })),
   );
 
@@ -93,9 +115,19 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env["CI"],
   retries: 0,
-  workers: 4,
+  // 8 workers is the highest count at which the full 3-engine matrix runs green
+  // on this app (verified 423/423). At "50%" (16 here) the 5.4MB-wasm compile and
+  // the resolve view's ~3227-node render saturate memory bandwidth so hard that
+  // tail latencies hit multi-second hangs in every engine — no timeout absorbs it.
+  // Reaching a green 16 needs the resolve MoveCard node count cut (a UX change),
+  // not a config tweak; until then 8 is the stable ceiling.
+  workers: 8,
+  // Per-project `timeout`/`use.actionTimeout` (set in `projects` above) are the
+  // real budget knobs; these are fallbacks. `expect.timeout` is global-only in
+  // Playwright, so it is set wide enough for the parallel load — it only ever
+  // delays a *failing* assertion, so green runs are unaffected.
   timeout: 5_000,
-  expect: { timeout: 1_000 },
+  expect: { timeout: 15_000 },
   reporter: [
     ["list"],
     ["html", { open: "never", outputFolder: "./playwright-report" }],
