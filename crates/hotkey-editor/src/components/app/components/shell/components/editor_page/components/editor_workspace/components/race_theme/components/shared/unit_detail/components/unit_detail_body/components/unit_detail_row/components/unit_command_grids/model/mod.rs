@@ -11,6 +11,8 @@ pub struct UnitCommandGridsModel {
     pub build_menu_slots: Option<Rc<[GridSlotId]>>,
     pub uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
     pub research_menu_slots: Option<Rc<[GridSlotId]>>,
+    #[props(default)]
+    pub onscroll: Option<EventHandler<ScrollEvent>>,
 }
 
 impl From<&UnitCommandGridsView> for UnitCommandGridsModel {
@@ -28,6 +30,7 @@ impl From<&UnitCommandGridsView> for UnitCommandGridsModel {
             build_menu_slots,
             uprooted_menu_slots,
             research_menu_slots,
+            onscroll: None,
         }
     }
 }

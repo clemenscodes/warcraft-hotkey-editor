@@ -1,17 +1,16 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "@container",
         "flex",
         "flex-col",
-        "gap-4",
-        "h-full",
-        "shrink-0",
-        "snap-start",
+        "gap-[4.5cqi]",
+        "flex-1",
+        "min-h-0",
+        "w-full",
         "overflow-hidden",
         "contain-layout",
         "contain-paint",
-        "p-4",
+        "p-[4.5cqi]",
         "border",
         "border-warcraft-blue-deep",
         "rounded-card",

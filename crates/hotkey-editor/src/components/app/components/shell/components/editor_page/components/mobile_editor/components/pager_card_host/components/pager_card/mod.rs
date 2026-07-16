@@ -7,6 +7,7 @@ pub use view::PagerCardView;
 mod style;
 
 use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::components::unit_detail_body::components::unit_detail_row::components::unit_command_grids::UnitCommandGrids;
+use components::grid_carousel_dots::GridCarouselDots;
 use components::pager_card_header::PagerCardHeader;
 use dioxus::prelude::*;
 use model::PagerCardModel;
@@ -25,6 +26,9 @@ pub fn PagerCard(props: PagerCardModel) -> Element {
         build_menu_slots,
         uprooted_menu_slots,
         research_menu_slots,
+        grid_count,
+        active_grid_index,
+        onscroll,
     } = presentation;
     rsx! {
         div {
@@ -40,6 +44,11 @@ pub fn PagerCard(props: PagerCardModel) -> Element {
                 build_menu_slots,
                 uprooted_menu_slots,
                 research_menu_slots,
+                onscroll,
+            }
+            GridCarouselDots {
+                grid_count,
+                active_grid_index,
             }
         }
     }

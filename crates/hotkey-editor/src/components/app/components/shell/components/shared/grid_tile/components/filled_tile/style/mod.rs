@@ -32,4 +32,7 @@ classes! {
         "[&:has(.dragging-source-ghost):has(.drag-over-ring)]:border-dashed",
         "[body:has(.dragging-source-ghost)_&]:transition-none",
     ],
+    mobile: tw![
+        "mobile:touch-pan-x",
+    ],
 }

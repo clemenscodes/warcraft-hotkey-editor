@@ -2,7 +2,7 @@ pub mod components;
 mod presentation;
 mod style;
 
-use components::pager_card::PagerCard;
+use components::pager_card_host::PagerCardHost;
 use components::pager_spacer::PagerSpacer;
 use dioxus::prelude::*;
 use presentation::{MobileEditorPresentation, use_mobile_editor};
@@ -29,7 +29,7 @@ pub fn MobileEditor() -> Element {
                 height_px: top_spacer_px,
             }
             for unit_id in window_unit_ids {
-                PagerCard {
+                PagerCardHost {
                     key: "{unit_id}",
                     unit_id,
                 }

@@ -23,9 +23,15 @@ pub fn UnitCommandGrids(props: UnitCommandGridsModel) -> Element {
     let build_menu = model.build_menu;
     let uprooted = model.uprooted;
     let research = model.research;
+    let onscroll_handler = props.onscroll;
     rsx! {
         div {
             class: CLASS,
+            onscroll: move |event| {
+                if let Some(handler) = onscroll_handler {
+                    handler.call(event);
+                }
+            },
             CommandGridEditor {
                 ..model.command_card,
             }

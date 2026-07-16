@@ -1,7 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "size-14",
+        "size-[15.6cqi]",
         "shrink-0",
         "border-2",
         "border-warcraft-blue",
