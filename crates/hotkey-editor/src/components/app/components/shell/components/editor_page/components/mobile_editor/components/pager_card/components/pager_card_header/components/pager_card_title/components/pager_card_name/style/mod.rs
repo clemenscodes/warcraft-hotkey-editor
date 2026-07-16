@@ -1,12 +1,12 @@
 use tw_macro::tw;
 classes! {
     base: tw![
-        "min-w-0",
-        "flex-1",
-        "truncate",
-        "text-xl",
+        "block",
+        "text-[8cqi]",
+        "leading-flush",
         "font-semibold",
         "text-warcraft-gold",
         "text-shadow-drop",
+        "whitespace-nowrap",
     ],
 }

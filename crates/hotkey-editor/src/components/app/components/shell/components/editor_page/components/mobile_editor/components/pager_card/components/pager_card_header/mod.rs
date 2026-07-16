@@ -5,9 +5,8 @@ mod view;
 pub use view::PagerCardHeaderView;
 mod style;
 
-use components::pager_card_id::PagerCardId;
-use components::pager_card_name::PagerCardName;
 use components::pager_card_portrait::PagerCardPortrait;
+use components::pager_card_title::PagerCardTitle;
 use dioxus::prelude::*;
 use model::PagerCardHeaderModel;
 use style::CLASS;
@@ -24,10 +23,8 @@ pub fn PagerCardHeader(props: PagerCardHeaderModel) -> Element {
             PagerCardPortrait {
                 src: icon_url,
             }
-            PagerCardName {
+            PagerCardTitle {
                 name,
-            }
-            PagerCardId {
                 unit_id,
             }
         }
