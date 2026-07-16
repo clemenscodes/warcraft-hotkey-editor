@@ -15,6 +15,8 @@ classes! {
     ],
     mobile: tw![
         "mobile:max-w-120.5",
+        "mobile:gap-[1cqi]",
+        "mobile:pt-0",
     ],
     tablet: tw![
         "tablet:max-w-132.5",

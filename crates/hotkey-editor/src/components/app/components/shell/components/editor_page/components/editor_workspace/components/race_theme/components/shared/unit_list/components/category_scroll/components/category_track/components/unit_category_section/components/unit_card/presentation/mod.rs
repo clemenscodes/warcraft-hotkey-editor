@@ -23,8 +23,11 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
     let mut selected_slot = editor.selected_slot();
     let mut active_category = editor.active_category();
     let is_selected = *selected_unit_id.read() == Some(unit_id);
+    // Searching drops the race filter, so a card in this list can belong to any
+    // race. `open_unit` derives the race and the mode from the unit itself, so
+    // picking one always lands on that unit's own theme.
     let on_click = EventHandler::new(move |_event: MouseEvent| {
-        navigation.select_unit(unit_id);
+        navigation.open_unit(unit_id);
         selected_slot.set(None);
         active_category.set(unit_kind);
     });
@@ -32,7 +35,7 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
         let key_value = event.data().key().to_string();
         if key_value == " " || key_value == "Enter" {
             event.prevent_default();
-            navigation.select_unit(unit_id);
+            navigation.open_unit(unit_id);
             selected_slot.set(None);
             active_category.set(unit_kind);
         }

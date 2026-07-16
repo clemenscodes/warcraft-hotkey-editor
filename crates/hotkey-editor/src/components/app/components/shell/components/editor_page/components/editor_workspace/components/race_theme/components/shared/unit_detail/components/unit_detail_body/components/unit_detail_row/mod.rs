@@ -6,8 +6,8 @@ mod view;
 pub use view::UnitDetailRowView;
 mod style;
 
-use components::hotkey_override_section::HotkeyOverrideSection;
-use components::unit_command_grids::UnitCommandGrids;
+use crate::components::app::components::shell::components::editor_page::components::shared::hotkey_override_section::HotkeyOverrideSection;
+use crate::components::app::components::shell::components::editor_page::components::shared::unit_command_grids::UnitCommandGrids;
 use dioxus::prelude::*;
 use model::UnitDetailRowModel;
 use presentation::UnitDetailRowPresentation;

@@ -1,3 +1,5 @@
+use crate::services::editor_state::context::use_editor_state;
+use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use std::cell::RefCell;
@@ -77,6 +79,15 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
         }
     });
 
+    let editor = use_editor_state();
+    let mut selected_slot = editor.selected_slot();
+    let mut selected_from_research = editor.selected_from_research();
+    let mut selected_from_uprooted = editor.selected_from_uprooted();
+    let navigation = use_view_navigation();
+    let selected_unit_id = navigation.selected_unit_id();
+    let scroll_selected_unit_id = selected_unit_id;
+
+    let scroll_unit_ids = unit_ids.clone();
     let scroll_element_ref = element_ref.clone();
     let mut scroll_viewport_px = viewport_px;
     let mut scroll_active_index = active_index;
@@ -98,7 +109,62 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
         }
         if *scroll_active_index.peek() != clamped_index {
             scroll_active_index.set(clamped_index);
+            // A slot id is the ability itself, not the ability on this unit, and
+            // commands like Hold Position sit on many units at once. Without this
+            // the selection would survive the swipe and light up on every card
+            // that happens to share the ability.
+            selected_slot.set(None);
+            selected_from_research.set(false);
+            selected_from_uprooted.set(false);
+            // `open_unit` already derives the race and the unit mode from the
+            // unit itself and pushes a navigation snapshot, so swiping keeps the
+            // race theme, the `unit` query parameter and the history entry in
+            // step with the card on screen. Reusing it means the pager never
+            // decides any of that for itself.
+            //
+            // The guard is what makes back and forward survive: navigating
+            // scrolls the pager, which fires this handler again, and pushing the
+            // unit we were just told to show would bury the entry we came from.
+            if let Some(unit_id) = scroll_unit_ids.get(clamped_index).copied() {
+                let already_current = *scroll_selected_unit_id.peek() == Some(unit_id);
+                if !already_current {
+                    navigation.open_unit(unit_id);
+                }
+            }
         }
+    });
+
+    // The other direction: a unit chosen anywhere but the pager itself, most of
+    // all by browser back and forward, has to bring its card on screen. Without
+    // this the address bar and the history would move while the card sat still.
+    let effect_unit_ids = unit_ids.clone();
+    let effect_element_ref = element_ref.clone();
+    let mut effect_active_index = active_index;
+    use_effect(move || {
+        let Some(target_unit_id) = *selected_unit_id.read() else {
+            return;
+        };
+        let Some(target_index) = effect_unit_ids
+            .iter()
+            .position(|unit_id| *unit_id == target_unit_id)
+        else {
+            return;
+        };
+        if *effect_active_index.peek() == target_index {
+            return;
+        }
+        let borrowed = effect_element_ref.borrow();
+        let Some(element) = borrowed.as_ref() else {
+            return;
+        };
+        let measured_height = element.client_height();
+        if measured_height <= 0 {
+            return;
+        }
+        effect_active_index.set(target_index);
+        let target_index_px = i32::try_from(target_index).unwrap_or(0);
+        let target_scroll_top = target_index_px * measured_height;
+        element.set_scroll_top(target_scroll_top);
     });
 
     let current_viewport_px = *viewport_px.read();

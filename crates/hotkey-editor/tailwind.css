@@ -42,6 +42,10 @@
 
   --color-warcraft-success: #6dd49a;
   --color-warcraft-danger: #ff5a5a;
+  --color-warcraft-danger-soft: #f0a8a8;
+  --color-warcraft-danger-border: #6a2020;
+  --color-warcraft-danger-dark: #501012;
+  --color-warcraft-danger-deep: #500000;
   --color-warcraft-shadow: #000000;
   --color-warcraft-highlight: #ffffff;
 

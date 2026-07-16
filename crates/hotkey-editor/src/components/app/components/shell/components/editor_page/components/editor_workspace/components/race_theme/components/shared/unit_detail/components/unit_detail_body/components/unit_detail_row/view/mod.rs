@@ -1,11 +1,10 @@
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::presentation::{
-    UnitCommandGridSlots, UnitOverrideTarget,
-};
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::presentation::UnitCommandGridSlots;
+use crate::services::customkeys::queries::unit_override_target_query::UnitOverrideTargetView;
 
 #[derive(Clone, PartialEq)]
 pub struct UnitDetailRowView {
     pub(crate) grid_slots: UnitCommandGridSlots,
-    pub(crate) override_target: UnitOverrideTarget,
+    pub(crate) override_target: UnitOverrideTargetView,
 }
 
 impl ddd::View for UnitDetailRowView {}

@@ -5,4 +5,7 @@ classes! {
         "grid-cols-[repeat(auto-fill,minmax(320px,1fr))]",
         "gap-6",
     ],
+    mobile: tw![
+        "mobile:gap-3",
+    ],
 }

@@ -45,11 +45,6 @@ classes! {
     mobile: tw![
         "mobile:h-dvh",
         "mobile:overflow-y-visible",
-        "mobile:**:min-w-0",
-        "mobile:[&_img]:max-w-full",
-        "mobile:[&_img]:h-auto",
-        "mobile:[&_svg]:max-w-full",
-        "mobile:[&_svg]:h-auto",
         "mobile:[&_button]:[-webkit-tap-highlight-color:transparent]",
         "mobile:[&_button]:touch-manipulation",
         "mobile:[&_a]:[-webkit-tap-highlight-color:transparent]",
@@ -63,11 +58,6 @@ classes! {
     tablet: tw![
         "tablet:h-auto",
         "tablet:overflow-y-visible",
-        "tablet:**:min-w-0",
-        "tablet:[&_img]:max-w-full",
-        "tablet:[&_img]:h-auto",
-        "tablet:[&_svg]:max-w-full",
-        "tablet:[&_svg]:h-auto",
         "tablet:[&_button]:[-webkit-tap-highlight-color:transparent]",
         "tablet:[&_button]:touch-manipulation",
         "tablet:[&_a]:[-webkit-tap-highlight-color:transparent]",

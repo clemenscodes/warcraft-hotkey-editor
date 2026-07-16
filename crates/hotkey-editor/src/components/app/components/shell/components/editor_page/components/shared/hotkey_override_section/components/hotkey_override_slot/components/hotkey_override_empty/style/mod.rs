@@ -1,0 +1,41 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "flex",
+        "flex-col",
+        "items-center",
+        "justify-center",
+        "flex-none",
+        "overflow-hidden",
+        "py-8",
+        "px-9",
+        "border",
+        "border-dashed",
+        "border-warcraft-blue",
+        "rounded-panel",
+        "bg-warcraft-bg-mid/45",
+        "text-warcraft-text-faint",
+        "text-xl",
+        "leading-body",
+        "italic",
+    ],
+    mobile: tw![
+        "mobile:w-full",
+        "mobile:flex-1",
+        "mobile:min-h-0",
+        "mobile:box-border",
+        "mobile:p-[0.8em]",
+        "mobile:text-center",
+        "mobile:text-[3.8cqi]",
+        "mobile:leading-body",
+    ],
+    tablet: tw![
+        "tablet:w-full",
+        "tablet:box-border",
+        "tablet:py-2.5",
+        "tablet:px-3",
+        "tablet:text-sm",
+        "tablet:leading-body",
+    ],
+}

@@ -9,7 +9,7 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:text-2xl",
+        "mobile:text-md",
         "mobile:leading-title",
         "mobile:text-center",
     ],

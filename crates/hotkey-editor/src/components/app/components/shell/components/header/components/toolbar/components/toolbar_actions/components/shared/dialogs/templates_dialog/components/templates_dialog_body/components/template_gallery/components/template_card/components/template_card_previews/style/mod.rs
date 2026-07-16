@@ -8,7 +8,9 @@ classes! {
         "gap-8",
     ],
     mobile: tw![
-        "mobile:gap-2",
+        "mobile:flex-col",
+        "mobile:items-stretch",
+        "mobile:gap-3",
     ],
     tablet: tw![
         "tablet:gap-2",

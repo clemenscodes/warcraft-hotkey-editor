@@ -17,4 +17,9 @@ classes! {
         "kb-focus:outline-none",
         "kb-focus:shadow-focus",
     ],
+    mobile: tw![
+        "mobile:gap-2",
+        "mobile:py-4",
+        "mobile:px-3",
+    ],
 }

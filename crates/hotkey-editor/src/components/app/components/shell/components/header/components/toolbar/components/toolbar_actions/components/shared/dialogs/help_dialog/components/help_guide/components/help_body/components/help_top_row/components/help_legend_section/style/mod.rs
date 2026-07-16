@@ -10,8 +10,10 @@ classes! {
     ],
     mobile: tw![
         "mobile:flex-none",
+        "mobile:w-full",
     ],
     tablet: tw![
         "tablet:flex-none",
+        "tablet:w-full",
     ],
 }

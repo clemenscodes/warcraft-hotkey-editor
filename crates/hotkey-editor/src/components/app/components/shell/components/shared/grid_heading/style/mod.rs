@@ -5,7 +5,7 @@ classes! {
         "uppercase",
         "tracking-heading",
         "font-normal",
-        "text-warcraft-gold",
+        "text-(--race-color,var(--color-warcraft-gold))",
         "text-shadow-drop",
     ],
     mobile: tw![

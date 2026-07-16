@@ -6,4 +6,7 @@ classes! {
         "select-none",
         "text-warcraft-gold/45",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

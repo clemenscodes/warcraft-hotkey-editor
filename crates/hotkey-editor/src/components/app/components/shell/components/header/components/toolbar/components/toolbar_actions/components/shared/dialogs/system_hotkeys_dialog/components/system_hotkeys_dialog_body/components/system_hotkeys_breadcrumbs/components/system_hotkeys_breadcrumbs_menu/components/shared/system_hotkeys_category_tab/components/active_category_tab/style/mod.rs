@@ -23,4 +23,7 @@ classes! {
         "text-warcraft-gold",
         "text-glow",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

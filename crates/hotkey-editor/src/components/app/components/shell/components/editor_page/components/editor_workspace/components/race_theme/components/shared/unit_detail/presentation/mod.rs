@@ -2,14 +2,16 @@ use super::model::UnitDetailInputs;
 use super::state::{UnitDetailModel, UnitDetailView};
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use crate::services::customkeys::context::use_loaded_keys;
+use crate::services::customkeys::queries::unit_override_target_query::{
+    UnitOverrideTargetQuery, UnitOverrideTargetRequest,
+};
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
-use std::collections::HashMap;
 use std::rc::Rc;
 use warcraft_api::WarcraftApi;
 use warcraft_api::{Evasion, HeroAttributes, UnitCombat, WarcraftObjectId, WarcraftObjectMeta};
-use warcraft_keybinds::{CustomKeys, GridSlotId, InspectorDetail, UnitSlotContainers};
+use warcraft_keybinds::{CustomKeys, GridSlotId, UnitSlotContainers};
 
 #[derive(Clone, PartialEq)]
 pub(crate) struct UnitCommandGridSlots {
@@ -18,12 +20,6 @@ pub(crate) struct UnitCommandGridSlots {
     pub(super) build_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) research_menu_slots: Option<Rc<[GridSlotId]>>,
-}
-
-#[derive(Clone, PartialEq)]
-pub(crate) struct UnitOverrideTarget {
-    pub(super) detail: Option<InspectorDetail>,
-    pub(super) active_container_slots: Rc<[GridSlotId]>,
 }
 
 #[derive(Clone, PartialEq)]
@@ -69,94 +65,6 @@ impl TryFrom<WarcraftObjectId> for ResolvedUnit {
     }
 }
 
-#[derive(Clone, PartialEq)]
-pub(super) struct InspectorPanel {
-    pub(super) detail: Option<InspectorDetail>,
-}
-
-pub(super) struct InspectorPanelInputs<'a> {
-    pub(super) inspector_slot: &'a Option<GridSlotId>,
-    pub(super) custom_keys: &'a Option<CustomKeys>,
-    pub(super) host_unit_id: WarcraftObjectId,
-    pub(super) from_uprooted: bool,
-    pub(super) from_research: bool,
-    pub(super) train_upgrades: &'a HashMap<WarcraftObjectId, WarcraftObjectId>,
-}
-
-impl From<InspectorPanelInputs<'_>> for InspectorPanel {
-    fn from(inputs: InspectorPanelInputs<'_>) -> Self {
-        let InspectorPanelInputs {
-            inspector_slot,
-            custom_keys,
-            host_unit_id,
-            from_uprooted,
-            from_research,
-            train_upgrades,
-        } = inputs;
-        let detail = inspector_slot.as_ref().map(|slot| {
-            let upgrade_id = if let GridSlotId::Ability(id) = slot {
-                train_upgrades.get(&id.object_id()).copied()
-            } else {
-                None
-            };
-            InspectorDetail::build(
-                slot,
-                custom_keys,
-                host_unit_id,
-                from_uprooted,
-                from_research,
-                upgrade_id,
-            )
-        });
-        Self { detail }
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub(super) struct ActiveContainer {
-    pub(super) slots: Rc<[GridSlotId]>,
-}
-
-pub(super) struct ActiveContainerInputs<'a> {
-    pub(super) containers: &'a UnitSlotContainers,
-    pub(super) inspector_slot: &'a Option<GridSlotId>,
-    pub(super) from_uprooted: bool,
-    pub(super) from_research: bool,
-}
-
-impl From<ActiveContainerInputs<'_>> for ActiveContainer {
-    fn from(inputs: ActiveContainerInputs<'_>) -> Self {
-        let ActiveContainerInputs {
-            containers,
-            inspector_slot,
-            from_uprooted,
-            from_research,
-        } = inputs;
-        let empty_slot_list: Rc<[GridSlotId]> = Rc::from(Vec::<GridSlotId>::new());
-        let slots: Rc<[GridSlotId]> = if from_uprooted {
-            containers
-                .uprooted()
-                .unwrap_or_else(|| empty_slot_list.clone())
-        } else if from_research {
-            containers
-                .research()
-                .unwrap_or_else(|| empty_slot_list.clone())
-        } else {
-            let in_build_menu = inspector_slot
-                .as_ref()
-                .is_some_and(|slot| containers.build_menu_contains(slot));
-            if in_build_menu {
-                containers
-                    .build_menu()
-                    .unwrap_or_else(|| empty_slot_list.clone())
-            } else {
-                containers.command_card()
-            }
-        };
-        Self { slots }
-    }
-}
-
 fn use_hero_level_reset(selected_unit_id: Signal<Option<WarcraftObjectId>>) {
     let mut selected_hero_level = use_editor_state().selected_hero_level();
     use_effect(move || {
@@ -196,28 +104,16 @@ pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
     let keys_guard = loaded_keys.read();
-    let train_upgrades = slot_containers.train_upgrades();
     let custom_keys_ref: &Option<CustomKeys> = &keys_guard;
-    let inspector_inputs = InspectorPanelInputs {
-        inspector_slot: &inspector_slot,
-        custom_keys: custom_keys_ref,
-        host_unit_id: unit_id,
+    let override_request = UnitOverrideTargetRequest {
+        unit_id,
+        selected_slot: inspector_slot,
         from_uprooted: inspector_from_uprooted,
         from_research: inspector_from_research,
-        train_upgrades,
     };
-    let inspector_panel = InspectorPanel::from(inspector_inputs);
+    let override_query = UnitOverrideTargetQuery::new(override_request);
+    let override_target = override_query.answer(custom_keys_ref);
     drop(keys_guard);
-    let containers_ref: &UnitSlotContainers = &slot_containers;
-    let active_container_inputs = ActiveContainerInputs {
-        containers: containers_ref,
-        inspector_slot: &inspector_slot,
-        from_uprooted: inspector_from_uprooted,
-        from_research: inspector_from_research,
-    };
-    let active_container = ActiveContainer::from(active_container_inputs);
-    let active_container_slots = active_container.slots;
-    let detail = inspector_panel.detail;
     let inputs = UnitDetailInputs {
         unit_id,
         resolved_unit,
@@ -225,8 +121,7 @@ pub(super) fn use_unit_detail_panel() -> UnitDetailView {
         build_menu_slots,
         uprooted_menu_slots,
         research_menu_slots,
-        detail,
-        active_container_slots,
+        override_target,
     };
     let model = UnitDetailModel::from(inputs);
     let boxed_model = Box::new(model);

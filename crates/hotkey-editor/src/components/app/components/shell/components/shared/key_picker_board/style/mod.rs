@@ -9,10 +9,11 @@ classes! {
         "gap-3",
         "w-full",
         "@container",
+        "focus:outline-none",
     ],
     mobile: tw![
         "mobile:flex-col",
-        "mobile:items-center",
+        "mobile:items-stretch",
         "mobile:gap-1.5",
     ],
 }

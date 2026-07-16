@@ -9,4 +9,10 @@ classes! {
         "w-10",
         "h-10",
     ],
+    mobile: tw![
+        "mobile:right-2",
+    ],
+    tablet: tw![
+        "tablet:right-2",
+    ],
 }

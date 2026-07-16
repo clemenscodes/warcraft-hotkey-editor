@@ -103,7 +103,11 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
             }
             "Enter" => {
                 if let Some(first_result) = first_result {
-                    navigation.select_unit(first_result.id());
+                    // Searching drops the race filter, so a hit can belong to any
+                    // race. `open_unit` takes the race and the mode from the unit
+                    // itself, which is what keeps the theme with the unit instead
+                    // of stranding a Demon Hunter under the Human theme.
+                    navigation.open_unit(first_result.id());
                     selected_slot.set(None);
                     active_category.set(first_result.kind());
                 }

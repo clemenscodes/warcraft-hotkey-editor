@@ -1,5 +1,5 @@
 use super::model::UnitDetailRowModel;
-use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::shared::unit_detail::presentation::UnitOverrideTarget;
+use crate::services::customkeys::queries::unit_override_target_query::UnitOverrideTargetView;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::GridSlotId;
@@ -10,7 +10,7 @@ pub struct UnitDetailRowPresentation {
     pub(super) build_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) research_menu_slots: Option<Rc<[GridSlotId]>>,
-    pub(super) override_target: UnitOverrideTarget,
+    pub(super) override_target: UnitOverrideTargetView,
 }
 
 impl From<&UnitDetailRowModel> for UnitDetailRowPresentation {

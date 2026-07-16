@@ -13,6 +13,7 @@ classes! {
         "overflow-y-auto",
     ],
     mobile: tw![
+        "mobile:justify-center",
         "mobile:pt-5",
         "mobile:px-4",
         "mobile:pb-6",

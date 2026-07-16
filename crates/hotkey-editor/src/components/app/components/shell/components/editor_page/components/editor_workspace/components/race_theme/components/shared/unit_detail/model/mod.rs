@@ -1,8 +1,9 @@
-use super::presentation::{ResolvedUnit, UnitCommandGridSlots, UnitOverrideTarget};
+use super::presentation::{ResolvedUnit, UnitCommandGridSlots};
 use super::state::UnitDetailModel;
+use crate::services::customkeys::queries::unit_override_target_query::UnitOverrideTargetView;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
-use warcraft_keybinds::{GridSlotId, InspectorDetail};
+use warcraft_keybinds::GridSlotId;
 
 pub(super) struct UnitDetailInputs {
     pub(super) unit_id: WarcraftObjectId,
@@ -11,8 +12,7 @@ pub(super) struct UnitDetailInputs {
     pub(super) build_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) uprooted_menu_slots: Option<Rc<[GridSlotId]>>,
     pub(super) research_menu_slots: Option<Rc<[GridSlotId]>>,
-    pub(super) detail: Option<InspectorDetail>,
-    pub(super) active_container_slots: Rc<[GridSlotId]>,
+    pub(super) override_target: UnitOverrideTargetView,
 }
 
 impl From<UnitDetailInputs> for UnitDetailModel {
@@ -24,8 +24,7 @@ impl From<UnitDetailInputs> for UnitDetailModel {
             build_menu_slots,
             uprooted_menu_slots,
             research_menu_slots,
-            detail,
-            active_container_slots,
+            override_target,
         } = inputs;
         let ResolvedUnit {
             unit_name,
@@ -42,10 +41,6 @@ impl From<UnitDetailInputs> for UnitDetailModel {
             build_menu_slots,
             uprooted_menu_slots,
             research_menu_slots,
-        };
-        let override_target = UnitOverrideTarget {
-            detail,
-            active_container_slots,
         };
         Self {
             unit_name,

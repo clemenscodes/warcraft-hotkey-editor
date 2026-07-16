@@ -24,4 +24,9 @@ classes! {
         "hover:bg-panel-blue",
         "hover:shadow-glow",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+        "mobile:px-4",
+        "mobile:py-2",
+    ],
 }

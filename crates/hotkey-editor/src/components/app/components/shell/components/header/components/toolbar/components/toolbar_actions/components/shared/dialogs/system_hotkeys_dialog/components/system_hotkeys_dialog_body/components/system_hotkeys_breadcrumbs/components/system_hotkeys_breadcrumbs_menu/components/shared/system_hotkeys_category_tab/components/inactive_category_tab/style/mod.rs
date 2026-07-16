@@ -22,4 +22,7 @@ classes! {
         "kb-focus:text-glow",
         "text-warcraft-gold/55",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

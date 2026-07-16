@@ -38,8 +38,8 @@ classes! {
         "[&:hover:not(:disabled)]:shadow-glow-soft",
     ],
     mobile: tw![
-        "mobile:h-[8.5cqi]",
-        "mobile:p-0",
-        "mobile:text-[1.6cqi]",
+        "mobile:h-(--key-height,11cqi)",
+        "mobile:px-1",
+        "mobile:text-(length:--key-font,4cqi)",
     ],
 }

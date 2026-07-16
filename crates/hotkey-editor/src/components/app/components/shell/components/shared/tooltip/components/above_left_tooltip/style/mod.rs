@@ -16,6 +16,8 @@ classes! {
         "text-center",
         "whitespace-normal",
         "text-warcraft-gold",
+        // bg-panel-dark is an 85-90% gradient and needs an opaque colour under it.
+        "bg-warcraft-bg-base",
         "bg-panel-dark",
         "text-shadow-drop",
         "shadow-raised",
@@ -36,5 +38,11 @@ classes! {
         "not-supports-[anchor-name:--a]:left-0",
         "not-supports-[anchor-name:--a]:right-auto",
         "not-supports-[anchor-name:--a]:translate-x-0",
+    ],
+    mobile: tw![
+        "mobile:max-w-72",
+        "mobile:px-2",
+        "mobile:py-1.5",
+        "mobile:text-sm",
     ],
 }

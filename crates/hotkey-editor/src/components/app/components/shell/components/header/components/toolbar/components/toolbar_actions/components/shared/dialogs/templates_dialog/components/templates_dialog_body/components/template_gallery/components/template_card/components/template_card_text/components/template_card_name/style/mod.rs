@@ -8,7 +8,7 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:text-lg",
+        "mobile:text-md",
         "mobile:tracking-caps",
         "mobile:text-warcraft-gold",
     ],

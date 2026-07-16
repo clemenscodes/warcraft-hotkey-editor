@@ -5,7 +5,7 @@ mod view;
 pub use view::PagerCardHostView;
 mod style;
 
-use components::pager_card::PagerCard;
+use components::pager_card_race_theme::PagerCardRaceTheme;
 use dioxus::prelude::*;
 use model::PagerCardHostModel;
 use style::CLASS;
@@ -17,7 +17,7 @@ pub fn PagerCardHost(props: PagerCardHostModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            PagerCard {
+            PagerCardRaceTheme {
                 unit_id,
             }
         }

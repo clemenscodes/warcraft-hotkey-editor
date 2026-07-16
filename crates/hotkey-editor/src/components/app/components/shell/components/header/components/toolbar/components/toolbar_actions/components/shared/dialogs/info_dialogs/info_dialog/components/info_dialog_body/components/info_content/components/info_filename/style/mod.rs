@@ -10,4 +10,7 @@ classes! {
         "text-2xl",
         "text-warcraft-gold",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

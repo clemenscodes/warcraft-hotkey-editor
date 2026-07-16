@@ -7,7 +7,7 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:text-xl",
+        "mobile:text-sm",
         "mobile:leading-heading",
     ],
     tablet: tw![

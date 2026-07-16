@@ -22,7 +22,9 @@ classes! {
         "kb-focus:shadow-glow-soft",
     ],
     mobile: tw![
-        "mobile:text-lg",
-        "mobile:leading-prose",
+        "mobile:px-3",
+        "mobile:py-3",
+        "mobile:text-xs",
+        "mobile:leading-body",
     ],
 }

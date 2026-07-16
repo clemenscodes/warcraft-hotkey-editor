@@ -5,6 +5,6 @@ classes! {
         "w-[6cqi]",
     ],
     mobile: tw![
-        "mobile:w-[7cqi]",
+        "mobile:w-(--key-slot,9.2cqi)",
     ],
 }

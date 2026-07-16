@@ -25,4 +25,9 @@ classes! {
         "hover:text-warcraft-gold",
         "hover:shadow-glow-soft",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+        "mobile:px-4",
+        "mobile:py-2",
+    ],
 }

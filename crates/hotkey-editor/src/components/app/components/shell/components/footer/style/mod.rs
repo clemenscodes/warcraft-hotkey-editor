@@ -28,4 +28,7 @@ classes! {
         "before:bg-warcraft-gold/40",
         "before:shadow-edge",
     ],
+    mobile: tw![
+        "mobile:hidden",
+    ],
 }

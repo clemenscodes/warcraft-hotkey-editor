@@ -1,4 +1,5 @@
-use super::presentation::{UnitCommandGridSlots, UnitOverrideTarget};
+use super::presentation::UnitCommandGridSlots;
+use crate::services::customkeys::queries::unit_override_target_query::UnitOverrideTargetView;
 use warcraft_api::Evasion;
 use warcraft_api::{HeroAttributes, UnitCombat, WarcraftObjectId};
 
@@ -17,5 +18,5 @@ pub(super) struct UnitDetailModel {
     pub(super) hero_attributes: Option<HeroAttributes>,
     pub(super) evasion: Evasion,
     pub(super) grid_slots: UnitCommandGridSlots,
-    pub(super) override_target: UnitOverrideTarget,
+    pub(super) override_target: UnitOverrideTargetView,
 }

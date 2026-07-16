@@ -18,7 +18,7 @@ classes! {
     ],
     mobile: tw![
         "mobile:aspect-[1/0.85]",
-        "mobile:text-lg",
+        "mobile:text-sm",
     ],
     tablet: tw![
         "tablet:aspect-[1/0.85]",

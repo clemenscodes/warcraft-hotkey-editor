@@ -8,4 +8,7 @@ classes! {
         "max-w-full",
         "whitespace-nowrap",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

@@ -17,4 +17,7 @@ classes! {
         "text-warcraft-gold/85",
         "text-shadow-drop",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }
