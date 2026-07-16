@@ -28,6 +28,8 @@ web-sys = { version = "0.3", features = [
   "Node",
   "NodeList",
   "KeyboardEvent",
+  "MediaQueryList",
+  "MediaQueryListEvent",
   "PointerEvent",
   "MouseEvent",
   "DomRect",

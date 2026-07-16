@@ -4,7 +4,7 @@ classes! {
     base: tw![
         "hidden",
         "flex-row",
-        "items-center",
+        "items-stretch",
         "justify-end",
         "gap-1",
         "min-w-0",

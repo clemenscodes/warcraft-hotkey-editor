@@ -5,7 +5,6 @@ classes! {
         "block",
         "h-full",
         "w-auto",
-        "max-w-full",
         "aspect-square",
         "shrink-0",
     ],

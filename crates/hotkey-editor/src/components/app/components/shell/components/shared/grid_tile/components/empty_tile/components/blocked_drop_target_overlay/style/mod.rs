@@ -4,7 +4,7 @@ classes! {
         "absolute",
         "inset-0",
         "pointer-events-none",
-        "rounded-(--tile-corner-radius,5.2cqi)",
+        "rounded-(--tile-corner-radius,var(--radius-tile))",
         "bg-warcraft-danger/4",
     ],
 }

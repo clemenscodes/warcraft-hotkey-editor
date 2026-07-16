@@ -26,14 +26,6 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:shadow-focus",
     ],
-    mobile: tw![
-        "mobile:w-9",
-        "mobile:h-9",
-    ],
-    tablet: tw![
-        "tablet:w-9",
-        "tablet:h-9",
-    ],
     desktop: tw![
         "desktop:hidden",
     ],

@@ -20,6 +20,7 @@ classes! {
     mobile: tw![
         "mobile:flex",
         "mobile:flex-row",
+        "mobile:items-stretch",
         "mobile:justify-between",
         "mobile:sticky",
         "mobile:top-0",
@@ -39,6 +40,7 @@ classes! {
     tablet: tw![
         "tablet:flex",
         "tablet:flex-row",
+        "tablet:items-stretch",
         "tablet:justify-between",
         "tablet:sticky",
         "tablet:top-0",

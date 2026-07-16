@@ -3,6 +3,7 @@ mod frame;
 mod model;
 mod presentation;
 mod view;
+mod viewport;
 
 pub use view::EditorPageView;
 mod style;
@@ -17,10 +18,17 @@ use model::EditorPageModel;
 use presentation::use_editor_page;
 use style::CLASS;
 use tw_macro::assert_component;
+use viewport::use_is_mobile_viewport;
 
 #[component]
 pub fn EditorPage(props: EditorPageModel) -> Element {
     use_editor_page(&props);
+    let is_mobile = use_is_mobile_viewport();
+    if is_mobile {
+        return rsx! {
+            MobileEditor {}
+        };
+    }
     let header = EditorTabsBarView;
     let body = EditorWorkspaceView;
     let frame = EditorPageFrame { header, body };
@@ -29,7 +37,6 @@ pub fn EditorPage(props: EditorPageModel) -> Element {
             class: CLASS,
             frame,
         }
-        MobileEditor {}
     }
 }
 

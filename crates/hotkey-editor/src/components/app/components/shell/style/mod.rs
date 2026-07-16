@@ -43,7 +43,7 @@ classes! {
         "[&_*::-webkit-scrollbar-corner]:[background:color-mix(in_oklab,var(--color-warcraft-bg-base)_45%,transparent)]",
     ],
     mobile: tw![
-        "mobile:h-auto",
+        "mobile:h-dvh",
         "mobile:overflow-y-visible",
         "mobile:**:min-w-0",
         "mobile:[&_img]:max-w-full",

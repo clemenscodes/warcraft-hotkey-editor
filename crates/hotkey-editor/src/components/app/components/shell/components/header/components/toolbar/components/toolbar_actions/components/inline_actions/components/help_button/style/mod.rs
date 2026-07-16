@@ -6,6 +6,7 @@ classes! {
         "items-center",
         "justify-center",
         "h-full",
+        "aspect-square",
     ],
     desktop: tw![
         "desktop:flex",

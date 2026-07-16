@@ -109,7 +109,7 @@ FROM base AS e2e
 COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY crates/hotkey-editor/e2e/package.json crates/hotkey-editor/e2e/package.json
 RUN pnpm install --frozen-lockfile \
-    && playwright install --with-deps chromium \
+    && playwright install --with-deps chromium firefox webkit \
     && pnpm --filter @warcraft-hotkey-editor/e2e add @playwright/test@1.61.1
 
 COPY --from=builder /app/target/dx/hotkey-editor/release/web/public /app/dist/warcraft-hotkey-editor
