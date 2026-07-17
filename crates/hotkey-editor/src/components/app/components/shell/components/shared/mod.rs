@@ -1,5 +1,7 @@
 pub mod breadcrumbs;
 pub mod carriers_dialog;
+pub mod catalog_visibility_toggle;
+pub mod category_scroll;
 pub mod clear_icon;
 pub mod clear_label;
 pub mod drag_scroll;
@@ -12,6 +14,8 @@ pub mod icons;
 pub mod key_picker_board;
 pub mod key_picker_board_host;
 pub mod mini_grid_frame;
+pub mod search_field_toggle;
 pub mod tile_face;
 pub mod tooltip;
+pub mod unit_list_search;
 pub mod warcraft_dialog;

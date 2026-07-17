@@ -1,9 +1,10 @@
 use dioxus::prelude::*;
 use warcraft_api::UnitMode;
+use warcraft_api::UnitModeSelection;
 
 #[derive(Clone, PartialEq)]
 pub struct ModeTabsView {
-    pub unit_mode: Signal<UnitMode>,
+    pub unit_modes: Signal<UnitModeSelection>,
     pub on_select: EventHandler<UnitMode>,
 }
 

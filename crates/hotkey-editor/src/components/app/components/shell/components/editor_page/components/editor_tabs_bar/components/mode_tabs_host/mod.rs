@@ -11,14 +11,14 @@ use tw_macro::assert_component;
 #[component]
 pub fn ModeTabsHost() -> Element {
     let ModeTabsInputs {
-        unit_mode,
+        unit_modes,
         on_select,
     } = use_mode_tabs_host();
     rsx! {
         div {
             class: CLASS,
             ModeTabs {
-                unit_mode,
+                unit_modes,
                 on_select,
             }
         }

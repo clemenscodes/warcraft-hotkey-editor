@@ -85,7 +85,7 @@ pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     let slot_data_memo = use_memo(move || {
         let unit_id_option = *selected_unit_id.read();
         let unit_id = unit_id_option.unwrap_or_default();
-        UnitSlotContainers::resolve(unit_id)
+        UnitSlotContainers::from(unit_id)
     });
     let unit_id_option = *selected_unit_id.read();
     let Some(unit_id) = unit_id_option else {

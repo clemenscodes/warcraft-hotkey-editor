@@ -8,3 +8,4 @@ pub mod grid_layout;
 pub mod navigation;
 pub mod resolve_selection;
 pub mod undo;
+pub mod unit_catalog;

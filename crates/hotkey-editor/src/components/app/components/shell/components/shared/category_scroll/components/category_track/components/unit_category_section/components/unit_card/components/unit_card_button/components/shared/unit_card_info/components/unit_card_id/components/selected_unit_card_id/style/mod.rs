@@ -1,0 +1,19 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "text-base",
+        "leading-title",
+        "overflow-hidden",
+        "text-ellipsis",
+        "whitespace-nowrap",
+        "opacity-70",
+        "text-(--race-color,var(--color-warcraft-gold))",
+    ],
+    tablet: tw![
+        "tablet:block",
+        "tablet:w-full",
+        "tablet:text-xs",
+        "tablet:leading-title",
+    ],
+}

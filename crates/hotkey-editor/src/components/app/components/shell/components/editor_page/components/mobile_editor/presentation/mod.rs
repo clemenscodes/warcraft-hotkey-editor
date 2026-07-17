@@ -61,6 +61,9 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
 
     let viewport_px = use_signal::<i32>(|| 0);
     let active_index = use_signal::<usize>(|| 0);
+    // Set while the pager is scrolling itself to follow a navigation, so the
+    // scroll it caused is not mistaken for a swipe. See `onscrollend`.
+    let following_navigation = use_signal::<bool>(|| false);
     let element_ref = use_hook(|| Rc::new(RefCell::new(None::<web_sys::Element>)));
 
     let unit_ids = unit_ids_memo();
@@ -91,6 +94,7 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
     let scroll_element_ref = element_ref.clone();
     let mut scroll_viewport_px = viewport_px;
     let mut scroll_active_index = active_index;
+    let mut scroll_following_navigation = following_navigation;
     let onscrollend = EventHandler::new(move |_event: ScrollEvent| {
         let borrowed = scroll_element_ref.borrow();
         let Some(element) = borrowed.as_ref() else {
@@ -106,6 +110,19 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
         let clamped_index = usize::try_from(rounded_index).unwrap_or(0).min(last_index);
         if *scroll_viewport_px.peek() != measured_height {
             scroll_viewport_px.set(measured_height);
+        }
+        // The pager scrolls itself whenever a unit is chosen elsewhere — the
+        // search dialog, back/forward. That scroll ends here too, and it must not
+        // be read as a swipe: the effect below sets the target index against the
+        // layout it can see, but the window and its spacers re-render underneath,
+        // so the settled position can round to the NEIGHBOUR. Navigating to that
+        // neighbour would silently overwrite the unit that was actually asked
+        // for — picking a Demon Hunter landed on Cenarius, the card before it in
+        // the pager's order. The `already_current` guard cannot catch it, because
+        // the neighbour is a genuinely different unit.
+        if *scroll_following_navigation.peek() {
+            scroll_following_navigation.set(false);
+            return;
         }
         if *scroll_active_index.peek() != clamped_index {
             scroll_active_index.set(clamped_index);
@@ -140,6 +157,7 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
     let effect_unit_ids = unit_ids.clone();
     let effect_element_ref = element_ref.clone();
     let mut effect_active_index = active_index;
+    let mut effect_following_navigation = following_navigation;
     use_effect(move || {
         let Some(target_unit_id) = *selected_unit_id.read() else {
             return;
@@ -162,9 +180,25 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
             return;
         }
         effect_active_index.set(target_index);
-        let target_index_px = i32::try_from(target_index).unwrap_or(0);
-        let target_scroll_top = target_index_px * measured_height;
-        element.set_scroll_top(target_scroll_top);
+        effect_following_navigation.set(true);
+        // Scrolling has to wait for the window this index change re-renders.
+        // The card at `target_index` only sits at `target_index * height` once
+        // the spacers around the virtualisation window have been laid out for the
+        // new index; scrolling in this same tick measures the OLD spacers and
+        // lands somewhere else entirely — picking Orc put the pager on the first
+        // Orc unit by name (Barracks) instead of the one the race switch resolved
+        // (Blademaster).
+        let scroll_element = element.clone();
+        spawn(async move {
+            gloo_timers::future::TimeoutFuture::new(0).await;
+            let laid_out_height = scroll_element.client_height();
+            if laid_out_height <= 0 {
+                return;
+            }
+            let target_index_px = i32::try_from(target_index).unwrap_or(0);
+            let target_scroll_top = target_index_px * laid_out_height;
+            scroll_element.set_scroll_top(target_scroll_top);
+        });
     });
 
     let current_viewport_px = *viewport_px.read();

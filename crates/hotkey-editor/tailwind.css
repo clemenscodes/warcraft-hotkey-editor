@@ -39,6 +39,11 @@
   --color-race-orc: #ff7a7a;
   --color-race-nightelf: #5fdada;
   --color-race-undead: #c79bff;
+  /* Neutral is the one race with no colour of its own — taverns, mercenaries and
+     creeps belong to nobody — so it wears the app's gold. The token exists so the
+     race-colour axis is total: every Race maps to a colour, and a neutral theme no
+     longer resolves through an undefined var and out to a fallback by luck. */
+  --color-race-neutral: var(--color-warcraft-gold);
 
   --color-warcraft-success: #6dd49a;
   --color-warcraft-danger: #ff5a5a;

@@ -60,7 +60,7 @@ impl UnitOverrideTargetQuery {
 
     pub fn answer(&self, custom_keys: &Option<CustomKeys>) -> UnitOverrideTargetView {
         let unit_id = self.request.unit_id;
-        let containers = UnitSlotContainers::resolve(unit_id);
+        let containers = UnitSlotContainers::from(unit_id);
         let owned_slot = self.owned_slot(&containers);
         let active_container_slots = self.active_container_slots(&containers, &owned_slot);
         let detail = self.detail(&containers, &owned_slot, custom_keys);
@@ -188,7 +188,7 @@ mod tests {
             .all()
             .map(|unit| unit.id())
             .find(|unit_id| {
-                let containers = UnitSlotContainers::resolve(*unit_id);
+                let containers = UnitSlotContainers::from(*unit_id);
                 let command_card = containers.command_card();
                 !command_card.is_empty()
             })
@@ -217,7 +217,7 @@ mod tests {
     #[test]
     fn reports_a_detail_for_a_slot_the_unit_owns() {
         let unit_id = first_unit_with_command_card();
-        let containers = UnitSlotContainers::resolve(unit_id);
+        let containers = UnitSlotContainers::from(unit_id);
         let command_card = containers.command_card();
         let owned_slot = *command_card.first().expect("command card is not empty");
         let request = UnitOverrideTargetRequest {
@@ -235,14 +235,14 @@ mod tests {
     fn reports_no_detail_for_a_slot_the_unit_does_not_own() {
         let api = WarcraftApi::default();
         let host_unit_id = first_unit_with_command_card();
-        let host_containers = UnitSlotContainers::resolve(host_unit_id);
+        let host_containers = UnitSlotContainers::from(host_unit_id);
         let foreign_slot = api
             .unit()
             .all()
             .map(|unit| unit.id())
             .filter(|unit_id| *unit_id != host_unit_id)
             .filter_map(|unit_id| {
-                let containers = UnitSlotContainers::resolve(unit_id);
+                let containers = UnitSlotContainers::from(unit_id);
                 let command_card = containers.command_card();
                 command_card.first().copied()
             })

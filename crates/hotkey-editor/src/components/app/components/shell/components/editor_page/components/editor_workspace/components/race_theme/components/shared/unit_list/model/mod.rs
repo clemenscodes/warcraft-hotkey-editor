@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use warcraft_api::UnitCatalogGroup;
 use warcraft_api::UnitKind;
 use warcraft_keybinds::GridSlotId;
 
@@ -27,7 +28,7 @@ pub(super) struct UnitListModel {
     pub(super) on_input: EventHandler<FormEvent>,
     pub(super) on_keydown: EventHandler<KeyboardEvent>,
     pub(super) mobile_categories: Vec<UnitKind>,
-    pub(super) category_kinds: Vec<UnitKind>,
+    pub(super) groups: Vec<UnitCatalogGroup>,
 }
 
 pub(super) struct UnitListInputs {
@@ -49,14 +50,14 @@ impl From<UnitListInputs> for UnitListModel {
         } = inputs;
         let search_value: ReadSignal<String> = raw_query.into();
         let mobile_categories = MOBILE_CATEGORY_ORDER.to_vec();
-        let category_kinds = state.category_kinds().to_vec();
+        let groups = state.groups().to_vec();
         Self {
             search_value,
             search_placeholder,
             on_input,
             on_keydown,
             mobile_categories,
-            category_kinds,
+            groups,
         }
     }
 }

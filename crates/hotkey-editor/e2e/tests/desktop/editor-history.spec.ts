@@ -36,14 +36,28 @@ test.describe("Editor selection history (back/forward)", () => {
     await expect(page).toHaveURL(/race=orc/);
   });
 
+  // The modes are independent, not a switch: turning campaign on adds it to
+  // melee rather than replacing it, so the URL carries both.
   test("back steps through mode selections", async ({ page }) => {
     await expect(page).toHaveURL(/mode=melee/);
 
     await page.locator("button", { hasText: "Campaign" }).click();
-    await expect(page).toHaveURL(/mode=campaign/);
+    await expect(page).toHaveURL(/mode=melee,campaign/);
 
     await page.goBack();
+    await expect(page).toHaveURL(/mode=melee(&|$)/);
+  });
+
+  test("turning off the last mode is refused, so the list is never empty", async ({
+    page,
+  }) => {
     await expect(page).toHaveURL(/mode=melee/);
+
+    // Melee is the only mode on, so clicking it off would list nothing at all —
+    // which is never what clicking a filter means.
+    await page.locator("button", { hasText: "Melee" }).click();
+    await expect(page).toHaveURL(/mode=melee/);
+    await expect(page.locator(".unit-card").first()).toBeVisible();
   });
 
   test("back steps through selected units", async ({ page }) => {

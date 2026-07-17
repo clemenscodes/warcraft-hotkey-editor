@@ -5,8 +5,8 @@ pub use view::ModeTabView;
 
 use crate::components::app::components::shell::components::editor_page::components::shared::toggle_button::ToggleButton;
 use dioxus::prelude::*;
-use tw_macro::assert_component;
 use model::ModeTabModel;
+use tw_macro::assert_component;
 
 #[component]
 pub fn ModeTab(props: ModeTabModel) -> Element {

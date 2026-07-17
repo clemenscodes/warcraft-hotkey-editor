@@ -23,9 +23,9 @@ impl ModeTabPair {
 }
 
 fn mode_tab(props: &ModeTabsModel, mode: UnitMode, label: &'static str) -> ModeTabBinding {
-    let unit_mode = props.unit_mode;
+    let unit_modes = props.unit_modes;
     let on_select = props.on_select;
-    let active = *unit_mode.read() == mode;
+    let active = unit_modes.read().includes(mode);
     let onclick = EventHandler::new(move |_event: MouseEvent| {
         on_select.call(mode);
     });

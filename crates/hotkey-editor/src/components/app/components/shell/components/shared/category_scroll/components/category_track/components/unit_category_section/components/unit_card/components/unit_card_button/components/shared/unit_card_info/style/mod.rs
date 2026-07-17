@@ -1,0 +1,16 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "flex",
+        "flex-col",
+        "gap-2",
+        "min-w-0",
+        "flex-1",
+    ],
+    tablet: tw![
+        "tablet:items-start",
+        "tablet:text-left",
+        "tablet:gap-1",
+        "tablet:overflow-hidden",
+    ],
+}

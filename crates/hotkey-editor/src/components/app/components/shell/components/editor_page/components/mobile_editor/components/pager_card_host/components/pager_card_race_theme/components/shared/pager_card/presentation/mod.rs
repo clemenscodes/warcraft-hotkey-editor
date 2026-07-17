@@ -59,7 +59,7 @@ pub(super) fn use_pager_card(props: &PagerCardModel) -> PagerCardPresentation {
         let override_query = UnitOverrideTargetQuery::new(override_request);
         override_query.answer(custom_keys_ref)
     });
-    let slot_data = use_memo(move || UnitSlotContainers::resolve(unit_id));
+    let slot_data = use_memo(move || UnitSlotContainers::from(unit_id));
     let identity = use_memo(move || {
         let api = WarcraftApi::default();
         let unit_view = api.unit().get(unit_id);

@@ -1,32 +1,3 @@
-use warcraft_api::CatalogVisibility;
-use warcraft_api::Race;
-use warcraft_api::SearchField;
-use warcraft_api::UnitListing;
-use warcraft_api::UnitListingRequest;
-use warcraft_api::UnitMode;
-
-#[derive(Clone, PartialEq, Debug)]
-pub(super) struct CatalogListingInputs {
-    pub(super) race: Race,
-    pub(super) mode: UnitMode,
-    pub(super) query: String,
-    pub(super) search_field: SearchField,
-    pub(super) visibility: CatalogVisibility,
-}
-
-impl CatalogListingInputs {
-    pub(super) fn into_listing(self) -> UnitListing {
-        let Self {
-            race,
-            mode,
-            query,
-            search_field,
-            visibility,
-        } = self;
-        let request = UnitListingRequest::new(race, mode, query, search_field, visibility);
-        UnitListing::resolve(&request)
-    }
-}
 use super::model::SearchKeydownInputs;
 use super::model::UnitListInputs;
 use super::model::UnitListModel;
@@ -34,8 +5,10 @@ use super::state::UnitListState;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use crate::services::navigation::view_navigation::ViewNavigationContext;
+use crate::services::unit_catalog::context::use_unit_catalog;
 use dioxus::prelude::*;
 use std::time::Duration;
+use warcraft_api::SearchField;
 
 pub(super) struct DebouncedSearch {
     pub(super) raw_query: Signal<String>,
@@ -120,13 +93,8 @@ fn use_search_keydown(inputs: SearchKeydownInputs) -> EventHandler<KeyboardEvent
 pub(super) fn use_unit_list() -> UnitListModel {
     let navigation = use_view_navigation();
     let editor = use_editor_state();
-    let active_race = navigation.active_race();
-    let unit_mode = navigation.unit_mode();
-    let search_query = navigation.search_query();
     let selected_slot = editor.selected_slot();
     let search_field = editor.search_field();
-    let show_abilityless_units = editor.show_abilityless_units();
-    let expand_variants = editor.expand_variants();
     let active_category = editor.active_category();
     let current_search_field = *search_field.read();
     let search_placeholder = match current_search_field {
@@ -134,28 +102,9 @@ pub(super) fn use_unit_list() -> UnitListModel {
         SearchField::Ability => "Search by ability…",
     };
     let search = use_debounced_search(navigation);
-    let listing_memo = use_memo(move || {
-        let listing_race = *active_race.read();
-        let listing_mode = *unit_mode.read();
-        let listing_query = search_query.read().clone();
-        let listing_search_field = *search_field.read();
-        let listing_show_abilityless = *show_abilityless_units.read();
-        let listing_expand_variants = *expand_variants.read();
-        let listing_visibility = CatalogVisibility {
-            include_abilityless: listing_show_abilityless,
-            expand_variants: listing_expand_variants,
-        };
-        let inputs = CatalogListingInputs {
-            race: listing_race,
-            mode: listing_mode,
-            query: listing_query,
-            search_field: listing_search_field,
-            visibility: listing_visibility,
-        };
-        inputs.into_listing()
-    });
-    let listing = listing_memo();
-    let state = UnitListState::new(listing);
+    let catalog = use_unit_catalog();
+    let listing = catalog.listing();
+    let state = UnitListState::from(listing);
     let first_result = state.first_result();
     let raw_query = search.raw_query;
     let on_clear = search.on_clear;

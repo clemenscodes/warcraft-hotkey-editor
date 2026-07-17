@@ -19,6 +19,7 @@ use crate::services::navigation::navigation_command::{NavigationCommand, Navigat
 use crate::services::navigation::navigation_snapshot::NavigationSnapshot;
 use crate::services::resolve_selection::context::use_resolve_selection_provider;
 use crate::services::undo::UndoHistory;
+use crate::services::unit_catalog::context::use_unit_catalog_provider;
 use dioxus::prelude::*;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::EditorSnapshot;
@@ -236,6 +237,9 @@ pub(super) fn use_shell() -> ShellModel {
         navigation_dispatch,
     );
     use_editor_state_provider(update_hotkeys_on_move);
+    // Sits below navigation and editor state because it reads both: the filter it
+    // resolves is assembled out of their signals.
+    use_unit_catalog_provider();
     let drag_state = use_drag_state_provider();
     let upload_status = use_signal::<UploadStatus>(|| UploadStatus::Idle);
     use_context_provider(|| upload_status);

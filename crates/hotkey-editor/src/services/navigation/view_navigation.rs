@@ -1,4 +1,5 @@
 use super::default_unit::DefaultUnit;
+use super::default_unit::DefaultUnitRequest;
 use crate::services::collision_selection::CollisionSelection;
 use crate::services::navigation::app_view::{AppView, CollisionKind};
 use crate::services::navigation::editor_navigation::DecodedEditorNavigation;
@@ -7,6 +8,7 @@ use crate::services::navigation::navigation_snapshot::NavigationSnapshot;
 use crate::services::navigation::search_session::SearchSession;
 use crate::services::resolve_selection::ResolveSelection;
 use dioxus::prelude::*;
+use warcraft_api::UnitModeSelection;
 use warcraft_api::{Race, WarcraftObjectId, WarcraftObjectMeta};
 use warcraft_api::{UnitMode, WarcraftApi};
 use warcraft_keybinds::GridSlotId;
@@ -15,7 +17,7 @@ use warcraft_keybinds::GridSlotId;
 pub struct EditorNavigationSignals {
     current_view: Signal<AppView>,
     active_race: Signal<Race>,
-    unit_mode: Signal<UnitMode>,
+    unit_modes: Signal<UnitModeSelection>,
     selected_unit_id: Signal<Option<WarcraftObjectId>>,
     search_query: Signal<String>,
 }
@@ -24,14 +26,14 @@ impl EditorNavigationSignals {
     pub fn new(
         current_view: Signal<AppView>,
         active_race: Signal<Race>,
-        unit_mode: Signal<UnitMode>,
+        unit_modes: Signal<UnitModeSelection>,
         selected_unit_id: Signal<Option<WarcraftObjectId>>,
         search_query: Signal<String>,
     ) -> Self {
         Self {
             current_view,
             active_race,
-            unit_mode,
+            unit_modes,
             selected_unit_id,
             search_query,
         }
@@ -42,7 +44,7 @@ impl EditorNavigationSignals {
 pub struct ViewNavigationContext {
     current_view: Signal<AppView>,
     active_race: Signal<Race>,
-    unit_mode: Signal<UnitMode>,
+    unit_modes: Signal<UnitModeSelection>,
     selected_unit_id: Signal<Option<WarcraftObjectId>>,
     search_query: Signal<String>,
     collision_selection: CollisionSelection,
@@ -62,14 +64,14 @@ impl ViewNavigationContext {
         let EditorNavigationSignals {
             current_view,
             active_race,
-            unit_mode,
+            unit_modes,
             selected_unit_id,
             search_query,
         } = editor;
         Self {
             current_view,
             active_race,
-            unit_mode,
+            unit_modes,
             selected_unit_id,
             search_query,
             collision_selection,
@@ -87,8 +89,8 @@ impl ViewNavigationContext {
         self.active_race
     }
 
-    pub fn unit_mode(&self) -> Signal<UnitMode> {
-        self.unit_mode
+    pub fn unit_modes(&self) -> Signal<UnitModeSelection> {
+        self.unit_modes
     }
 
     pub fn selected_unit_id(&self) -> Signal<Option<WarcraftObjectId>> {
@@ -103,11 +105,11 @@ impl ViewNavigationContext {
         match view {
             AppView::Editor => {
                 let race = *self.active_race.peek();
-                let unit_mode = *self.unit_mode.peek();
+                let unit_modes = *self.unit_modes.peek();
                 let selected_unit_id = *self.selected_unit_id.peek();
                 let search_query = self.search_query.peek().clone();
                 let navigation =
-                    DecodedEditorNavigation::new(race, unit_mode, selected_unit_id, search_query);
+                    DecodedEditorNavigation::new(race, unit_modes, selected_unit_id, search_query);
                 NavigationSnapshot::Editor(navigation)
             }
             AppView::Collisions { kind } => {
@@ -151,22 +153,36 @@ impl ViewNavigationContext {
 
     pub fn select_race(self, race: Race, mut selected_slot: Signal<Option<GridSlotId>>) {
         selected_slot.set(None);
-        let unit_mode = *self.unit_mode.peek();
-        let default_unit = DefaultUnit::new(race, unit_mode);
-        let next_unit = default_unit.resolve();
+        let unit_modes = *self.unit_modes.peek();
+        let default_unit_request = DefaultUnitRequest::new(race, unit_modes);
+        let default_unit = DefaultUnit::from(&default_unit_request);
+        let next_unit = default_unit.unit_id();
         let search_query = self.search_query.peek().clone();
-        let navigation = DecodedEditorNavigation::new(race, unit_mode, next_unit, search_query);
+        let navigation = DecodedEditorNavigation::new(race, unit_modes, next_unit, search_query);
         let snapshot = NavigationSnapshot::Editor(navigation);
         self.push(snapshot);
     }
 
-    pub fn select_mode(self, mode: UnitMode, mut selected_slot: Signal<Option<GridSlotId>>) {
+    /// Flip one mode on or off. The two are independent — a unit that exists in
+    /// either can be listed at the same time — so this toggles rather than
+    /// replaces. The domain refuses to turn the last one off, because clicking a
+    /// filter never means "list nothing".
+    pub fn toggle_mode(self, mode: UnitMode, mut selected_slot: Signal<Option<GridSlotId>>) {
         selected_slot.set(None);
         let race = *self.active_race.peek();
-        let default_unit = DefaultUnit::new(race, mode);
-        let next_unit = default_unit.resolve();
+        let current_modes = *self.unit_modes.peek();
+        let next_modes = current_modes.toggled(mode);
+        if next_modes == current_modes {
+            return;
+        }
+        // The unit on screen may have just been filtered out from under us, so
+        // land on the narrowed listing's own first entry rather than a unit the
+        // new selection no longer admits.
+        let default_unit_request = DefaultUnitRequest::new(race, next_modes);
+        let default_unit = DefaultUnit::from(&default_unit_request);
+        let next_unit = default_unit.unit_id();
         let search_query = self.search_query.peek().clone();
-        let navigation = DecodedEditorNavigation::new(race, mode, next_unit, search_query);
+        let navigation = DecodedEditorNavigation::new(race, next_modes, next_unit, search_query);
         let snapshot = NavigationSnapshot::Editor(navigation);
         self.push(snapshot);
     }
@@ -175,32 +191,41 @@ impl ViewNavigationContext {
         let api = WarcraftApi::default();
         let object_option = api.object(unit_id);
         let mut race = *self.active_race.peek();
-        let mut unit_mode = *self.unit_mode.peek();
+        let mut unit_modes = *self.unit_modes.peek();
         if let Some(object) = object_option {
             if let Some(object_race) = object.race() {
                 race = object_race;
             }
+            // A hit may be a campaign unit while the browse shows melee, so the
+            // unit's own mode has to be admitted or it would vanish the moment it
+            // is opened. It is added, never swapped in: the modes are independent,
+            // and opening a campaign unit is no reason to stop listing melee.
             if let WarcraftObjectMeta::Unit(unit_meta) = object.meta() {
-                unit_mode = if unit_meta.is_campaign() {
+                let unit_mode = if unit_meta.is_campaign() {
                     UnitMode::Campaign
                 } else {
                     UnitMode::Melee
                 };
+                if !unit_modes.includes(unit_mode) {
+                    unit_modes = unit_modes.toggled(unit_mode);
+                }
             }
         }
         let search_query = self.search_query.peek().clone();
         let selected_unit = Some(unit_id);
-        let navigation = DecodedEditorNavigation::new(race, unit_mode, selected_unit, search_query);
+        let navigation =
+            DecodedEditorNavigation::new(race, unit_modes, selected_unit, search_query);
         let snapshot = NavigationSnapshot::Editor(navigation);
         self.push(snapshot);
     }
 
     pub fn select_unit(self, unit_id: WarcraftObjectId) {
         let race = *self.active_race.peek();
-        let unit_mode = *self.unit_mode.peek();
+        let unit_modes = *self.unit_modes.peek();
         let search_query = self.search_query.peek().clone();
         let selected_unit = Some(unit_id);
-        let navigation = DecodedEditorNavigation::new(race, unit_mode, selected_unit, search_query);
+        let navigation =
+            DecodedEditorNavigation::new(race, unit_modes, selected_unit, search_query);
         let snapshot = NavigationSnapshot::Editor(navigation);
         self.push(snapshot);
     }
@@ -227,9 +252,9 @@ impl ViewNavigationContext {
 
     pub fn set_search_query(self, value: String) {
         let race = *self.active_race.peek();
-        let unit_mode = *self.unit_mode.peek();
+        let unit_modes = *self.unit_modes.peek();
         let selected_unit_id = *self.selected_unit_id.peek();
-        let navigation = DecodedEditorNavigation::new(race, unit_mode, selected_unit_id, value);
+        let navigation = DecodedEditorNavigation::new(race, unit_modes, selected_unit_id, value);
         let snapshot = NavigationSnapshot::Editor(navigation);
         let mut session_active = self.search_session.active();
         let mut session_generation = self.search_session.generation();
@@ -263,9 +288,9 @@ impl ViewNavigationContext {
         if *active_race.peek() != navigation.race() {
             active_race.set(navigation.race());
         }
-        let mut unit_mode = self.unit_mode;
-        if *unit_mode.peek() != navigation.unit_mode() {
-            unit_mode.set(navigation.unit_mode());
+        let mut unit_modes = self.unit_modes;
+        if *unit_modes.peek() != navigation.unit_modes() {
+            unit_modes.set(navigation.unit_modes());
         }
         let mut selected_unit_id = self.selected_unit_id;
         if *selected_unit_id.peek() != navigation.selected_unit_id() {

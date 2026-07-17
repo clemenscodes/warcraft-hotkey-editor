@@ -1,11 +1,14 @@
 use super::default_unit::DefaultUnit;
+use super::default_unit::DefaultUnitRequest;
+use std::str::FromStr;
+use warcraft_api::UnitModeSelection;
+use warcraft_api::WarcraftApi;
 use warcraft_api::{Race, WarcraftObjectId};
-use warcraft_api::{UnitMode, WarcraftApi};
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct DecodedEditorNavigation {
     race: Race,
-    unit_mode: UnitMode,
+    unit_modes: UnitModeSelection,
     selected_unit_id: Option<WarcraftObjectId>,
     search_query: String,
 }
@@ -15,8 +18,8 @@ impl DecodedEditorNavigation {
         self.race
     }
 
-    pub fn unit_mode(&self) -> UnitMode {
-        self.unit_mode
+    pub fn unit_modes(&self) -> UnitModeSelection {
+        self.unit_modes
     }
 
     pub fn selected_unit_id(&self) -> Option<WarcraftObjectId> {
@@ -29,13 +32,13 @@ impl DecodedEditorNavigation {
 
     pub fn new(
         race: Race,
-        unit_mode: UnitMode,
+        unit_modes: UnitModeSelection,
         selected_unit_id: Option<WarcraftObjectId>,
         search_query: String,
     ) -> Self {
         Self {
             race,
-            unit_mode,
+            unit_modes,
             selected_unit_id,
             search_query,
         }
@@ -51,18 +54,21 @@ impl DecodedEditorNavigation {
         let race_param = race.unwrap_or_default();
         let race = Race::try_from(race_param).unwrap_or(Race::Human);
         let mode_param = mode.unwrap_or_default();
-        let unit_mode = UnitMode::try_from(mode_param).unwrap_or(UnitMode::Melee);
+        // A link may name one mode, both, or something stale; anything that names
+        // no real mode falls back to the default rather than listing nothing.
+        let unit_modes = UnitModeSelection::from_str(mode_param).unwrap_or_default();
         let unit_param = unit.unwrap_or_default();
         let selected_unit_id = if unit_param.is_empty() {
-            let default_unit = DefaultUnit::new(race, unit_mode);
-            default_unit.resolve()
+            let default_unit_request = DefaultUnitRequest::new(race, unit_modes);
+            let default_unit = DefaultUnit::from(&default_unit_request);
+            default_unit.unit_id()
         } else {
             api.resolve(unit_param)
         };
         let search_query = query.unwrap_or_default().to_string();
         Self {
             race,
-            unit_mode,
+            unit_modes,
             selected_unit_id,
             search_query,
         }

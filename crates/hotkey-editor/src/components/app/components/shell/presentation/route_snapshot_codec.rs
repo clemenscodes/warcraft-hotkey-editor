@@ -45,7 +45,7 @@ impl From<&NavigationSnapshot> for Route {
                 let race = navigation.race();
                 let race_label = race.slug().to_string();
                 let race = Some(race_label);
-                let mode = Some(navigation.unit_mode().to_string());
+                let mode = Some(navigation.unit_modes().to_string());
                 let unit = navigation
                     .selected_unit_id()
                     .map(|unit_id| unit_id.value().to_string());
