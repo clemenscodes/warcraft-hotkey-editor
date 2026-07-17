@@ -1,9 +1,10 @@
 use tw_macro::tw;
 
-// The four independent toggles — both modes and both catalog toggles — share one
-// row, because they are one kind of control. Their labels differ in length, so
-// they keep their natural width and a long one moves to the next line rather
-// than squeezing the whole row down to its smallest member.
+// One row, each toggle as wide as its own label. They only ever collided with
+// each other because the shared button inflated every label to uppercase and
+// then hid the overflow behind an ellipsis. With the label at its true width
+// all four fit, and if a translation ever makes one too long the row wraps
+// rather than cutting a word in half.
 classes! {
     base: tw![
         "flex",

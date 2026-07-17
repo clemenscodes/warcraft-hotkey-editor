@@ -2,21 +2,18 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "@container",
-        "flex-1",
-        "min-w-0",
-        "px-(--toggle-pad,1.5rem)",
+        "px-2",
         "bg-panel-gold-resting",
         "border",
         "border-(--race-color,var(--color-warcraft-gold-border))/70",
         "rounded-panel",
         "text-warcraft-text-secondary",
-        "text-(length:--toggle-font,var(--text-xl))",
-        "uppercase",
-        "tracking-caps",
+        "text-sm",
         "whitespace-nowrap",
-        "overflow-hidden",
-        "text-ellipsis",
+        "min-h-11",
+        "flex",
+        "items-center",
+        "justify-center",
         "text-shadow-drop",
         "cursor-pointer",
         "transition-[border-color,color,box-shadow]",
@@ -29,8 +26,8 @@ classes! {
         "kb-focus:shadow-focus",
     ],
     mobile: tw![
-        "mobile:text-(length:--toggle-font,var(--text-base))",
-        "mobile:px-(--toggle-pad,0.625rem)",
+        "mobile:text-sm",
+        "mobile:px-2",
     ],
     tablet: tw![
         "tablet:text-md",
