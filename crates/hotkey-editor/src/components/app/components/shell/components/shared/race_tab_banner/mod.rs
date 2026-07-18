@@ -1,3 +1,4 @@
+pub mod binding;
 pub mod components;
 mod model;
 mod view;

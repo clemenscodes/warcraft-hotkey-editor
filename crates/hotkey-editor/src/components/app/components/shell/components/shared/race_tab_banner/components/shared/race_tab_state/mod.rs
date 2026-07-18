@@ -1,7 +1,7 @@
 pub mod components;
 mod presentation;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::RaceTabBinding;
+use crate::components::app::components::shell::components::shared::race_tab_banner::binding::RaceTabBinding;
 use components::active_race_tab::ActiveRaceTab;
 use components::inactive_race_tab::InactiveRaceTab;
 use dioxus::prelude::*;

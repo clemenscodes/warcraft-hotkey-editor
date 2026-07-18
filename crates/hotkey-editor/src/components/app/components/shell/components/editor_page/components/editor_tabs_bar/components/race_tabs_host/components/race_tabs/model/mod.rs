@@ -8,14 +8,6 @@ pub struct RaceTabsModel {
     pub on_select: EventHandler<Race>,
 }
 
-#[derive(Props, Clone, PartialEq)]
-pub struct RaceTabBinding {
-    pub is_active: bool,
-    pub label: String,
-    pub onclick: EventHandler<MouseEvent>,
-    pub onkeydown: EventHandler<KeyboardEvent>,
-}
-
 impl From<&RaceTabsView> for RaceTabsModel {
     fn from(view: &RaceTabsView) -> Self {
         let RaceTabsView {

@@ -1,4 +1,3 @@
-pub mod components;
 mod model;
 mod presentation;
 mod view;
@@ -6,9 +5,8 @@ mod view;
 pub use view::RaceTabsView;
 mod style;
 
-use components::race_tab_banner::RaceTabBanner;
+use crate::components::app::components::shell::components::shared::race_tab_banner::RaceTabBanner;
 use dioxus::prelude::*;
-use model::RaceTabBinding;
 use model::RaceTabsModel;
 use presentation::RaceTabsPresentation;
 use style::CLASS;

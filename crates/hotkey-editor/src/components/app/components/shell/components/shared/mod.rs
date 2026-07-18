@@ -14,6 +14,7 @@ pub mod icons;
 pub mod key_picker_board;
 pub mod key_picker_board_host;
 pub mod mini_grid_frame;
+pub mod race_tab_banner;
 pub mod search_field_toggle;
 pub mod tile_face;
 pub mod tooltip;

@@ -1,7 +1,7 @@
 mod style;
 
-use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::RaceTabBinding;
-use crate::components::app::components::shell::components::editor_page::components::editor_tabs_bar::components::race_tabs_host::components::race_tabs::components::race_tab_banner::components::shared::race_tab_state::RaceTabState;
+use crate::components::app::components::shell::components::shared::race_tab_banner::binding::RaceTabBinding;
+use crate::components::app::components::shell::components::shared::race_tab_banner::components::shared::race_tab_state::RaceTabState;
 use dioxus::prelude::*;
 use style::CLASS;
 use tw_macro::assert_component;
