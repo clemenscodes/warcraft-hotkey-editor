@@ -3,6 +3,7 @@ use ddd::Layered;
 use ddd::Query;
 use warcraft_api::CatalogVisibility;
 use warcraft_api::Race;
+use warcraft_api::RaceSelection;
 use warcraft_api::SearchField;
 use warcraft_api::UnitCatalogListing;
 use warcraft_api::UnitListingRequest;
@@ -26,6 +27,7 @@ pub struct UnitFilterQuery {
     search_query: String,
     search_field: SearchField,
     visibility: CatalogVisibility,
+    search_race_scope: RaceSelection,
 }
 
 impl UnitFilterQuery {
@@ -35,6 +37,7 @@ impl UnitFilterQuery {
         search_query: String,
         search_field: SearchField,
         visibility: CatalogVisibility,
+        search_race_scope: RaceSelection,
     ) -> Self {
         Self {
             race,
@@ -42,6 +45,7 @@ impl UnitFilterQuery {
             search_query,
             search_field,
             visibility,
+            search_race_scope,
         }
     }
 
@@ -83,13 +87,14 @@ impl UnitFilterQuery {
 impl From<&UnitFilterQuery> for UnitListingRequest {
     fn from(filter: &UnitFilterQuery) -> Self {
         let search_query = filter.search_query.clone();
-        Self::new(
+        let request = Self::new(
             filter.race,
             filter.modes,
             search_query,
             filter.search_field,
             filter.visibility,
-        )
+        );
+        request.searching_within(filter.search_race_scope.clone())
     }
 }
 
@@ -107,6 +112,7 @@ mod tests {
     use crate::services::unit_catalog::queries::assert_query;
     use warcraft_api::CatalogVisibility;
     use warcraft_api::Race;
+    use warcraft_api::RaceSelection;
     use warcraft_api::SearchField;
     use warcraft_api::UnitMode;
     use warcraft_api::UnitModeSelection;
@@ -120,6 +126,7 @@ mod tests {
             owned_query,
             SearchField::UnitName,
             CatalogVisibility::default(),
+            RaceSelection::All,
         )
     }
 
@@ -176,6 +183,7 @@ mod tests {
             String::new(),
             SearchField::UnitName,
             CatalogVisibility::default(),
+            RaceSelection::All,
         );
         let both_count: usize = both
             .answer()

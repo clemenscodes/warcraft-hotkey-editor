@@ -19,6 +19,7 @@ pub(crate) fn use_unit_catalog_provider() -> UnitCatalogService {
     let search_field = editor.search_field();
     let show_abilityless_units = editor.show_abilityless_units();
     let expand_variants = editor.expand_variants();
+    let search_race_scope = editor.search_race_scope();
     let filter = use_memo(move || {
         let race = *active_race.read();
         let modes = *unit_modes.read();
@@ -28,7 +29,8 @@ pub(crate) fn use_unit_catalog_provider() -> UnitCatalogService {
             include_abilityless: *show_abilityless_units.read(),
             expand_variants: *expand_variants.read(),
         };
-        UnitFilterQuery::new(race, modes, query, field, visibility)
+        let scope = search_race_scope.read().clone();
+        UnitFilterQuery::new(race, modes, query, field, visibility, scope)
     });
     // The database pass is the expensive part, so it hangs off the filter rather
     // than off the individual signals: an edit that leaves the filter equal (a
