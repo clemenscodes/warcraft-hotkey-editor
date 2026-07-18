@@ -17,11 +17,19 @@ Read this alongside:
 
 ## Commands and CI
 
-- **Only two commands exist:** `moon run :ci` (the one and only verification gate —
-  fmt, clippy, tests, wasm build, Playwright e2e) and `moon run :dev` (the one and
-  only dev server). Never a narrower `moon`/`cargo`/`dx`/`playwright` target. If
-  `moon run :ci` fails, fix the code and run it again — never route around it.
-  (`cargo fmt` directly is fine to *format*; the gate is still `moon run :ci`.)
+- **Only three commands exist:**
+  - `moon run :ci` — the one and only verification gate (fmt, clippy, tests, wasm build,
+    Playwright e2e). If you want to know whether the work is green, you run this. If it
+    fails, fix the code and run it again — never route around it.
+  - `moon run :check` — a fast compile-only check (`cargo check` against the wasm target,
+    nothing else). Use it to iterate while writing; it runs no fmt, clippy, tests, wasm
+    build, or e2e. It is **NOT** the gate and does **NOT** verify the work — passing it
+    says only that the code type-checks. When the work is done you still run `moon run :ci`.
+  - `moon run :dev` — the one and only dev server.
+
+  Never a narrower `moon`/`cargo`/`dx`/`playwright` target, never bare `cargo check`, never
+  `cargo test`/`cargo clippy`. (`cargo fmt` directly is fine to *format*; the gate is still
+  `moon run :ci`.)
 
 - **NEVER run a second `moon run :ci` while one is already running.** There is **no
   CPU-load flakiness** in this project — the tests are deterministic. A mass failure

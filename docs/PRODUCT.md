@@ -2,9 +2,8 @@
 
 > This document describes **why** this repository exists and **for whom**. It is the
 > onboarding read for new developers and agents, on equal footing with `ARCHITECTURE.md`,
-> `COMPONENTS.md`, `RUST_STYLE.md` and `AGENTS.md`, which govern the HOW of the code. The
-> detailed, source-backed research behind every statement here lives in `PRODUCT.md`. This
-> file holds the finished picture.
+> `COMPONENTS.md`, `RUST_STYLE.md`, `AGENTS.md` and `DOMAIN.md`, which govern the HOW of
+> the code. This file holds the finished picture of the product itself.
 
 ---
 
@@ -72,21 +71,40 @@ ideas rather than one correct one.
 
 ## 3. The domain in brief
 
-Every unit and every building has a **command card**, a fixed 4x3 grid of twelve buttons.
-`CustomKeys.txt` is the file the game reads to override their keys and positions, addressed per
-object through a four character rawcode.
+You cannot reason about hotkeys without the game they belong to. The domain is not "five races
+and some keys", it is Warcraft III, and none of it is stated in the code.
 
-The format knows three hotkey fields, `Hotkey`, `Unhotkey`, `Researchhotkey`, and three
-position fields, `Buttonpos`, `Unbuttonpos`, `Researchbuttonpos`, each as `x,y` in the grid
-with x from 0 leftmost to 3 rightmost and y from 0 top to 2 bottom. A hero skill therefore has
-two independent grid slots, one in the learn menu and one on the command card.
+**The game.** Warcraft III (Reign of Chaos plus its expansion The Frozen Throne, re-released as
+Reforged) is a real-time strategy game. You pick a race, build a base, harvest three resources
+(gold, lumber, food/upkeep), train units and RPG-like Heroes that level up and learn abilities,
+research upgrades, and fight. The map is also full of creeps, neutral hostile units guarding
+gold mines and neutral buildings.
+
+**The command card.** Select any unit or building and the UI shows its command card, a fixed
+4x3 grid of twelve buttons for everything it can do, Move, Stop, Hold, Attack, its spells and
+abilities, a worker's build menu, a building's train/research menu. Different races have
+different units and buildings, hence different command cards, which is why the editor is
+organized by race.
+
+**`CustomKeys.txt`** is the file the game reads to override those keys and positions, addressed
+per object through a four character rawcode. The format knows three hotkey fields, `Hotkey`,
+`Unhotkey` (cancel/unlearn), `Researchhotkey` (a hero learning an ability), and three position
+fields, `Buttonpos`, `Unbuttonpos`, `Researchbuttonpos`, each as `x,y` in the grid with x from
+0 leftmost to 3 rightmost and y from 0 top to 2 bottom. A hero skill therefore has two
+independent grid slots, one in the learn menu and one on the command card.
 
 **Grid layouts** are the core of the remapping practice. The twelve grid positions are mapped
-onto a fixed keyboard block, so that the key matches the **position** rather than a letter you
-have to memorize.
+onto a fixed keyboard block (for example `QWER / ASDF / ZXCV`), so that the key matches the
+**position** rather than a per-ability letter you have to memorize.
 
-Five races are equal in the editor, Human, Orc, Night Elf, Undead and Neutral. Neutral is not a
-special case, because tavern heroes, mercenaries and creeps need their hotkeys just the same.
+**The five races, and how `Race` is modeled.** Four races are selectable at the start of a
+match, Human, Orc, Night Elf, Undead. The fifth, Neutral, cannot be picked at the start, yet
+everyone plays it anyway, tavern Heroes bought in-game by any race, hireable mercenaries, plus
+creeps and neutral buildings, and those need custom hotkeys just like the rest. So in this
+editor Neutral is a full, equal race alongside the four, five first-class race tabs, none
+second-class. The race set is therefore closed, compile-time, and game-defined, exactly these
+five, each once, never runtime data fetched through a service or an aggregate, and never a
+`[Race; N]` that could hold duplicates or the wrong count.
 
 ---
 
