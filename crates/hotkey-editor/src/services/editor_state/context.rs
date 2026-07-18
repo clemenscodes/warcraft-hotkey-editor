@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
-use warcraft_api::{SearchField, UnitKind, WarcraftObjectId};
+use warcraft_api::{RaceSelection, SearchField, UnitKind, WarcraftObjectId};
 use warcraft_keybinds::GridSlotId;
 
 use crate::services::editor_state::EditorState;
@@ -21,6 +21,7 @@ pub(crate) fn use_editor_state_provider(update_hotkeys_on_move: Signal<bool>) ->
     let active_category = use_signal::<UnitKind>(|| UnitKind::Soldier);
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
+    let search_race_scope = use_signal(RaceSelection::default);
     let editor_state = EditorState {
         selected_slot,
         selected_hero_level,
@@ -33,6 +34,7 @@ pub(crate) fn use_editor_state_provider(update_hotkeys_on_move: Signal<bool>) ->
         active_category,
         show_abilityless_units,
         expand_variants,
+        search_race_scope,
         update_hotkeys_on_move,
     };
     use_context_provider(|| editor_state);

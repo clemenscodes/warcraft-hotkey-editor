@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::{HashMap, HashSet};
+use warcraft_api::RaceSelection;
 use warcraft_api::SearchField;
 use warcraft_api::UnitKind;
 use warcraft_api::WarcraftObjectId;
@@ -20,6 +21,7 @@ pub struct EditorState {
     active_category: Signal<UnitKind>,
     show_abilityless_units: Signal<bool>,
     expand_variants: Signal<bool>,
+    search_race_scope: Signal<RaceSelection>,
     update_hotkeys_on_move: Signal<bool>,
 }
 
@@ -66,6 +68,10 @@ impl EditorState {
 
     pub fn expand_variants(&self) -> Signal<bool> {
         self.expand_variants
+    }
+
+    pub fn search_race_scope(&self) -> Signal<RaceSelection> {
+        self.search_race_scope
     }
 
     pub fn update_hotkeys_on_move(&self) -> Signal<bool> {
