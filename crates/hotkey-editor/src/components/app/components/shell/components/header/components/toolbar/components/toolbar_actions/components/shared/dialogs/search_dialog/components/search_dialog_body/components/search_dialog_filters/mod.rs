@@ -15,12 +15,16 @@ use tw_macro::assert_component;
 /// Every filter in one block, because together they are one filter.
 ///
 /// Race, mode and visibility are all toggles feeding the same
-/// [`UnitFilterQuery`](crate::services::unit_catalog::queries::unit_filter_query::UnitFilterQuery),
-/// so they belong side by side and above the search: you narrow what you are
-/// looking through before you type what you are looking for, not after.
+/// [`UnitFilterQuery`](crate::services::unit_catalog::queries::unit_filter_query::UnitFilterQuery).
+/// The block is folded away by default behind the config button and renders
+/// nothing when closed, so the search field stays the first thing the dialog
+/// shows. It is a guarded child, it decides to draw nothing rather than letting a
+/// parent branch on `open`.
 #[component]
 pub fn SearchDialogFilters(props: SearchDialogFiltersModel) -> Element {
-    let SearchDialogFiltersModel {} = props;
+    if !props.open {
+        return rsx! {};
+    }
     rsx! {
         div {
             class: CLASS,

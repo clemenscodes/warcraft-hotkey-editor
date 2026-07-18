@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
 use std::time::Duration;
+use warcraft_api::RaceSelection;
 use warcraft_api::SearchField;
 use warcraft_api::UnitCatalogGroup;
+use warcraft_api::UnitModeSelection;
 
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
@@ -24,6 +26,9 @@ pub(super) struct SearchDialogBodyPresentation {
     pub(super) on_input: EventHandler<FormEvent>,
     pub(super) on_keydown: EventHandler<KeyboardEvent>,
     pub(super) groups: Vec<UnitCatalogGroup>,
+    pub(super) filters_open: bool,
+    pub(super) filters_label: String,
+    pub(super) on_toggle_filters: EventHandler<MouseEvent>,
 }
 
 pub(super) fn use_search_dialog_body() -> SearchDialogBodyPresentation {
@@ -85,6 +90,28 @@ pub(super) fn use_search_dialog_body() -> SearchDialogBodyPresentation {
             _ => {}
         }
     });
+    let scope_signal = editor.search_race_scope();
+    let unit_modes_signal = navigation.unit_modes();
+    let show_abilityless_signal = editor.show_abilityless_units();
+    let expand_variants_signal = editor.expand_variants();
+    let scope = scope_signal.read().clone();
+    let current_modes = *unit_modes_signal.read();
+    let race_narrowed = scope != RaceSelection::All;
+    let modes_changed = current_modes != UnitModeSelection::default();
+    let show_plain_active = *show_abilityless_signal.read();
+    let all_tiers_active = *expand_variants_signal.read();
+    let active_flags = [race_narrowed, modes_changed, show_plain_active, all_tiers_active];
+    let active_filter_count = active_flags.iter().filter(|flag| **flag).count();
+    let filters_label = match active_filter_count {
+        0 => "Filters".to_owned(),
+        count => format!("Filters ({count})"),
+    };
+    let mut filters_open_signal = use_signal(|| false);
+    let filters_open = *filters_open_signal.read();
+    let on_toggle_filters = EventHandler::new(move |_event: MouseEvent| {
+        let next = !*filters_open_signal.peek();
+        filters_open_signal.set(next);
+    });
     let search_value: ReadSignal<String> = raw_query.into();
     SearchDialogBodyPresentation {
         search_value,
@@ -92,5 +119,8 @@ pub(super) fn use_search_dialog_body() -> SearchDialogBodyPresentation {
         on_input,
         on_keydown,
         groups,
+        filters_open,
+        filters_label,
+        on_toggle_filters,
     }
 }
