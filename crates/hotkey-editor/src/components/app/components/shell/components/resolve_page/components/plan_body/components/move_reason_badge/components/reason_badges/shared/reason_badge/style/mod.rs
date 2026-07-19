@@ -19,4 +19,8 @@ classes! {
         "border-[color-mix(in_oklab,var(--reason-color)_60%,transparent)]",
         "bg-[color-mix(in_oklab,var(--reason-color)_12%,transparent)]",
     ],
+    // The reason badge is a small label on the phone card, not a heading.
+    mobile: tw![
+        "mobile:text-xs",
+    ],
 }

@@ -1,2 +1,3 @@
-pub mod search_config_button;
+pub mod search_dialog_bar;
 pub mod search_dialog_filters;
+pub mod search_dialog_scrim;

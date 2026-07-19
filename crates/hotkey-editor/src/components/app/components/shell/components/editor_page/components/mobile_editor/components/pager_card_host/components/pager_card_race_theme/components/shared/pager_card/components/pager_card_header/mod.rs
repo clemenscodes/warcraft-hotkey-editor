@@ -5,7 +5,7 @@ mod view;
 pub use view::PagerCardHeaderView;
 mod style;
 
-use components::pager_card_portrait::PagerCardPortrait;
+use components::pager_card_detail_trigger::PagerCardDetailTrigger;
 use components::pager_card_title::PagerCardTitle;
 use dioxus::prelude::*;
 use model::PagerCardHeaderModel;
@@ -20,8 +20,9 @@ pub fn PagerCardHeader(props: PagerCardHeaderModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            PagerCardPortrait {
-                src: icon_url,
+            PagerCardDetailTrigger {
+                icon_url,
+                unit_id,
             }
             PagerCardTitle {
                 name,

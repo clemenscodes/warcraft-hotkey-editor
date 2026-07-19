@@ -8,6 +8,11 @@ classes! {
         "min-w-0",
         "shrink-0",
         "snap-start",
-        "py-4",
+        "py-1.5",
+    ],
+    tablet: tw![
+        "tablet:w-full",
+        "tablet:max-w-4xl",
+        "tablet:self-center",
     ],
 }

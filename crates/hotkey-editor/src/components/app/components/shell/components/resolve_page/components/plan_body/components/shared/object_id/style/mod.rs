@@ -6,6 +6,6 @@ classes! {
         "flex-none",
     ],
     mobile: tw![
-        "mobile:text-xs",
+        "mobile:text-2xs",
     ],
 }

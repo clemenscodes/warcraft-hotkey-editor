@@ -14,7 +14,7 @@ classes! {
         "border-warcraft-gold/45",
         "bg-warcraft-bg-base",
         "shadow-bevel",
-        "[&:has(:focus-visible)]:border-warcraft-gold",
-        "[&:has(:focus-visible)]:shadow-ring",
+        "has-[:focus-visible]:border-warcraft-gold",
+        "has-[:focus-visible]:shadow-ring",
     ],
 }

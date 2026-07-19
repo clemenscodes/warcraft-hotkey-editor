@@ -7,5 +7,7 @@ pub mod files;
 pub mod grid_layout;
 pub mod navigation;
 pub mod resolve_selection;
+pub mod search_dialog;
 pub mod undo;
 pub mod unit_catalog;
+pub mod viewport;

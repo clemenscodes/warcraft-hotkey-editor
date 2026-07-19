@@ -4,9 +4,8 @@ classes! {
         "@container",
         "grid",
         "grid-cols-2",
-        "gap-x-7",
-        "gap-y-5",
-        "items-start",
+        "gap-4",
+        "items-center",
         "flex-none",
         "isolate",
     ],
@@ -28,7 +27,5 @@ classes! {
     ],
     tablet: tw![
         "tablet:grid-cols-[repeat(2,1fr)]",
-        "tablet:gap-x-10",
-        "tablet:gap-y-7",
     ],
 }

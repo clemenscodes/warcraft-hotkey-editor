@@ -10,6 +10,7 @@ classes! {
         "min-w-0",
         "grow",
         "self-stretch",
+        "text-xl",
     ],
     mobile: tw![
         "mobile:h-40",

@@ -5,4 +5,7 @@ classes! {
         "text-xl",
         "leading-body",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

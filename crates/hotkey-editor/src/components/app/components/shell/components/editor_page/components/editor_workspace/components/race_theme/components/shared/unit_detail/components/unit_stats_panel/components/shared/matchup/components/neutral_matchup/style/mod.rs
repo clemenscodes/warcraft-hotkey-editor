@@ -15,7 +15,7 @@ classes! {
         "[--matchup-color:var(--color-warcraft-text-secondary)]",
     ],
     mobile: tw![
-        "mobile:text-xl",
+        "mobile:text-xs",
         "mobile:px-2.5",
         "mobile:py-1.5",
     ],

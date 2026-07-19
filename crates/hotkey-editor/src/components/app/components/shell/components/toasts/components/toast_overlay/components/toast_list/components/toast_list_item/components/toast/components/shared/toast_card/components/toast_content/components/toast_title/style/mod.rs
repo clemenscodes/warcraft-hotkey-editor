@@ -9,4 +9,7 @@ classes! {
         "text-shadow-drop",
         "text-(--toast-title)",
     ],
+    mobile: tw![
+        "mobile:text-lg",
+    ],
 }

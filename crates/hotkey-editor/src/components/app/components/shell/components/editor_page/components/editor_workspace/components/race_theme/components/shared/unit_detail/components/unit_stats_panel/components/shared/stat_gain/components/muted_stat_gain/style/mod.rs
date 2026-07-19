@@ -8,4 +8,7 @@ classes! {
         "tabular-nums",
         "text-shadow-drop",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

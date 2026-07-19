@@ -9,6 +9,7 @@ classes! {
         "text-2xl",
         "tracking-caps",
         "uppercase",
+        "whitespace-nowrap",
         "text-warcraft-gold",
         "cursor-pointer",
         "bg-panel-gold-resting",

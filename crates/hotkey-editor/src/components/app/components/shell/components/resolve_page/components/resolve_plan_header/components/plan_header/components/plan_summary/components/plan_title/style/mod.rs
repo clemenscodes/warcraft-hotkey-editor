@@ -7,4 +7,8 @@ classes! {
         "text-warcraft-gold",
         "text-shadow-drop",
     ],
+    mobile: tw![
+        "mobile:text-base",
+        "mobile:whitespace-nowrap",
+    ],
 }

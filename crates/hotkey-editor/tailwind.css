@@ -61,6 +61,7 @@
   --radius-panel: 10px;
   --radius-container: 12px;
 
+  --text-2xs: 0.68rem;
   --text-xs: 0.8rem;
   --text-sm: 0.9rem;
   --text-base: 1rem;
@@ -109,6 +110,7 @@
 @utility bg-panel-header { background-image: radial-gradient( ellipse 90% 60% at 50% 0%, var(--color-warcraft-blue-deep) 0%, transparent 60%), linear-gradient( 180deg, var(--color-warcraft-bg-mid) 0%, var(--color-warcraft-bg-base) 100%); }
 @utility bg-panel-toast { background-image: linear-gradient( 135deg, color-mix(in oklab, var(--color-warcraft-bg-mid) 97%, transparent) 0%, color-mix(in oklab, var(--color-warcraft-bg-base) 97%, transparent) 100%); }
 @utility bg-race-banner { background-image: linear-gradient( 180deg, color-mix(in oklab, var(--race-color) var(--banner-strength, 100%), var(--color-warcraft-bg-base)) 0%, var(--color-warcraft-bg-base) 100%); }
+@utility bg-banner-scrim { background-image: linear-gradient( 180deg, transparent 0%, transparent 45%, color-mix(in oklab, var(--color-warcraft-shadow) 55%, transparent) 75%, color-mix(in oklab, var(--color-warcraft-shadow) 85%, transparent) 100%); }
 
 @utility shadow-glow-soft { box-shadow: 0 0 8px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.48); }
 @utility shadow-glow { box-shadow: 0 0 14px rgb(from var(--glow-color, var(--color-warcraft-gold)) r g b / 0.55); }

@@ -2,6 +2,7 @@ use super::model::UnitCardModel;
 use crate::components::app::components::shell::components::shared::icons::IconUrl;
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
+use crate::services::search_dialog::context::use_search_dialog_dismiss;
 use dioxus::prelude::*;
 use warcraft_api::WarcraftObjectId;
 
@@ -23,6 +24,10 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
     let mut selected_slot = editor.selected_slot();
     let mut active_category = editor.active_category();
     let is_selected = *selected_unit_id.read() == Some(unit_id);
+    // Present only when this card is rendered inside the search dialog, so
+    // picking a result closes the overlay. In the desktop unit list there is no
+    // dialog and the context is absent, so the same card leaves it untouched.
+    let dismiss = use_search_dialog_dismiss();
     // Searching drops the race filter, so a card in this list can belong to any
     // race. `open_unit` derives the race and the mode from the unit itself, so
     // picking one always lands on that unit's own theme.
@@ -30,6 +35,9 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
         navigation.open_unit(unit_id);
         selected_slot.set(None);
         active_category.set(unit_kind);
+        if let Some(dismiss) = dismiss {
+            dismiss.dismiss();
+        }
     });
     let on_keydown = EventHandler::new(move |event: KeyboardEvent| {
         let key_value = event.data().key().to_string();
@@ -38,6 +46,9 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
             navigation.open_unit(unit_id);
             selected_slot.set(None);
             active_category.set(unit_kind);
+            if let Some(dismiss) = dismiss {
+                dismiss.dismiss();
+            }
         }
     });
     let icon_path = props.icon_path.clone();

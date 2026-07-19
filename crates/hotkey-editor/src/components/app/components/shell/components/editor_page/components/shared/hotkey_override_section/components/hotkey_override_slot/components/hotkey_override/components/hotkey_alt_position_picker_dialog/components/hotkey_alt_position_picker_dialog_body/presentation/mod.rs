@@ -20,7 +20,7 @@ pub(super) fn use_hotkey_alt_position_picker_dialog_body(
     let grid_layout = use_grid_layout();
     let drag_state = use_drag_state();
     let explainer_text = String::from(
-        "Drag the off-state button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact.",
+        "Drag the off-state button to a different cell. Cells holding another ability are protected. Drops on top of them are rejected so the unit's primary layout stays intact.",
     );
     let object_id = props.object_id;
     let picker_selected_slot =

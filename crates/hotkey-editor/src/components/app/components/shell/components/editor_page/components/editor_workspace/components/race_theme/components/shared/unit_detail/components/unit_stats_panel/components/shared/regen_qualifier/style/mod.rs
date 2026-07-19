@@ -8,6 +8,6 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:text-xl",
+        "mobile:text-xs",
     ],
 }

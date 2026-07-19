@@ -1,13 +1,14 @@
+mod model;
 mod style;
 
-use crate::components::app::components::shell::components::shared::race_tab_banner::binding::RaceTabBinding;
 use crate::components::app::components::shell::components::shared::race_tab_banner::components::shared::race_tab_state::RaceTabState;
 use dioxus::prelude::*;
+use model::OrcRaceTabModel;
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn OrcRaceTab(props: RaceTabBinding) -> Element {
+pub fn OrcRaceTab(props: OrcRaceTabModel) -> Element {
     let is_active = props.is_active;
     let label = props.label;
     let onclick = props.onclick;

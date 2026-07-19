@@ -20,7 +20,7 @@ pub(super) fn use_hotkey_upgrade_position_picker_body(
     let grid_layout = use_grid_layout();
     let drag_state = use_drag_state();
     let explainer_text = String::from(
-        "Drag the upgraded-form button to a different cell. Cells holding another ability are protected; drops on top of them are rejected so the unit's primary layout stays intact.",
+        "Drag the upgraded-form button to a different cell. Cells holding another ability are protected. Drops on top of them are rejected so the unit's primary layout stays intact.",
     );
     let upgrade_unit_id = props.upgrade_unit_id;
     let picker_selected_slot =

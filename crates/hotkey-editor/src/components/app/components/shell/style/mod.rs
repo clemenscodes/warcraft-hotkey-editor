@@ -56,7 +56,7 @@ classes! {
         "mobile:[&_*::-webkit-scrollbar]:hidden",
     ],
     tablet: tw![
-        "tablet:h-auto",
+        "tablet:h-dvh",
         "tablet:overflow-y-visible",
         "tablet:[&_button]:[-webkit-tap-highlight-color:transparent]",
         "tablet:[&_button]:touch-manipulation",

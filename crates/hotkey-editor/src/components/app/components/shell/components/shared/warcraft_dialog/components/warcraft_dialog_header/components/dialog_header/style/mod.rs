@@ -1,6 +1,7 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "@container",
         "relative",
         "flex",
         "items-center",
@@ -12,7 +13,6 @@ classes! {
         "pb-6",
         "border-b",
         "border-warcraft-gold/40",
-        "shadow-edge",
     ],
     mobile: tw![
         "mobile:gap-2",

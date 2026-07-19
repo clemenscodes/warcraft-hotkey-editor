@@ -187,6 +187,32 @@ impl ViewNavigationContext {
         self.push(snapshot);
     }
 
+    /// Set both modes at once to a computed selection. The three way mode choice
+    /// in the search filter panel is exclusive, Melee or Campaign or Both, so it
+    /// hands the target selection here rather than toggling one axis. The push is
+    /// the same as `toggle_mode`, it lands on the narrowed listing's own first
+    /// entry so the unit on screen is never one the new selection stopped
+    /// admitting.
+    pub fn set_unit_modes(
+        self,
+        next_modes: UnitModeSelection,
+        mut selected_slot: Signal<Option<GridSlotId>>,
+    ) {
+        selected_slot.set(None);
+        let current_modes = *self.unit_modes.peek();
+        if next_modes == current_modes {
+            return;
+        }
+        let race = *self.active_race.peek();
+        let default_unit_request = DefaultUnitRequest::new(race, next_modes);
+        let default_unit = DefaultUnit::from(&default_unit_request);
+        let next_unit = default_unit.unit_id();
+        let search_query = self.search_query.peek().clone();
+        let navigation = DecodedEditorNavigation::new(race, next_modes, next_unit, search_query);
+        let snapshot = NavigationSnapshot::Editor(navigation);
+        self.push(snapshot);
+    }
+
     pub fn open_unit(self, unit_id: WarcraftObjectId) {
         let api = WarcraftApi::default();
         let object_option = api.object(unit_id);

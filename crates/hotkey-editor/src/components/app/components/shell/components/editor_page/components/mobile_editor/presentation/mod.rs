@@ -1,33 +1,13 @@
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
+use crate::services::unit_catalog::context::use_unit_catalog;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use std::cell::RefCell;
 use std::rc::Rc;
-use warcraft_api::{Race, WarcraftApi, WarcraftObjectId};
+use warcraft_api::WarcraftObjectId;
 
 const CARD_WINDOW_BUFFER: usize = 1;
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-struct UnitOrder {
-    race_rank: u8,
-    name: &'static str,
-    unit_id: WarcraftObjectId,
-}
-
-impl UnitOrder {
-    fn rank_of(race: Option<Race>) -> u8 {
-        let rank: u8 = match race {
-            Some(Race::Human) => 0,
-            Some(Race::Orc) => 1,
-            Some(Race::Nightelf) => 2,
-            Some(Race::Undead) => 3,
-            Some(Race::Neutral) => 4,
-            None => 5,
-        };
-        rank
-    }
-}
 
 pub(super) struct MobileEditorPresentation {
     pub(super) onmounted: EventHandler<MountedEvent>,
@@ -38,24 +18,18 @@ pub(super) struct MobileEditorPresentation {
 }
 
 pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
-    let unit_ids_memo = use_memo(|| {
-        let api = WarcraftApi::default();
-        let mut ordered: Vec<UnitOrder> = api
-            .unit()
-            .all()
-            .map(|unit| {
-                let race_rank = UnitOrder::rank_of(unit.race());
-                let name = unit.name().unwrap_or("(unnamed)");
-                let unit_id = unit.id();
-                UnitOrder {
-                    race_rank,
-                    name,
-                    unit_id,
-                }
-            })
+    // The pager pages through the filtered catalog listing, the same units the
+    // search dialog lists, rather than every unit of every race. The listing is
+    // already ordered by the domain, so there is no re-sort here.
+    let catalog = use_unit_catalog();
+    let unit_ids_memo = use_memo(move || {
+        let listing = catalog.listing();
+        let ids: Rc<[WarcraftObjectId]> = listing
+            .groups()
+            .iter()
+            .flat_map(|group| group.entries())
+            .map(|entry| entry.unit_id())
             .collect();
-        ordered.sort();
-        let ids: Rc<[WarcraftObjectId]> = ordered.into_iter().map(|order| order.unit_id).collect();
         ids
     });
 
@@ -154,20 +128,28 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
     // The other direction: a unit chosen anywhere but the pager itself, most of
     // all by browser back and forward, has to bring its card on screen. Without
     // this the address bar and the history would move while the card sat still.
-    let effect_unit_ids = unit_ids.clone();
+    //
+    // Reading the memo inside the effect re-runs it whenever a filter changes
+    // the list, not only when the selection does, so narrowing the catalog also
+    // reconciles the pager. The card the pager follows is the selected unit when
+    // it survives the new list, and the first result otherwise, which keeps the
+    // active index inside the list rather than dangling past a now shorter one.
+    let effect_unit_ids_memo = unit_ids_memo;
     let effect_element_ref = element_ref.clone();
     let mut effect_active_index = active_index;
     let mut effect_following_navigation = following_navigation;
     use_effect(move || {
-        let Some(target_unit_id) = *selected_unit_id.read() else {
+        let target_unit_ids = effect_unit_ids_memo();
+        if target_unit_ids.is_empty() {
             return;
-        };
-        let Some(target_index) = effect_unit_ids
-            .iter()
-            .position(|unit_id| *unit_id == target_unit_id)
-        else {
-            return;
-        };
+        }
+        let selected = *selected_unit_id.read();
+        let matched_index = selected.and_then(|target_unit_id| {
+            target_unit_ids
+                .iter()
+                .position(|unit_id| *unit_id == target_unit_id)
+        });
+        let target_index = matched_index.unwrap_or(0);
         if *effect_active_index.peek() == target_index {
             return;
         }
@@ -202,7 +184,10 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
     });
 
     let current_viewport_px = *viewport_px.read();
-    let current_active_index = *active_index.read();
+    // A filter change can shrink the list under a stale index, so clamp it here
+    // to keep the window slice inside the new bounds until the effect reconciles.
+    let last_index = unit_count.saturating_sub(1);
+    let current_active_index = (*active_index.read()).min(last_index);
 
     let window_start;
     let window_end;

@@ -75,6 +75,16 @@ impl MoveCategory {
             _ => None,
         }
     }
+
+    pub fn from_title(title: &str) -> Option<Self> {
+        match title {
+            "Fights" => Some(Self::Fight),
+            "Gap pulls" => Some(Self::GapPull),
+            "Spills" => Some(Self::Spill),
+            "Swaps" => Some(Self::Swap),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]

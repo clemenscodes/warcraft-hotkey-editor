@@ -1,20 +1,19 @@
 pub mod components;
-mod presentation;
+mod model;
 
-use crate::components::app::components::shell::components::shared::race_tab_banner::binding::RaceTabBinding;
 use components::active_race_tab::ActiveRaceTab;
 use components::inactive_race_tab::InactiveRaceTab;
 use dioxus::prelude::*;
-use presentation::RaceTabBehavior;
+use model::RaceTabStateModel;
 use tw_macro::assert_component;
 
 #[component]
-pub fn RaceTabState(props: RaceTabBinding) -> Element {
-    let behavior = RaceTabBehavior::from(&props);
-    let label = behavior.label().to_string();
-    let onclick = behavior.onclick();
-    let onkeydown = behavior.onkeydown();
-    match behavior.is_active() {
+pub fn RaceTabState(props: RaceTabStateModel) -> Element {
+    let is_active = props.is_active;
+    let label = props.label;
+    let onclick = props.onclick;
+    let onkeydown = props.onkeydown;
+    match is_active {
         true => rsx! {
             ActiveRaceTab {
                 label,

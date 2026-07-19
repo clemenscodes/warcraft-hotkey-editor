@@ -4,6 +4,8 @@ classes! {
         "flex",
         "w-full",
         "min-w-0",
-        "self-stretch",
     ],
+    mobile: tw![
+        "mobile:justify-center",
+    ]
 }

@@ -27,6 +27,11 @@ classes! {
     ],
     mobile: tw![
         "mobile:max-w-[calc(100vw-1.5rem)]",
+        "mobile:gap-[0.9em]",
+        "mobile:px-[1.25em]",
+        "mobile:py-[1em]",
+        "mobile:border-0",
+        "mobile:text-sm",
     ],
     tablet: tw![
         "tablet:max-w-[calc(100vw-1.5rem)]",

@@ -11,4 +11,11 @@ classes! {
         "leading-none",
         "text-shadow-drop",
     ],
+    // With the grids stacked on a phone the arrow leaves the absolute centre,
+    // sits in flow between them and rotates a quarter turn to point down.
+    mobile: tw![
+        "mobile:static",
+        "mobile:transform-[rotate(90deg)]",
+        "mobile:text-2xl",
+    ],
 }
