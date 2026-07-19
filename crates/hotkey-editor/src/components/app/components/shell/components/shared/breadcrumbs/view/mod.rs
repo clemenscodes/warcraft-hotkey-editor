@@ -1,4 +1,4 @@
-use super::breadcrumb_view::BreadcrumbView;
+use super::BreadcrumbView;
 
 #[derive(Clone, PartialEq)]
 pub struct BreadcrumbsView {

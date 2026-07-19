@@ -1,4 +1,3 @@
-mod breadcrumb_view;
 pub mod components;
 mod model;
 mod view;
@@ -6,7 +5,7 @@ mod view;
 pub use view::BreadcrumbsView;
 mod style;
 
-pub use breadcrumb_view::BreadcrumbView;
+pub use components::breadcrumb::BreadcrumbView;
 
 use components::breadcrumb::Breadcrumb;
 use components::breadcrumb_separator::BreadcrumbSeparator;
@@ -20,10 +19,8 @@ pub fn Breadcrumbs(props: BreadcrumbsModel) -> Element {
     let breadcrumbs = props.breadcrumbs;
     let aria_label = props.aria_label;
     rsx! {
-        nav {
-            class: CLASS,
-            aria_label,
-            for (index, breadcrumb) in breadcrumbs.into_iter().enumerate() {
+        nav { class: CLASS, aria_label,
+            for (index , breadcrumb) in breadcrumbs.into_iter().enumerate() {
                 if index > 0 {
                     BreadcrumbSeparator {}
                 }

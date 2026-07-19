@@ -14,6 +14,7 @@ pub fn MobileEditor() -> Element {
     let presentation = use_mobile_editor();
     let MobileEditorPresentation {
         onmounted,
+        onscroll,
         onscrollend,
         top_spacer_px,
         bottom_spacer_px,
@@ -24,6 +25,7 @@ pub fn MobileEditor() -> Element {
             class: CLASS,
             aria_label: "Mobile editor",
             onmounted: move |event| onmounted.call(event),
+            onscroll: move |event| onscroll.call(event),
             onscrollend: move |event| onscrollend.call(event),
             PagerSpacer {
                 height_px: top_spacer_px,

@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 use std::ops::Range;
 use std::rc::Rc;
 
+use warcraft_api::WarcraftObjectId;
 use warcraft_keybinds::{CustomKeys, GridBehavior, GridCoordinate, GridLayout, GridSlotId};
 
 use crate::services::customkeys::service::CustomKeysService;
@@ -19,37 +20,72 @@ pub(super) fn occupant_at<B: GridBehavior>(
     file.slot_at(behavior, slot_ids, coordinate)
 }
 
+pub(super) struct SelectHandlerArgs<B: GridBehavior> {
+    pub(super) behavior: B,
+    pub(super) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(super) selected_slot: Signal<Option<GridSlotId>>,
+    pub(super) selected_unit: Signal<Option<WarcraftObjectId>>,
+    pub(super) host_unit_id: WarcraftObjectId,
+    pub(super) selected_from_research: Signal<bool>,
+    pub(super) selected_from_uprooted: Signal<bool>,
+    pub(super) slot_ids: Rc<[GridSlotId]>,
+}
+
 pub(super) fn select_handler<B: GridBehavior>(
-    behavior: B,
-    loaded_keys: Signal<Option<CustomKeys>>,
-    mut selected_slot: Signal<Option<GridSlotId>>,
-    mut selected_from_research: Signal<bool>,
-    mut selected_from_uprooted: Signal<bool>,
-    slot_ids: Rc<[GridSlotId]>,
+    args: SelectHandlerArgs<B>,
 ) -> EventHandler<GridCoordinate> {
+    let SelectHandlerArgs {
+        behavior,
+        loaded_keys,
+        mut selected_slot,
+        mut selected_unit,
+        host_unit_id,
+        mut selected_from_research,
+        mut selected_from_uprooted,
+        slot_ids,
+    } = args;
     EventHandler::new(move |coordinate: GridCoordinate| {
         let occupant = occupant_at(&behavior, loaded_keys, &slot_ids, coordinate);
         selected_slot.set(occupant);
+        selected_unit.set(Some(host_unit_id));
         selected_from_research.set(behavior.research_positions());
         selected_from_uprooted.set(behavior.marks_alternate_form());
     })
 }
 
+pub(super) struct ActivateHandlerArgs<B: GridBehavior> {
+    pub(super) behavior: B,
+    pub(super) loaded_keys: Signal<Option<CustomKeys>>,
+    pub(super) selected_slot: Signal<Option<GridSlotId>>,
+    pub(super) selected_unit: Signal<Option<WarcraftObjectId>>,
+    pub(super) host_unit_id: WarcraftObjectId,
+    pub(super) selected_from_research: Signal<bool>,
+    pub(super) selected_from_uprooted: Signal<bool>,
+    pub(super) hotkey_assign_request: Signal<bool>,
+    pub(super) slot_ids: Rc<[GridSlotId]>,
+}
+
 pub(super) fn activate_handler<B: GridBehavior>(
-    behavior: B,
-    loaded_keys: Signal<Option<CustomKeys>>,
-    mut selected_slot: Signal<Option<GridSlotId>>,
-    mut selected_from_research: Signal<bool>,
-    mut selected_from_uprooted: Signal<bool>,
-    mut hotkey_assign_request: Signal<bool>,
-    slot_ids: Rc<[GridSlotId]>,
+    args: ActivateHandlerArgs<B>,
 ) -> EventHandler<GridCoordinate> {
+    let ActivateHandlerArgs {
+        behavior,
+        loaded_keys,
+        mut selected_slot,
+        mut selected_unit,
+        host_unit_id,
+        mut selected_from_research,
+        mut selected_from_uprooted,
+        mut hotkey_assign_request,
+        slot_ids,
+    } = args;
     EventHandler::new(move |coordinate: GridCoordinate| {
         let occupant = occupant_at(&behavior, loaded_keys, &slot_ids, coordinate);
         let Some(slot) = occupant else {
             return;
         };
         selected_slot.set(Some(slot));
+        selected_unit.set(Some(host_unit_id));
         selected_from_research.set(behavior.research_positions());
         selected_from_uprooted.set(behavior.marks_alternate_form());
         hotkey_assign_request.set(true);
@@ -62,6 +98,8 @@ pub(super) struct MoveHandlerArgs<B: GridBehavior> {
     pub(super) custom_keys_service: CustomKeysService,
     pub(super) grid_layout: Signal<GridLayout>,
     pub(super) selected_slot: Signal<Option<GridSlotId>>,
+    pub(super) selected_unit: Signal<Option<WarcraftObjectId>>,
+    pub(super) host_unit_id: WarcraftObjectId,
     pub(super) update_hotkeys_on_move: Signal<bool>,
     pub(super) prevent_swap_on_drop: bool,
     pub(super) slot_ids: Rc<[GridSlotId]>,
@@ -77,6 +115,8 @@ pub(super) fn move_handler<B: GridBehavior>(
         custom_keys_service,
         grid_layout,
         mut selected_slot,
+        mut selected_unit,
+        host_unit_id,
         update_hotkeys_on_move,
         prevent_swap_on_drop,
         slot_ids,
@@ -101,6 +141,7 @@ pub(super) fn move_handler<B: GridBehavior>(
                 ToastOptions::new().description("Reassign it via the hotkey override first.");
             toast.warning(message, options);
             selected_slot.set(Some(moving_slot));
+            selected_unit.set(Some(host_unit_id));
             return;
         }
         let assign_hotkey_on_move = *update_hotkeys_on_move.read();
@@ -111,6 +152,7 @@ pub(super) fn move_handler<B: GridBehavior>(
                 .with_assign_hotkey_on_move(assign_hotkey_on_move);
         custom_keys_service.move_slot(&move_request);
         selected_slot.set(Some(moving_slot));
+        selected_unit.set(Some(host_unit_id));
     })
 }
 

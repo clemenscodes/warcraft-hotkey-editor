@@ -92,6 +92,7 @@ impl UnitCommandGridsPresentation {
             slot_ids,
             loaded_keys,
             selected_slot: editor.selected_slot(),
+            selected_unit: editor.selected_unit(),
             selected_from_research: editor.selected_from_research(),
             selected_from_uprooted: editor.selected_from_uprooted(),
             tier_overrides: editor.tier_overrides(),

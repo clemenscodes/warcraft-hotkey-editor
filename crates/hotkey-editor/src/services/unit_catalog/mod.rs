@@ -15,17 +15,27 @@ pub mod queries;
 use dioxus::prelude::*;
 use queries::unit_filter_query::UnitFilterQuery;
 use warcraft_api::UnitCatalogListing;
+use warcraft_api::UnitRoster;
 
 /// The live unit catalog, resolved from the current filter.
 #[derive(Clone, Copy, PartialEq)]
 pub struct UnitCatalogService {
     filter: Memo<UnitFilterQuery>,
     listing: Memo<UnitCatalogListing>,
+    roster: Memo<UnitRoster>,
 }
 
 impl UnitCatalogService {
-    pub(crate) fn new(filter: Memo<UnitFilterQuery>, listing: Memo<UnitCatalogListing>) -> Self {
-        Self { filter, listing }
+    pub(crate) fn new(
+        filter: Memo<UnitFilterQuery>,
+        listing: Memo<UnitCatalogListing>,
+        roster: Memo<UnitRoster>,
+    ) -> Self {
+        Self {
+            filter,
+            listing,
+            roster,
+        }
     }
 
     /// What is currently being listed.
@@ -36,5 +46,11 @@ impl UnitCatalogService {
     /// The catalog the filter describes: every category with its units.
     pub fn listing(&self) -> UnitCatalogListing {
         self.listing.read().clone()
+    }
+
+    /// The whole game as one ordered list, independent of the active race and
+    /// mode: what the mobile pager walks so a swipe carries across races.
+    pub fn roster(&self) -> UnitRoster {
+        self.roster.read().clone()
     }
 }

@@ -11,6 +11,7 @@ pub(crate) fn use_editor_state() -> EditorState {
 
 pub(crate) fn use_editor_state_provider(update_hotkeys_on_move: Signal<bool>) -> EditorState {
     let selected_slot = use_signal::<Option<GridSlotId>>(|| None);
+    let selected_unit = use_signal::<Option<WarcraftObjectId>>(|| None);
     let selected_hero_level = use_signal::<u32>(|| 1);
     let selected_from_research = use_signal::<bool>(|| false);
     let selected_from_uprooted = use_signal::<bool>(|| false);
@@ -22,8 +23,11 @@ pub(crate) fn use_editor_state_provider(update_hotkeys_on_move: Signal<bool>) ->
     let show_abilityless_units = use_signal::<bool>(|| false);
     let expand_variants = use_signal::<bool>(|| false);
     let search_race_scope = use_signal(RaceSelection::default);
+    let footer_hidden = use_signal::<bool>(|| false);
+    let search_dialog_open = use_signal::<bool>(|| false);
     let editor_state = EditorState {
         selected_slot,
+        selected_unit,
         selected_hero_level,
         selected_from_research,
         selected_from_uprooted,
@@ -36,6 +40,8 @@ pub(crate) fn use_editor_state_provider(update_hotkeys_on_move: Signal<bool>) ->
         expand_variants,
         search_race_scope,
         update_hotkeys_on_move,
+        footer_hidden,
+        search_dialog_open,
     };
     use_context_provider(|| editor_state);
     editor_state

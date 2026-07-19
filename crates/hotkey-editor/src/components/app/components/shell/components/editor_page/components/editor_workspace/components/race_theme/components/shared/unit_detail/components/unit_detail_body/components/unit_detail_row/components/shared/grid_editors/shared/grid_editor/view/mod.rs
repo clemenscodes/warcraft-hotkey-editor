@@ -12,6 +12,11 @@ pub struct GridEditorView {
     pub slot_ids: Rc<[GridSlotId]>,
     pub loaded_keys: Signal<Option<CustomKeys>>,
     pub selected_slot: Signal<Option<GridSlotId>>,
+    // The unit the selection was made on. A tile only renders selected, and only
+    // this grid's own tile-clicks record the selection, when this matches
+    // `host_unit_id` — so a shared ability selected on one unit does not light up
+    // on every other visible unit that has it (the mobile pager shows many).
+    pub selected_unit: Signal<Option<WarcraftObjectId>>,
     pub selected_from_research: Signal<bool>,
     pub selected_from_uprooted: Signal<bool>,
     pub tier_overrides: Signal<HashMap<WarcraftObjectId, usize>>,

@@ -1,3 +1,4 @@
+use crate::services::editor_state::context::use_editor_state;
 use dioxus::prelude::*;
 
 pub(super) struct SearchButtonHostModel {
@@ -8,7 +9,10 @@ pub(super) struct SearchButtonHostModel {
 }
 
 pub(super) fn use_search_button() -> SearchButtonHostModel {
-    let mut open_signal = use_signal::<bool>(|| false);
+    // The open flag lives in the shared editor state so the mobile pager can see
+    // it and freeze its scroll driven navigation while the dialog is open.
+    let editor = use_editor_state();
+    let mut open_signal = editor.search_dialog_open();
     let open = open_signal();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
         let next = !*open_signal.read();

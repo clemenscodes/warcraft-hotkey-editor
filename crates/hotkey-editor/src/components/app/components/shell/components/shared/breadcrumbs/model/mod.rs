@@ -1,4 +1,4 @@
-use super::breadcrumb_view::BreadcrumbView;
+use super::BreadcrumbView;
 use super::view::BreadcrumbsView;
 use dioxus::prelude::*;
 

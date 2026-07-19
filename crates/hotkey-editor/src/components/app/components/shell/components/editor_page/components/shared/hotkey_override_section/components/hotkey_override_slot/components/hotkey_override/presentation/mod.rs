@@ -13,7 +13,6 @@ use dioxus::prelude::*;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
 use warcraft_api::Description;
-use warcraft_api::Tip;
 use warcraft_keybinds::{
     CustomKeys, GridLayout, GridSlotId, HotkeyTarget, HotkeyToken, InspectorDetail, Letter,
 };
@@ -108,19 +107,17 @@ impl From<FieldVisibilityInputs<'_>> for FieldVisibility {
     }
 }
 
+// The override card no longer shows an ability's per-level description (that
+// moved out), and the tier was only ever the axis for it, so the only thing left
+// to resolve is the name to display.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub(super) struct TierResolution {
-    pub(super) total_tier_count: usize,
-    pub(super) active_tier_index: usize,
     pub(super) active_tier_name: String,
-    pub(super) description_lines: Vec<String>,
-    pub(super) tier_label_text: String,
 }
 
 pub(super) struct TierResolutionInputs<'a> {
     pub(super) detail: &'a InspectorDetail,
     pub(super) stored_tier_index: usize,
-    pub(super) is_research_context: bool,
 }
 
 impl From<TierResolutionInputs<'_>> for TierResolution {
@@ -128,7 +125,6 @@ impl From<TierResolutionInputs<'_>> for TierResolution {
         let TierResolutionInputs {
             detail,
             stored_tier_index,
-            is_research_context,
         } = inputs;
         let ubertip_count = detail.ubertip_levels().len();
         let name_count = detail.name_levels().len();
@@ -149,38 +145,7 @@ impl From<TierResolutionInputs<'_>> for TierResolution {
         } else {
             detail.display_name().to_string()
         };
-        let active_ubertip_text: Option<String> = if has_multiple_tiers {
-            detail.ubertip_levels().get(active_tier_index).cloned()
-        } else if is_research_context {
-            detail
-                .research_ubertip()
-                .map(String::from)
-                .or_else(|| detail.ubertip().map(String::from))
-        } else {
-            detail.ubertip().map(String::from)
-        };
-        let mut description_lines: Vec<String> = active_ubertip_text
-            .as_deref()
-            .map(Description::lines_from)
-            .unwrap_or_default();
-        if description_lines.is_empty() {
-            let fallback_tip = if is_research_context {
-                detail.research_tip().or(detail.tip())
-            } else {
-                detail.tip()
-            };
-            if let Some(text) = fallback_tip {
-                description_lines = Tip::lines_from(text);
-            }
-        }
-        let tier_label_text = format!("Level {} of {}", active_tier_index + 1, total_tier_count);
-        Self {
-            total_tier_count,
-            active_tier_index,
-            active_tier_name,
-            description_lines,
-            tier_label_text,
-        }
+        Self { active_tier_name }
     }
 }
 
@@ -547,7 +512,6 @@ pub(super) fn use_hotkey_override(props: &HotkeyOverrideModel) -> HotkeyOverride
     let tier_inputs = TierResolutionInputs {
         detail: &detail,
         stored_tier_index,
-        is_research_context,
     };
     let tiers = TierResolution::from(tier_inputs);
 

@@ -25,6 +25,10 @@ pub(super) fn use_hotkey_alt_position_picker_dialog_body(
     let object_id = props.object_id;
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability_off(object_id)));
+    // The picker is a single self-contained grid, so its selection is always its
+    // own; matching `host_unit_id` keeps the highlight gate satisfied.
+    let picker_selected_unit =
+        use_signal::<Option<WarcraftObjectId>>(|| Some(WarcraftObjectId::default()));
     let picker_selected_research = use_signal::<bool>(|| false);
     let picker_selected_uprooted = use_signal::<bool>(|| false);
     let picker_tier_overrides = use_signal::<HashMap<WarcraftObjectId, usize>>(HashMap::new);
@@ -36,6 +40,7 @@ pub(super) fn use_hotkey_alt_position_picker_dialog_body(
         slot_ids: props.picker_slots.clone(),
         loaded_keys,
         selected_slot: picker_selected_slot,
+        selected_unit: picker_selected_unit,
         selected_from_research: picker_selected_research,
         selected_from_uprooted: picker_selected_uprooted,
         tier_overrides: picker_tier_overrides,

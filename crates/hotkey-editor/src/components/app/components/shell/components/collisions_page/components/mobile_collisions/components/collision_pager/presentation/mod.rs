@@ -125,46 +125,48 @@ pub(super) fn use_collision_pager(props: &CollisionPagerModel) -> CollisionPager
     let effect_element_ref = element_ref.clone();
     let mut effect_active_index = active_index;
     let mut effect_following_navigation = following_navigation;
-    use_effect(use_reactive!(
-        |(effect_entry_keys, selected_key, current_viewport_px)| {
-            let _ = current_viewport_px;
-            if effect_entry_keys.is_empty() {
-                return;
-            }
-            let matched_index = selected_key
-                .as_ref()
-                .and_then(|key| effect_entry_keys.iter().position(|entry| entry == key));
-            let target_index = matched_index.unwrap_or(0);
-            if *effect_active_index.peek() == target_index {
-                return;
-            }
-            let borrowed = effect_element_ref.borrow();
-            let Some(element) = borrowed.as_ref() else {
-                return;
-            };
-            let measured_height = element.client_height();
-            if measured_height <= 0 {
-                return;
-            }
-            effect_active_index.set(target_index);
-            effect_following_navigation.set(true);
-            // Scrolling has to wait for the cards this index change re-renders. The
-            // card at `target_index` only sits at `target_index * height` once the
-            // new content has laid out, so scrolling in this same tick measures the
-            // old layout and lands elsewhere. Deferring one tick lets it settle.
-            let scroll_element = element.clone();
-            spawn(async move {
-                gloo_timers::future::TimeoutFuture::new(0).await;
-                let laid_out_height = scroll_element.client_height();
-                if laid_out_height <= 0 {
-                    return;
-                }
-                let target_index_px = i32::try_from(target_index).unwrap_or(0);
-                let target_scroll_top = target_index_px * laid_out_height;
-                scroll_element.set_scroll_top(target_scroll_top);
-            });
+    use_effect(use_reactive!(|(
+        effect_entry_keys,
+        selected_key,
+        current_viewport_px,
+    )| {
+        let _ = current_viewport_px;
+        if effect_entry_keys.is_empty() {
+            return;
         }
-    ));
+        let matched_index = selected_key
+            .as_ref()
+            .and_then(|key| effect_entry_keys.iter().position(|entry| entry == key));
+        let target_index = matched_index.unwrap_or(0);
+        if *effect_active_index.peek() == target_index {
+            return;
+        }
+        let borrowed = effect_element_ref.borrow();
+        let Some(element) = borrowed.as_ref() else {
+            return;
+        };
+        let measured_height = element.client_height();
+        if measured_height <= 0 {
+            return;
+        }
+        effect_active_index.set(target_index);
+        effect_following_navigation.set(true);
+        // Scrolling has to wait for the cards this index change re-renders. The
+        // card at `target_index` only sits at `target_index * height` once the
+        // new content has laid out, so scrolling in this same tick measures the
+        // old layout and lands elsewhere. Deferring one tick lets it settle.
+        let scroll_element = element.clone();
+        spawn(async move {
+            gloo_timers::future::TimeoutFuture::new(0).await;
+            let laid_out_height = scroll_element.client_height();
+            if laid_out_height <= 0 {
+                return;
+            }
+            let target_index_px = i32::try_from(target_index).unwrap_or(0);
+            let target_scroll_top = target_index_px * laid_out_height;
+            scroll_element.set_scroll_top(target_scroll_top);
+        });
+    }));
 
     CollisionPagerPresentation {
         onmounted,

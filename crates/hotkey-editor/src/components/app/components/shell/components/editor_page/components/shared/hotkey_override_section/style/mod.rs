@@ -10,8 +10,6 @@ classes! {
     mobile: tw![
         "mobile:w-full",
         "mobile:self-stretch",
-        "mobile:flex-1",
-        "mobile:min-h-0",
         "mobile:items-center",
         "mobile:gap-[2cqi]",
     ],

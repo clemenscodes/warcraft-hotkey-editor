@@ -5,6 +5,7 @@ use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use crate::services::unit_catalog::UnitCatalogService;
 use crate::services::unit_catalog::queries::unit_filter_query::UnitFilterQuery;
+use crate::services::unit_catalog::queries::unit_roster_query::UnitRosterQuery;
 
 pub(crate) fn use_unit_catalog() -> UnitCatalogService {
     use_context()
@@ -39,7 +40,18 @@ pub(crate) fn use_unit_catalog_provider() -> UnitCatalogService {
         let current_filter = filter.read().clone();
         current_filter.answer()
     });
-    let service = UnitCatalogService::new(filter, listing);
+    // The roster is the whole game in canonical order, narrowed by nothing but
+    // the visibility toggles, so it does not re-scan when the race or mode
+    // changes — only when a visibility toggle does. The mobile pager walks it.
+    let roster = use_memo(move || {
+        let visibility = CatalogVisibility {
+            include_abilityless: *show_abilityless_units.read(),
+            expand_variants: *expand_variants.read(),
+        };
+        let query = UnitRosterQuery::new(visibility);
+        query.answer()
+    });
+    let service = UnitCatalogService::new(filter, listing, roster);
     use_context_provider(|| service);
     service
 }

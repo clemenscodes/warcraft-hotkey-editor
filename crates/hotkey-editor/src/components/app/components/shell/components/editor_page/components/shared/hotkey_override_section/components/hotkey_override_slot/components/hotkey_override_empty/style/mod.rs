@@ -22,8 +22,6 @@ classes! {
     ],
     mobile: tw![
         "mobile:w-full",
-        "mobile:flex-1",
-        "mobile:min-h-0",
         "mobile:box-border",
         "mobile:p-[0.8em]",
         "mobile:text-center",

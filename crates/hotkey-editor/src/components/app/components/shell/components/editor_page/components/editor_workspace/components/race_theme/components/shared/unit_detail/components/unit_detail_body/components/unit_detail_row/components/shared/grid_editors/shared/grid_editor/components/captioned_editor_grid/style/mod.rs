@@ -11,23 +11,9 @@ classes! {
         "min-w-0",
         "self-stretch",
         "@container",
-        "max-w-144.5",
     ],
     mobile: tw![
-        "mobile:max-w-120.5",
         "mobile:gap-[1cqi]",
         "mobile:pt-0",
-    ],
-    tablet: tw![
-        "tablet:max-w-132.5",
-    ],
-    desktop: tw![
-        "desktop:max-w-160.5",
-    ],
-    qhd: tw![
-        "qhd:max-w-176.5",
-    ],
-    uhd: tw![
-        "uhd:max-w-204.5",
     ],
 }

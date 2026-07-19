@@ -11,7 +11,7 @@ classes! {
     // without overflowing. The cap never exceeds the card width on tiny screens.
     mobile: tw![
         "mobile:flex-none",
-        "mobile:w-[15rem]",
+        "mobile:w-60",
         "mobile:max-w-full",
     ],
 }

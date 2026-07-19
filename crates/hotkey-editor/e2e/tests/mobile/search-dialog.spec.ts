@@ -45,7 +45,7 @@ test.describe("Mobile search dialog", () => {
       .filter({ hasText: /^Campaign$/ })
       .click();
     await expect(page).toHaveURL(/mode=campaign(&|$)/);
-    await expect(page.locator(".mode-group .active-segment-option")).toHaveCount(1);
+    await expect(page.locator(".mode-group .active-toggle-button")).toHaveCount(1);
   });
 
   test("searching by ability finds units that carry it", async ({ page }) => {

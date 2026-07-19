@@ -8,6 +8,7 @@ pub use view::ResolvePageView;
 
 mod style;
 
+use crate::services::viewport::use_is_touch_viewport;
 use components::clear_state::ClearState;
 use components::empty_state::EmptyState;
 use components::mobile_resolve::MobileResolve;
@@ -17,7 +18,6 @@ use dioxus::prelude::*;
 use dioxus_kit::frame::Page;
 use frame::ResolvePageFrame;
 use model::ResolvePageModel;
-use crate::services::viewport::use_is_touch_viewport;
 use presentation::{ResolvePagePresentation, ResolvePlanPresentation, use_resolve_page};
 use style::CLASS;
 use tw_macro::assert_component;

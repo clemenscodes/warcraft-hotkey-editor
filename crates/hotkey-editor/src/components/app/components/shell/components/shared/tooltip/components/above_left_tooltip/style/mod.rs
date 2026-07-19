@@ -16,7 +16,6 @@ classes! {
         "text-center",
         "whitespace-normal",
         "text-warcraft-gold",
-        // bg-panel-dark is an 85-90% gradient and needs an opaque colour under it.
         "bg-warcraft-bg-base",
         "bg-panel-dark",
         "text-shadow-drop",

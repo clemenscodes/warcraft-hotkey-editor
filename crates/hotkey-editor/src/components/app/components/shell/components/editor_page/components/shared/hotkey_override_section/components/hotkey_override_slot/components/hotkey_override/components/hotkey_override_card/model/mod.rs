@@ -17,9 +17,7 @@ pub struct HotkeyOverrideCardModel {
     pub research_is_special: bool,
     pub on_research_activate: EventHandler<()>,
     pub is_info_only: bool,
-    pub description_lines: Vec<String>,
     pub alt_name_text: Option<String>,
-    pub alt_description_lines: Vec<String>,
     pub show_alt_controls: bool,
     pub alt_hotkey_label: String,
     pub alt_hotkey_is_editing: bool,
@@ -32,9 +30,6 @@ pub struct HotkeyOverrideCardModel {
     pub upgrade_hotkey_is_special: bool,
     pub on_hotkey_upgrade_position_click: EventHandler<()>,
     pub on_upgrade_hotkey_activate: EventHandler<()>,
-    pub active_tier_index: usize,
-    pub total_tier_count: usize,
-    pub tier_label_text: String,
 }
 
 impl From<&HotkeyOverrideCardView> for HotkeyOverrideCardModel {
@@ -53,9 +48,7 @@ impl From<&HotkeyOverrideCardView> for HotkeyOverrideCardModel {
             research_is_special,
             on_research_activate,
             is_info_only,
-            description_lines,
             alt_name_text,
-            alt_description_lines,
             show_alt_controls,
             alt_hotkey_label,
             alt_hotkey_is_editing,
@@ -68,9 +61,6 @@ impl From<&HotkeyOverrideCardView> for HotkeyOverrideCardModel {
             upgrade_hotkey_is_special,
             on_hotkey_upgrade_position_click,
             on_upgrade_hotkey_activate,
-            active_tier_index,
-            total_tier_count,
-            tier_label_text,
         } = view.clone();
         Self {
             name_text,
@@ -86,9 +76,7 @@ impl From<&HotkeyOverrideCardView> for HotkeyOverrideCardModel {
             research_is_special,
             on_research_activate,
             is_info_only,
-            description_lines,
             alt_name_text,
-            alt_description_lines,
             show_alt_controls,
             alt_hotkey_label,
             alt_hotkey_is_editing,
@@ -101,9 +89,6 @@ impl From<&HotkeyOverrideCardView> for HotkeyOverrideCardModel {
             upgrade_hotkey_is_special,
             on_hotkey_upgrade_position_click,
             on_upgrade_hotkey_activate,
-            active_tier_index,
-            total_tier_count,
-            tier_label_text,
         }
     }
 }

@@ -6,6 +6,10 @@ classes! {
         "text-center",
         "whitespace-nowrap",
     ],
-    mobile: tw!["mobile:whitespace-normal"],
-    tablet: tw!["tablet:whitespace-normal"],
+    mobile: tw![
+        "mobile:whitespace-normal",
+    ],
+    tablet: tw![
+        "tablet:whitespace-normal",
+    ],
 }

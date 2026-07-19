@@ -4,10 +4,10 @@ classes! {
         "@container",
         "flex",
         "flex-col",
-        "h-full",
         "min-w-0",
         "shrink-0",
         "snap-start",
+        "snap-always",
         "py-1.5",
     ],
     tablet: tw![

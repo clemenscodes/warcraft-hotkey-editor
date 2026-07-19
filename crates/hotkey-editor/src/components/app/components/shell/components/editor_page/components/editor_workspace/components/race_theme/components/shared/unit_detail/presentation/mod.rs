@@ -78,6 +78,7 @@ pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     let selected_unit_id = navigation.selected_unit_id();
     let editor = use_editor_state();
     let selected_slot = editor.selected_slot();
+    let selected_unit = editor.selected_unit();
     let selected_from_research = editor.selected_from_research();
     let selected_from_uprooted = editor.selected_from_uprooted();
     let loaded_keys = use_loaded_keys();
@@ -100,7 +101,13 @@ pub(super) fn use_unit_detail_panel() -> UnitDetailView {
     let build_menu_slots = slot_containers.build_menu();
     let uprooted_menu_slots = slot_containers.uprooted();
     let research_menu_slots = slot_containers.research();
-    let inspector_slot = *selected_slot.read();
+    // Only a selection made on this unit fills its override, so a stale selection
+    // from another unit (say after a layout switch) does not leak in.
+    let inspector_slot = if *selected_unit.read() == Some(unit_id) {
+        *selected_slot.read()
+    } else {
+        None
+    };
     let inspector_from_uprooted = *selected_from_uprooted.read();
     let inspector_from_research = *selected_from_research.read();
     let keys_guard = loaded_keys.read();

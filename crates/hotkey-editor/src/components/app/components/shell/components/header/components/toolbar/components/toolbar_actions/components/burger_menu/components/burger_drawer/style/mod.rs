@@ -9,8 +9,6 @@ classes! {
         "max-h-dvh",
         "z-71",
         "w-[min(74vw,280px)]",
-        // bg-panel-dark is an 85-90% gradient and needs an opaque colour under it.
-        // A drawer must not show the page through itself.
         "bg-warcraft-bg-base",
         "bg-panel-dark",
         "border-l",

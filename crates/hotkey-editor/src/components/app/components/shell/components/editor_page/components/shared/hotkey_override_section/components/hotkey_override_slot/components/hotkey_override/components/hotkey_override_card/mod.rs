@@ -1,16 +1,12 @@
 pub mod components;
 mod model;
-mod presentation;
 mod view;
 
 pub use view::HotkeyOverrideCardView;
 mod style;
 
 use dioxus::prelude::*;
-use presentation::{HotkeyOverrideCardFit, use_hotkey_override_card_fit};
 
-use components::ability_description::AbilityDescription;
-use components::ability_tier::AbilityTier;
 use components::alt_state_section::AltStateSection;
 use components::hotkey_override_header::HotkeyOverrideHeader;
 use components::upgrade_section::UpgradeSection;
@@ -21,10 +17,6 @@ use model::HotkeyOverrideCardModel;
 
 #[component]
 pub fn HotkeyOverrideCard(props: HotkeyOverrideCardModel) -> Element {
-    let HotkeyOverrideCardFit {
-        font_style,
-        onmounted,
-    } = use_hotkey_override_card_fit(&props);
     let HotkeyOverrideCardModel {
         name_text,
         object_id,
@@ -39,9 +31,7 @@ pub fn HotkeyOverrideCard(props: HotkeyOverrideCardModel) -> Element {
         research_is_special,
         on_research_activate,
         is_info_only,
-        description_lines,
         alt_name_text,
-        alt_description_lines,
         show_alt_controls,
         alt_hotkey_label,
         alt_hotkey_is_editing,
@@ -54,15 +44,10 @@ pub fn HotkeyOverrideCard(props: HotkeyOverrideCardModel) -> Element {
         upgrade_hotkey_is_special,
         on_hotkey_upgrade_position_click,
         on_upgrade_hotkey_activate,
-        active_tier_index,
-        total_tier_count,
-        tier_label_text,
     } = props;
     rsx! {
         div {
             class: CLASS,
-            style: font_style,
-            onmounted: move |event| onmounted.call(event),
             HotkeyOverrideHeader {
                 name_text,
                 object_id,
@@ -78,12 +63,8 @@ pub fn HotkeyOverrideCard(props: HotkeyOverrideCardModel) -> Element {
                 on_research_activate,
                 is_info_only,
             }
-            AbilityDescription {
-                description_lines,
-            }
             AltStateSection {
                 alt_name_text,
-                alt_description_lines,
                 show_alt_controls,
                 alt_hotkey_label,
                 alt_hotkey_is_editing,
@@ -98,12 +79,6 @@ pub fn HotkeyOverrideCard(props: HotkeyOverrideCardModel) -> Element {
                 upgrade_hotkey_is_special,
                 on_position_click: on_hotkey_upgrade_position_click,
                 on_hotkey_activate: on_upgrade_hotkey_activate,
-            }
-            AbilityTier {
-                object_id,
-                active_tier_index,
-                total_tier_count,
-                tier_label_text,
             }
         }
     }

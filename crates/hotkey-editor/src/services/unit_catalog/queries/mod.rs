@@ -1,4 +1,5 @@
 pub mod unit_filter_query;
+pub mod unit_roster_query;
 
 #[cfg(test)]
 pub(crate) fn assert_query<TheQuery>()

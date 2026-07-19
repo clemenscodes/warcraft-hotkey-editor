@@ -25,6 +25,10 @@ pub(super) fn use_hotkey_upgrade_position_picker_body(
     let upgrade_unit_id = props.upgrade_unit_id;
     let picker_selected_slot =
         use_signal::<Option<GridSlotId>>(move || Some(GridSlotId::ability(upgrade_unit_id)));
+    // The picker is a single self-contained grid; matching `host_unit_id` keeps
+    // the highlight gate satisfied.
+    let picker_selected_unit =
+        use_signal::<Option<WarcraftObjectId>>(|| Some(WarcraftObjectId::default()));
     let picker_selected_research = use_signal::<bool>(|| false);
     let picker_selected_uprooted = use_signal::<bool>(|| false);
     let picker_tier_overrides = use_signal::<HashMap<WarcraftObjectId, usize>>(HashMap::new);
@@ -36,6 +40,7 @@ pub(super) fn use_hotkey_upgrade_position_picker_body(
         slot_ids: props.picker_slots.clone(),
         loaded_keys,
         selected_slot: picker_selected_slot,
+        selected_unit: picker_selected_unit,
         selected_from_research: picker_selected_research,
         selected_from_uprooted: picker_selected_uprooted,
         tier_overrides: picker_tier_overrides,

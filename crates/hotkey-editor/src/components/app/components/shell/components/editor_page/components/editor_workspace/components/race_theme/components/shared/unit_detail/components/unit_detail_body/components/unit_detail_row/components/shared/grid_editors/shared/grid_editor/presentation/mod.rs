@@ -28,6 +28,8 @@ pub(crate) fn use_grid_editor<B: GridBehavior>(
     let tier_overrides = config.tier_overrides;
     let grid_layout = config.grid_layout;
     let selected_slot = config.selected_slot;
+    let selected_unit = config.selected_unit;
+    let host_unit_id = config.host_unit_id;
     let selected_from_research = config.selected_from_research;
     let slot_ids = config.slot_ids.clone();
     let restrict_draggable_to: Rc<[GridSlotId]> = Rc::from(config.restrict_draggable_to.as_slice());
@@ -39,7 +41,14 @@ pub(crate) fn use_grid_editor<B: GridBehavior>(
         };
         let tier_guard = tier_overrides.read();
         let layout_snapshot = *grid_layout.read();
-        let selected_snapshot = *selected_slot.read();
+        // A tile renders selected only when the selection was made on THIS unit,
+        // so a shared ability selected on one card does not light up on every other
+        // visible card that has it (the mobile pager shows many at once).
+        let selected_snapshot = if *selected_unit.read() == Some(host_unit_id) {
+            *selected_slot.read()
+        } else {
+            None
+        };
         let selected_research_snapshot = *selected_from_research.read();
         let input = CommandGridRenderInput::new(
             &slot_ids,

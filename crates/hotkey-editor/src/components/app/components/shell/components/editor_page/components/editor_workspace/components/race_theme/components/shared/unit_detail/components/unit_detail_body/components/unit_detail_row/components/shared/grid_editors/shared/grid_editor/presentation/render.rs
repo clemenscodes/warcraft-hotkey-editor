@@ -16,7 +16,8 @@ use super::super::model::GridEditorModel;
 use crate::services::drag_state::DragFollowerVisual;
 
 use super::handlers::{
-    MoveHandlerArgs, activate_handler, drop_blocked_callback, move_handler, select_handler,
+    ActivateHandlerArgs, MoveHandlerArgs, SelectHandlerArgs, activate_handler,
+    drop_blocked_callback, move_handler, select_handler,
 };
 
 use super::mechanics;
@@ -33,6 +34,8 @@ impl EditorTile {
         let loaded_keys = config.loaded_keys;
         let grid_layout = config.grid_layout;
         let selected_slot = config.selected_slot;
+        let selected_unit = config.selected_unit;
+        let host_unit_id = config.host_unit_id;
         let selected_from_research = config.selected_from_research;
         let selected_from_uprooted = config.selected_from_uprooted;
         let update_hotkeys_on_move = config.update_hotkeys_on_move;
@@ -42,29 +45,37 @@ impl EditorTile {
         let dragging_slot = config.dragging_slot;
         let drop_target_tile = config.drop_target_tile;
         let drag_follower = config.drag_follower;
-        let on_select = select_handler(
-            behavior.clone(),
+        let select_args = SelectHandlerArgs {
+            behavior: behavior.clone(),
             loaded_keys,
             selected_slot,
+            selected_unit,
+            host_unit_id,
             selected_from_research,
             selected_from_uprooted,
-            slot_ids.clone(),
-        );
-        let on_activate = activate_handler(
-            behavior.clone(),
+            slot_ids: slot_ids.clone(),
+        };
+        let on_select = select_handler(select_args);
+        let activate_args = ActivateHandlerArgs {
+            behavior: behavior.clone(),
             loaded_keys,
             selected_slot,
+            selected_unit,
+            host_unit_id,
             selected_from_research,
             selected_from_uprooted,
             hotkey_assign_request,
-            slot_ids.clone(),
-        );
+            slot_ids: slot_ids.clone(),
+        };
+        let on_activate = activate_handler(activate_args);
         let move_args = MoveHandlerArgs {
             behavior: behavior.clone(),
             loaded_keys,
             custom_keys_service: consume_context::<CustomKeysService>(),
             grid_layout,
             selected_slot,
+            selected_unit,
+            host_unit_id,
             update_hotkeys_on_move,
             prevent_swap_on_drop,
             slot_ids: slot_ids.clone(),

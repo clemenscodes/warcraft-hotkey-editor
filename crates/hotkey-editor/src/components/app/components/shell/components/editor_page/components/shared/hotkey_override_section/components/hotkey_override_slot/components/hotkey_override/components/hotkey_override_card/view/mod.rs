@@ -16,9 +16,7 @@ pub struct HotkeyOverrideCardView {
     pub research_is_special: bool,
     pub on_research_activate: EventHandler<()>,
     pub is_info_only: bool,
-    pub description_lines: Vec<String>,
     pub alt_name_text: Option<String>,
-    pub alt_description_lines: Vec<String>,
     pub show_alt_controls: bool,
     pub alt_hotkey_label: String,
     pub alt_hotkey_is_editing: bool,
@@ -31,9 +29,6 @@ pub struct HotkeyOverrideCardView {
     pub upgrade_hotkey_is_special: bool,
     pub on_hotkey_upgrade_position_click: EventHandler<()>,
     pub on_upgrade_hotkey_activate: EventHandler<()>,
-    pub active_tier_index: usize,
-    pub total_tier_count: usize,
-    pub tier_label_text: String,
 }
 
 impl ddd::View for HotkeyOverrideCardView {}

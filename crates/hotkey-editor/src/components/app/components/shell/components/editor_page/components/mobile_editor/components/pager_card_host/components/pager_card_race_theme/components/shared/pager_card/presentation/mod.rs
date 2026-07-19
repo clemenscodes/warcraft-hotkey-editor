@@ -37,6 +37,7 @@ pub(super) fn use_pager_card(props: &PagerCardModel) -> PagerCardPresentation {
     let unit_id = props.unit_id;
     let editor = use_editor_state();
     let selected_slot = editor.selected_slot();
+    let selected_unit = editor.selected_unit();
     let selected_from_research = editor.selected_from_research();
     let selected_from_uprooted = editor.selected_from_uprooted();
     let loaded_keys = use_loaded_keys();
@@ -45,7 +46,13 @@ pub(super) fn use_pager_card(props: &PagerCardModel) -> PagerCardPresentation {
     // containers and rebuilt the inspector detail for each mounted card, which is
     // what made the wheel drag.
     let override_target_memo = use_memo(move || {
-        let inspector_slot = *selected_slot.read();
+        // Only this card's own selection drives its override, so a shared ability
+        // selected on another visible card does not also fill this one in.
+        let inspector_slot = if *selected_unit.read() == Some(unit_id) {
+            *selected_slot.read()
+        } else {
+            None
+        };
         let inspector_from_research = *selected_from_research.read();
         let inspector_from_uprooted = *selected_from_uprooted.read();
         let keys_guard = loaded_keys.read();

@@ -36,10 +36,7 @@ pub fn GridTile(props: GridTileModel) -> Element {
             }
         },
         TileOccupancy::Empty => rsx! {
-            EmptyTile {
-                state,
-                is_drag_over,
-            }
+            EmptyTile { state, is_drag_over }
         },
     }
 }

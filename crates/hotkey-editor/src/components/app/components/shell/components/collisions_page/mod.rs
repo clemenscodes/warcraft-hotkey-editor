@@ -8,6 +8,7 @@ mod view;
 pub use view::CollisionsPageView;
 mod style;
 
+use crate::services::viewport::use_is_touch_viewport;
 use components::body::BodyView;
 use components::collisions_breadcrumbs::CollisionsBreadcrumbsView;
 use components::mobile_collisions::MobileCollisions;
@@ -15,7 +16,6 @@ use dioxus::prelude::*;
 use dioxus_kit::frame::Page;
 use frame::CollisionsPageFrame;
 use model::CollisionsPageModel;
-use crate::services::viewport::use_is_touch_viewport;
 use presentation::use_collisions_page;
 use style::CLASS;
 use tw_macro::assert_component;

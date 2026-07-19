@@ -2,7 +2,7 @@
   description = "Warcraft III Hotkey Editor — web-based CustomKeys.txt editor";
 
   nixConfig = {
-    extra-substituters = [ "https://clemenscodes.cachix.org" ];
+    extra-substituters = ["https://clemenscodes.cachix.org"];
     extra-trusted-public-keys = [
       "clemenscodes.cachix.org-1:yEwW1YgttL2xdsyfFDz/vv8zZRhRGMeDQsKKmtV1N18="
     ];
@@ -24,20 +24,18 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      flake-utils,
-      rust-overlay,
-      crane,
-      playwright,
-      moon-tui,
-      tw-lint,
-    }:
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    rust-overlay,
+    crane,
+    playwright,
+    moon-tui,
+    tw-lint,
+  }:
     flake-utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
@@ -111,7 +109,7 @@
             OPENSSL_NO_VENDOR = 1;
           };
 
-          buildInputs = [ pkgs.openssl ];
+          buildInputs = [pkgs.openssl];
           nativeBuildInputs = with pkgs; [
             pkg-config
             installShellFiles
@@ -120,21 +118,20 @@
 
           postInstall =
             pkgs.lib.optionalString (pkgs.stdenv.hostPlatform.emulatorAvailable pkgs.buildPackages)
-              (
-                let
-                  emulator = pkgs.stdenv.hostPlatform.emulator pkgs.buildPackages;
-                in
-                ''
-                  installShellCompletion --cmd moon \
-                    --bash <(${emulator} $out/bin/moon completions --shell bash) \
-                    --fish <(${emulator} $out/bin/moon completions --shell fish) \
-                    --zsh <(${emulator} $out/bin/moon completions --shell zsh)
-                ''
-              );
+            (
+              let
+                emulator = pkgs.stdenv.hostPlatform.emulator pkgs.buildPackages;
+              in ''
+                installShellCompletion --cmd moon \
+                  --bash <(${emulator} $out/bin/moon completions --shell bash) \
+                  --fish <(${emulator} $out/bin/moon completions --shell fish) \
+                  --zsh <(${emulator} $out/bin/moon completions --shell zsh)
+              ''
+            );
 
           doCheck = false;
           doInstallCheck = true;
-          nativeInstallCheckInputs = [ pkgs.versionCheckHook ];
+          nativeInstallCheckInputs = [pkgs.versionCheckHook];
 
           meta = {
             description = "Task runner and repo management tool for the web ecosystem, written in Rust";
@@ -174,7 +171,7 @@
           playwright-driver
           twLint
         ];
-        moonRuntimeInputs = ciRuntimeInputs ++ [ moonTui ];
+        moonRuntimeInputs = ciRuntimeInputs ++ [moonTui];
 
         ci-cache-tools = pkgs.buildEnv {
           name = "warcraft-hotkey-editor-ci-cache-tools";
@@ -185,8 +182,7 @@
         # `hotkey-editor` per `.moon/workspace.yml`) in a shell app so
         # we can expose it as `nix run .#<task>` — no need to enter the
         # devshell first.
-        runMoonTask =
-          task:
+        runMoonTask = task:
           pkgs.writeShellApplication {
             name = "moon-${task}";
             runtimeInputs = moonRuntimeInputs;
@@ -246,7 +242,7 @@
         # Nix-native check derivations — all reuse the cached artifacts above
         # so they never recompile deps. These replace the raw cargo calls that
         # used to run in the `rust-checks` CI job.
-        cargoFmt = craneLib.cargoFmt { inherit src; };
+        cargoFmt = craneLib.cargoFmt {inherit src;};
 
         cargoClippyNative = craneLib.cargoClippy (
           commonArgsNative
@@ -308,8 +304,7 @@
             '';
           }
         );
-      in
-      {
+      in {
         formatter = pkgs.nixfmt;
 
         packages = {
@@ -354,7 +349,7 @@
         };
 
         devShells.default = pkgs.mkShell {
-          inputsFrom = [ warcraft-hotkey-editor ];
+          inputsFrom = [warcraft-hotkey-editor];
           packages =
             moonRuntimeInputs
             ++ (with pkgs; [
@@ -362,6 +357,7 @@
               cargo-edit
               taplo
               nil
+              hadolint
             ]);
 
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
