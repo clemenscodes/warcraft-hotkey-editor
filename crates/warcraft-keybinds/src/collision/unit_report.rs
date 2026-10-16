@@ -1351,6 +1351,21 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
+        // ngme (Goblin Merchant)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'E',
+                    &[GridSlotId::ability("bspd"), GridSlotId::ability("stel")],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("ngme", "Goblin Merchant", empty_pos, empty_hot);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
         // unp1 (Halls of the Dead)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -1475,8 +1490,15 @@ mod unit_collision_report_tests {
                     &[GridSlotId::ability("ncea"), GridSlotId::ability("ncen")],
                 )
                 .build();
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'W',
+                    &[GridSlotId::ability("nhrw"), GridSlotId::ability("nqbh")],
+                )
+                .build();
             let eb = UnitCollisionEntryBuilder::new("nmr4", "Mercenary Camp", empty_pos, empty_hot);
             let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
         builder = builder.entry(entry);

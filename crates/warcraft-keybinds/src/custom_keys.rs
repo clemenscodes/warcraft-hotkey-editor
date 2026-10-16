@@ -3781,7 +3781,6 @@ mod normalize_tests {
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod template_generation_tests {
     use warcraft_api::WarcraftObjectMeta;
-    use warcraft_database::ObjectLookup;
     use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
     use super::CustomKeys;
@@ -3850,26 +3849,23 @@ mod template_generation_tests {
             {
                 continue;
             }
-            let is_passive = ObjectLookup::is_passive_ability(id);
             let existing_binding = tmpl.binding(id);
 
             let section_header = format!("[{id}]\n");
             out.push_str(&section_header);
 
             if let Some(button_position) = default_button_position {
-                if !is_passive {
-                    let hotkey = existing_binding
-                        .and_then(|binding| binding.hotkey())
-                        .map(|hotkey_display| hotkey_display.to_string())
-                        .or_else(|| {
-                            layout
-                                .letter_at(button_position.column(), button_position.row())
-                                .map(|letter| letter.to_string())
-                        });
-                    if let Some(hotkey_string) = hotkey {
-                        let hotkey_line = format!("Hotkey={hotkey_string}\n");
-                        out.push_str(&hotkey_line);
-                    }
+                let hotkey = existing_binding
+                    .and_then(|binding| binding.hotkey())
+                    .map(|hotkey_display| hotkey_display.to_string())
+                    .or_else(|| {
+                        layout
+                            .letter_at(button_position.column(), button_position.row())
+                            .map(|letter| letter.to_string())
+                    });
+                if let Some(hotkey_string) = hotkey {
+                    let hotkey_line = format!("Hotkey={hotkey_string}\n");
+                    out.push_str(&hotkey_line);
                 }
                 let btn_column = u8::from(button_position.column());
                 let btn_row = u8::from(button_position.row());

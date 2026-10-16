@@ -32,5 +32,3 @@ warcraft-slk = { path = "../warcraft-slk" }
 name = "rules"
 path = "tests/rules.rs"
 
-[dev-dependencies]
-warcraft-database = { path = "../warcraft-database" }
