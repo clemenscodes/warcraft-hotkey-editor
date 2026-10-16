@@ -3369,6 +3369,7 @@ dependencies = [
 [[package]]
 name = "warcraft-api"
 version = "0.7.0"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.9.0#32aa3d4adbfd3b00110eee433a7f87fce7863bd6"
 dependencies = [
  "ddd",
  "serde",
@@ -3379,6 +3380,7 @@ dependencies = [
 [[package]]
 name = "warcraft-keybinds"
 version = "0.7.0"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.9.0#32aa3d4adbfd3b00110eee433a7f87fce7863bd6"
 dependencies = [
  "ddd",
  "warcraft-api",
@@ -3387,6 +3389,7 @@ dependencies = [
 [[package]]
 name = "warcraft-primitives"
 version = "0.7.0"
+source = "git+https://github.com/clemenscodes/warcraft-data?tag=v0.9.0#32aa3d4adbfd3b00110eee433a7f87fce7863bd6"
 dependencies = [
  "serde",
  "serde_json",

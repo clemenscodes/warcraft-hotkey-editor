@@ -31,7 +31,14 @@ test.describe("Off-state regression: Healing Wave drag after cascade", () => {
     await page.locator('.race-tabs [class*="neutral-race-tab"]').click();
     await page.locator('input[type="search"]').fill("ndrs");
     await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).waitFor();
-    await page.locator(".unit-card").filter({ hasText: "Draenei Seer" }).click();
+    // Click until the card is the selected one: Firefox can swallow a click
+    // while the filtered list is still re-rendering after the search input.
+    const card = page.locator(".unit-card").filter({ hasText: "Draenei Seer" });
+    const selected = card.locator(".selected-unit-card-button");
+    await expect(async () => {
+      await card.click();
+      await expect(selected).toBeVisible({ timeout: 1000 });
+    }).toPass();
     await page.locator(".filled-tile").first().waitFor();
 
     const commandCard = page.locator(".grid-editor", {

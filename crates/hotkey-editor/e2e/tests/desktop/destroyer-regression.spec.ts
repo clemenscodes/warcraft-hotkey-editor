@@ -31,7 +31,14 @@ test.describe("Destroyer regression: abilList order respected after cascade", ()
     await page.locator('.race-tabs [class*="undead-race-tab"]').click();
     await page.locator('input[type="search"]').fill("ubsp");
     await page.locator(".unit-card").filter({ hasText: "Destroyer" }).waitFor();
-    await page.locator(".unit-card").filter({ hasText: "Destroyer" }).click();
+    // Click until the card is the selected one: Firefox can swallow a click
+    // while the filtered list is still re-rendering after the search input.
+    const card = page.locator(".unit-card").filter({ hasText: "Destroyer" });
+    const selected = card.locator(".selected-unit-card-button");
+    await expect(async () => {
+      await card.click();
+      await expect(selected).toBeVisible({ timeout: 1000 });
+    }).toPass();
     await page.locator(".filled-tile").first().waitFor();
 
     const cell = (col: number, row: number) =>

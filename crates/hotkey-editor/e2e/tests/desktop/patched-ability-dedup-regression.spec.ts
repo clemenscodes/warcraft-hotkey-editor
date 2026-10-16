@@ -42,7 +42,15 @@ async function pickUnit(
   await page.locator('input[type="search"]').fill(options.query);
   const card = page.locator(".unit-card").filter({ hasText: options.cardText });
   await card.first().waitFor();
-  await card.first().click();
+  // Click until this card is the selected one. Firefox can swallow a click
+  // while the filtered list is still re-rendering after the search input,
+  // and the previously selected unit's tiles are already filled, so a bare
+  // `.filled-tile` wait would read the old command card.
+  const selected = card.first().locator(".selected-unit-card-button");
+  await expect(async () => {
+    await card.first().click();
+    await expect(selected).toBeVisible({ timeout: 1000 });
+  }).toPass();
   await page.locator(".filled-tile").first().waitFor();
 }
 

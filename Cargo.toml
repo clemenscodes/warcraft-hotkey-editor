@@ -21,17 +21,8 @@ ddd = { git = "https://github.com/clemenscodes/ddd", tag = "v0.2.0" }
 dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.4.2" }
 tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.2.0" }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
-warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.8.0" }
-warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.8.0" }
-
-# DEVELOPMENT ONLY — MUST BE DELETED BEFORE THIS WORK IS COMMITTED.
-# Points the pinned warcraft-data crates at the local working copy so the
-# grouped-listing domain change can be iterated on without a tag round trip.
-# The change ships by tagging warcraft-data and bumping the tags above; a
-# committed patch breaks CI.
-[patch."https://github.com/clemenscodes/warcraft-data"]
-warcraft-api = { path = "/home/clemens/.local/src/warcraft-data-forsaken/crates/warcraft-api" }
-warcraft-keybinds = { path = "/home/clemens/.local/src/warcraft-data-forsaken/crates/warcraft-keybinds" }
+warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.9.0" }
+warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.9.0" }
 
 # Tuned for a shipped WASM SPA: size is the Lighthouse lever, and the app is
 # DOM-bound (per-frame Rust work is light), so trading compile time and raw
