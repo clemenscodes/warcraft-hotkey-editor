@@ -3983,6 +3983,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "warcraft-api",
+ "warcraft-database",
  "warcraft-keybinds",
  "warcraft-slk",
 ]

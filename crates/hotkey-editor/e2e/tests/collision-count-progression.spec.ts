@@ -25,7 +25,7 @@ async function collisionState(
 // Hard-coded counts intentionally — they are the ground truth for the
 // algorithm and any change in them should be a conscious decision.
 test.describe("Collision count progression across the resolve workflow", () => {
-  test("default template → resolve → apply grid drops the count from 99+ to 55 to 0", async ({
+  test("default template → resolve → apply grid drops the count from 99+ to 44 to 0", async ({
     page,
   }) => {
     await page.goto(APP);
@@ -77,8 +77,11 @@ test.describe("Collision count progression across the resolve workflow", () => {
     // Hippogryph/Fire Lord, dropping 4 more hotkey clashes; 56 before
     // the Clockwerk Goblin group collapsed ncg1/ncg2/ncg3/ncgb so their
     // Self Destruct ids Asd2/Asd3/Asdg fan out as one button, deduping
-    // one more clash.)
-    expect(afterResolve).toBe(55);
+    // one more clash; 44 since the default template is generated from the
+    // patch 3.0.0 game data, carrying Blizzard's own default hotkeys, passive
+    // abilities included, instead of the hand-placed grid letters the old
+    // template had for creep abilities.)
+    expect(afterResolve).toBe(44);
     expect(afterResolve).toBeLessThan(initialCount);
     expect(await collisionState(page)).toBe("attention");
 

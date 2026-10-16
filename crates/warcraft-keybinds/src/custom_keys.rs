@@ -3,7 +3,7 @@ use std::fmt;
 use std::sync::OnceLock;
 
 use warcraft_api::{WarcraftObjectId, WarcraftObjectKind, WarcraftObjectMeta};
-use warcraft_database::{ObjectLookup, VariantUnits, WARCRAFT_DATABASE};
+use warcraft_database::{TALENT_VARIANTS, VariantUnits, WARCRAFT_DATABASE};
 
 use crate::cascade::conflict_graph::ConflictGraph;
 use crate::cascade::planner::{CascadePlan, MoveReason, PlannedMove, UnresolvedMover};
@@ -275,6 +275,7 @@ impl CustomKeys {
         result.mirror_build_commands_to_abilities();
         result.mirror_morph_abilities_to_unit_commands();
         result.sync_mirrored_off_states();
+        result.mirror_talent_variants_from_bases();
         result.materialize_upgrade_hotkey_tiers();
         result
     }
@@ -412,6 +413,37 @@ impl CustomKeys {
             produced_binding.set_button_position(button_position);
             produced_binding.set_hotkey(hotkey);
             self.put_ability(produced_unit_id, produced_binding);
+        }
+    }
+
+    /// Copies each hero talent's base keybind onto the talent (see
+    /// [`warcraft_api::TalentVariant`]). A picked talent replaces its base on the
+    /// same command card button and the live game then reads the talent's own
+    /// section, so without this mirror the button falls back to Blizzard's
+    /// default the moment the talent is chosen. The editor never shows a talent
+    /// on its own; it always follows its base.
+    fn mirror_talent_variants_from_bases(&mut self) {
+        for talent_variant in TALENT_VARIANTS {
+            let base_id = talent_variant.base_id();
+            let Some(base_binding) = self.binding(base_id) else {
+                continue;
+            };
+            let button_position = base_binding.button_position().copied();
+            let unbutton_position = base_binding.unbutton_position().copied();
+            let research_button_position = base_binding.research_button_position().copied();
+            let hotkey = base_binding.hotkey().cloned();
+            let unhotkey = base_binding.unhotkey().cloned();
+            let research_hotkey = base_binding.research_hotkey().cloned();
+            let variant_id = talent_variant.variant_id();
+            let existing_binding = self.binding(variant_id).cloned();
+            let mut variant_binding = existing_binding.unwrap_or_default();
+            variant_binding.set_button_position(button_position);
+            variant_binding.set_unbutton_position(unbutton_position);
+            variant_binding.set_research_button_position(research_button_position);
+            variant_binding.set_hotkey(hotkey);
+            variant_binding.set_unhotkey(unhotkey);
+            variant_binding.set_research_hotkey(research_hotkey);
+            self.put_ability(variant_id, variant_binding);
         }
     }
 
@@ -711,7 +743,6 @@ impl CustomKeys {
         let new_position = GridCoordinate::new(column_index, row_index);
         match slot {
             GridSlotId::Ability(ability_id) => {
-                let is_passive = ObjectLookup::is_passive_ability(ability_id.value());
                 let grid_hotkey = Self::grid_hotkey_for(*ability_id, letter);
                 if let Some(binding) = self.binding_or_default_mut(*ability_id) {
                     if is_research_context {
@@ -721,7 +752,7 @@ impl CustomKeys {
                         }
                     } else {
                         binding.set_button_position(Some(new_position));
-                        if assign_hotkey && !is_passive {
+                        if assign_hotkey {
                             binding.set_hotkey(Some(grid_hotkey));
                         }
                     }
@@ -918,14 +949,10 @@ impl CustomKeys {
 
         for ability_id in &ability_ids {
             let ability_id_str = ability_id.value();
-            let is_passive = ObjectLookup::is_passive_ability(ability_id_str);
-            let button_position = if is_passive {
-                None
-            } else {
-                self.binding(ability_id_str)
-                    .and_then(|binding| binding.button_position())
-                    .copied()
-            };
+            let button_position = self
+                .binding(ability_id_str)
+                .and_then(|binding| binding.button_position())
+                .copied();
             let research_button_position = self
                 .binding(ability_id_str)
                 .and_then(|binding| binding.research_button_position())
@@ -2247,6 +2274,36 @@ mod tests {
     }
 
     #[test]
+    fn apply_grid_rebinds_passive_abilities_to_their_cell() {
+        // A passive ability has a hotkey the game shows on its button even
+        // though it cannot be pressed. Applying the grid must rebind it like
+        // every other button, or a stale default (`E` on Devotion Aura at the
+        // bottom row) keeps colliding with a real button bound to that key.
+        let input = "[AHad]\nHotkey=E\nButtonpos=2,2\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        keys.apply_grid_to_all_bindings(layout);
+        let binding = keys.binding("AHad").expect("AHad exists");
+        let expected_hotkey = Hotkey::Letter('C');
+        assert_eq!(binding.hotkey(), Some(&expected_hotkey));
+    }
+
+    #[test]
+    fn moving_a_passive_ability_takes_the_grid_letter_along() {
+        use crate::identity::slot::GridSlotId;
+        let input = "[AHad]\nHotkey=E\nButtonpos=2,2\n";
+        let mut keys = CustomKeys::from(input);
+        let layout = GridLayout::qwerty_grid();
+        let slot = GridSlotId::ability("AHad");
+        keys.assign_position(layout, &slot, 3, 2, false, true);
+        let binding = keys.binding("AHad").expect("AHad exists");
+        let expected_position = GridCoordinate::new(ColumnIndex::Three, RowIndex::Two);
+        let expected_hotkey = Hotkey::Letter('V');
+        assert_eq!(binding.button_position(), Some(&expected_position));
+        assert_eq!(binding.hotkey(), Some(&expected_hotkey));
+    }
+
+    #[test]
     fn apply_grid_preserves_two_tier_upgrade_hotkey() {
         // `Ruba` (Banshee training) has two levels at cell (1,2). Applying the
         // grid must keep both tiers bound.
@@ -2929,6 +2986,54 @@ mod normalize_tests {
         let expected_hotkey = Hotkey::Letter('R');
         assert_eq!(produced_unit.hotkey(), Some(&expected_hotkey));
         assert_eq!(produced_unit.button_position(), Some(&morph_position));
+    }
+
+    #[test]
+    fn normalize_mirrors_base_keybind_onto_every_talent_variant() {
+        use crate::model::AbilityBinding;
+        // A picked talent (`AHq1`..`AHq3`) replaces Guiding Hand `AHgh` on the
+        // same button and the live game then reads the talent's own section.
+        // Editing the button only touches `AHgh`, so normalize must copy its
+        // positions and hotkeys onto every talent, overriding the talent's
+        // stale Blizzard default.
+        let button_position = GridCoordinate::new(ColumnIndex::One, RowIndex::Two);
+        let research_position = GridCoordinate::new(ColumnIndex::One, RowIndex::Zero);
+        let base_binding = AbilityBinding::builder()
+            .hotkey(Hotkey::Letter('X'))
+            .button_position(button_position)
+            .research_hotkey(Hotkey::Letter('W'))
+            .research_button_position(research_position)
+            .build();
+        let stale_position = GridCoordinate::new(ColumnIndex::Three, RowIndex::Two);
+        let stale_talent_binding = AbilityBinding::builder()
+            .hotkey(Hotkey::Letter('R'))
+            .button_position(stale_position)
+            .build();
+        let mut overlay = CustomKeys::from("");
+        overlay.put_ability("AHgh", base_binding);
+        overlay.put_ability("AHq1", stale_talent_binding);
+        let normalized = overlay.normalize();
+        let expected_hotkey = Hotkey::Letter('X');
+        let expected_research_hotkey = Hotkey::Letter('W');
+        for talent_id in ["AHq1", "AHq2", "AHq3"] {
+            let talent = normalized
+                .binding(talent_id)
+                .expect("talent section exists");
+            assert_eq!(talent.hotkey(), Some(&expected_hotkey));
+            assert_eq!(talent.button_position(), Some(&button_position));
+            assert_eq!(talent.research_hotkey(), Some(&expected_research_hotkey));
+            assert_eq!(talent.research_button_position(), Some(&research_position));
+        }
+    }
+
+    #[test]
+    fn talent_sections_survive_parsing() {
+        // Talents are no database objects of their own, yet their sections
+        // must be kept — the live game reads them once a talent is picked.
+        let file = CustomKeys::from("[AHq1]\nHotkey=R\nButtonpos=3,2\n");
+        let talent = file.binding("AHq1").expect("talent section kept");
+        let expected_hotkey = Hotkey::Letter('R');
+        assert_eq!(talent.hotkey(), Some(&expected_hotkey));
     }
 
     #[test]

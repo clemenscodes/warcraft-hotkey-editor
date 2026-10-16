@@ -1,5 +1,6 @@
 use std::{collections::BTreeMap, path::PathBuf};
 
+use warcraft_api::MAX_ABILITY_LEVEL;
 use warcraft_slk::{RowView, SlkTable};
 
 use crate::{
@@ -35,12 +36,17 @@ pub struct AbilityMetadataEntry {
     morph_target_unit: Option<String>,
     transform_from_unit: Option<String>,
     transform_to_unit: Option<String>,
-    evasion_chance_per_level: [f32; 4],
+    evasion_chance_per_level: [f32; MAX_ABILITY_LEVEL],
     /// For a leveled summon ability, the distinct unit summoned at each level
     /// (`UnitID1..UnitIDN`) in level order — e.g. `[osw1, osw2, osw3]`. These are
     /// the tiers of one summoned unit; empty unless the ability summons two or
     /// more distinct units across its levels.
     tiered_summon_units: Vec<String>,
+    /// A hero talent (patch 3.0.0): a variant of a hero ability that replaces
+    /// its base on the same command card button once the talent is picked. The
+    /// row is a hero ability (`hero = 1`) whose `comments` name it a talent
+    /// (`Guiding Hand - talent 1`, `Warcry - T1 - Magic Immunity`).
+    is_talent: bool,
 }
 
 impl AbilityMetadataEntry {
@@ -48,10 +54,10 @@ impl AbilityMetadataEntry {
         self.code.as_deref()
     }
 
-    /// Per-level chance to evade an attack (0.0..=1.0). `[0.0; 4]` unless the
+    /// Per-level chance to evade an attack (0.0..=1.0). `[0.0; MAX_ABILITY_LEVEL]` unless the
     /// ability is an evasion ability. Read from the real numeric data field
     /// (`DataA`/`DataD`), never from the tooltip text.
-    pub fn evasion_chance_per_level(&self) -> [f32; 4] {
+    pub fn evasion_chance_per_level(&self) -> [f32; MAX_ABILITY_LEVEL] {
         self.evasion_chance_per_level
     }
 
@@ -69,6 +75,10 @@ impl AbilityMetadataEntry {
 
     pub fn tiered_summon_units(&self) -> &[String] {
         &self.tiered_summon_units
+    }
+
+    pub fn is_talent(&self) -> bool {
+        self.is_talent
     }
 }
 
@@ -125,6 +135,9 @@ impl AbilityMetadataExtraction {
             };
 
             let tiered_summon_units = Self::tiered_summon_units(&row, level_count);
+            let raw_hero_flag = row.get("hero").unwrap_or("").trim();
+            let raw_comments = row.get("comments").unwrap_or("");
+            let is_talent = raw_hero_flag == "1" && Self::comments_mark_talent(raw_comments);
 
             let has_evasion = evasion_chance_per_level.iter().any(|chance| *chance > 0.0);
             if code.is_none()
@@ -133,6 +146,7 @@ impl AbilityMetadataExtraction {
                 && transform_to_unit.is_none()
                 && !has_evasion
                 && tiered_summon_units.is_empty()
+                && !is_talent
             {
                 continue;
             }
@@ -144,10 +158,34 @@ impl AbilityMetadataExtraction {
                 transform_to_unit,
                 evasion_chance_per_level,
                 tiered_summon_units,
+                is_talent,
             };
             database.insert(alias.to_string(), entry);
         }
         database
+    }
+
+    /// Blizzard labels every talent row in `comments`, either spelled out
+    /// (`Guiding Hand - talent 1`, `Anya Talent Tier 1a`) or as a tier token
+    /// (`Warcry - T1 - Magic Immunity`). Ordinary hero abilities never carry
+    /// either marker.
+    fn comments_mark_talent(comments: &str) -> bool {
+        let lowercase_comments = comments.to_ascii_lowercase();
+        if lowercase_comments.contains("talent") {
+            return true;
+        }
+        lowercase_comments
+            .split(|character: char| !character.is_ascii_alphanumeric())
+            .any(|token| {
+                let mut token_characters = token.chars();
+                let starts_with_tier = token_characters.next() == Some('t');
+                let remainder = token_characters.as_str();
+                starts_with_tier
+                    && !remainder.is_empty()
+                    && remainder
+                        .chars()
+                        .all(|character| character.is_ascii_digit())
+            })
     }
 
     /// Per-level chance to evade an attack, read from the real numeric data
@@ -160,13 +198,13 @@ impl AbilityMetadataExtraction {
     ///
     /// Only the first `level_count` levels are real; `DataA4`/`DataD4` carry
     /// filler values past a 3-level ability, so anything beyond stays `0.0`.
-    fn evasion_chances(code: &str, row: &RowView, level_count: usize) -> [f32; 4] {
+    fn evasion_chances(code: &str, row: &RowView, level_count: usize) -> [f32; MAX_ABILITY_LEVEL] {
         let column_prefix = match code {
             "AEev" => "DataA",
             "ANdb" => "DataD",
-            _ => return [0.0; 4],
+            _ => return [0.0; MAX_ABILITY_LEVEL],
         };
-        let mut chances: [f32; 4] = [0.0; 4];
+        let mut chances: [f32; MAX_ABILITY_LEVEL] = [0.0; MAX_ABILITY_LEVEL];
         let usable_levels = level_count.min(chances.len());
         let mut level_index = 0;
         while level_index < usable_levels {

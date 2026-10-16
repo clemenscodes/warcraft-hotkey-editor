@@ -3,7 +3,8 @@ use std::path::{Path, PathBuf};
 
 use clap::Parser;
 use warcraft_api::{
-    GridCoordinate, WarcraftDatabase, WarcraftObject, WarcraftObjectId, WarcraftObjectMeta,
+    GridCoordinate, MAX_ABILITY_LEVEL, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
+    WarcraftObjectMeta,
 };
 use warcraft_extractor::*;
 
@@ -286,7 +287,7 @@ const EXTRACTION_RULES: [ExtractionRule; 42] = [
 struct CodegenContext {
     str_slices: BTreeMap<String, Vec<String>>,
     id_slices: BTreeMap<String, Vec<String>>,
-    cooldown_arrays: BTreeMap<String, [u32; 4]>,
+    cooldown_arrays: BTreeMap<String, [u32; MAX_ABILITY_LEVEL]>,
 }
 
 impl CodegenContext {
@@ -310,6 +311,7 @@ impl CodegenContext {
             .map(|entry| entry.tiered_summon_units().to_vec())
             .collect();
         let unit_upgrade_swaps = aggregated_data.upgrade_swaps().clone();
+        let talent_variants = aggregated_data.talent_variants();
         let database: WarcraftDatabase = aggregated_data.into();
 
         let mut context = CodegenContext::new();
@@ -384,6 +386,8 @@ impl CodegenContext {
         output.push('\n');
         emit_unit_upgrade_swaps(&mut output, &unit_upgrade_swaps);
         output.push('\n');
+        emit_talent_variants(&mut output, &talent_variants);
+        output.push('\n');
         context.emit_consts(&mut output);
 
         output
@@ -412,7 +416,7 @@ impl CodegenContext {
         name
     }
 
-    fn intern_cooldowns_named(&mut self, name: String, values: [u32; 4]) -> String {
+    fn intern_cooldowns_named(&mut self, name: String, values: [u32; MAX_ABILITY_LEVEL]) -> String {
         self.cooldown_arrays.entry(name.clone()).or_insert(values);
         name
     }
@@ -436,9 +440,13 @@ impl CodegenContext {
         }
 
         for (name, values) in &self.cooldown_arrays {
+            let joined_values = values
+                .iter()
+                .map(|value| value.to_string())
+                .collect::<Vec<String>>()
+                .join(", ");
             output.push_str(&format!(
-                "const {name}: [u32; 4] = [{}, {}, {}, {}];\n",
-                values[0], values[1], values[2], values[3]
+                "const {name}: [u32; {MAX_ABILITY_LEVEL}] = [{joined_values}];\n"
             ));
         }
     }
@@ -691,13 +699,12 @@ impl CodegenContext {
                 let evasion_call = if has_evasion {
                     // `{:?}` keeps the decimal point so the slot stays an f32
                     // literal (`0.0`, not `0`) — and round-trips the value.
-                    format!(
-                        ".with_evasion_chances([{:?}, {:?}, {:?}, {:?}])",
-                        evasion_chances[0],
-                        evasion_chances[1],
-                        evasion_chances[2],
-                        evasion_chances[3]
-                    )
+                    let joined_chances = evasion_chances
+                        .iter()
+                        .map(|chance| format!("{chance:?}"))
+                        .collect::<Vec<String>>()
+                        .join(", ");
+                    format!(".with_evasion_chances([{joined_chances}])")
                 } else {
                     String::new()
                 };
@@ -824,6 +831,22 @@ fn emit_unit_upgrade_swaps(output: &mut String, swaps: &BTreeSet<UnitUpgradeSwap
         let to_unit_id = swap.to_unit_id();
         output.push_str(&format!(
             "    UnitUpgradeSwap::new({from_unit_id:?}, {to_unit_id:?}),\n"
+        ));
+    }
+    output.push_str("];\n");
+}
+
+/// Emits the `TALENT_VARIANTS` table: each entry is a hero talent paired with
+/// the hero ability it replaces on the command card (`variant` → `base`), so
+/// consumers can give every talent its base's keybind. Ordered by variant id
+/// for stable regen.
+fn emit_talent_variants(output: &mut String, talent_variants: &TalentVariantDatabase) {
+    output.push_str("pub const TALENT_VARIANTS: &[TalentVariant] = &[\n");
+    for talent_variant in talent_variants {
+        let variant_id = talent_variant.variant_id();
+        let base_id = talent_variant.base_id();
+        output.push_str(&format!(
+            "    TalentVariant::new({variant_id:?}, {base_id:?}),\n"
         ));
     }
     output.push_str("];\n");

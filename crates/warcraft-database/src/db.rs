@@ -23,6 +23,7 @@ pub static WARCRAFT_DATABASE: LazyLock<WarcraftDatabase> = LazyLock::new(|| {
     insert_objects_chunk_6(&mut objects);
     insert_objects_chunk_7(&mut objects);
     insert_objects_chunk_8(&mut objects);
+    insert_objects_chunk_9(&mut objects);
     WarcraftDatabase::new(objects)
 });
 
@@ -595,7 +596,7 @@ fn insert_objects_chunk_0(
                 )
                 .with_code(Some("AEev"))
                 .with_morph_target(None)
-                .with_evasion_chances([0.15, 0.0, 0.0, 0.0])
+                .with_evasion_chances([0.15, 0.0, 0.0, 0.0, 0.0])
                 .with_off_state(None, None, None, None),
             ),
             WarcraftObjectText::new(ACEV_TIP_LEVELS, ACEV_UBERTIP_LEVELS),
@@ -766,7 +767,7 @@ fn insert_objects_chunk_0(
             ACHV_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, None, None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ACHV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Calls forth a wave of healing energy that bounces up to 3 times, healing 130 damage on the primary target. Each jump heals less damage."), None).with_code(Some("AOhw")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ACHV_TIP_LEVELS, ACHV_UBERTIP_LEVELS),
         ),
     );
@@ -1595,7 +1596,7 @@ fn insert_objects_chunk_0(
             AEEV_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AEEV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 10% chance to avoid an attack."), Some("Gives a percent chance to avoid attacks. |n|n|cffffcc00Level 1|r - 10% chance that an opponent misses. |n|cffffcc00Level 2|r - 20% chance that an opponent misses. |n|cffffcc00Level 3|r - 30% chance that an opponent misses.")).with_code(Some("AEev")).with_morph_target(None).with_evasion_chances([0.1, 0.2, 0.3, 0.0]).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AEEV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 10% chance to avoid an attack."), Some("Gives a percent chance to avoid attacks. |n|n|cffffcc00Level 1|r - 10% chance that an opponent misses. |n|cffffcc00Level 2|r - 20% chance that an opponent misses. |n|cffffcc00Level 3|r - 30% chance that an opponent misses.")).with_code(Some("AEev")).with_morph_target(None).with_evasion_chances([0.1, 0.2, 0.3, 0.0, 0.0]).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AEEV_TIP_LEVELS, AEEV_UBERTIP_LEVELS),
         ),
     );
@@ -1770,6 +1771,40 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AHDq"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AHDq"),
+            AHDQ_NAMES,
+            AHDQ_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AHDQ_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("ANde"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHDw"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AHDw"),
+            AHDW_NAMES,
+            AHDW_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AHDW_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("ANde"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AHab"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AHab"),
@@ -1796,6 +1831,19 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AHas"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHas"),
+            AHAS_NAMES,
+            AHAS_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHAS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives 15% Magic Resistance and 15% increased healing received to nearby friendly units."), Some("Gives additional Magic Resistance and increased healing received to nearby friendly units. |n|n|cffffcc00Level 1|r - 15% Magic Resistance, 15% increased healing received. |n|cffffcc00Level 2|r - 25% Magic Resistance, 20% increased healing received. |n|cffffcc00Level 3|r - 35% Magic Resistance, 25% increased healing received.")).with_code(Some("AHas")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHAS_TIP_LEVELS, AHAS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AHav"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AHav"),
@@ -1805,6 +1853,19 @@ fn insert_objects_chunk_0(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, true, AHAV_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Activate Avatar to give the Mountain King 5 bonus armor, 500 bonus hit points, 20 bonus damage and spell immunity. |nLasts 60 seconds."), Some("When Avatar is activated, it gives the Mountain King 5 bonus armor, 500 bonus hit points, 20 bonus damage and spell immunity. |nLasts 60 seconds.")).with_code(Some("AHav")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), None, None, Some("commandbuttons/btnavataroff.blp"))),
             WarcraftObjectText::with_alt(AHAV_TIP_LEVELS, AHAV_UBERTIP_LEVELS, Some("Deactivate Avatar"), None),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHbd"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHbd"),
+            AHBD_NAMES,
+            AHBD_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHBD_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Enter a defensive stance, reducing incoming damage by 40% and movement speed by 40%. During this time, if Garek takes any damage, he gains 15% attack rate for 3 seconds. |nLasts 10 seconds."), Some("Take reduced damage, at the cost of movement speed. Taking damage grants increased attack rate. |n|n|cffffcc00Level 1|r - 40% reduced damage, 40% reduced movement speed, 15% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 2|r - 50% reduced damage, 40% reduced movement speed, 20% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 3|r - 60% reduced damage, 40% reduced movement speed, 25% attack rate for 3 seconds. Lasts 10 seconds.")).with_code(Some("AHbd")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHBD_TIP_LEVELS, AHBD_UBERTIP_LEVELS),
         ),
     );
 
@@ -1886,6 +1947,58 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AHch"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHch"),
+            AHCH_NAMES,
+            AHCH_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHCH_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Dashes towards a target point, dealing 100 damage to enemy units hit along the way, and stunning them for 1 seconds."), Some("Dash towards a target point, dealing damage and stunning enemy units.|n|n|cffffcc00Level 1|r - 100 damage, 1 second stun. |n|cffffcc00Level 2|r - 125 damage, 2 second stun. |n|cffffcc00Level 3|r - 150 damage, 3 second stun.")).with_code(Some("AHch")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHCH_TIP_LEVELS, AHCH_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHcl"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHcl"),
+            AHCL_NAMES,
+            AHCL_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, true, AHCL_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Call upon the Light, removing all debuffs from nearby friendly units and all buffs from nearby enemy units. Friendly units are healed for 125 hit points, and gain 25% bonus to damage for 25 seconds. For each debuff removed from a friendly unit, that unit heals an additional 50 hitpoints and gains an additional 15% bonus to damage. Enemy units are stunned for 3 seconds.|n|cffffcc00Deals 400 damage to summoned units.|r"), Some("Call upon the Light, removing all debuffs from nearby friendly units and all buffs from nearby enemy units. Friendly units are healed for 125 hit points, and gain 25% bonus to damage for 25 seconds. For each debuff removed from a friendly unit, that unit heals an additional 50 hitpoints and gains an additional 15% bonus to damage.Enemy units are stunned for 3 seconds.|n|cffffcc00Deals 400 damage to summoned units.|r")).with_code(Some("AHcl")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHCL_TIP_LEVELS, AHCL_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHcr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHcr"),
+            AHCR_NAMES,
+            AHCR_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHCR_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Bless the ground, healing nearby friendly living units for 25 hit points per second. Enemy Undead units take 20 damage per second and have incoming healing reduced by 25%. |nLasts 5 seconds."), Some("Bless the ground, healing living allies and burning enemy Undead while reducing their healing received. |n|n|cffffcc00Level 1|r - Heals 25 hit points per second, deals 20 damage per second, reduces healing by 25%. Lasts 5 seconds. |n|cffffcc00Level 2|r - Heals 35 hit points per second, deals 30 damage per second, reduces healing by 33%. Lasts 5 seconds. |n|cffffcc00Level 3|r - Heals 50 hit points per second, deals 40 damage per second, reduces healing by 50%. Lasts 5 seconds.")).with_code(Some("AHcr")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHCR_TIP_LEVELS, AHCR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHct"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHct"),
+            AHCT_NAMES,
+            AHCT_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, true, AHCT_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Place a banner at a target location, increasing nearby allied unit's Critical Strike chance by 50% and Spell Critical chance by 50%.|nLasts 20 seconds."), Some("Place a banner at a target location, increasing nearby allied unit's Critical Strike chance by 50% and Spell Critical chance by 50%.|nLasts 20 seconds.")).with_code(Some("AOwd")).with_morph_target(Some(WarcraftObjectId::new("hcta"))).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHCT_TIP_LEVELS, AHCT_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AHdr"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AHdr"),
@@ -1908,6 +2021,19 @@ fn insert_objects_chunk_0(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHDS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("An impenetrable shield surrounds this unit, protecting it from all damage and spells for 15 seconds."), Some("An impenetrable shield surrounds the Paladin, protecting him from all damage and spells for a set amount of time. |n|n|cffffcc00Level 1|r - Lasts 15 seconds. |n|cffffcc00Level 2|r - Lasts 25 seconds. |n|cffffcc00Level 3|r - Lasts 35 seconds.")).with_code(Some("AHds")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), None, None, Some("commandbuttons/btndivineshieldoff.blp"))),
             WarcraftObjectText::with_alt(AHDS_TIP_LEVELS, AHDS_UBERTIP_LEVELS, Some("Deactivate Divine Shield"), None),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHen"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHen"),
+            AHEN_NAMES,
+            AHEN_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHEN_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 30% and cannot move.|nLasts 8 seconds."), Some("Throw a net at an enemy, ensnaring them and reducing their attack rate. |n|n|cffffcc00Level 1|r - 30% attack rate, 8 seconds. |n|cffffcc00Level 2|r - 45% attack rate, 10 seconds.|n|cffffcc00Level 3|r - 60% attack rate, 15 seconds.")).with_code(Some("Aens")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHEN_TIP_LEVELS, AHEN_UBERTIP_LEVELS),
         ),
     );
 
@@ -1938,6 +2064,32 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AHgh"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHgh"),
+            AHGH_NAMES,
+            AHGH_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHGH_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Leonid inspires friendly units within 900 range. Affected units gain 20% attack rate, 10% Ability Speed, and 10% movement speed.|nDrains 15 mana per second until deactivated."), Some("Leonid inspires nearby friendly units, granting several bonuses.|nDrains mana until deactivated. |n|n|cffffcc00Level 1|r - 20% attack rate, 10% Ability Speed, 10% movement speed. |n|cffffcc00Level 2|r - 30% attack rate, 25% Ability Speed, 15% movement speed. |n|cffffcc00Level 3|r - 40% attack rate, 40% Ability Speed, 20% movement speed")).with_code(Some("AHgh")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), None, None, Some("commandbuttons/btnguidinghandoff.blp"))),
+            WarcraftObjectText::with_alt(AHGH_TIP_LEVELS, AHGH_UBERTIP_LEVELS, Some("Deactivate Guiding Hand - [|cffffcc00Level 1|r]"), Some("Deactivate Guiding Hand to stop draining mana.")),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHgr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHgr"),
+            AHGR_NAMES,
+            AHGR_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AHGR_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Every attack against Leonid increases his armor by 0.25, to a maximum of 15. Resets after 5 seconds of not being attacked."), Some("Every attack against Leonid increases his armor for a short duration.|n|n|cffffcc00Level 1|r - 0.25 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds.|n|cffffcc00Level 2|r - 0.5 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds. |n|cffffcc00Level 3|r - 0.75 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds.|n|cffffcc00Level 4|r - 1 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds. |n|cffffcc00Level 5|r - 1.25 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds.")).with_code(Some("AHgr")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHGR_TIP_LEVELS, AHGR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AHhb"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AHhb"),
@@ -1951,6 +2103,71 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AHhc"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHhc"),
+            AHHC_NAMES,
+            AHHC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AHHC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Gain a shield that can absorb 200 damage, and taunt all nearby enemies within 450 range for 5 seconds."), Some("Gain a shield and taunt nearby enemies.|n|n|cffffcc00Level 1|r - 200 damage shield, 450 range taunt for 5 seconds.|n|cffffcc00Level 2|r - 275 damage shield, 500 range taunt for 5 seconds. |n|cffffcc00Level 3|r - 350 damage shield, 550 range taunt for 5 seconds.|n|cffffcc00Level 4|r - 425 damage shield, 600 range taunt for 5 seconds. |n|cffffcc00Level 5|r - 500 damage shield, 650 range taunt for 5 seconds.")).with_code(Some("AHhc")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHHC_TIP_LEVELS, AHHC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHhr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHhr"),
+            AHHR_NAMES,
+            AHHR_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AHHR_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Empower the next attack, dealing 100 bonus damage and stunning the target for 2 seconds."), Some("Empower the next attack, dealing bonus damage and stunning the target.|n|n|cffffcc00Level 1|r - 100 bonus damage, 2 second stun duration.|n|cffffcc00Level 2|r - 150 bonus damage, 2.25 second stun duration. |n|cffffcc00Level 3|r - 200 bonus damage, 2.5 second stun duration.|n|cffffcc00Level 4|r - 250 bonus damage, 3 second stun duration. |n|cffffcc00Level 5|r - 300 bonus damage, 3.5 second stun duration.")).with_code(Some("AHhr")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHHR_TIP_LEVELS, AHHR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHhs"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHhs"),
+            AHHS_NAMES,
+            AHHS_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHHS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Attack a target, dealing 100 damage. Deals 25% extra damage to debuffed enemies."), Some("Attack a target, dealing bonus damage to them if they are debuffed. |n|n|cffffcc00Level 1|r - 100 damage, 25% bonus damage. |n|cffffcc00Level 2|r - 200 damage, 35% bonus damage. |n|cffffcc00Level 3|r - 300 damage, 45% bonus damage.")).with_code(Some("AHhs")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHHS_TIP_LEVELS, AHHS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHic"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHic"),
+            AHIC_NAMES,
+            AHIC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHIC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Landen inspires his allies, increasing their armor by 3 and Magic Resistance by 15%.|nLasts 15 seconds."), Some("Nearby friendly units gain increased armor and Magic Resistance for a duration.|n|n|cffffcc00Level 1|r - 3 armor, 15% Magic Resistance for 15 seconds. |n|cffffcc00Level 2|r - 7 armor, 25% Magic Resistance for 15 seconds. |n|cffffcc00Level 3|r - 10 armor, 35% Magic Resistance for 15 seconds.")).with_code(Some("AHic")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHIC_TIP_LEVELS, AHIC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHmc"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHmc"),
+            AHMC_NAMES,
+            AHMC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHMC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 2 units. |nLasts 60 seconds."), Some("Takes control of a target enemy unit for a period of time. |n|n|cffffcc00Level 1|r - Maximum 2 units, up to level 5 for 60 seconds. |n|cffffcc00Level 2|r - Maximum 3 units, up to level 5 for 60 seconds. |n|cffffcc00Level 3|r - Maximum 4 units, up to level 5 for 60 seconds.")).with_code(Some("AHmc")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHMC_TIP_LEVELS, AHMC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AHmt"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AHmt"),
@@ -1960,6 +2177,19 @@ fn insert_objects_chunk_0(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, true, AHMT_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Teleports 24 of the player's nearby units, including the Archmage, to a friendly ground unit or structure."), Some("Teleports 24 of the player's nearby units, including the Archmage, to a friendly ground unit or structure.")).with_code(Some("AHmt")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AHMT_TIP_LEVELS, AHMT_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHpa"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHpa"),
+            AHPA_NAMES,
+            AHPA_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHPA_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives 15% Magic Resistance and 15% increased healing received to nearby friendly units."), Some("Gives additional Magic Resistance and increased healing received to nearby friendly units. |n|n|cffffcc00Level 1|r - 15% Magic Resistance, 15% increased healing received. |n|cffffcc00Level 2|r - 25% Magic Resistance, 20% increased healing received. |n|cffffcc00Level 3|r - 35% Magic Resistance, 25% increased healing received.")).with_code(Some("AHas")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHPA_TIP_LEVELS, AHPA_UBERTIP_LEVELS),
         ),
     );
 
@@ -2003,6 +2233,45 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AHsf"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHsf"),
+            AHSF_NAMES,
+            AHSF_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHSF_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Conjures holy fire onto a target area. Friendly living units are healed for 100 hit points, while enemy Undead units take 10 damage per second over 10 seconds."), Some("Conjures holy fire onto a target area, healing friendly living units and burning enemy Undead units. |n|n|cffffcc00Level 1|r - Heals 100 hit points, deals 10 damage per second for 10 seconds. |n|cffffcc00Level 2|r - Heals 125 hit points, deals 15 damage per second for 10 seconds. |n|cffffcc00Level 3|r - Heals 150 hit points, deals 20 damage per second for 10 seconds.")).with_code(Some("AHsf")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHSF_TIP_LEVELS, AHSF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHsl"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHsl"),
+            AHSL_NAMES,
+            AHSL_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, true, AHSL_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("|cffffcc00Passive:|r Ilastar's attacks against enemies cast a Holy Bolt on the most damaged friendly unit within 800 range, healing 25 hit points.|n|n|cffffcc00Active:|r Ilastar becomes imbued with the Light, increasing his attack rate by 50% and movement speed by 50%, and increasing the effectiveness of Holy Bolt by 100%.|nLasts 10 seconds."), Some("|cffffcc00Passive:|r Ilastar's attacks against enemies cast a Holy Bolt on the most damaged friendly unit within 800 range, healing 25 hit points.|n|n|cffffcc00Active:|r Ilastar becomes imbued with the Light, increasing his attack rate by 50% and movement speed by 50%, and increasing the effectiveness of Holy Bolt by 100%.|nLasts 10 seconds.")).with_code(Some("AHsl")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHSL_TIP_LEVELS, AHSL_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHsw"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHsw"),
+            AHSW_NAMES,
+            AHSW_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHSW_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Strikes the target area, dealing 100 damage to enemy units, and restoring 25 hit points per unit hit."), Some("Strikes the target area, dealing damage and restoring hit points per enemy hit. |n|n|cffffcc00Level 1|r - 100 damage, 25 hit points. |n|cffffcc00Level 2|r - 175 damage, 35 hit points. |n|cffffcc00Level 3|r - 250 damage 45 hit points.")).with_code(Some("AHsw")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHSW_TIP_LEVELS, AHSW_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AHta"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AHta"),
@@ -2038,6 +2307,19 @@ fn insert_objects_chunk_0(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AHTC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Slams the ground, dealing 60 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%."), Some("Slams the ground, dealing damage to and slowing the movement speed and attack rate of nearby enemy land units. |n|n|cffffcc00Level 1|r - 60 damage, 50% move, 50% attack. |n|cffffcc00Level 2|r - 110 damage, 50% move, 50% attack. |n|cffffcc00Level 3|r - 150 damage, 50% move, 50% attack.")).with_code(Some("AHtc")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AHTC_TIP_LEVELS, AHTC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AHwc"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AHwc"),
+            AHWC_NAMES,
+            AHWC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, true, AHWC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Garek lets out a defiant battle cry, granting his attacks 50% cleave damage, 50% Lifesteal, and 25% Ability Vamp. |nLasts 20 seconds."), Some("Garek lets out a defiant battle cry, granting his attacks 50% cleave damage, 50% Lifesteal, and 25% Ability Vamp. |nLasts 20 seconds.")).with_code(Some("AHwc")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AHWC_TIP_LEVELS, AHWC_UBERTIP_LEVELS),
         ),
     );
 
@@ -2297,6 +2579,19 @@ fn insert_objects_chunk_0(
     );
 
     objects.insert(
+        WarcraftObjectId::new("ANcp"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ANcp"),
+            ANCP_NAMES,
+            ANCP_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANCP_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Dashes towards a target point up to 725 range away, dealing 100 damage to enemy land units hit along the way, and slowing their movement by 20% and attack rate by 30%."), Some("Dash towards a target point, dealing damage to and slowing the movement speed and attack rate of enemy land units passed through.|n|n|cffffcc00Level 1|r - 725 range, 100 damage, 20% movement speed, 30% attack rate. |n|cffffcc00Level 2|r - 725 range, 150 damage, 30% movement speed, 40% attack rate. |n|cffffcc00Level 3|r - 725 range, 200 damage, 40% movement speed, 50% attack rate.")).with_code(Some("ANcp")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(ANCP_TIP_LEVELS, ANCP_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("ANcr"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("ANcr"),
@@ -2408,7 +2703,7 @@ fn insert_objects_chunk_0(
             ANDB_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times total damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times total damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times total damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times total damage.")).with_code(Some("ANdb")).with_morph_target(None).with_evasion_chances([0.07, 0.14, 0.21, 0.0]).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, ANDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times total damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times total damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times total damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times total damage.")).with_code(Some("ANdb")).with_morph_target(None).with_evasion_chances([0.07, 0.14, 0.21, 0.0, 0.0]).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ANDB_TIP_LEVELS, ANDB_UBERTIP_LEVELS),
         ),
     );
@@ -2868,7 +3163,11 @@ fn insert_objects_chunk_0(
             WarcraftObjectText::new(ANPI_TIP_LEVELS, ANPI_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_1(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("ANr2"),
         WarcraftObject::with_text(
@@ -3210,11 +3509,7 @@ fn insert_objects_chunk_0(
             WarcraftObjectText::new(ANTA_TIP_LEVELS, ANTA_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_1(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("ANth"),
         WarcraftObject::with_text(
@@ -3630,6 +3925,40 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AUDq"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AUDq"),
+            AUDQ_NAMES,
+            AUDQ_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AUDQ_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("ANde"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUDw"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AUDw"),
+            AUDW_NAMES,
+            AUDW_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AUDW_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("ANde"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AUa2"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AUa2"),
@@ -3682,6 +4011,32 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AUbd"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUbd"),
+            AUBD_NAMES,
+            AUBD_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AUBD_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 30% attack rate for 3 seconds. |nLasts 10 seconds."), Some("Take reduced damage, at the cost of movement speed. Taking damage grants increased attack rate. |n|n|cffffcc00Level 1|r - 65% reduced damage, 40% reduced movement speed, 30% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 2|r - 65% reduced damage, 40% reduced movement speed, 35% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 3|r - 65% reduced damage, 40% reduced movement speed, 40% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 4|r - 65% reduced damage, 40% reduced movement speed, 45% attack rate for 3 seconds. Lasts 10 seconds.")).with_code(Some("AHbd")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUBD_TIP_LEVELS, AUBD_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUbr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUbr"),
+            AUBR_NAMES,
+            AUBR_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AUBR_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Dashes towards a target point, dealing 100 damage to enemy units hit along the way, and gaining 3 bonus damage for every enemy unit hit.|nLasts 7 seconds."), Some("Dash towards a target point, dealing damage and gaining bonus attack damage per enemy hit.|n|n|cffffcc00Level 1|r - 100 damage, 3 bonus damage per enemy unit hit. |n|cffffcc00Level 2|r - 125 damage, 6 bonus damage per enemy unit hit. |n|cffffcc00Level 3|r - 150 damage, 9 bonus damage per enemy unit hit.|n|cffffcc00Level 4|r - 175 damage, 12 bonus damage per enemy unit hit.|n|cffffcc00Level 5|r - 200 damage, 15 bonus damage per enemy unit hit.")).with_code(Some("AUbr")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUBR_TIP_LEVELS, AUBR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AUbu"),
         WarcraftObject::new(
             WarcraftObjectId::new("AUbu"),
@@ -3729,6 +4084,19 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AUCS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Sends a horde of bats to deal 75 damage to each enemy unit in a cone."), Some("Sends a horde of bats to damage enemies. |n|n|cffffcc00Level 1|r - 75 damage per unit. |n|cffffcc00Level 2|r - 135 damage per unit. |n|cffffcc00Level 3|r - 200 damage per unit.")).with_code(Some("AUcs")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AUCS_TIP_LEVELS, AUCS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUdb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUdb"),
+            AUDB_NAMES,
+            AUDB_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AUDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Every 4 attacks against a target deals 80 bonus damage.|nResets after 5 seconds."), Some("Deal bonus damage after attacking a target several times.|n|n|cffffcc00Level 1|r - 4 attacks, 80 bonus damage. |n|cffffcc00Level 2|r - 4 attacks, 115 bonus damage. |n|cffffcc00Level 3|r - 4 attacks, 150 bonus damage.|n|cffffcc00Level 4|r - 4 attacks, 185 bonus damage.|n|cffffcc00Level 5|r - 4 attacks, 220 bonus damage.")).with_code(Some("AUdb")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUDB_TIP_LEVELS, AUDB_UBERTIP_LEVELS),
         ),
     );
 
@@ -3850,6 +4218,19 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AUla"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUla"),
+            AULA_NAMES,
+            AULA_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AULA_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 25 hit points per second.|nDrains 15 mana per second until deactivated."), Some("Create a tether between Anya and a friendly unit, dispelling negative debuffs and healing the target.|nDrains mana until deactivated. |n|n|cffffcc00Level 1|r - 25 hit points per second, drains 15 mana per second. |n|cffffcc00Level 2|r - 35 hit points per second, drains 15 mana per second. |n|cffffcc00Level 3|r - 45 hit points per second, drains 15 mana per second. |n|cffffcc00Level 4|r - 55 hit points per second, drains 15 mana per second. |n|cffffcc00Level 5|r - 65 hit points per second, drains 15 mana per second.")).with_code(Some("AUla")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), None, None, Some("commandbuttons/btnsoullanternoff.blp"))),
+            WarcraftObjectText::with_alt(AULA_TIP_LEVELS, AULA_UBERTIP_LEVELS, Some("Deactivate Soul Lantern - [|cffffcc00Level 1|r]"), Some("Deactivate Soul Lantern to stop draining mana.")),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AUls"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AUls"),
@@ -3876,6 +4257,19 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("AUsw"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUsw"),
+            AUSW_NAMES,
+            AUSW_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AUSW_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero)), Some("Strikes the target area, dealing 100 damage to enemy units, reducing their armor by 2, and restoring 25 hit points per unit hit."), Some("Strikes the target area, dealing damage, reducing armor and restoring hit points per unit hit. |n|n|cffffcc00Level 1|r - 100 damage, 2 armor reduction, 25 hit points. |n|cffffcc00Level 2|r - 175 damage, 2 armor reduction, 35 hit points. |n|cffffcc00Level 3|r - 250 damage, 3 armor reduction, 45 hit points. |n|cffffcc00Level 4|r - 325 damage, 3 armor reduction, 55 hit points. |n|cffffcc00Level 5|r - 400 damage, 4 armor reduction, 65 hit points.")).with_code(Some("AHsw")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUSW_TIP_LEVELS, AUSW_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("AUts"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("AUts"),
@@ -3885,6 +4279,62 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AUTS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero)), Some("Enhances the Crypt Lord's chitinous armor with organic barbs, giving the Crypt Lord 4 bonus armor and returning 15% of melee attack damage to enemies."), Some("The Crypt Lord forms barbed layers of chitinous armor that increases its defense and returns damage to enemy melee attackers.  |n|n|cffffcc00Level 1|r - 15% damage returned, 4 bonus armor. |n|cffffcc00Level 2|r -  30% damage returned, 8 bonus armor. |n|cffffcc00Level 3|r -  45% damage returned, 12 bonus armor.")).with_code(Some("AUts")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), None, None, None)),
             WarcraftObjectText::new(AUTS_TIP_LEVELS, AUTS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUvg"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUvg"),
+            AUVG_NAMES,
+            AUVG_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AUVG_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 15 bonus Strength, 25% bonus Resolve, and 25% Lifesteal.|nLasts 20 seconds."), Some("Garek draws upon his inner strength, sacrificing hit points to gain bonus Strength, Resolve, and Lifesteal. |n|n|cffffcc00Level 1|r - Costs 35% hit points; gain 15 Strength, 25% Resolve, 25% Lifesteal for 20 seconds. |n|cffffcc00Level 2|r - Costs 35% hit points; gain 25 Strength, 30% Resolve, 30% Lifesteal for 20 seconds. |n|cffffcc00Level 3|r - Costs 35% hit points; gain 35 Strength, 35% Resolve, 35% Lifesteal for 20 seconds.")).with_code(Some("AUvg")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUVG_TIP_LEVELS, AUVG_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUwc"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUwc"),
+            AUWC_NAMES,
+            AUWC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(3, false, AUWC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Zero)), Some("Anya summons 5 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. |nLasts 30 seconds."), Some("Anya summons Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%.|n|n|cffffcc00Level 1|r - 5 Banshees |n|cffffcc00Level 2|r - 7 Banshees |n|cffffcc00Level 3|r - 9 Banshees")).with_code(Some("AUwc")).with_morph_target(Some(WarcraftObjectId::new("ufrb"))).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUWC_TIP_LEVELS, AUWC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AUwf"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("AUwf"),
+            AUWF_NAMES,
+            AUWF_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(5, false, AUWF_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Fires a magical arrow at a target area, dealing 100 damage. Applies a stack of Deathseeker Arrows to enemies hit.|n2 charges, recharges every 10 seconds."), Some("Fire a magical arrow at a target area, dealing damage and applying a stack of Deathseeker Arrows to enemies hit.|n|n|cffffcc00Level 1|r - 100 damage, max 2 charges, recharges every 10 seconds. |n|cffffcc00Level 2|r - 150 damage, max 2 charges, recharges every 10 seconds. |n|cffffcc00Level 3|r - 175 damage, max 3 charges, recharges every 10 seconds.|n|cffffcc00Level 4|r - 200 damage, max 3 charges, recharges every 10 seconds.|n|cffffcc00Level 5|r - 250 damage, max 4 charges, recharges every 10 seconds.")).with_code(Some("AUwf")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AUWF_TIP_LEVELS, AUWF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("AViq"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("AViq"),
+            AVIQ_NAMES,
+            AVIQ_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AVIQ_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("AIde"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
         ),
     );
 
@@ -3911,6 +4361,23 @@ fn insert_objects_chunk_1(
                 .with_off_state(None, None, None, None),
             ),
             WarcraftObjectText::new(AABS_TIP_LEVELS, AABS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Aaca"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Aaca"),
+            AACA_NAMES,
+            AACA_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AACA_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aaga"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
         ),
     );
 
@@ -4042,6 +4509,19 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(4, false, AAMK_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::One)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::One)), Some("Gives a total of 3 points to Agility, Intelligence, and Strength"), Some("Gives a permanent bonus to Agility, Intelligence, and Strength. |n|n|cffffcc00Level 1|r - Adds three points to all stats.|n|cffffcc00Level 2|r - Adds three additional points.|n|cffffcc00Level 3|r - Adds three additional points.|n|cffffcc00Level 4|r - Adds three additional points.")).with_code(Some("Aamk")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AAMK_TIP_LEVELS, AAMK_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Aaml"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Aaml"),
+            AAML_NAMES,
+            AAML_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(2, false, AAML_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::One)), Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::One)), Some("Gives a total of 5 points to Agility, Intelligence, and Strength"), Some("Gives a permanent bonus to Agility, Intelligence, and Strength. |n|n|cffffcc00Level 1|r - Grants 5 points to all stats.|n|cffffcc00Level 2|r - Grants an additional 5 points to all stats.")).with_code(Some("Aamk")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AAML_TIP_LEVELS, AAML_UBERTIP_LEVELS),
         ),
     );
 
@@ -4309,6 +4789,23 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Abns"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Abns"),
+            ABNS_NAMES,
+            ABNS_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, ABNS_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Abns"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Abof"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Abof"),
@@ -4331,6 +4828,23 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ABRF_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), None, Some("Transforms the Druid into a bear, slowing mana regeneration, but making him an excellent warrior."), None).with_code(Some("Abrf")).with_morph_target(Some(WarcraftObjectId::new("edcm"))).with_off_state(Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), None, None, Some("commandbuttons/btndruidoftheclaw.blp"))),
             WarcraftObjectText::with_alt(ABRF_TIP_LEVELS, ABRF_UBERTIP_LEVELS, Some("Night Elf Form"), Some("Transforms the Druid into a Night Elf.")),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Absc"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Absc"),
+            ABSC_NAMES,
+            ABSC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, ABSC_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("AIsb"))
+                    .with_morph_target(Some(WarcraftObjectId::new("Aacr")))
+                    .with_off_state(None, None, None, None),
+            ),
         ),
     );
 
@@ -4545,7 +5059,7 @@ fn insert_objects_chunk_1(
             ACDB_ICONS,
             Ability,
             None,
-            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(4, false, ACDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times normal damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times normal damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times normal damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times normal damage. |n|cffffcc00Level 4|r - 30% dodge, 6 times normal damage.")).with_code(Some("ANdb")).with_morph_target(None).with_evasion_chances([0.07, 0.14, 0.21, 0.3]).with_off_state(None, None, None, None)),
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(4, false, ACDB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero)), Some("Gives a 7% chance to dodge an attack and a 10% chance to deal 2 times normal damage."), Some("Gives a percent chance to avoid attacks and a 10% chance to deal additional damage. |n|n|cffffcc00Level 1|r - 7% dodge, 2 times normal damage. |n|cffffcc00Level 2|r - 14% dodge, 3 times normal damage. |n|cffffcc00Level 3|r - 21% dodge, 4 times normal damage. |n|cffffcc00Level 4|r - 30% dodge, 6 times normal damage.")).with_code(Some("ANdb")).with_morph_target(None).with_evasion_chances([0.07, 0.14, 0.21, 0.3, 0.0]).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(ACDB_TIP_LEVELS, ACDB_UBERTIP_LEVELS),
         ),
     );
@@ -5287,6 +5801,74 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Aes6"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Aes6"),
+            AES6_NAMES,
+            AES6_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AES6_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aoas"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Aes7"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Aes7"),
+            AES7_NAMES,
+            AES7_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AES7_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aoas"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Aes8"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Aes8"),
+            AES8_NAMES,
+            AES8_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AES8_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aoas"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Aes9"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Aes9"),
+            AES9_NAMES,
+            AES9_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AES9_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aoas"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Aesn"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Aesn"),
@@ -5395,6 +5977,19 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Afab"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Afab"),
+            AFAB_NAMES,
+            AFAB_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AFAB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, Some("Hurls a flask of acid at a target.  The flask breaks upon impact, splashing a powerful acid on nearby hostile units.|n|nDecreases armor by 3; deals 5 damage per second to the primary target; deals slightly less damage to nearby targets.|nLasts 15 seconds."), None).with_code(Some("ANab")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AFAB_TIP_LEVELS, AFAB_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Afae"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Afae"),
@@ -5456,6 +6051,19 @@ fn insert_objects_chunk_1(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AFBT_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Three, RowIndex::Two)), None, Some("This tower's attacks destroy 24 mana per hit against any unit, causing bonus damage equal to the mana destroyed.|n|nAdditionally, attacks made by this tower cause 20 bonus damage against summoned units."), None).with_code(Some("Afbk")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AFBT_TIP_LEVELS, AFBT_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Afhs"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Afhs"),
+            AFHS_NAMES,
+            AFHS_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AFHS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Sprays 3 waves of healing mist; each wave heals 50 damage to all friendly units in an area."), None).with_code(Some("ANhs")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AFHS_TIP_LEVELS, AFHS_UBERTIP_LEVELS),
         ),
     );
 
@@ -5581,6 +6189,19 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Afuf"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Afuf"),
+            AFUF_NAMES,
+            AFUF_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AFUF_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), None, Some("Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. |nLasts 45 seconds."), None).with_code(Some("Auhf")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(AFUF_TIP_LEVELS, AFUF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Afzy"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Afzy"),
@@ -5621,6 +6242,40 @@ fn insert_objects_chunk_1(
             WarcraftObjectMeta::Ability(
                 AbilityMeta::with_ubertips(1, false, AGLD_COOLDOWNS, None, None, None, None)
                     .with_code(Some("Agld"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Agr1"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Agr1"),
+            AGR1_NAMES,
+            AGR1_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AGR1_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aven"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Agr5"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("Agr5"),
+            AGR5_NAMES,
+            AGR5_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AGR5_COOLDOWNS, None, None, None, None)
+                    .with_code(Some("Aoas"))
                     .with_morph_target(None)
                     .with_off_state(None, None, None, None),
             ),
@@ -5819,7 +6474,11 @@ fn insert_objects_chunk_1(
             WarcraftObjectText::new(AHID_TIP_LEVELS, AHID_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_2(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("Ahlh"),
         WarcraftObject::with_text(
@@ -6316,6 +6975,24 @@ fn insert_objects_chunk_1(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Amda"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Amda"),
+            AMDA_NAMES,
+            AMDA_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(1, false, AMDA_COOLDOWNS, None, None, Some(""), None)
+                    .with_code(Some("Amda"))
+                    .with_morph_target(None)
+                    .with_off_state(None, None, None, None),
+            ),
+            WarcraftObjectText::new(AMDA_TIP_LEVELS, AMDA_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Amed"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Amed"),
@@ -6791,11 +7468,7 @@ fn insert_objects_chunk_1(
             WarcraftObjectText::new(ANSK_TIP_LEVELS, ANSK_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_2(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("Aoar"),
         WarcraftObject::new(
@@ -6836,6 +7509,19 @@ fn insert_objects_chunk_2(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AOBS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Improves the fighting capabilities of Grunts with a 125 hit point increase, and 3 bonus attack damage."), None).with_code(Some("APai")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AOBS_TIP_LEVELS, AOBS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Aomb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Aomb"),
+            AOMB_NAMES,
+            AOMB_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AOMB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Increases a friendly unit's attack rate by 40% and movement speed by 25%. |nLasts 20 seconds."), None).with_code(Some("Ablo")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, None, Some("commandbuttons/btnbloodlustoff.blp"))),
+            WarcraftObjectText::with_alt(AOMB_TIP_LEVELS, AOMB_UBERTIP_LEVELS, Some("|cffc3dbffRight-click to activate auto-casting.|r"), Some("|cffc3dbffRight-click to deactivate auto-casting.|r")),
         ),
     );
 
@@ -6901,6 +7587,19 @@ fn insert_objects_chunk_2(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, APAK_COOLDOWNS, None, None, Some("Allows this unit to carry items for Heroes. Items cannot be used from this unit's inventory."), None).with_code(Some("AInv")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(APAK_TIP_LEVELS, APAK_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Apbw"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Apbw"),
+            APBW_NAMES,
+            APBW_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, APBW_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, Some("Drops a Disease Cloud with each attack. Disease Cloud deals 2 damage per second. |nLasts 75 seconds."), None).with_code(Some("Apts")).with_morph_target(Some(WarcraftObjectId::new("uplg"))).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(APBW_TIP_LEVELS, APBW_UBERTIP_LEVELS),
         ),
     );
 
@@ -7857,6 +8556,19 @@ fn insert_objects_chunk_2(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Asdi"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Asdi"),
+            ASDI_NAMES,
+            ASDI_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ASDI_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), None, Some("Removes all buffs from units in a target area. |n|cffffcc00Deals 200 damage to summoned units.|r"), None).with_code(Some("Adis")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(ASDI_TIP_LEVELS, ASDI_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Asds"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Asds"),
@@ -7891,6 +8603,55 @@ fn insert_objects_chunk_2(
                 Some("|cffc3dbff|cffc3dbffRight-click to activate auto-casting.|r|r"),
                 Some("|cffc3dbff|cffc3dbffRight-click to deactivate auto-casting.|r|r"),
             ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Asea"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Asea"),
+            ASEA_NAMES,
+            ASEA_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(
+                AbilityMeta::with_ubertips(
+                    1,
+                    false,
+                    ASEA_COOLDOWNS,
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    None,
+                    Some("Heals a target friendly non-mechanical wounded unit for 100 hit points."),
+                    None,
+                )
+                .with_code(Some("Ahea"))
+                .with_morph_target(None)
+                .with_off_state(
+                    Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)),
+                    None,
+                    None,
+                    Some("commandbuttons/btnhealoff.blp"),
+                ),
+            ),
+            WarcraftObjectText::with_alt(
+                ASEA_TIP_LEVELS,
+                ASEA_UBERTIP_LEVELS,
+                Some("|cffc3dbffRight-click to activate auto-casting.|r"),
+                Some("|cffc3dbffRight-click to deactivate auto-casting.|r"),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Asfs"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Asfs"),
+            ASFS_NAMES,
+            ASFS_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ASFS_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage."), None).with_code(Some("AHfs")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(ASFS_TIP_LEVELS, ASFS_UBERTIP_LEVELS),
         ),
     );
 
@@ -7930,6 +8691,19 @@ fn insert_objects_chunk_2(
                 .with_off_state(None, None, None, None),
             ),
             WarcraftObjectText::new(ASID_TIP_LEVELS, ASID_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Asif"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Asif"),
+            ASIF_NAMES,
+            ASIF_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ASIF_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, Some("Increases a target friendly unit's damage by 25% and armor by 5. |nLasts 60 seconds."), None).with_code(Some("Ainf")).with_morph_target(None).with_off_state(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Two)), None, None, Some("commandbuttons/btninnerfireoff.blp"))),
+            WarcraftObjectText::with_alt(ASIF_TIP_LEVELS, ASIF_UBERTIP_LEVELS, Some("|cffc3dbffRight-click to activate auto-casting.|r"), Some("|cffc3dbffRight-click to deactivate auto-casting.|r")),
         ),
     );
 
@@ -8114,6 +8888,19 @@ fn insert_objects_chunk_2(
                     .with_morph_target(None)
                     .with_off_state(None, None, None, None),
             ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Assb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Assb"),
+            ASSB_NAMES,
+            ASSB_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, ASSB_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, Some("Wreaths an enemy unit in magical flames which cause 25 damage per second, prevent the casting of spells, and reduce attack damage by 75%.|nLasts 16 seconds."), None).with_code(Some("ANso")).with_morph_target(None).with_off_state(None, None, None, None)),
+            WarcraftObjectText::new(ASSB_TIP_LEVELS, ASSB_UBERTIP_LEVELS),
         ),
     );
 
@@ -8433,6 +9220,19 @@ fn insert_objects_chunk_2(
             None,
             WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AUHF_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Two)), None, Some("Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. |nLasts 45 seconds."), None).with_code(Some("Auhf")).with_morph_target(None).with_off_state(None, None, None, None)),
             WarcraftObjectText::new(AUHF_TIP_LEVELS, AUHF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Auic"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Auic"),
+            AUIC_NAMES,
+            AUIC_ICONS,
+            Ability,
+            None,
+            WarcraftObjectMeta::Ability(AbilityMeta::with_ubertips(1, false, AUIC_COOLDOWNS, Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), Some("Units killed while under the effect of Infectious Claws will turn into more Infectious Ghouls."), None).with_code(Some("ANba")).with_morph_target(Some(WarcraftObjectId::new("uigh"))).with_off_state(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two)), None, None, Some("commandbuttons/btnghoulfrenzy.blp"))),
+            WarcraftObjectText::new(AUIC_TIP_LEVELS, AUIC_UBERTIP_LEVELS),
         ),
     );
 
@@ -10258,6 +11058,168 @@ fn insert_objects_chunk_2(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Hct1"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Hct1"),
+            HCT1_NAMES,
+            HCT1_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    HCT1_UNIT_ABILITIES,
+                    HCT1_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HCT1_UNIT_RESEARCHES,
+                        HCT1_UNIT_BUILDS,
+                        HCT1_UNIT_TRAINS,
+                        HCT1_UNIT_SELL_ITEMS,
+                        HCT1_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(HCT1_TIP_LEVELS, HCT1_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Hctl"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Hctl"),
+            HCTL_NAMES,
+            HCTL_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    HCTL_UNIT_ABILITIES,
+                    HCTL_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HCTL_UNIT_RESEARCHES,
+                        HCTL_UNIT_BUILDS,
+                        HCTL_UNIT_TRAINS,
+                        HCTL_UNIT_SELL_ITEMS,
+                        HCTL_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(HCTL_TIP_LEVELS, HCTL_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Hctr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Hctr"),
+            HCTR_NAMES,
+            HCTR_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    HCTR_UNIT_ABILITIES,
+                    HCTR_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HCTR_UNIT_RESEARCHES,
+                        HCTR_UNIT_BUILDS,
+                        HCTR_UNIT_TRAINS,
+                        HCTR_UNIT_SELL_ITEMS,
+                        HCTR_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(HCTR_TIP_LEVELS, HCTR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Hdgo"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Hdgo"),
@@ -10475,6 +11437,65 @@ fn insert_objects_chunk_2(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Hjsm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Hjsm"),
+            HJSM_NAMES,
+            HJSM_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    HJSM_UNIT_ABILITIES,
+                    HJSM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HJSM_UNIT_RESEARCHES,
+                        HJSM_UNIT_BUILDS,
+                        HJSM_UNIT_TRAINS,
+                        HJSM_UNIT_SELL_ITEMS,
+                        HJSM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        500,
+                        0.25,
+                        RegenType::Always,
+                        2.5,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(285, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(285, 0.01),
+                    AttributeBase::new(16, 15, 19),
+                    AttributeGrowth::new(2.0, 1.0, 3.0),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(HJSM_TIP_LEVELS, HJSM_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One))),
+    );
+}
+
+fn insert_objects_chunk_3(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
+    objects.insert(
         WarcraftObjectId::new("Hkal"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Hkal"),
@@ -10527,6 +11548,60 @@ fn insert_objects_chunk_2(
             WarcraftObjectText::new(HKAL_TIP_LEVELS, HKAL_UBERTIP_LEVELS),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Hleo"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Hleo"),
+            HLEO_NAMES,
+            HLEO_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    HLEO_UNIT_ABILITIES,
+                    HLEO_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HLEO_UNIT_RESEARCHES,
+                        HLEO_UNIT_BUILDS,
+                        HLEO_UNIT_TRAINS,
+                        HLEO_UNIT_SELL_ITEMS,
+                        HLEO_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(HLEO_TIP_LEVELS, HLEO_UBERTIP_LEVELS),
+        ),
     );
 
     objects.insert(
@@ -10906,6 +11981,60 @@ fn insert_objects_chunk_2(
                 )),
             ),
             WarcraftObjectText::new(HPB2_TIP_LEVELS, HPB2_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Htmx"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Htmx"),
+            HTMX_NAMES,
+            HTMX_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    HTMX_UNIT_ABILITIES,
+                    HTMX_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HTMX_UNIT_RESEARCHES,
+                        HTMX_UNIT_BUILDS,
+                        HTMX_UNIT_TRAINS,
+                        HTMX_UNIT_SELL_ITEMS,
+                        HTMX_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(HTMX_TIP_LEVELS, HTMX_UBERTIP_LEVELS),
         ),
     );
 
@@ -11565,6 +12694,60 @@ fn insert_objects_chunk_2(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Nglx"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Nglx"),
+            NGLX_NAMES,
+            NGLX_ICONS,
+            Unit,
+            Some(Neutral),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    NGLX_UNIT_ABILITIES,
+                    NGLX_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        NGLX_UNIT_RESEARCHES,
+                        NGLX_UNIT_BUILDS,
+                        NGLX_UNIT_TRAINS,
+                        NGLX_UNIT_SELL_ITEMS,
+                        NGLX_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.5,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            22,
+                            28,
+                            128,
+                            2.0,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(300, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(300, 0.01),
+                    AttributeBase::new(22, 15, 20),
+                    AttributeGrowth::new(2.4, 1.0, 2.6),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(NGLX_TIP_LEVELS, NGLX_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Nkjx"),
         WarcraftObject::new(
             WarcraftObjectId::new("Nkjx"),
@@ -11885,6 +13068,64 @@ fn insert_objects_chunk_2(
             WarcraftObjectText::new(NNGS_TIP_LEVELS, NNGS_UBERTIP_LEVELS),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Npal"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Npal"),
+            NPAL_NAMES,
+            NPAL_ICONS,
+            Unit,
+            Some(Neutral),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    NPAL_UNIT_ABILITIES,
+                    NPAL_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        NPAL_UNIT_RESEARCHES,
+                        NPAL_UNIT_BUILDS,
+                        NPAL_UNIT_TRAINS,
+                        NPAL_UNIT_SELL_ITEMS,
+                        NPAL_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.0,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(NPAL_TIP_LEVELS, NPAL_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(
+            ColumnIndex::Three,
+            RowIndex::Zero,
+        ))),
     );
 
     objects.insert(
@@ -13282,11 +14523,7 @@ fn insert_objects_chunk_2(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::One))),
     );
-}
 
-fn insert_objects_chunk_3(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("Remk"),
         WarcraftObject::with_text(
@@ -14588,6 +15825,115 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Uany"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uany"),
+            UANY_NAMES,
+            UANY_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UANY_UNIT_ABILITIES,
+                    UANY_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UANY_UNIT_RESEARCHES,
+                        UANY_UNIT_BUILDS,
+                        UANY_UNIT_TRAINS,
+                        UANY_UNIT_SELL_ITEMS,
+                        UANY_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        550,
+                        0.25,
+                        RegenType::Always,
+                        3.7,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            2.46,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(225, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(225, 0.01),
+                    AttributeBase::new(18, 19, 15),
+                    AttributeGrowth::new(1.9, 1.5, 2.6),
+                    PrimaryAttribute::Agility,
+                )),
+            ),
+            WarcraftObjectText::new(UANY_TIP_LEVELS, UANY_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Uarf"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uarf"),
+            UARF_NAMES,
+            UARF_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    UARF_UNIT_ABILITIES,
+                    UARF_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UARF_UNIT_RESEARCHES,
+                        UARF_UNIT_BUILDS,
+                        UARF_UNIT_TRAINS,
+                        UARF_UNIT_SELL_ITEMS,
+                        UARF_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UARF_TIP_LEVELS, UARF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Ubal"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Ubal"),
@@ -14638,6 +15984,114 @@ fn insert_objects_chunk_3(
                 )),
             ),
             WarcraftObjectText::new(UBAL_TIP_LEVELS, UBAL_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Ubru"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Ubru"),
+            UBRU_NAMES,
+            UBRU_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UBRU_UNIT_ABILITIES,
+                    UBRU_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UBRU_UNIT_RESEARCHES,
+                        UBRU_UNIT_BUILDS,
+                        UBRU_UNIT_TRAINS,
+                        UBRU_UNIT_SELL_ITEMS,
+                        UBRU_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        675,
+                        1.0,
+                        RegenType::Blight,
+                        3.6,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(23, 12, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UBRU_TIP_LEVELS, UBRU_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Ubtr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Ubtr"),
+            UBTR_NAMES,
+            UBTR_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UBTR_UNIT_ABILITIES,
+                    UBTR_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UBTR_UNIT_RESEARCHES,
+                        UBTR_UNIT_BUILDS,
+                        UBTR_UNIT_TRAINS,
+                        UBTR_UNIT_SELL_ITEMS,
+                        UBTR_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        675,
+                        1.0,
+                        RegenType::Blight,
+                        3.6,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(23, 12, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UBTR_TIP_LEVELS, UBTR_UBERTIP_LEVELS),
         ),
     );
 
@@ -14748,6 +16202,60 @@ fn insert_objects_chunk_3(
             WarcraftObjectText::new(UCRL_TIP_LEVELS, UCRL_UBERTIP_LEVELS),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Uctl"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uctl"),
+            UCTL_NAMES,
+            UCTL_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    UCTL_UNIT_ABILITIES,
+                    UCTL_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UCTL_UNIT_RESEARCHES,
+                        UCTL_UNIT_BUILDS,
+                        UCTL_UNIT_TRAINS,
+                        UCTL_UNIT_SELL_ITEMS,
+                        UCTL_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UCTL_TIP_LEVELS, UCTL_UBERTIP_LEVELS),
+        ),
     );
 
     objects.insert(
@@ -14969,6 +16477,223 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("Ugr2"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Ugr2"),
+            UGR2_NAMES,
+            UGR2_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    UGR2_UNIT_ABILITIES,
+                    UGR2_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UGR2_UNIT_RESEARCHES,
+                        UGR2_UNIT_BUILDS,
+                        UGR2_UNIT_TRAINS,
+                        UGR2_UNIT_SELL_ITEMS,
+                        UGR2_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UGR2_TIP_LEVELS, UGR2_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Ugr3"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Ugr3"),
+            UGR3_NAMES,
+            UGR3_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    UGR3_UNIT_ABILITIES,
+                    UGR3_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UGR3_UNIT_RESEARCHES,
+                        UGR3_UNIT_BUILDS,
+                        UGR3_UNIT_TRAINS,
+                        UGR3_UNIT_SELL_ITEMS,
+                        UGR3_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UGR3_TIP_LEVELS, UGR3_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Ugrk"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Ugrk"),
+            UGRK_NAMES,
+            UGRK_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    UGRK_UNIT_ABILITIES,
+                    UGRK_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UGRK_UNIT_RESEARCHES,
+                        UGRK_UNIT_BUILDS,
+                        UGRK_UNIT_TRAINS,
+                        UGRK_UNIT_SELL_ITEMS,
+                        UGRK_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.25,
+                        RegenType::Always,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UGRK_TIP_LEVELS, UGRK_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Ujsm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Ujsm"),
+            UJSM_NAMES,
+            UJSM_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UJSM_UNIT_ABILITIES,
+                    UJSM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UJSM_UNIT_RESEARCHES,
+                        UJSM_UNIT_BUILDS,
+                        UJSM_UNIT_TRAINS,
+                        UJSM_UNIT_SELL_ITEMS,
+                        UJSM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        500,
+                        0.25,
+                        RegenType::Always,
+                        2.5,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(285, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(285, 0.01),
+                    AttributeBase::new(16, 15, 19),
+                    AttributeGrowth::new(2.0, 1.0, 3.0),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(UJSM_TIP_LEVELS, UJSM_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::One))),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("Uktl"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("Uktl"),
@@ -15129,6 +16854,225 @@ fn insert_objects_chunk_3(
             ),
             WarcraftObjectText::new(UMAL_TIP_LEVELS, UMAL_UBERTIP_LEVELS),
         ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Uput"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uput"),
+            UPUT_NAMES,
+            UPUT_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UPUT_UNIT_ABILITIES,
+                    UPUT_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UPUT_UNIT_RESEARCHES,
+                        UPUT_UNIT_BUILDS,
+                        UPUT_UNIT_TRAINS,
+                        UPUT_UNIT_SELL_ITEMS,
+                        UPUT_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        500,
+                        0.25,
+                        RegenType::Always,
+                        2.5,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            31,
+                            600,
+                            1.8,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(285, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(285, 0.01),
+                    AttributeBase::new(16, 15, 19),
+                    AttributeGrowth::new(2.0, 1.0, 3.0),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(UPUT_TIP_LEVELS, UPUT_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Urff"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Urff"),
+            URFF_NAMES,
+            URFF_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    URFF_UNIT_ABILITIES,
+                    URFF_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        URFF_UNIT_RESEARCHES,
+                        URFF_UNIT_BUILDS,
+                        URFF_UNIT_TRAINS,
+                        URFF_UNIT_SELL_ITEMS,
+                        URFF_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        500,
+                        1.0,
+                        RegenType::Blight,
+                        3.1,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(285, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(285, 0.01),
+                    AttributeBase::new(16, 17, 19),
+                    AttributeGrowth::new(1.8, 1.0, 3.2),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(URFF_TIP_LEVELS, URFF_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Urfm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Urfm"),
+            URFM_NAMES,
+            URFM_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    URFM_UNIT_ABILITIES,
+                    URFM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        URFM_UNIT_RESEARCHES,
+                        URFM_UNIT_BUILDS,
+                        URFM_UNIT_TRAINS,
+                        URFM_UNIT_SELL_ITEMS,
+                        URFM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        450,
+                        1.0,
+                        RegenType::Blight,
+                        3.1,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            2.13,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(285, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(285, 0.01),
+                    AttributeBase::new(14, 17, 19),
+                    AttributeGrowth::new(1.8, 1.0, 3.2),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(URFM_TIP_LEVELS, URFM_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Urfu"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Urfu"),
+            URFU_NAMES,
+            URFU_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    URFU_UNIT_ABILITIES,
+                    URFU_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        URFU_UNIT_RESEARCHES,
+                        URFU_UNIT_BUILDS,
+                        URFU_UNIT_TRAINS,
+                        URFU_UNIT_SELL_ITEMS,
+                        URFU_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        450,
+                        1.0,
+                        RegenType::Blight,
+                        3.1,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            21,
+                            27,
+                            600,
+                            1.9,
+                            AttackType::Hero,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(285, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(285, 0.01),
+                    AttributeBase::new(14, 17, 19),
+                    AttributeGrowth::new(1.8, 1.0, 3.2),
+                    PrimaryAttribute::Intelligence,
+                )),
+            ),
+            WarcraftObjectText::new(URFU_TIP_LEVELS, URFU_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two))),
     );
 
     objects.insert(
@@ -15398,6 +17342,168 @@ fn insert_objects_chunk_3(
                     PrimaryAttribute::Intelligence,
                 )),
             ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Uzkf"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uzkf"),
+            UZKF_NAMES,
+            UZKF_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    55,
+                    UZKF_UNIT_ABILITIES,
+                    UZKF_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UZKF_UNIT_RESEARCHES,
+                        UZKF_UNIT_BUILDS,
+                        UZKF_UNIT_TRAINS,
+                        UZKF_UNIT_SELL_ITEMS,
+                        UZKF_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        1.0,
+                        RegenType::Blight,
+                        3.9,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            24,
+                            34,
+                            100,
+                            2.2,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(22, 13, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UZKF_TIP_LEVELS, UZKF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Uzkm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uzkm"),
+            UZKM_NAMES,
+            UZKM_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UZKM_UNIT_ABILITIES,
+                    UZKM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UZKM_UNIT_RESEARCHES,
+                        UZKM_UNIT_BUILDS,
+                        UZKM_UNIT_TRAINS,
+                        UZKM_UNIT_SELL_ITEMS,
+                        UZKM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        675,
+                        1.0,
+                        RegenType::Blight,
+                        3.6,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(23, 12, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UZKM_TIP_LEVELS, UZKM_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("Uzrm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("Uzrm"),
+            UZRM_NAMES,
+            UZRM_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Hero,
+                    40,
+                    UZRM_UNIT_ABILITIES,
+                    UZRM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UZRM_UNIT_RESEARCHES,
+                        UZRM_UNIT_BUILDS,
+                        UZRM_UNIT_TRAINS,
+                        UZRM_UNIT_SELL_ITEMS,
+                        UZRM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        675,
+                        1.0,
+                        RegenType::Blight,
+                        3.6,
+                        DefenseType::Hero,
+                        Some(UnitAttack::new(
+                            25,
+                            35,
+                            100,
+                            2.33,
+                            AttackType::Hero,
+                            WeaponType::Normal,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(255, 0.01)),
+                )
+                .with_level(5)
+                .with_gold_cost(425)
+                .with_hero_attributes(HeroAttributes::new(
+                    ManaPool::new(255, 0.01),
+                    AttributeBase::new(23, 12, 17),
+                    AttributeGrowth::new(2.7, 1.5, 1.8),
+                    PrimaryAttribute::Strength,
+                )),
+            ),
+            WarcraftObjectText::new(UZRM_TIP_LEVELS, UZRM_UBERTIP_LEVELS),
         ),
     );
 
@@ -15724,6 +17830,129 @@ fn insert_objects_chunk_3(
             WarcraftObjectText::new(BZBF_TIP_LEVELS, BZBF_UBERTIP_LEVELS),
         ),
     );
+}
+
+fn insert_objects_chunk_4(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
+    objects.insert(
+        WarcraftObjectId::new("cabl"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cabl"),
+            CABL_NAMES,
+            CABL_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CABL_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CABL_TIP_LEVELS, CABL_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cagh"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cagh"),
+            CAGH_NAMES,
+            CAGH_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CAGH_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CAGH_TIP_LEVELS, CAGH_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cbmv"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cbmv"),
+            CBMV_NAMES,
+            CBMV_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CBMV_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CBMV_TIP_LEVELS, CBMV_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cccg"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cccg"),
+            CCCG_NAMES,
+            CCCG_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CCCG_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CCCG_TIP_LEVELS, CCCG_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cccm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cccm"),
+            CCCM_NAMES,
+            CCCM_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CCCM_ABILITIES,
+                Some(WarcraftObjectId::new("Accm")),
+            )),
+            WarcraftObjectText::new(CCCM_TIP_LEVELS, CCCM_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ccec"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ccec"),
+            CCEC_NAMES,
+            CCEC_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CCEC_ABILITIES,
+                Some(WarcraftObjectId::new("Acec")),
+            )),
+            WarcraftObjectText::new(CCEC_TIP_LEVELS, CCEC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ccem"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ccem"),
+            CCEM_NAMES,
+            CCEM_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CCEM_ABILITIES,
+                Some(WarcraftObjectId::new("Acem")),
+            )),
+            WarcraftObjectText::new(CCEM_TIP_LEVELS, CCEM_UBERTIP_LEVELS),
+        ),
+    );
 
     objects.insert(
         WarcraftObjectId::new("ccmd"),
@@ -15739,6 +17968,108 @@ fn insert_objects_chunk_3(
                 Some(WarcraftObjectId::new("AIco")),
             )),
             WarcraftObjectText::new(CCMD_TIP_LEVELS, CCMD_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ccvw"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ccvw"),
+            CCVW_NAMES,
+            CCVW_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CCVW_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CCVW_TIP_LEVELS, CCVW_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cdhb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cdhb"),
+            CDHB_NAMES,
+            CDHB_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CDHB_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CDHB_TIP_LEVELS, CDHB_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cegi"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cegi"),
+            CEGI_NAMES,
+            CEGI_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CEGI_ABILITIES,
+                Some(WarcraftObjectId::new("Acgi")),
+            )),
+            WarcraftObjectText::new(CEGI_TIP_LEVELS, CEGI_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("celi"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("celi"),
+            CELI_NAMES,
+            CELI_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CELI_ABILITIES,
+                Some(WarcraftObjectId::new("Acli")),
+            )),
+            WarcraftObjectText::new(CELI_TIP_LEVELS, CELI_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cese"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cese"),
+            CESE_NAMES,
+            CESE_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CESE_ABILITIES,
+                Some(WarcraftObjectId::new("ASYR")),
+            )),
+            WarcraftObjectText::new(CESE_TIP_LEVELS, CESE_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cexp"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cexp"),
+            CEXP_NAMES,
+            CEXP_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CEXP_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CEXP_TIP_LEVELS, CEXP_UBERTIP_LEVELS),
         ),
     );
 
@@ -15769,6 +18100,40 @@ fn insert_objects_chunk_3(
                 Some(WarcraftObjectId::new("AIi6")),
             )),
             WarcraftObjectText::new(CIRI_TIP_LEVELS, CIRI_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ckcm"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ckcm"),
+            CKCM_NAMES,
+            CKCM_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CKCM_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CKCM_TIP_LEVELS, CKCM_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ckdk"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ckdk"),
+            CKDK_NAMES,
+            CKDK_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CKDK_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CKDK_TIP_LEVELS, CKDK_UBERTIP_LEVELS),
         ),
     );
 
@@ -15807,6 +18172,23 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("clom"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("clom"),
+            CLOM_NAMES,
+            CLOM_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CLOM_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CLOM_TIP_LEVELS, CLOM_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("clsd"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("clsd"),
@@ -15820,6 +18202,23 @@ fn insert_objects_chunk_3(
                 Some(WarcraftObjectId::new("AIhm")),
             )),
             WarcraftObjectText::new(CLSD_TIP_LEVELS, CLSD_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cmag"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cmag"),
+            CMAG_NAMES,
+            CMAG_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CMAG_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CMAG_TIP_LEVELS, CMAG_UBERTIP_LEVELS),
         ),
     );
 
@@ -15872,6 +18271,57 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("cpor"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cpor"),
+            CPOR_NAMES,
+            CPOR_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CPOR_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CPOR_TIP_LEVELS, CPOR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cprk"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cprk"),
+            CPRK_NAMES,
+            CPRK_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CPRK_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CPRK_TIP_LEVELS, CPRK_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cptz"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cptz"),
+            CPTZ_NAMES,
+            CPTZ_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CPTZ_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CPTZ_TIP_LEVELS, CPTZ_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("crdt"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("crdt"),
@@ -15902,6 +18352,142 @@ fn insert_objects_chunk_3(
                 Some(WarcraftObjectId::new("AIta")),
             )),
             WarcraftObjectText::new(CRYS_TIP_LEVELS, CRYS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ctat"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ctat"),
+            CTAT_NAMES,
+            CTAT_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CTAT_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CTAT_TIP_LEVELS, CTAT_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ctoa"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ctoa"),
+            CTOA_NAMES,
+            CTOA_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CTOA_ABILITIES,
+                Some(WarcraftObjectId::new("AIam")),
+            )),
+            WarcraftObjectText::new(CTOA_TIP_LEVELS, CTOA_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ctoi"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ctoi"),
+            CTOI_NAMES,
+            CTOI_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CTOI_ABILITIES,
+                Some(WarcraftObjectId::new("AIim")),
+            )),
+            WarcraftObjectText::new(CTOI_TIP_LEVELS, CTOI_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ctos"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ctos"),
+            CTOS_NAMES,
+            CTOS_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CTOS_ABILITIES,
+                Some(WarcraftObjectId::new("AIsm")),
+            )),
+            WarcraftObjectText::new(CTOS_TIP_LEVELS, CTOS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cvdt"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cvdt"),
+            CVDT_NAMES,
+            CVDT_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CVDT_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CVDT_TIP_LEVELS, CVDT_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cvfs"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cvfs"),
+            CVFS_NAMES,
+            CVFS_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CVFS_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CVFS_TIP_LEVELS, CVFS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cvpe"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cvpe"),
+            CVPE_NAMES,
+            CVPE_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CVPE_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CVPE_TIP_LEVELS, CVPE_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("cvvb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("cvvb"),
+            CVVB_NAMES,
+            CVVB_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                CVVB_ABILITIES,
+                Some(WarcraftObjectId::new("_")),
+            )),
+            WarcraftObjectText::new(CVVB_TIP_LEVELS, CVVB_UBERTIP_LEVELS),
         ),
     );
 
@@ -16257,6 +18843,23 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("ebac"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebac"),
+            EBAC_NAMES,
+            EBAC_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBAC_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBAC_TIP_LEVELS, EBAC_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("ebal"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("ebal"),
@@ -16303,6 +18906,57 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("ebhg"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebhg"),
+            EBHG_NAMES,
+            EBHG_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBHG_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBHG_TIP_LEVELS, EBHG_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ebhi"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebhi"),
+            EBHI_NAMES,
+            EBHI_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBHI_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBHI_TIP_LEVELS, EBHI_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ebhl"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebhl"),
+            EBHL_NAMES,
+            EBHL_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBHL_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBHL_TIP_LEVELS, EBHL_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("ebsh"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("ebsh"),
@@ -16346,6 +19000,57 @@ fn insert_objects_chunk_3(
             WarcraftObjectText::new(EBSH_TIP_LEVELS, EBSH_UBERTIP_LEVELS),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ebua"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebua"),
+            EBUA_NAMES,
+            EBUA_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBUA_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBUA_TIP_LEVELS, EBUA_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ebug"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebug"),
+            EBUG_NAMES,
+            EBUG_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBUG_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBUG_TIP_LEVELS, EBUG_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ebul"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ebul"),
+            EBUL_NAMES,
+            EBUL_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                EBUL_ABILITIES,
+                Some(WarcraftObjectId::new("AIni")),
+            )),
+            WarcraftObjectText::new(EBUL_TIP_LEVELS, EBUL_UBERTIP_LEVELS),
+        ),
     );
 
     objects.insert(
@@ -18064,6 +20769,23 @@ fn insert_objects_chunk_3(
     );
 
     objects.insert(
+        WarcraftObjectId::new("glxb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("glxb"),
+            GLXB_NAMES,
+            GLXB_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                GLXB_ABILITIES,
+                Some(WarcraftObjectId::new("Aglx")),
+            )),
+            WarcraftObjectText::new(GLXB_TIP_LEVELS, GLXB_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("gmfr"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("gmfr"),
@@ -18075,11 +20797,7 @@ fn insert_objects_chunk_3(
             WarcraftObjectText::new(GMFR_TIP_LEVELS, GMFR_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_4(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("gobm"),
         WarcraftObject::with_text(
@@ -18671,6 +21389,87 @@ fn insert_objects_chunk_4(
             WarcraftObjectText::new(HCAS_TIP_LEVELS, HCAS_UBERTIP_LEVELS),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("hcta"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("hcta"),
+            HCTA_NAMES,
+            HCTA_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    HCTA_UNIT_ABILITIES,
+                    HCTA_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HCTA_UNIT_RESEARCHES,
+                        HCTA_UNIT_BUILDS,
+                        HCTA_UNIT_TRAINS,
+                        HCTA_UNIT_SELL_ITEMS,
+                        HCTA_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    150,
+                    0.0,
+                    RegenType::None,
+                    0.0,
+                    DefenseType::Medium,
+                    None,
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("hctg"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("hctg"),
+            HCTG_NAMES,
+            HCTG_ICONS,
+            Unit,
+            Some(Human),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    18,
+                    HCTG_UNIT_ABILITIES,
+                    HCTG_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        HCTG_UNIT_RESEARCHES,
+                        HCTG_UNIT_BUILDS,
+                        HCTG_UNIT_TRAINS,
+                        HCTG_UNIT_SELL_ITEMS,
+                        HCTG_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(UnitCombat::new(
+                    600,
+                    0.25,
+                    RegenType::Always,
+                    3.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        25,
+                        30,
+                        100,
+                        1.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(6)
+                .with_gold_cost(130),
+            ),
+        ),
     );
 
     objects.insert(
@@ -20627,7 +23426,11 @@ fn insert_objects_chunk_4(
             WarcraftObjectText::new(MANH_TIP_LEVELS, MANH_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_5(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("mcou"),
         WarcraftObject::with_text(
@@ -25357,11 +28160,7 @@ fn insert_objects_chunk_4(
             WarcraftObjectText::new(NDQP_TIP_LEVELS, NDQP_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_5(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("ndqs"),
         WarcraftObject::with_text(
@@ -26883,6 +29682,43 @@ fn insert_objects_chunk_5(
                 .with_gold_cost(365),
             ),
             WarcraftObjectText::new(NDTW_TIP_LEVELS, NDTW_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ndum"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("ndum"),
+            NDUM_NAMES,
+            NDUM_ICONS,
+            Unit,
+            Some(Neutral),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    0,
+                    NDUM_UNIT_ABILITIES,
+                    NDUM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        NDUM_UNIT_RESEARCHES,
+                        NDUM_UNIT_BUILDS,
+                        NDUM_UNIT_TRAINS,
+                        NDUM_UNIT_SELL_ITEMS,
+                        NDUM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    99999,
+                    99999.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Divine,
+                    None,
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
+            ),
         ),
     );
 
@@ -28906,7 +31742,11 @@ fn insert_objects_chunk_5(
             WarcraftObjectText::new(NFOV_TIP_LEVELS, NFOV_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_6(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("nfpc"),
         WarcraftObject::with_text(
@@ -34140,11 +36980,7 @@ fn insert_objects_chunk_5(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
     );
-}
 
-fn insert_objects_chunk_6(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("nltc"),
         WarcraftObject::with_text(
@@ -37691,7 +40527,11 @@ fn insert_objects_chunk_6(
             ),
         ),
     );
+}
 
+fn insert_objects_chunk_7(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("now3"),
         WarcraftObject::new(
@@ -42941,11 +45781,7 @@ fn insert_objects_chunk_6(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
     );
-}
 
-fn insert_objects_chunk_7(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("ntkh"),
         WarcraftObject::with_text(
@@ -46432,7 +49268,11 @@ fn insert_objects_chunk_7(
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Two))),
     );
+}
 
+fn insert_objects_chunk_8(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("oflg"),
         WarcraftObject::with_text(
@@ -46769,6 +49609,618 @@ fn insert_objects_chunk_7(
                 .with_level(0)
                 .with_gold_cost(0),
             ),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oidb"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oidb"),
+            OIDB_NAMES,
+            OIDB_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    28,
+                    OIDB_UNIT_ABILITIES,
+                    OIDB_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIDB_UNIT_RESEARCHES,
+                        OIDB_UNIT_BUILDS,
+                        OIDB_UNIT_TRAINS,
+                        OIDB_UNIT_SELL_ITEMS,
+                        OIDB_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    365,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        14,
+                        20,
+                        600,
+                        1.35,
+                        AttackType::Magic,
+                        WeaponType::Missile,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIDB_TIP_LEVELS, OIDB_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oidg"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oidg"),
+            OIDG_NAMES,
+            OIDG_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    18,
+                    OIDG_UNIT_ABILITIES,
+                    OIDG_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIDG_UNIT_RESEARCHES,
+                        OIDG_UNIT_BUILDS,
+                        OIDG_UNIT_TRAINS,
+                        OIDG_UNIT_SELL_ITEMS,
+                        OIDG_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    650,
+                    0.25,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        15,
+                        16,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIDG_TIP_LEVELS, OIDG_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oie1"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oie1"),
+            OIE1_NAMES,
+            OIE1_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIE1_UNIT_ABILITIES,
+                    OIE1_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIE1_UNIT_RESEARCHES,
+                        OIE1_UNIT_BUILDS,
+                        OIE1_UNIT_TRAINS,
+                        OIE1_UNIT_SELL_ITEMS,
+                        OIE1_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    -1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    None,
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIE1_TIP_LEVELS, OIE1_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oie2"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oie2"),
+            OIE2_NAMES,
+            OIE2_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIE2_UNIT_ABILITIES,
+                    OIE2_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIE2_UNIT_RESEARCHES,
+                        OIE2_UNIT_BUILDS,
+                        OIE2_UNIT_TRAINS,
+                        OIE2_UNIT_SELL_ITEMS,
+                        OIE2_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    -1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    None,
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIE2_TIP_LEVELS, OIE2_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oie3"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oie3"),
+            OIE3_NAMES,
+            OIE3_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIE3_UNIT_ABILITIES,
+                    OIE3_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIE3_UNIT_RESEARCHES,
+                        OIE3_UNIT_BUILDS,
+                        OIE3_UNIT_TRAINS,
+                        OIE3_UNIT_SELL_ITEMS,
+                        OIE3_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    -1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    None,
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIE3_TIP_LEVELS, OIE3_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oie4"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oie4"),
+            OIE4_NAMES,
+            OIE4_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIE4_UNIT_ABILITIES,
+                    OIE4_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIE4_UNIT_RESEARCHES,
+                        OIE4_UNIT_BUILDS,
+                        OIE4_UNIT_TRAINS,
+                        OIE4_UNIT_SELL_ITEMS,
+                        OIE4_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    -1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    None,
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIE4_TIP_LEVELS, OIE4_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oifr"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oifr"),
+            OIFR_NAMES,
+            OIFR_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    20,
+                    OIFR_UNIT_ABILITIES,
+                    OIFR_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIFR_UNIT_RESEARCHES,
+                        OIFR_UNIT_BUILDS,
+                        OIFR_UNIT_TRAINS,
+                        OIFR_UNIT_SELL_ITEMS,
+                        OIFR_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    550,
+                    0.25,
+                    RegenType::Always,
+                    2.0,
+                    DefenseType::Medium,
+                    Some(UnitAttack::new(
+                        20,
+                        22,
+                        500,
+                        1.5,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIFR_TIP_LEVELS, OIFR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oigs"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oigs"),
+            OIGS_NAMES,
+            OIGS_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIGS_UNIT_ABILITIES,
+                    OIGS_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIGS_UNIT_RESEARCHES,
+                        OIGS_UNIT_BUILDS,
+                        OIGS_UNIT_TRAINS,
+                        OIGS_UNIT_SELL_ITEMS,
+                        OIGS_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        27,
+                        33,
+                        10,
+                        1.0,
+                        AttackType::Spells,
+                        WeaponType::Missile,
+                    )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIGS_TIP_LEVELS, OIGS_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oimd"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oimd"),
+            OIMD_NAMES,
+            OIMD_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIMD_UNIT_ABILITIES,
+                    OIMD_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIMD_UNIT_RESEARCHES,
+                        OIMD_UNIT_BUILDS,
+                        OIMD_UNIT_TRAINS,
+                        OIMD_UNIT_SELL_ITEMS,
+                        OIMD_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        75,
+                        75,
+                        750,
+                        5.0,
+                        AttackType::Normal,
+                        WeaponType::MissileBounce,
+                    )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIMD_TIP_LEVELS, OIMD_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oirf"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oirf"),
+            OIRF_NAMES,
+            OIRF_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    1,
+                    OIRF_UNIT_ABILITIES,
+                    OIRF_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OIRF_UNIT_RESEARCHES,
+                        OIRF_UNIT_BUILDS,
+                        OIRF_UNIT_TRAINS,
+                        OIRF_UNIT_SELL_ITEMS,
+                        OIRF_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(false, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    5000,
+                    1000.0,
+                    RegenType::Always,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        41,
+                        47,
+                        10,
+                        1.0,
+                        AttackType::Spells,
+                        WeaponType::Missile,
+                    )),
+                ))
+                .with_level(0)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OIRF_TIP_LEVELS, OIRF_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oisg"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oisg"),
+            OISG_NAMES,
+            OISG_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    20,
+                    OISG_UNIT_ABILITIES,
+                    OISG_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OISG_UNIT_RESEARCHES,
+                        OISG_UNIT_BUILDS,
+                        OISG_UNIT_TRAINS,
+                        OISG_UNIT_SELL_ITEMS,
+                        OISG_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    800,
+                    0.5,
+                    RegenType::Always,
+                    4.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        40,
+                        46,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OISG_TIP_LEVELS, OISG_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oisk"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oisk"),
+            OISK_NAMES,
+            OISK_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    18,
+                    OISK_UNIT_ABILITIES,
+                    OISK_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OISK_UNIT_RESEARCHES,
+                        OISK_UNIT_BUILDS,
+                        OISK_UNIT_TRAINS,
+                        OISK_UNIT_SELL_ITEMS,
+                        OISK_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    180,
+                    2.0,
+                    RegenType::Blight,
+                    1.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        14,
+                        15,
+                        90,
+                        2.0,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(1)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OISK_TIP_LEVELS, OISK_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oism"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oism"),
+            OISM_NAMES,
+            OISM_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    20,
+                    OISM_UNIT_ABILITIES,
+                    OISM_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OISM_UNIT_RESEARCHES,
+                        OISM_UNIT_BUILDS,
+                        OISM_UNIT_TRAINS,
+                        OISM_UNIT_SELL_ITEMS,
+                        OISM_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(
+                    UnitCombat::new(
+                        650,
+                        0.5,
+                        RegenType::Always,
+                        0.0,
+                        DefenseType::Heavy,
+                        Some(UnitAttack::new(
+                            45,
+                            53,
+                            500,
+                            1.6,
+                            AttackType::Pierce,
+                            WeaponType::Missile,
+                        )),
+                    )
+                    .with_mana_pool(ManaPool::new(300, 0.75)),
+                )
+                .with_level(3)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OISM_TIP_LEVELS, OISM_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("oisp"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("oisp"),
+            OISP_NAMES,
+            OISP_ICONS,
+            Unit,
+            Some(Orc),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    30,
+                    OISP_UNIT_ABILITIES,
+                    OISP_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        OISP_UNIT_RESEARCHES,
+                        OISP_UNIT_BUILDS,
+                        OISP_UNIT_TRAINS,
+                        OISP_UNIT_SELL_ITEMS,
+                        OISP_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    350,
+                    0.5,
+                    RegenType::Always,
+                    1.0,
+                    DefenseType::Medium,
+                    Some(UnitAttack::new(
+                        25,
+                        32,
+                        600,
+                        1.8,
+                        AttackType::Pierce,
+                        WeaponType::Missile,
+                    )),
+                ))
+                .with_level(3)
+                .with_gold_cost(0),
+            ),
+            WarcraftObjectText::new(OISP_TIP_LEVELS, OISP_UBERTIP_LEVELS),
         ),
     );
 
@@ -48375,6 +51827,23 @@ fn insert_objects_chunk_7(
     );
 
     objects.insert(
+        WarcraftObjectId::new("peou"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("peou"),
+            PEOU_NAMES,
+            PEOU_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                PEOU_ABILITIES,
+                Some(WarcraftObjectId::new("AIhe")),
+            )),
+            WarcraftObjectText::new(PEOU_TIP_LEVELS, PEOU_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("pghe"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("pghe"),
@@ -48627,6 +52096,40 @@ fn insert_objects_chunk_7(
                 Some(WarcraftObjectId::new("AIsp")),
             )),
             WarcraftObjectText::new(PSPD_TIP_LEVELS, PSPD_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("puhe"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("puhe"),
+            PUHE_NAMES,
+            PUHE_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                PUHE_ABILITIES,
+                Some(WarcraftObjectId::new("AIhe")),
+            )),
+            WarcraftObjectText::new(PUHE_TIP_LEVELS, PUHE_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("puma"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("puma"),
+            PUMA_NAMES,
+            PUMA_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                Campaign,
+                PUMA_ABILITIES,
+                Some(WarcraftObjectId::new("AIma")),
+            )),
+            WarcraftObjectText::new(PUMA_TIP_LEVELS, PUMA_UBERTIP_LEVELS),
         ),
     );
 
@@ -49499,11 +53002,7 @@ fn insert_objects_chunk_7(
             WarcraftObjectText::new(SCHL_TIP_LEVELS, SCHL_UBERTIP_LEVELS),
         ),
     );
-}
 
-fn insert_objects_chunk_8(
-    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
-) {
     objects.insert(
         WarcraftObjectId::new("sclp"),
         WarcraftObject::with_text(
@@ -50585,7 +54084,11 @@ fn insert_objects_chunk_8(
             WarcraftObjectText::new(TINT_TIP_LEVELS, TINT_UBERTIP_LEVELS),
         ),
     );
+}
 
+fn insert_objects_chunk_9(
+    objects: &mut std::collections::BTreeMap<WarcraftObjectId, WarcraftObject>,
+) {
     objects.insert(
         WarcraftObjectId::new("tkno"),
         WarcraftObject::with_text(
@@ -50755,6 +54258,23 @@ fn insert_objects_chunk_8(
                 Some(WarcraftObjectId::new("AIsm")),
             )),
             WarcraftObjectText::new(TSTR_TIP_LEVELS, TSTR_UBERTIP_LEVELS),
+        ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ttal"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("ttal"),
+            TTAL_NAMES,
+            TTAL_ICONS,
+            Item,
+            None,
+            WarcraftObjectMeta::Item(ItemMeta::new(
+                PowerUp,
+                TTAL_ABILITIES,
+                Some(WarcraftObjectId::new("ATap")),
+            )),
+            WarcraftObjectText::new(TTAL_TIP_LEVELS, TTAL_UBERTIP_LEVELS),
         ),
     );
 
@@ -50975,6 +54495,50 @@ fn insert_objects_chunk_8(
     );
 
     objects.insert(
+        WarcraftObjectId::new("uass"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("uass"),
+            UASS_NAMES,
+            UASS_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    20,
+                    UASS_UNIT_ABILITIES,
+                    UASS_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UASS_UNIT_RESEARCHES,
+                        UASS_UNIT_BUILDS,
+                        UASS_UNIT_TRAINS,
+                        UASS_UNIT_SELL_ITEMS,
+                        UASS_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(UnitCombat::new(
+                    240,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        15,
+                        24,
+                        100,
+                        0.9,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(105),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("uban"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("uban"),
@@ -51110,6 +54674,51 @@ fn insert_objects_chunk_8(
                 .with_gold_cost(595),
             ),
         ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ublw"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("ublw"),
+            UBLW_NAMES,
+            UBLW_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    24,
+                    UBLW_UNIT_ABILITIES,
+                    UBLW_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UBLW_UNIT_RESEARCHES,
+                        UBLW_UNIT_BUILDS,
+                        UBLW_UNIT_TRAINS,
+                        UBLW_UNIT_SELL_ITEMS,
+                        UBLW_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(UnitCombat::new(
+                    315,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        10,
+                        11,
+                        600,
+                        1.8,
+                        AttackType::Magic,
+                        WeaponType::Artillery,
+                    )),
+                ))
+                .with_level(3)
+                .with_gold_cost(145),
+            ),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
     );
 
     objects.insert(
@@ -51530,6 +55139,50 @@ fn insert_objects_chunk_8(
     );
 
     objects.insert(
+        WarcraftObjectId::new("ucze"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("ucze"),
+            UCZE_NAMES,
+            UCZE_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    18,
+                    UCZE_UNIT_ABILITIES,
+                    UCZE_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UCZE_UNIT_RESEARCHES,
+                        UCZE_UNIT_BUILDS,
+                        UCZE_UNIT_TRAINS,
+                        UCZE_UNIT_SELL_ITEMS,
+                        UCZE_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(UnitCombat::new(
+                    340,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        12,
+                        13,
+                        90,
+                        1.35,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(120),
+            ),
+        ),
+    );
+
+    objects.insert(
         WarcraftObjectId::new("udes"),
         WarcraftObject::with_text(
             WarcraftObjectId::new("udes"),
@@ -51586,6 +55239,96 @@ fn insert_objects_chunk_8(
             WarcraftObjectMeta::Item(ItemMeta::new(Miscellaneous, UFLG_ABILITIES, None)),
             WarcraftObjectText::new(UFLG_TIP_LEVELS, UFLG_UBERTIP_LEVELS),
         ),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ufr2"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("ufr2"),
+            UFR2_NAMES,
+            UFR2_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    28,
+                    UFR2_UNIT_ABILITIES,
+                    UFR2_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UFR2_UNIT_RESEARCHES,
+                        UFR2_UNIT_BUILDS,
+                        UFR2_UNIT_TRAINS,
+                        UFR2_UNIT_SELL_ITEMS,
+                        UFR2_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    365,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        30,
+                        40,
+                        10,
+                        1.0,
+                        AttackType::Chaos,
+                        WeaponType::Instant,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
+            ),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ufrb"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("ufrb"),
+            UFRB_NAMES,
+            UFRB_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    28,
+                    UFRB_UNIT_ABILITIES,
+                    UFRB_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UFRB_UNIT_RESEARCHES,
+                        UFRB_UNIT_BUILDS,
+                        UFRB_UNIT_TRAINS,
+                        UFRB_UNIT_SELL_ITEMS,
+                        UFRB_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    365,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Unarmored,
+                    Some(UnitAttack::new(
+                        30,
+                        40,
+                        10,
+                        1.0,
+                        AttackType::Chaos,
+                        WeaponType::Instant,
+                    )),
+                ))
+                .with_level(2)
+                .with_gold_cost(0),
+            ),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::One, RowIndex::Zero))),
     );
 
     objects.insert(
@@ -51678,6 +55421,50 @@ fn insert_objects_chunk_8(
             WarcraftObjectText::new(UGAR_TIP_LEVELS, UGAR_UBERTIP_LEVELS),
         )
         .with_default_position(Some(GridCoordinate::new(ColumnIndex::Two, RowIndex::Zero))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("ugbo"),
+        WarcraftObject::new(
+            WarcraftObjectId::new("ugbo"),
+            UGBO_NAMES,
+            UGBO_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    40,
+                    UGBO_UNIT_ABILITIES,
+                    UGBO_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UGBO_UNIT_RESEARCHES,
+                        UGBO_UNIT_BUILDS,
+                        UGBO_UNIT_TRAINS,
+                        UGBO_UNIT_SELL_ITEMS,
+                        UGBO_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, false),
+                )
+                .with_combat(UnitCombat::new(
+                    2200,
+                    5.0,
+                    RegenType::Always,
+                    2.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        130,
+                        136,
+                        128,
+                        1.9,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(4)
+                .with_gold_cost(240),
+            ),
+        ),
     );
 
     objects.insert(
@@ -51844,6 +55631,52 @@ fn insert_objects_chunk_8(
             ColumnIndex::Three,
             RowIndex::Zero,
         ))),
+    );
+
+    objects.insert(
+        WarcraftObjectId::new("uigh"),
+        WarcraftObject::with_text(
+            WarcraftObjectId::new("uigh"),
+            UIGH_NAMES,
+            UIGH_ICONS,
+            Unit,
+            Some(Undead),
+            WarcraftObjectMeta::Unit(
+                UnitMeta::with_full_and_extras(
+                    Soldier,
+                    18,
+                    UIGH_UNIT_ABILITIES,
+                    UIGH_UNIT_HERO_ABILITIES,
+                    UnitProduction::new(
+                        UIGH_UNIT_RESEARCHES,
+                        UIGH_UNIT_BUILDS,
+                        UIGH_UNIT_TRAINS,
+                        UIGH_UNIT_SELL_ITEMS,
+                        UIGH_UNIT_SELL_UNITS,
+                    ),
+                    UnitFlags::new(true, true, false, true),
+                )
+                .with_combat(UnitCombat::new(
+                    385,
+                    2.0,
+                    RegenType::Blight,
+                    0.0,
+                    DefenseType::Heavy,
+                    Some(UnitAttack::new(
+                        16,
+                        22,
+                        90,
+                        1.15,
+                        AttackType::Normal,
+                        WeaponType::Normal,
+                    )),
+                ))
+                .with_level(3)
+                .with_gold_cost(165),
+            ),
+            WarcraftObjectText::new(UIGH_TIP_LEVELS, UIGH_UBERTIP_LEVELS),
+        )
+        .with_default_position(Some(GridCoordinate::new(ColumnIndex::Zero, RowIndex::Zero))),
     );
 
     objects.insert(
@@ -53727,11 +57560,84 @@ pub const UNIT_UPGRADE_SWAPS: &[UnitUpgradeSwap] = &[
     UnitUpgradeSwap::new("ohun", "otbk"),
 ];
 
+pub const TALENT_VARIANTS: &[TalentVariant] = &[
+    TalentVariant::new("AHa1", "AHas"),
+    TalentVariant::new("AHa2", "AHas"),
+    TalentVariant::new("AHa3", "AHas"),
+    TalentVariant::new("AHap", "AHen"),
+    TalentVariant::new("AHb1", "AHbd"),
+    TalentVariant::new("AHb2", "AHbd"),
+    TalentVariant::new("AHb3", "AHbd"),
+    TalentVariant::new("AHc1", "AHch"),
+    TalentVariant::new("AHc2", "AHch"),
+    TalentVariant::new("AHc3", "AHch"),
+    TalentVariant::new("AHe2", "AHen"),
+    TalentVariant::new("AHe3", "AHen"),
+    TalentVariant::new("AHg1", "AHgr"),
+    TalentVariant::new("AHg2", "AHgr"),
+    TalentVariant::new("AHg3", "AHgr"),
+    TalentVariant::new("AHh1", "AHhr"),
+    TalentVariant::new("AHh2", "AHhr"),
+    TalentVariant::new("AHh3", "AHhr"),
+    TalentVariant::new("AHi1", "AHic"),
+    TalentVariant::new("AHi2", "AHic"),
+    TalentVariant::new("AHi3", "AHic"),
+    TalentVariant::new("AHl1", "AHsl"),
+    TalentVariant::new("AHl2", "AHsl"),
+    TalentVariant::new("AHl3", "AHsl"),
+    TalentVariant::new("AHm1", "AHsf"),
+    TalentVariant::new("AHm2", "AHsf"),
+    TalentVariant::new("AHm3", "AHsf"),
+    TalentVariant::new("AHq1", "AHgh"),
+    TalentVariant::new("AHq2", "AHgh"),
+    TalentVariant::new("AHq3", "AHgh"),
+    TalentVariant::new("AHs1", "AHsw"),
+    TalentVariant::new("AHs2", "AHsw"),
+    TalentVariant::new("AHs3", "AHsw"),
+    TalentVariant::new("AHu1", "AHhc"),
+    TalentVariant::new("AHu2", "AHhc"),
+    TalentVariant::new("AHu3", "AHhc"),
+    TalentVariant::new("AHv1", "AHhs"),
+    TalentVariant::new("AHv2", "AHhs"),
+    TalentVariant::new("AHv3", "AHhs"),
+    TalentVariant::new("AHw1", "AHwc"),
+    TalentVariant::new("AHw2", "AHwc"),
+    TalentVariant::new("AHw3", "AHwc"),
+    TalentVariant::new("AHz1", "AHmc"),
+    TalentVariant::new("AHz2", "AHmc"),
+    TalentVariant::new("AHz3", "AHmc"),
+    TalentVariant::new("AUb2", "AUbd"),
+    TalentVariant::new("AUb3", "AUbd"),
+    TalentVariant::new("AUd1", "AUdb"),
+    TalentVariant::new("AUd2", "AUdb"),
+    TalentVariant::new("AUd3", "AUdb"),
+    TalentVariant::new("AUi1", "AUwc"),
+    TalentVariant::new("AUi2", "AUwc"),
+    TalentVariant::new("AUi3", "AUwc"),
+    TalentVariant::new("AUl1", "AUla"),
+    TalentVariant::new("AUl2", "AUla"),
+    TalentVariant::new("AUl3", "AUla"),
+    TalentVariant::new("AUr1", "AUbr"),
+    TalentVariant::new("AUr2", "AUbr"),
+    TalentVariant::new("AUr3", "AUbr"),
+    TalentVariant::new("AUs1", "AUsw"),
+    TalentVariant::new("AUs2", "AUsw"),
+    TalentVariant::new("AUs3", "AUsw"),
+    TalentVariant::new("AUv1", "AUvg"),
+    TalentVariant::new("AUv2", "AUvg"),
+    TalentVariant::new("AUv3", "AUvg"),
+    TalentVariant::new("AUw1", "AUwf"),
+    TalentVariant::new("AUw2", "AUwf"),
+    TalentVariant::new("AUw3", "AUwf"),
+];
+
 const AABS_ICONS: &[&str] = &["commandbuttons/btnabsorbmagic.blp"];
 const AABS_NAMES: &[&str] = &["Absorb Mana"];
 const AABS_TIP_LEVELS: &[&str] = &["Absorb Mana"];
 const AABS_UBERTIP_LEVELS: &[&str] =
     &["Takes all mana from one of your units and gives it to the Destroyer."];
+const AACA_ICONS: &[&str] = &[];
+const AACA_NAMES: &[&str] = &["Raise the Banner"];
 const AADM_ICONS: &[&str] = &["commandbuttons/btndryaddispelmagicon.blp"];
 const AADM_NAMES: &[&str] = &["Abolish Magic"];
 const AADM_TIP_LEVELS: &[&str] = &["Abolish Magic"];
@@ -53768,6 +57674,13 @@ const AAMK_UBERTIP_LEVELS: &[&str] = &[
     "Gives a total of 6 points to Agility, Intelligence, and Strength",
     "Gives a total of 9 points to Agility, Intelligence, and Strength",
     "Gives a total of 12 points to Agility, Intelligence, and Strength",
+];
+const AAML_ICONS: &[&str] = &["passivebuttons/pasbtnstatup.blp"];
+const AAML_NAMES: &[&str] = &["Attribute Bonus"];
+const AAML_TIP_LEVELS: &[&str] = &["Attribute Bonus - [Level 1]", "Attribute Bonus - [Level 2]"];
+const AAML_UBERTIP_LEVELS: &[&str] = &[
+    "Gives a total of 5 points to Agility, Intelligence, and Strength",
+    "Gives a total of 10 points to Agility, Intelligence, and Strength",
 ];
 const AAMS_ICONS: &[&str] = &["commandbuttons/btnantimagicshell.blp"];
 const AAMS_NAMES: &[&str] = &["Anti-magic Shell"];
@@ -53825,6 +57738,8 @@ const ABLO_TIP_LEVELS: &[&str] = &["Bloodlust"];
 const ABLO_UBERTIP_LEVELS: &[&str] = &[
     "Increases a friendly unit's attack rate by 40% and movement speed by 25%. Lasts 60 seconds.",
 ];
+const ABNS_ICONS: &[&str] = &[];
+const ABNS_NAMES: &[&str] = &["Banshee"];
 const ABOF_ICONS: &[&str] = &["passivebuttons/pasbtnfirerocks.blp"];
 const ABOF_NAMES: &[&str] = &["Burning Oil"];
 const ABOF_TIP_LEVELS: &[&str] = &["Burning Oil"];
@@ -53837,6 +57752,8 @@ const ABRF_TIP_LEVELS: &[&str] = &["Bear Form"];
 const ABRF_UBERTIP_LEVELS: &[&str] = &[
     "Transforms the Druid into a bear, slowing mana regeneration, but making him an excellent warrior.",
 ];
+const ABSC_ICONS: &[&str] = &[];
+const ABSC_NAMES: &[&str] = &["Curse Orb"];
 const ABSK_ICONS: &[&str] = &["commandbuttons/btnberserkfortrolls.blp"];
 const ABSK_NAMES: &[&str] = &["Berserk"];
 const ABSK_TIP_LEVELS: &[&str] = &["Berserk"];
@@ -54723,6 +58640,14 @@ const AENW_TIP_LEVELS: &[&str] = &["Entangling Roots"];
 const AENW_UBERTIP_LEVELS: &[&str] = &[
     "Causes roots to burst from the ground, immobilizing a target enemy unit for 6 seconds, and dealing 10 damage per second.",
 ];
+const AES6_ICONS: &[&str] = &["commandbuttons/btnsteelmelee.blp"];
+const AES6_NAMES: &[&str] = &["Item Essencium Attack 1"];
+const AES7_ICONS: &[&str] = &["commandbuttons/btnsteelmelee.blp"];
+const AES7_NAMES: &[&str] = &["Item Essencium Attack 2"];
+const AES8_ICONS: &[&str] = &["commandbuttons/btnsteelmelee.blp"];
+const AES8_NAMES: &[&str] = &["Item Essencium Attack 3"];
+const AES9_ICONS: &[&str] = &["commandbuttons/btnsteelmelee.blp"];
+const AES9_NAMES: &[&str] = &["Item Essencium Attack 4"];
 const AESB_ICONS: &[&str] = &["commandbuttons/btnstarfall.blp"];
 const AESB_NAMES: &[&str] = &["Starfall"];
 const AESB_TIP_LEVELS: &[&str] = &["Starfall"];
@@ -54811,6 +58736,12 @@ const AFA2_NAMES: &[&str] = &["Faerie Fire"];
 const AFA2_TIP_LEVELS: &[&str] = &["Faerie Fire"];
 const AFA2_UBERTIP_LEVELS: &[&str] =
     &["Reduces a target enemy unit's armor by 4 and gives vision of that unit. Lasts 70 seconds."];
+const AFAB_ICONS: &[&str] = &["commandbuttons/btnacidbomb.blp"];
+const AFAB_NAMES: &[&str] = &["Acid Bomb"];
+const AFAB_TIP_LEVELS: &[&str] = &["Acid Bomb"];
+const AFAB_UBERTIP_LEVELS: &[&str] = &[
+    "Hurls a flask of acid at a target. The flask breaks upon impact, splashing a powerful acid on nearby hostile units. Decreases armor by 3; deals 5 damage per second to the primary target; deals slightly less damage to nearby targets. Lasts 15 seconds.",
+];
 const AFAC_ICONS: &[&str] = &["commandbuttons/btnalleriaflute.blp"];
 const AFAC_NAMES: &[&str] = &["Alleria's Flute of Accuracy"];
 const AFAC_TIP_LEVELS: &[&str] = &["Purchase Alleria's Flute of Accuracy"];
@@ -54844,6 +58775,12 @@ const AFBT_NAMES: &[&str] = &["Feedback"];
 const AFBT_TIP_LEVELS: &[&str] = &["Feedback"];
 const AFBT_UBERTIP_LEVELS: &[&str] = &[
     "This tower's attacks destroy 24 mana per hit against any unit, causing bonus damage equal to the mana destroyed. Additionally, attacks made by this tower cause 20 bonus damage against summoned units.",
+];
+const AFHS_ICONS: &[&str] = &["commandbuttons/btnhealingspray.blp"];
+const AFHS_NAMES: &[&str] = &["Healing Spray"];
+const AFHS_TIP_LEVELS: &[&str] = &["Healing Spray"];
+const AFHS_UBERTIP_LEVELS: &[&str] = &[
+    "Sprays 3 waves of healing mist; each wave heals 50 damage to all friendly units in an area.",
 ];
 const AFLA_ICONS: &[&str] = &["commandbuttons/btnflare.blp"];
 const AFLA_NAMES: &[&str] = &["Flare"];
@@ -54883,6 +58820,12 @@ const AFSH_NAMES: &[&str] = &["Fragmentation Shards"];
 const AFSH_TIP_LEVELS: &[&str] = &["Fragmentation Shards"];
 const AFSH_UBERTIP_LEVELS: &[&str] =
     &["Uses fragmentation mortars to increase damage dealt to Unarmored and Medium armor units."];
+const AFUF_ICONS: &[&str] = &["commandbuttons/btnunholyfrenzy.blp"];
+const AFUF_NAMES: &[&str] = &["Chemical Frenzy"];
+const AFUF_TIP_LEVELS: &[&str] = &["Chemical Frenzy"];
+const AFUF_UBERTIP_LEVELS: &[&str] = &[
+    "Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.",
+];
 const AFZY_ICONS: &[&str] = &["commandbuttons/btnbloodluston.blp"];
 const AFZY_NAMES: &[&str] = &["Frenzy"];
 const AFZY_TIP_LEVELS: &[&str] = &["Frenzy"];
@@ -54892,6 +58835,10 @@ const AGHO_ICONS: &[&str] = &[];
 const AGHO_NAMES: &[&str] = &["Ghost"];
 const AGLD_ICONS: &[&str] = &[];
 const AGLD_NAMES: &[&str] = &["Gold Mine ability"];
+const AGR1_ICONS: &[&str] = &["commandbuttons/btnzigguratupgrade.blp"];
+const AGR1_NAMES: &[&str] = &["Item Gravelight DoT"];
+const AGR5_ICONS: &[&str] = &["commandbuttons/btnsteelmelee.blp"];
+const AGR5_NAMES: &[&str] = &["Item Gravelight Attack Side"];
 const AGRA_ICONS: &[&str] = &["commandbuttons/btngrabtree.blp"];
 const AGRA_NAMES: &[&str] = &["War Club"];
 const AGRA_TIP_LEVELS: &[&str] = &["War Club"];
@@ -54941,11 +58888,35 @@ const AHAR_NAMES: &[&str] = &["Harvest"];
 const AHAR_TIP_LEVELS: &[&str] = &["Gather"];
 const AHAR_UBERTIP_LEVELS: &[&str] =
     &["Mines gold from gold mines and harvests lumber from trees."];
+const AHAS_ICONS: &[&str] = &["passivebuttons/pasbtnsacredaura.blp"];
+const AHAS_NAMES: &[&str] = &["Sacred Aura"];
+const AHAS_TIP_LEVELS: &[&str] = &[
+    "Sacred Aura - [Level 1]",
+    "Sacred Aura - [Level 2]",
+    "Sacred Aura - [Level 3]",
+];
+const AHAS_UBERTIP_LEVELS: &[&str] = &[
+    "Gives 15% Magic Resistance and 15% increased healing received to nearby friendly units.",
+    "Gives 25% Magic Resistance and 20% increased healing received to nearby friendly units.",
+    "Gives 35% Magic Resistance and 25% increased healing recieved to nearby friendly units.",
+];
 const AHAV_ICONS: &[&str] = &["commandbuttons/btnavataron.blp"];
 const AHAV_NAMES: &[&str] = &["Avatar"];
 const AHAV_TIP_LEVELS: &[&str] = &["Activate Avatar"];
 const AHAV_UBERTIP_LEVELS: &[&str] = &[
     "Activate Avatar to give the Mountain King 5 bonus armor, 500 bonus hit points, 20 bonus damage and spell immunity. Lasts 60 seconds.",
+];
+const AHBD_ICONS: &[&str] = &["commandbuttons/btnunyieldingguard.blp"];
+const AHBD_NAMES: &[&str] = &["Unyielding Guard"];
+const AHBD_TIP_LEVELS: &[&str] = &[
+    "Unyielding Guard - [Level 1]",
+    "Unyielding Guard - [Level 2]",
+    "Unyielding Guard - [Level 3]",
+];
+const AHBD_UBERTIP_LEVELS: &[&str] = &[
+    "Enter a defensive stance, reducing incoming damage by 40% and movement speed by 40%. During this time, if Garek takes any damage, he gains 15% attack rate for 3 seconds. Lasts 10 seconds.",
+    "Enter a defensive stance, reducing incoming damage by 50% and movement speed by 40%. During this time, if Garek takes any damage, he gains 20% attack rate for 3 seconds. Lasts 10 seconds.",
+    "Enter a defensive stance, reducing incoming damage by 60% and movement speed by 40%. During this time, if Garek takes any damage, he gains 25% attack rate for 3 seconds. Lasts 10 seconds.",
 ];
 const AHBH_ICONS: &[&str] = &["passivebuttons/pasbtnbash.blp"];
 const AHBH_NAMES: &[&str] = &["Bash"];
@@ -54992,6 +58963,44 @@ const AHCA_UBERTIP_LEVELS: &[&str] = &[
     "Adds a cold effect to each attack, slowing a target enemy unit's attacks by 30% and movement by 30% for 6 seconds.",
     "Adds a cold effect to each attack, slowing a target enemy unit's attacks by 50% and movement by 50% for 6 seconds.Adds a cold effect to each attack, slowing a target enemy unit's attacks by 70% and movement by 70% for 6 seconds.",
 ];
+const AHCH_ICONS: &[&str] = &["commandbuttons/btnvaliantcharge.blp"];
+const AHCH_NAMES: &[&str] = &["Valiant Charge"];
+const AHCH_TIP_LEVELS: &[&str] = &[
+    "Valiant Charge - [Level 1]",
+    "Valiant Charge - [Level 2]",
+    "Valiant Charge - [Level 3]",
+];
+const AHCH_UBERTIP_LEVELS: &[&str] = &[
+    "Dashes towards a target point, dealing 100 damage to enemy units hit along the way, and stunning them for 1 seconds.",
+    "Dashes towards a target point, dealing 125 damage to enemy units hit along the way, and stunning them for 2 seconds.",
+    "Dashes towards a target point, dealing 150 damage to enemy units hit along the way, and stunning them for 3 seconds.",
+];
+const AHCL_ICONS: &[&str] = &["commandbuttons/btncleansingfire.blp"];
+const AHCL_NAMES: &[&str] = &["Cleansing Fire"];
+const AHCL_TIP_LEVELS: &[&str] = &["Cleansing Fire"];
+const AHCL_UBERTIP_LEVELS: &[&str] = &[
+    "Call upon the Light, removing all debuffs from nearby friendly units and all buffs from nearby enemy units. Friendly units are healed for 125 hit points, and gain 25% bonus to damage for 25 seconds. For each debuff removed from a friendly unit, that unit heals an additional 50 hitpoints and gains an additional 15% bonus to damage. Enemy units are stunned for 3 seconds. Deals 400 damage to summoned units.",
+];
+const AHCR_ICONS: &[&str] = &["commandbuttons/btnconsecration.blp"];
+const AHCR_NAMES: &[&str] = &["Consecration"];
+const AHCR_TIP_LEVELS: &[&str] = &[
+    "Consecration - [Level 1]",
+    "Consecration - [Level 2]",
+    "Consecration - [Level 3]",
+];
+const AHCR_UBERTIP_LEVELS: &[&str] = &[
+    "Bless the ground, healing nearby friendly living units for 25 hit points per second. Enemy Undead units take 20 damage per second and have incoming healing reduced by 25%. Lasts 5 seconds.",
+    "Bless the ground, healing nearby friendly living units for 35 hit points per second. Enemy Undead units take 30 damage per second and have incoming healing reduced by 33%. Lasts 5 seconds.",
+    "Bless the ground, healing nearby friendly living units for 50 hit points per second. Enemy Undead units take 40 damage per second and have incoming healing reduced by 50%. Lasts 5 seconds.",
+];
+const AHCT_ICONS: &[&str] = &["commandbuttons/btnraisethebanner.blp"];
+const AHCT_NAMES: &[&str] = &["Raise the Banner"];
+const AHCT_TIP_LEVELS: &[&str] = &["Raise the Banner"];
+const AHCT_UBERTIP_LEVELS: &[&str] = &[
+    "Place a banner at a target location, increasing nearby allied unit's Critical Strike chance by 50% and Spell Critical chance by 50%. Lasts 20 seconds.",
+];
+const AHDQ_ICONS: &[&str] = &["passivebuttons/pasbtndemolish.blp"];
+const AHDQ_NAMES: &[&str] = &["Item Hero Damage x1.25"];
 const AHDR_ICONS: &[&str] = &["commandbuttons/btnmanadrain.blp"];
 const AHDR_NAMES: &[&str] = &["Siphon Mana"];
 const AHDR_TIP_LEVELS: &[&str] = &[
@@ -55016,11 +59025,25 @@ const AHDS_UBERTIP_LEVELS: &[&str] = &[
     "An impenetrable shield surrounds this unit, protecting it from all damage and spells for 25 seconds.",
     "An impenetrable shield surrounds this unit, protecting it from all damage and spells for 35 seconds.",
 ];
+const AHDW_ICONS: &[&str] = &["passivebuttons/pasbtndemolish.blp"];
+const AHDW_NAMES: &[&str] = &["Item Hero Damage x1.15"];
 const AHEA_ICONS: &[&str] = &["commandbuttons/btnhealon.blp"];
 const AHEA_NAMES: &[&str] = &["Heal"];
 const AHEA_TIP_LEVELS: &[&str] = &["Heal"];
 const AHEA_UBERTIP_LEVELS: &[&str] =
     &["Heals a target friendly non-mechanical wounded unit for 25 hit points."];
+const AHEN_ICONS: &[&str] = &["commandbuttons/btnapprehend.blp"];
+const AHEN_NAMES: &[&str] = &["Apprehend"];
+const AHEN_TIP_LEVELS: &[&str] = &[
+    "Apprehend - [Level 1]",
+    "Apprehend - [Level 2]",
+    "Apprehend - [Level 3]",
+];
+const AHEN_UBERTIP_LEVELS: &[&str] = &[
+    "Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 30% and cannot move. Lasts 8 seconds.",
+    "Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 45% and cannot move. Lasts 10 seconds.",
+    "Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 60% and cannot move. Lasts 15 seconds.",
+];
 const AHFA_ICONS: &[&str] = &["commandbuttons/btnsearingarrowson.blp"];
 const AHFA_NAMES: &[&str] = &["Searing Arrows"];
 const AHFA_TIP_LEVELS: &[&str] = &[
@@ -55045,6 +59068,34 @@ const AHFS_UBERTIP_LEVELS: &[&str] = &[
     "Conjures a pillar of flame that burns ground units for 80 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take light damage.",
     "Conjures a pillar of flame that burns ground units for 110 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take moderate damage.",
 ];
+const AHGH_ICONS: &[&str] = &["commandbuttons/btnguidinghand.blp"];
+const AHGH_NAMES: &[&str] = &["Guiding Hand"];
+const AHGH_TIP_LEVELS: &[&str] = &[
+    "Activate Guiding Hand - [Level 1]",
+    "Activate Guiding Hand - [Level 2]",
+    "Activate Guiding Hand - [Level 3]",
+];
+const AHGH_UBERTIP_LEVELS: &[&str] = &[
+    "Leonid inspires friendly units within 900 range. Affected units gain 20% attack rate, 10% Ability Speed, and 10% movement speed. Drains 15 mana per second until deactivated.",
+    "Leonid inspires friendly units within 900 range. Affected units gain 30% attack rate, 25% Ability Speed, and 15% movement speed. Drains 15 mana per second until deactivated.",
+    "Leonid inspires friendly units within 900 range. Affected units gain 40% attack rate, 40% Ability Speed, and 20% movement speed. Drains 15 mana per second until deactivated.",
+];
+const AHGR_ICONS: &[&str] = &["passivebuttons/pasbtngrit.blp"];
+const AHGR_NAMES: &[&str] = &["Grit"];
+const AHGR_TIP_LEVELS: &[&str] = &[
+    "Grit - [Level 1]",
+    "Grit - [Level 2]",
+    "Grit - [Level 3]",
+    "Grit - [Level 4]",
+    "Grit - [Level 5]",
+];
+const AHGR_UBERTIP_LEVELS: &[&str] = &[
+    "Every attack against Leonid increases his armor by 0.25, to a maximum of 15. Resets after 5 seconds of not being attacked.",
+    "Every attack against Leonid increases his armor by 0.5, to a maximum of 15. Resets after 5 seconds of not being attacked.",
+    "Every attack against Leonid increases his armor by 0.75, to a maximum of 15. Resets after 5 seconds of not being attacked.",
+    "Every attack against Leonid increases his armor by 1, to a maximum of 15. Resets after 5 seconds of not being attacked.",
+    "Every attack against Leonid increases his armor by 1.25, to a maximum of 15. Resets after 5 seconds of not being attacked.",
+];
 const AHHB_ICONS: &[&str] = &["commandbuttons/btnholybolt.blp"];
 const AHHB_NAMES: &[&str] = &["Holy Light"];
 const AHHB_TIP_LEVELS: &[&str] = &[
@@ -55056,6 +59107,62 @@ const AHHB_UBERTIP_LEVELS: &[&str] = &[
     "A holy light that can heal a friendly living unit for 200 or deal half damage to an enemy Undead unit. Healing pierces spell immunity.",
     "A holy light that can heal a friendly living unit for 400 or deal half damage to an enemy Undead unit. Healing pierces spell immunity.",
     "A holy light that can heal a friendly living unit for 600 or deal half damage to an enemy Undead unit. Healing pierces spell immunity.",
+];
+const AHHC_ICONS: &[&str] = &["commandbuttons/btnheroicchallenge.blp"];
+const AHHC_NAMES: &[&str] = &["Provoke"];
+const AHHC_TIP_LEVELS: &[&str] = &[
+    "Provoke - [Level 1]",
+    "Provoke - [Level 2]",
+    "Provoke - [Level 3]",
+    "Provoke - [Level 4]",
+    "Provoke - [Level 5]",
+];
+const AHHC_UBERTIP_LEVELS: &[&str] = &[
+    "Gain a shield that can absorb 200 damage, and taunt all nearby enemies within 450 range for 5 seconds.",
+    "Gain a shield that can absorb 275 damage, and taunt all nearby enemies within 500 range for 5 seconds.",
+    "Gain a shield that can absorb 350 damage, and taunt all nearby enemies within 550 range for 5 seconds.",
+    "Gain a shield that can absorb 425 damage, and taunt all nearby enemies within 600 range for 5 seconds.",
+    "Gain a shield that can absorb 500 damage, and taunt all nearby enemies within 650 range for 5 seconds.",
+];
+const AHHR_ICONS: &[&str] = &["commandbuttons/btnheadsplitter.blp"];
+const AHHR_NAMES: &[&str] = &["Headsplitter"];
+const AHHR_TIP_LEVELS: &[&str] = &[
+    "Headsplitter - [Level 1]",
+    "Headsplitter - [Level 2]",
+    "Headsplitter - [Level 3]",
+    "Headsplitter - [Level 4]",
+    "Headsplitter - [Level 5]",
+];
+const AHHR_UBERTIP_LEVELS: &[&str] = &[
+    "Empower the next attack, dealing 100 bonus damage and stunning the target for 2 seconds.",
+    "Empower the next attack, dealing 150 bonus damage and stunning the target for 2.25 seconds.",
+    "Empower the next attack, dealing 200 bonus damage and stunning the target for 2.5 seconds.",
+    "Empower the next attack, dealing 250 bonus damage and stunning the target for 3 seconds.",
+    "Empower the next attack, dealing 300 bonus damage and stunning the target for 3.5 seconds.",
+];
+const AHHS_ICONS: &[&str] = &["commandbuttons/btnheroicslash.blp"];
+const AHHS_NAMES: &[&str] = &["Heroic Slash"];
+const AHHS_TIP_LEVELS: &[&str] = &[
+    "Heroic Slash - [Level 1]",
+    "Heroic Slash - [Level 2]",
+    "Heroic Slash - [Level 3]",
+];
+const AHHS_UBERTIP_LEVELS: &[&str] = &[
+    "Attack a target, dealing 100 damage. Deals 25% extra damage to debuffed enemies.",
+    "Attack a target, dealing 200 damage. Deals 35% extra damage to debuffed enemies.",
+    "Attack a target, dealing 300 damage. Deals 45% extra damage to debuffed enemies.",
+];
+const AHIC_ICONS: &[&str] = &["commandbuttons/btninspirecourage.blp"];
+const AHIC_NAMES: &[&str] = &["Inspire Courage"];
+const AHIC_TIP_LEVELS: &[&str] = &[
+    "Inspire Courage - [Level 1]",
+    "Inspire Courage - [Level 2]",
+    "Inspire Courage - [Level 3]",
+];
+const AHIC_UBERTIP_LEVELS: &[&str] = &[
+    "Landen inspires his allies, increasing their armor by 3 and Magic Resistance by 15%. Lasts 15 seconds.",
+    "Landen inspires his allies, increasing their armor by 7 and Magic Resistance by 25%. Lasts 15 seconds.",
+    "Landen inspires his allies, increasing their armor by 10 and Magic Resistance by 35%. Lasts 15 seconds.",
 ];
 const AHID_ICONS: &[&str] = &["commandbuttons/btnambush.blp"];
 const AHID_NAMES: &[&str] = &["Shadow Meld"];
@@ -55075,6 +59182,18 @@ const AHLH_UBERTIP_LEVELS: &[&str] = &[
     "Increases the amount of lumber that Peasants can carry by 10.",
     "Further increases the amount of lumber that Peasants can carry by 10.",
 ];
+const AHMC_ICONS: &[&str] = &["commandbuttons/btnmindcontrol.blp"];
+const AHMC_NAMES: &[&str] = &["Mind Control"];
+const AHMC_TIP_LEVELS: &[&str] = &[
+    "Mind Control - [Level 1]",
+    "Mind Control - [Level 2]",
+    "Mind Control - [Level 3]",
+];
+const AHMC_UBERTIP_LEVELS: &[&str] = &[
+    "Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 2 units. Lasts 60 seconds.",
+    "Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 3 units. Lasts 60 seconds.",
+    "Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 4 units. Lasts 60 seconds.",
+];
 const AHMT_ICONS: &[&str] = &["commandbuttons/btnmassteleport.blp"];
 const AHMT_NAMES: &[&str] = &["Mass Teleport"];
 const AHMT_TIP_LEVELS: &[&str] = &["Mass Teleport"];
@@ -55085,6 +59204,18 @@ const AHNL_ICONS: &[&str] = &["commandbuttons/btnantimagicshell.blp"];
 const AHNL_NAMES: &[&str] = &["Summoning Ritual"];
 const AHNL_TIP_LEVELS: &[&str] = &["Summoning Ritual"];
 const AHNL_UBERTIP_LEVELS: &[&str] = &["Summons energies from the twisting nether."];
+const AHPA_ICONS: &[&str] = &["passivebuttons/pasbtnsacredaura.blp"];
+const AHPA_NAMES: &[&str] = &["Sacred Aura"];
+const AHPA_TIP_LEVELS: &[&str] = &[
+    "Sacred Aura - [Level 1]",
+    "Sacred Aura - [Level 2]",
+    "Sacred Aura - [Level 3]",
+];
+const AHPA_UBERTIP_LEVELS: &[&str] = &[
+    "Gives 15% Magic Resistance and 15% increased healing received to nearby friendly units.",
+    "Gives 25% Magic Resistance and 20% increased healing received to nearby friendly units.",
+    "Gives 35% Magic Resistance and 25% increased healing recieved to nearby friendly units.",
+];
 const AHPE_ICONS: &[&str] = &["passivebuttons/pasbtnmarkoffire.blp"];
 const AHPE_NAMES: &[&str] = &["Phoenix"];
 const AHPE_TIP_LEVELS: &[&str] = &["Phoenix"];
@@ -55124,6 +59255,36 @@ const AHSB_NAMES: &[&str] = &["Sundering Blades"];
 const AHSB_TIP_LEVELS: &[&str] = &["Sundering Blades"];
 const AHSB_UBERTIP_LEVELS: &[&str] =
     &["Increases damage dealt to enemy targets with Medium armor by 10%."];
+const AHSF_ICONS: &[&str] = &["commandbuttons/btnlightsmercy.blp"];
+const AHSF_NAMES: &[&str] = &["Light's Mercy"];
+const AHSF_TIP_LEVELS: &[&str] = &[
+    "Light's Mercy - [Level 1]",
+    "Light's Mercy - [Level 2]",
+    "Light's Mercy - [Level 3]",
+];
+const AHSF_UBERTIP_LEVELS: &[&str] = &[
+    "Conjures holy fire onto a target area. Friendly living units are healed for 100 hit points, while enemy Undead units take 10 damage per second over 10 seconds.",
+    "Conjures holy fire onto a target area. Friendly living units are healed for 125 hit points, while enemy Undead units take 15 damage per second over 10 seconds.",
+    "Conjures holy fire onto a target area. Friendly living units are healed for 150 hit points, while enemy Undead units take 20 damage per second over 10 seconds.",
+];
+const AHSL_ICONS: &[&str] = &["commandbuttons/btnsurgeoflight.blp"];
+const AHSL_NAMES: &[&str] = &["Surge of Light"];
+const AHSL_TIP_LEVELS: &[&str] = &["Surge of Light"];
+const AHSL_UBERTIP_LEVELS: &[&str] = &[
+    "Passive: Ilastar's attacks against enemies cast a Holy Bolt on the most damaged friendly unit within 800 range, healing 25 hit points. Active: Ilastar becomes imbued with the Light, increasing his attack rate by 50% and movement speed by 50%, and increasing the effectiveness of Holy Bolt by 100%. Lasts 10 seconds.",
+];
+const AHSW_ICONS: &[&str] = &["commandbuttons/btnsweepingstrike.blp"];
+const AHSW_NAMES: &[&str] = &["Sweeping Strike"];
+const AHSW_TIP_LEVELS: &[&str] = &[
+    "Sweeping Strike - [Level 1]",
+    "Sweeping Strike - [Level 2]",
+    "Sweeping Strike - [Level 3]",
+];
+const AHSW_UBERTIP_LEVELS: &[&str] = &[
+    "Strikes the target area, dealing 100 damage to enemy units, and restoring 25 hit points per unit hit.",
+    "Strikes the target area, dealing 175 damage to enemy units, and restoring 35 hit points per unit hit.",
+    "Strikes the target area, dealing 250 damage to enemy units, and restoring 45 hit points per unit hit.",
+];
 const AHTA_ICONS: &[&str] = &["commandbuttons/btnreveal.blp"];
 const AHTA_NAMES: &[&str] = &["Reveal"];
 const AHTA_TIP_LEVELS: &[&str] = &["Reveal"];
@@ -55152,6 +59313,12 @@ const AHTC_UBERTIP_LEVELS: &[&str] = &[
     "Slams the ground, dealing 60 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%.",
     "Slams the ground, dealing 110 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%.",
     "Slams the ground, dealing 150 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%.",
+];
+const AHWC_ICONS: &[&str] = &["commandbuttons/btnwarcry.blp"];
+const AHWC_NAMES: &[&str] = &["Warcry"];
+const AHWC_TIP_LEVELS: &[&str] = &["Warcry"];
+const AHWC_UBERTIP_LEVELS: &[&str] = &[
+    "Garek lets out a defiant battle cry, granting his attacks 50% cleave damage, 50% Lifesteal, and 25% Ability Vamp. Lasts 20 seconds.",
 ];
 const AHWD_ICONS: &[&str] = &["commandbuttons/btnhealingward.blp"];
 const AHWD_NAMES: &[&str] = &["Healing Ward"];
@@ -55270,6 +59437,10 @@ const AMBT_ICONS: &[&str] = &["commandbuttons/btnmanarechargeon.blp"];
 const AMBT_NAMES: &[&str] = &["Replenish Mana and Life"];
 const AMBT_TIP_LEVELS: &[&str] = &["Replenish Mana and Life"];
 const AMBT_UBERTIP_LEVELS: &[&str] = &["Replenish the life and mana of a target friendly unit."];
+const AMDA_ICONS: &[&str] = &[];
+const AMDA_NAMES: &[&str] = &["Banshee's Wail"];
+const AMDA_TIP_LEVELS: &[&str] = &["Banshee's Wail"];
+const AMDA_UBERTIP_LEVELS: &[&str] = &[];
 const AMED_ICONS: &[&str] = &["commandbuttons/btnundeadunload.blp"];
 const AMED_NAMES: &[&str] = &["Drop Corpse"];
 const AMED_TIP_LEVELS: &[&str] = &["Drop All Corpses"];
@@ -55470,6 +59641,18 @@ const ANCL_ICONS: &[&str] = &["commandbuttons/btndeathpact.blp"];
 const ANCL_NAMES: &[&str] = &["Channel"];
 const ANCL_TIP_LEVELS: &[&str] = &["Channel"];
 const ANCL_UBERTIP_LEVELS: &[&str] = &["Channels powerful warding magic."];
+const ANCP_ICONS: &[&str] = &["commandbuttons/btnrighteousfury.blp"];
+const ANCP_NAMES: &[&str] = &["Righteous Fury"];
+const ANCP_TIP_LEVELS: &[&str] = &[
+    "Righteous Fury - [Level 1]",
+    "Righteous Fury - [Level 2]",
+    "Righteous Fury - [Level 3]",
+];
+const ANCP_UBERTIP_LEVELS: &[&str] = &[
+    "Dashes towards a target point up to 725 range away, dealing 100 damage to enemy land units hit along the way, and slowing their movement by 20% and attack rate by 30%.",
+    "Dashes towards a target point up to 725 range away, dealing 150 damage to enemy land units hit along the way, and slowing their movement by 30% and attack rate by 40%.",
+    "Dashes towards a target point up to 725 range away, dealing 200 damage to enemy land units hit along the way, and slowing their movement by 40% and attack rate by 50%.",
+];
 const ANCR_ICONS: &[&str] = &["commandbuttons/btnchemicalrage.blp"];
 const ANCR_NAMES: &[&str] = &["Chemical Rage"];
 const ANCR_TIP_LEVELS: &[&str] = &[
@@ -56128,6 +60311,12 @@ const AOLS_UBERTIP_LEVELS: &[&str] = &[
     "Creates a swarm of angry spirits that drain the life energies of nearby enemy units. They store the life energy they drain from their victims and use it to replenish Rokhan's hit points when they return. Lasts 30 seconds.",
     "Creates a swarm of angry spirits that drain the life energies of nearby enemy units. They store the life energy they drain from their victims and use it to replenish Rokhan's hit points when they return. Lasts 30 seconds.",
 ];
+const AOMB_ICONS: &[&str] = &["commandbuttons/btnbloodluston.blp"];
+const AOMB_NAMES: &[&str] = &["Item Totem Ogre Magi Bloodlust"];
+const AOMB_TIP_LEVELS: &[&str] = &["Bloodlust"];
+const AOMB_UBERTIP_LEVELS: &[&str] = &[
+    "Increases a friendly unit's attack rate by 40% and movement speed by 25%. Lasts 20 seconds.",
+];
 const AOMI_ICONS: &[&str] = &["commandbuttons/btnmirrorimage.blp"];
 const AOMI_NAMES: &[&str] = &["Mirror Image"];
 const AOMI_TIP_LEVELS: &[&str] = &[
@@ -56294,6 +60483,12 @@ const APAK_NAMES: &[&str] = &["Pack Mule"];
 const APAK_TIP_LEVELS: &[&str] = &["Pack Mule"];
 const APAK_UBERTIP_LEVELS: &[&str] = &[
     "Allows this unit to carry items for Heroes. Items cannot be used from this unit's inventory.",
+];
+const APBW_ICONS: &[&str] = &["passivebuttons/pasbtnplaguecloud.blp"];
+const APBW_NAMES: &[&str] = &["Disease Cloud"];
+const APBW_TIP_LEVELS: &[&str] = &["Disease Cloud"];
+const APBW_UBERTIP_LEVELS: &[&str] = &[
+    "Drops a Disease Cloud with each attack. Disease Cloud deals 2 damage per second. Lasts 75 seconds.",
 ];
 const APG2_ICONS: &[&str] = &["commandbuttons/btnpurge.blp"];
 const APG2_NAMES: &[&str] = &["Purge"];
@@ -56541,11 +60736,27 @@ const ASDG_ICONS: &[&str] = &["commandbuttons/btnselfdestructon.blp"];
 const ASDG_NAMES: &[&str] = &["Kaboom!"];
 const ASDG_TIP_LEVELS: &[&str] = &["Kaboom!"];
 const ASDG_UBERTIP_LEVELS: &[&str] = &["Deals 30 damage in a small area."];
+const ASDI_ICONS: &[&str] = &["commandbuttons/btndispelmagic.blp"];
+const ASDI_NAMES: &[&str] = &["Dispel Magic"];
+const ASDI_TIP_LEVELS: &[&str] = &["Dispel Magic"];
+const ASDI_UBERTIP_LEVELS: &[&str] =
+    &["Removes all buffs from units in a target area. Deals 200 damage to summoned units."];
 const ASDS_ICONS: &[&str] = &["commandbuttons/btnselfdestructon.blp"];
 const ASDS_NAMES: &[&str] = &["Kaboom!"];
 const ASDS_TIP_LEVELS: &[&str] = &["Kaboom!"];
 const ASDS_UBERTIP_LEVELS: &[&str] =
     &["Deals 250 damage in a small area. Effective against buildings and trees."];
+const ASEA_ICONS: &[&str] = &["commandbuttons/btnhealon.blp"];
+const ASEA_NAMES: &[&str] = &["Heal"];
+const ASEA_TIP_LEVELS: &[&str] = &["Heal"];
+const ASEA_UBERTIP_LEVELS: &[&str] =
+    &["Heals a target friendly non-mechanical wounded unit for 100 hit points."];
+const ASFS_ICONS: &[&str] = &["commandbuttons/btnwalloffire.blp"];
+const ASFS_NAMES: &[&str] = &["Flame Strike"];
+const ASFS_TIP_LEVELS: &[&str] = &["Flame Strike"];
+const ASFS_UBERTIP_LEVELS: &[&str] = &[
+    "Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.",
+];
 const ASHM_ICONS: &[&str] = &["commandbuttons/btnambush.blp"];
 const ASHM_NAMES: &[&str] = &["Shadow Meld"];
 const ASHM_TIP_LEVELS: &[&str] = &["Hide"];
@@ -56556,6 +60767,11 @@ const ASID_ICONS: &[&str] = &["commandbuttons/btnsell.blp"];
 const ASID_NAMES: &[&str] = &["Sell Items"];
 const ASID_TIP_LEVELS: &[&str] = &["Sell Items"];
 const ASID_UBERTIP_LEVELS: &[&str] = &["Permits the sale of items."];
+const ASIF_ICONS: &[&str] = &["commandbuttons/btninnerfireon.blp"];
+const ASIF_NAMES: &[&str] = &["Inner Fire"];
+const ASIF_TIP_LEVELS: &[&str] = &["Inner Fire"];
+const ASIF_UBERTIP_LEVELS: &[&str] =
+    &["Increases a target friendly unit's damage by 25% and armor by 5. Lasts 60 seconds."];
 const ASLO_ICONS: &[&str] = &["commandbuttons/btnslowon.blp"];
 const ASLO_NAMES: &[&str] = &["Slow"];
 const ASLO_TIP_LEVELS: &[&str] = &["Slow"];
@@ -56599,6 +60815,12 @@ const ASPT_ICONS: &[&str] = &[];
 const ASPT_NAMES: &[&str] = &["Spawn Hydra Hatchling"];
 const ASPY_ICONS: &[&str] = &[];
 const ASPY_NAMES: &[&str] = &["Spawn Hydra"];
+const ASSB_ICONS: &[&str] = &["commandbuttons/btnsoulburn.blp"];
+const ASSB_NAMES: &[&str] = &["Soul Burn"];
+const ASSB_TIP_LEVELS: &[&str] = &["Soul Burn"];
+const ASSB_UBERTIP_LEVELS: &[&str] = &[
+    "Wreaths an enemy unit in magical flames which cause 25 damage per second, prevent the casting of spells, and reduce attack damage by 75%. Lasts 16 seconds.",
+];
 const ASSK_ICONS: &[&str] = &["passivebuttons/pasbtnhardenedskin.blp"];
 const ASSK_NAMES: &[&str] = &["Hardened Skin"];
 const ASSK_TIP_LEVELS: &[&str] = &["Hardened Skin"];
@@ -56684,6 +60906,38 @@ const AUAV_UBERTIP_LEVELS: &[&str] = &[
     "Nearby friendly melee units gain 35% of their attack damage when they hit enemy units.",
     "Nearby friendly melee units gain 50% of their attack damage when they hit enemy units.",
 ];
+const AUBD_ICONS: &[&str] = &["commandbuttons/btnunyieldingguardu.blp"];
+const AUBD_NAMES: &[&str] = &["Undying Defiance"];
+const AUBD_TIP_LEVELS: &[&str] = &[
+    "Undying Defiance - [Level 1]",
+    "Undying Defiance - [Level 2]",
+    "Undying Defiance - [Level 3]",
+    "Undying Defiance - [Level 4]",
+    "Undying Defiance - [Level 5]",
+];
+const AUBD_UBERTIP_LEVELS: &[&str] = &[
+    "Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 30% attack rate for 3 seconds. Lasts 10 seconds.",
+    "Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 35% attack rate for 3 seconds. Lasts 10 seconds.",
+    "Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 40% attack rate for 3 seconds. Lasts 10 seconds.",
+    "Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 45% attack rate for 3 seconds. Lasts 10 seconds.",
+    "Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 50% attack rate for 3 seconds. Lasts 10 seconds.",
+];
+const AUBR_ICONS: &[&str] = &["commandbuttons/btnbatteringram.blp"];
+const AUBR_NAMES: &[&str] = &["Battering Ram"];
+const AUBR_TIP_LEVELS: &[&str] = &[
+    "Battering Ram - [Level 1]",
+    "Battering Ram - [Level 2]",
+    "Battering Ram - [Level 3]",
+    "Battering Ram - [Level 4]",
+    "Battering Ram - [Level 5]",
+];
+const AUBR_UBERTIP_LEVELS: &[&str] = &[
+    "Dashes towards a target point, dealing 100 damage to enemy units hit along the way, and gaining 3 bonus damage for every enemy unit hit. Lasts 7 seconds.",
+    "Dashes towards a target point, dealing 125 damage to enemy units hit along the way, and gaining 6 bonus damage for every enemy unit hit. Lasts 7 seconds.",
+    "Dashes towards a target point, dealing 150 damage to enemy units hit along the way, and gaining 9 bonus damage for every enemy unit hit. Lasts 7 seconds.",
+    "Dashes towards a target point, dealing 175 damage to enemy units hit along the way, and gaining 12 bonus damage for every enemy unit hit. Lasts 7 seconds.",
+    "Dashes towards a target point, dealing 200 damage to enemy units hit along the way, and gaining 15 bonus damage for every enemy unit hit. Lasts 7 seconds.",
+];
 const AUBU_ICONS: &[&str] = &["commandbuttons/btnscourgebuild.blp"];
 const AUBU_NAMES: &[&str] = &["Build (Undead)"];
 const AUCB_ICONS: &[&str] = &["commandbuttons/btncarrionscarabson.blp"];
@@ -56716,6 +60970,22 @@ const AUCS_UBERTIP_LEVELS: &[&str] = &[
     "Sends a horde of bats to deal 135 damage to each enemy unit in a cone.",
     "Sends a horde of bats to deal 200 damage to each enemy unit in a cone.",
 ];
+const AUDB_ICONS: &[&str] = &["passivebuttons/pasbtndeathseekerarrows.blp"];
+const AUDB_NAMES: &[&str] = &["Deathseeker Arrows"];
+const AUDB_TIP_LEVELS: &[&str] = &[
+    "Deathseeker Arrows - [Level 1]",
+    "Deathseeker Arrows - [Level 2]",
+    "Deathseeker Arrows - [Level 3]",
+    "Deathseeker Arrows - [Level 4]",
+    "Deathseeker Arrows - [Level 5]",
+];
+const AUDB_UBERTIP_LEVELS: &[&str] = &[
+    "Every 4 attacks against a target deals 80 bonus damage. Resets after 5 seconds.",
+    "Every 4 attacks against a target deals 115 bonus damage. Resets after 5 seconds.",
+    "Every 4 attacks against a target deals 150 bonus damage. Resets after 5 seconds.",
+    "Every 4 attacks against a target deals 185 bonus damage. Resets after 5 seconds.",
+    "Every 4 attacks against a target deals 220 bonus damage. Resets after 5 seconds.",
+];
 const AUDC_ICONS: &[&str] = &["commandbuttons/btndeathcoil.blp"];
 const AUDC_NAMES: &[&str] = &["Death Coil"];
 const AUDC_TIP_LEVELS: &[&str] = &[
@@ -56746,6 +61016,8 @@ const AUDP_UBERTIP_LEVELS: &[&str] = &[
     "Kills a target friendly Undead unit, giving 200% of its hit points to the Death Knight.",
     "Kills a target friendly Undead unit, giving 300% of its hit points to the Death Knight.",
 ];
+const AUDQ_ICONS: &[&str] = &["passivebuttons/pasbtndemolish.blp"];
+const AUDQ_NAMES: &[&str] = &["Item Unit Damage x1.25"];
 const AUDR_ICONS: &[&str] = &["commandbuttons/btndarkritual.blp"];
 const AUDR_NAMES: &[&str] = &["Dark Ritual"];
 const AUDR_TIP_LEVELS: &[&str] = &[
@@ -56758,6 +61030,8 @@ const AUDR_UBERTIP_LEVELS: &[&str] = &[
     "Sacrifices a target friendly Undead unit to convert 55% of its hit points into mana for the Lich.",
     "Sacrifices a target friendly Undead unit to convert 80% of its hit points into mana for the Lich.",
 ];
+const AUDW_ICONS: &[&str] = &["passivebuttons/pasbtndemolish.blp"];
+const AUDW_NAMES: &[&str] = &["Item Unit Damage x1.15"];
 const AUFA_ICONS: &[&str] = &["commandbuttons/btnfrostarmor.blp"];
 const AUFA_NAMES: &[&str] = &["Frost Armor"];
 const AUFA_TIP_LEVELS: &[&str] = &[
@@ -56808,6 +61082,12 @@ const AUHF_TIP_LEVELS: &[&str] = &["Unholy Frenzy"];
 const AUHF_UBERTIP_LEVELS: &[&str] = &[
     "Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.",
 ];
+const AUIC_ICONS: &[&str] = &["commandbuttons/btnghoulfrenzy.blp"];
+const AUIC_NAMES: &[&str] = &["Item Infectious Claws"];
+const AUIC_TIP_LEVELS: &[&str] = &["Infectious Claws"];
+const AUIC_UBERTIP_LEVELS: &[&str] = &[
+    "Units killed while under the effect of Infectious Claws will turn into more Infectious Ghouls.",
+];
 const AUIM_ICONS: &[&str] = &["commandbuttons/btnimpale.blp"];
 const AUIM_NAMES: &[&str] = &["Impale"];
 const AUIM_TIP_LEVELS: &[&str] = &[
@@ -56825,6 +61105,22 @@ const AUIN_NAMES: &[&str] = &["Inferno"];
 const AUIN_TIP_LEVELS: &[&str] = &["Inferno"];
 const AUIN_UBERTIP_LEVELS: &[&str] = &[
     "Calls an Infernal down from the sky, dealing 50 damage and stunning enemy land units for 4 seconds in an area. The Infernal lasts 180 seconds.",
+];
+const AULA_ICONS: &[&str] = &["commandbuttons/btnsoullanternon.blp"];
+const AULA_NAMES: &[&str] = &["Soul Lantern"];
+const AULA_TIP_LEVELS: &[&str] = &[
+    "Activate Soul Lantern - [Level 1]",
+    "Activate Soul Lantern - [Level 2]",
+    "Activate Soul Lantern - [Level 3]",
+    "Activate Soul Lantern - [Level 4]",
+    "Activate Soul Lantern - [Level 5]",
+];
+const AULA_UBERTIP_LEVELS: &[&str] = &[
+    "Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 25 hit points per second. Drains 15 mana per second until deactivated.",
+    "Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 35 hit points per second. Drains 15 mana per second until deactivated.",
+    "Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 45 hit points per second. Drains 15 mana per second until deactivated.",
+    "Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 55 hit points per second. Drains 15 mana per second until deactivated.",
+    "Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 65 hit points per second. Drains 15 mana per second until deactivated.",
 ];
 const AULS_ICONS: &[&str] = &["commandbuttons/btnlocustswarm.blp"];
 const AULS_NAMES: &[&str] = &["Locust Swarm"];
@@ -56857,6 +61153,22 @@ const AUSM_TIP_LEVELS: &[&str] = &["Skeletal Mastery"];
 const AUSM_UBERTIP_LEVELS: &[&str] = &[
     "Causes one of the two skeletons created by Raise Dead to be a Skeletal Mage and increases the duration of raised Skeleton Warriors and Skeletal Mages by 20 seconds.",
 ];
+const AUSW_ICONS: &[&str] = &["commandbuttons/btnrelentlesscleave.blp"];
+const AUSW_NAMES: &[&str] = &["Relentless Cleave"];
+const AUSW_TIP_LEVELS: &[&str] = &[
+    "Relentless Cleave - [Level 1]",
+    "Relentless Cleave - [Level 2]",
+    "Relentless Cleave - [Level 3]",
+    "Relentless Cleave - [Level 4]",
+    "Relentless Cleave - [Level 5]",
+];
+const AUSW_UBERTIP_LEVELS: &[&str] = &[
+    "Strikes the target area, dealing 100 damage to enemy units, reducing their armor by 2, and restoring 25 hit points per unit hit.",
+    "Strikes the target area, dealing 175 damage to enemy units, reducing their armor by 2, and restoring 35 hit points per unit hit.",
+    "Strikes the target area, dealing 250 damage to enemy units, reducing their armor by 3, and restoring 45 hit points per unit hit.",
+    "Strikes the target area, dealing 325 damage to enemy units, reducing their armor by 3, and restoring 55 hit points per unit hit.",
+    "Strikes the target area, dealing 400 damage to enemy units, reducing their armor by 4, and restoring 65 hit points per unit hit.",
+];
 const AUTS_ICONS: &[&str] = &["passivebuttons/pasbtnthornshield.blp"];
 const AUTS_NAMES: &[&str] = &["Spiked Carapace"];
 const AUTS_TIP_LEVELS: &[&str] = &[
@@ -56869,10 +61181,52 @@ const AUTS_UBERTIP_LEVELS: &[&str] = &[
     "Enhances the Crypt Lord's chitinous armor with organic barbs, giving him 8 bonus armor and returning 30% of melee attack damage to enemies.",
     "Enhances the Crypt Lord's chitinous armor with organic barbs, giving him 12 bonus armor and returning 45% of melee attack damage to enemies.",
 ];
+const AUVG_ICONS: &[&str] = &["commandbuttons/btnvengeance.blp"];
+const AUVG_NAMES: &[&str] = &["Grim Conviction"];
+const AUVG_TIP_LEVELS: &[&str] = &[
+    "Grim Conviction - [Level 1]",
+    "Grim Conviction - [Level 2]",
+    "Grim Conviction - [Level 3]",
+];
+const AUVG_UBERTIP_LEVELS: &[&str] = &[
+    "Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 15 bonus Strength, 25% bonus Resolve, and 25% Lifesteal. Lasts 20 seconds.",
+    "Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 25 bonus Strength, 30% bonus Resolve, and 30% Lifesteal. Lasts 20 seconds.",
+    "Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 35 bonus Strength, 35% bonus Resolve, and 35% Lifesteal. Lasts 20 seconds.",
+];
+const AUWC_ICONS: &[&str] = &["commandbuttons/btnbansheescall.blp"];
+const AUWC_NAMES: &[&str] = &["Banshee's Wail"];
+const AUWC_TIP_LEVELS: &[&str] = &[
+    "Banshee's Wail - [Level 1]",
+    "Banshee's Wail - [Level 2]",
+    "Banshee's Wail - [Level 3]",
+];
+const AUWC_UBERTIP_LEVELS: &[&str] = &[
+    "Anya summons 5 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. Lasts 30 seconds.",
+    "Anya summons 7 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. Lasts 30 seconds.",
+    "Anya summons 9 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. Lasts 30 seconds.",
+];
+const AUWF_ICONS: &[&str] = &["commandbuttons/btnwitheringfire.blp"];
+const AUWF_NAMES: &[&str] = &["Withering Fire"];
+const AUWF_TIP_LEVELS: &[&str] = &[
+    "Withering Fire - [Level 1]",
+    "Withering Fire - [Level 2]",
+    "Withering Fire - [Level 3]",
+    "Withering Fire - [Level 4]",
+    "Withering Fire - [Level 5]",
+];
+const AUWF_UBERTIP_LEVELS: &[&str] = &[
+    "Fires a magical arrow at a target area, dealing 100 damage. Applies a stack of Deathseeker Arrows to enemies hit. 2 charges, recharges every 10 seconds.",
+    "Fires a magical arrow at a target area, dealing 150 damage. Applies a stack of Deathseeker Arrows to enemies hit. 2 charges, recharges every 10 seconds.",
+    "Fires a magical arrow at a target area, dealing 175 damage. Applies a stack of Deathseeker Arrows to enemies hit. 3 charges, recharges every 10 seconds.",
+    "Fires a magical arrow at a target area, dealing 200 damage. Applies a stack of Deathseeker Arrows to enemies hit. 3 charges, recharges every 10 seconds.",
+    "Fires a magical arrow at a target area, dealing 250 damage. Applies a stack of Deathseeker Arrows to enemies hit. 4 charges, recharges every 10 seconds.",
+];
 const AVEN_ICONS: &[&str] = &["passivebuttons/pasbtnenvenomedspear.blp"];
 const AVEN_NAMES: &[&str] = &["Envenomed Spears"];
 const AVEN_TIP_LEVELS: &[&str] = &["Envenomed Spears"];
 const AVEN_UBERTIP_LEVELS: &[&str] = &["Deals 3 poison damage per second. Lasts 25 seconds."];
+const AVIQ_ICONS: &[&str] = &[];
+const AVIQ_NAMES: &[&str] = &["Fire Hands"];
 const AVNG_ICONS: &[&str] = &["commandbuttons/btnavengingwatcheron.blp"];
 const AVNG_NAMES: &[&str] = &["Spirit of Vengeance"];
 const AVNG_TIP_LEVELS: &[&str] = &["Spirit of Vengeance"];
@@ -56974,12 +61328,76 @@ const BZBF_NAMES: &[&str] = &["Full Vial"];
 const BZBF_TIP_LEVELS: &[&str] = &["Purchase Full Vial"];
 const BZBF_UBERTIP_LEVELS: &[&str] =
     &["A special vial adept at containing the magical healing waters of a Fountain of Life."];
+const CABL_ICONS: &[&str] = &["commandbuttons/btnwirtsleg.blp"];
+const CABL_NAMES: &[&str] = &["|cffffff00Bandit Lord's Limbs|r"];
+const CABL_TIP_LEVELS: &[&str] = &["Purchase Bandit Lord's Limbs"];
+const CABL_UBERTIP_LEVELS: &[&str] =
+    &["Quest Item Only marginally damaged. Hopefully, Keever can still make use of them."];
+const CAGH_ICONS: &[&str] = &["commandbuttons/btngarithos.blp"];
+const CAGH_NAMES: &[&str] = &["|cffffff00Garithos's Head|r"];
+const CAGH_TIP_LEVELS: &[&str] = &["Purchase Garithos's Head"];
+const CAGH_UBERTIP_LEVELS: &[&str] =
+    &["Quest Item Serves him right. Better for Keever to use Garithos’s head than yours."];
+const CBMV_ICONS: &[&str] = &["commandbuttons/btncorrosivebreath.blp"];
+const CBMV_NAMES: &[&str] = &["|cffffff00Broodmother Venom|r"];
+const CBMV_TIP_LEVELS: &[&str] = &["Purchase Broodmother Venom"];
+const CBMV_UBERTIP_LEVELS: &[&str] =
+    &["Quest Item The spider matriarch's venom gleams inside the vial, deadly to the touch."];
+const CCCG_ICONS: &[&str] = &["commandbuttons/btnghoul.blp"];
+const CCCG_NAMES: &[&str] = &["|cffffff00Captured Ghoul|r"];
+const CCCG_TIP_LEVELS: &[&str] = &["Purchase Captured Ghoul"];
+const CCCG_UBERTIP_LEVELS: &[&str] =
+    &["Quest Item A ghoul captured in a net. At times calm, at other times quite agitated."];
+const CCCM_ICONS: &[&str] = &["commandbuttons/btnconsecratedmixture.blp"];
+const CCCM_NAMES: &[&str] = &["|cff7c2abbConsecrated Mixture|r"];
+const CCCM_TIP_LEVELS: &[&str] = &["Purchase Consecrated Mixture"];
+const CCCM_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Use: Permanently increases All Stats of the Hero by 3."];
+const CCEC_ICONS: &[&str] = &["commandbuttons/btnelixirofcunning.blp"];
+const CCEC_NAMES: &[&str] = &["|cff40da00Elixir of Cunning|r"];
+const CCEC_TIP_LEVELS: &[&str] = &["Purchase Elixir of Cunning"];
+const CCEC_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Use: Permanently increases the Agility and Intelligence of the Hero by 2."];
+const CCEM_ICONS: &[&str] = &["commandbuttons/btnelixirofmonsterhunting.blp"];
+const CCEM_NAMES: &[&str] = &["|cff40da00Elixir of the Monster Hunter|r"];
+const CCEM_TIP_LEVELS: &[&str] = &["Purchase Elixir of the Monster Hunter"];
+const CCEM_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Use: Permanently increases the Strength and Agility of the Hero by 2."];
 const CCMD_ICONS: &[&str] = &["commandbuttons/btnscepterofmastery.blp"];
 const CCMD_NAMES: &[&str] = &["Scepter of Mastery"];
 const CCMD_TIP_LEVELS: &[&str] = &["Purchase Scepter of Mastery"];
 const CCMD_UBERTIP_LEVELS: &[&str] = &[
     "Transfers control of the targeted non-Hero unit to the player who uses the Scepter. The transfer of control is permanent. Cannot be used on Heroes or on creeps higher than level 5. Contains 1 charges.",
 ];
+const CCVW_ICONS: &[&str] = &["commandbuttons/btnengineeringupgrade.blp"];
+const CCVW_NAMES: &[&str] = &["|cffffff00Valve Wheel|r"];
+const CCVW_TIP_LEVELS: &[&str] = &["Purchase Valve Wheel"];
+const CCVW_UBERTIP_LEVELS: &[&str] = &[
+    "Quest Item A heavy iron wheel designed to fit onto a matching stem. It looks surprisingly ornate for something so utilitarian.",
+];
+const CDHB_ICONS: &[&str] = &["commandbuttons/btnpotionred.blp"];
+const CDHB_NAMES: &[&str] = &["|cffffff00Darkhound Blood|r"];
+const CDHB_TIP_LEVELS: &[&str] = &["Purchase Darkhound Blood"];
+const CDHB_UBERTIP_LEVELS: &[&str] = &["Quest Item A fresh sample of a darkhound's cursed blood."];
+const CEGI_ICONS: &[&str] = &["commandbuttons/btnelixirofgreaterintelligence.blp"];
+const CEGI_NAMES: &[&str] = &["|cff6295E3Elixir of Greater Intelligence|r"];
+const CEGI_TIP_LEVELS: &[&str] = &["Purchase Elixir of Greater Intelligence"];
+const CEGI_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Use: Permanently increases the Intelligence of the Hero by 5."];
+const CELI_ICONS: &[&str] = &["commandbuttons/btnelixiroflesserintelligence.blp"];
+const CELI_NAMES: &[&str] = &["|cff40da00Elixir of Lesser Intelligence|r"];
+const CELI_TIP_LEVELS: &[&str] = &["Purchase Elixir of Lesser Intelligence"];
+const CELI_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Use: Permanently increases the Intelligence of the Hero by 3."];
+const CESE_ICONS: &[&str] = &["commandbuttons/btnenvenomedspear.blp"];
+const CESE_NAMES: &[&str] = &["|cffffff00Experimental Serum|r"];
+const CESE_TIP_LEVELS: &[&str] = &["Purchase Experimental Serum"];
+const CESE_UBERTIP_LEVELS: &[&str] =
+    &["Quest Item Temporarily calms the target, making them compliant."];
+const CEXP_ICONS: &[&str] = &["commandbuttons/btnbarrel.blp"];
+const CEXP_NAMES: &[&str] = &["|cffffff00Explosive Barrel|r"];
+const CEXP_TIP_LEVELS: &[&str] = &["Purchase Explosive Barrel"];
+const CEXP_UBERTIP_LEVELS: &[&str] = &["Quest Item A heavy barrel loaded with gunpowder."];
 const CHES_ICONS: &[&str] = &["commandbuttons/btncheese.blp"];
 const CHES_NAMES: &[&str] = &["Cheese"];
 const CHES_TIP_LEVELS: &[&str] = &["Purchase the Cheese"];
@@ -56988,6 +61406,16 @@ const CIRI_ICONS: &[&str] = &["commandbuttons/btnrobeofthemagi.blp"];
 const CIRI_NAMES: &[&str] = &["Robe of the Magi +6"];
 const CIRI_TIP_LEVELS: &[&str] = &["Purchase Robe of the Magi"];
 const CIRI_UBERTIP_LEVELS: &[&str] = &["Increases the Intelligence of the Hero by 6 when worn."];
+const CKCM_ICONS: &[&str] = &["commandbuttons/btnbloodkey.blp"];
+const CKCM_NAMES: &[&str] = &["|cffffff00Key to the Chamber of Mysteries|r"];
+const CKCM_TIP_LEVELS: &[&str] = &["Purchase Key to the Chamber of Mysteries"];
+const CKCM_UBERTIP_LEVELS: &[&str] = &["Quest Item Used to open a very specific door."];
+const CKDK_ICONS: &[&str] = &["commandbuttons/btnmoonkey.blp"];
+const CKDK_NAMES: &[&str] = &["|cffffff00Dungeon Key|r"];
+const CKDK_TIP_LEVELS: &[&str] = &["Purchase Dungeon Key"];
+const CKDK_UBERTIP_LEVELS: &[&str] = &[
+    "Quest Item A simple key that can open multiple locks. Also a sign of lax security measures.",
+];
 const CKNG_ICONS: &[&str] = &["commandbuttons/btnhelmutpurple.blp"];
 const CKNG_NAMES: &[&str] = &["Crown of Kings +5"];
 const CKNG_TIP_LEVELS: &[&str] = &["Purchase Crown of Kings"];
@@ -56999,12 +61427,22 @@ const CLFM_TIP_LEVELS: &[&str] = &["Purchase Cloak of Flames"];
 const CLFM_UBERTIP_LEVELS: &[&str] = &[
     "Engulfs the Hero in fire which deals 10 damage per second to nearby enemy land units. Does not stack with Immolation.",
 ];
+const CLOM_ICONS: &[&str] = &["commandbuttons/btnlumpofmeat.blp"];
+const CLOM_NAMES: &[&str] = &["|cffffff00Lump of Meat|r"];
+const CLOM_TIP_LEVELS: &[&str] = &["Purchase Lump of Meat"];
+const CLOM_UBERTIP_LEVELS: &[&str] = &[
+    "Quest Item A large pile of meat, perfect for feeding beasts of burden… or creatures just as hungry and far more dangerous.",
+];
 const CLSD_ICONS: &[&str] = &["commandbuttons/btncloak.blp"];
 const CLSD_NAMES: &[&str] = &["Cloak of Shadows"];
 const CLSD_TIP_LEVELS: &[&str] = &["Purchase Cloak of Shadows"];
 const CLSD_UBERTIP_LEVELS: &[&str] = &[
     "Provides the Hero with invisibility when worn. An invisible Hero is untargetable by the enemy unless detected. If the Hero moves, attacks, uses an ability, or casts a spell, the invisibility effect is lost.",
 ];
+const CMAG_ICONS: &[&str] = &["commandbuttons/btnghostkey.blp"];
+const CMAG_NAMES: &[&str] = &["|cffffff00Magical Key|r"];
+const CMAG_TIP_LEVELS: &[&str] = &["Purchase Magical Key"];
+const CMAG_UBERTIP_LEVELS: &[&str] = &["Quest Item Can open magical pens."];
 const CMDATTACKGROUND_ICONS: &[&str] = &["commandbuttons/btnattackground.blp"];
 const CMDATTACKGROUND_NAMES: &[&str] = &["Attack Ground"];
 const CMDATTACKGROUND_TIP_LEVELS: &[&str] = &["Attack Ground"];
@@ -57121,6 +61559,20 @@ const COSL_TIP_LEVELS: &[&str] = &["Purchase Celestial Orb of Souls"];
 const COSL_UBERTIP_LEVELS: &[&str] = &[
     "Artifact Brings 6 of your nearby dead units back to life. History Crafted by the Titans as gifts to their favored creations, the Celestial Orb of Souls channels the powers of the light to bring back to life those who have recently fallen.",
 ];
+const CPOR_ICONS: &[&str] = &["commandbuttons/btnusedsoulgem.blp"];
+const CPOR_NAMES: &[&str] = &["|cffffff00Portal Orb|r"];
+const CPOR_TIP_LEVELS: &[&str] = &["Purchase Portal Orb"];
+const CPOR_UBERTIP_LEVELS: &[&str] = &["Quest Item Can power up an inactive portal."];
+const CPRK_ICONS: &[&str] = &["commandbuttons/btnmoonkey.blp"];
+const CPRK_NAMES: &[&str] = &["|cffffff00Prison Key|r"];
+const CPRK_TIP_LEVELS: &[&str] = &["Purchase Prison Key"];
+const CPRK_UBERTIP_LEVELS: &[&str] = &["Quest Item Can open prison cells."];
+const CPTZ_ICONS: &[&str] = &["commandbuttons/btnwornsteelplate.blp"];
+const CPTZ_NAMES: &[&str] = &["|cffffff00Paladin's Torso|r"];
+const CPTZ_TIP_LEVELS: &[&str] = &["Purchase Paladin's Torso"];
+const CPTZ_UBERTIP_LEVELS: &[&str] = &[
+    "Quest Item This person may have had a good heart in life. But for Keever, just the ribcage will suffice.",
+];
 const CRDT_ICONS: &[&str] = &["commandbuttons/btnrevenant.blp"];
 const CRDT_NAMES: &[&str] = &["Crown of the Deathlord"];
 const CRDT_TIP_LEVELS: &[&str] = &["Purchase Crown of the Deathlord"];
@@ -57133,6 +61585,44 @@ const CRYS_TIP_LEVELS: &[&str] = &["Purchase Crystal Ball"];
 const CRYS_UBERTIP_LEVELS: &[&str] = &[
     "Reveals a targeted area. Invisible units are also revealed by the Crystal Ball's effect. Lasts 10 seconds.",
 ];
+const CTAT_ICONS: &[&str] = &["commandbuttons/btnenchantedgemstone.blp"];
+const CTAT_NAMES: &[&str] = &["|cffffff00The Artifact|r"];
+const CTAT_TIP_LEVELS: &[&str] = &["Purchase The Artifact"];
+const CTAT_UBERTIP_LEVELS: &[&str] = &["Quest Item An artifact of great power..."];
+const CTOA_ICONS: &[&str] = &["commandbuttons/btntome.blp"];
+const CTOA_NAMES: &[&str] = &["|cff40da00Tome of Agility|r"];
+const CTOA_TIP_LEVELS: &[&str] = &["Purchase Tome of Agility"];
+const CTOA_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Purchase: Permanently increases the Agility of the Hero by 1."];
+const CTOI_ICONS: &[&str] = &["commandbuttons/btntome.blp"];
+const CTOI_NAMES: &[&str] = &["|cff40da00Tome of Intelligence|r"];
+const CTOI_TIP_LEVELS: &[&str] = &["Purchase Tome of Intelligence"];
+const CTOI_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Purchase: Permanently increases the Intelligence of the Hero by 1."];
+const CTOS_ICONS: &[&str] = &["commandbuttons/btntome.blp"];
+const CTOS_NAMES: &[&str] = &["|cff40da00Tome of Strength|r"];
+const CTOS_TIP_LEVELS: &[&str] = &["Purchase Tome of Strength"];
+const CTOS_UBERTIP_LEVELS: &[&str] =
+    &["Consumable Item Purchase: Permanently increases the Strength of the Hero by 1."];
+const CVDT_ICONS: &[&str] = &["commandbuttons/btntomebrown.blp"];
+const CVDT_NAMES: &[&str] = &["|cffffff00Very Very Deep Thoughts|r"];
+const CVDT_TIP_LEVELS: &[&str] = &["Purchase Very Very Deep Thoughts"];
+const CVDT_UBERTIP_LEVELS: &[&str] = &[
+    "Quest Item If you give someone food, you are feeding them. But if you give someone water, are you watering them?",
+];
+const CVFS_ICONS: &[&str] = &["commandbuttons/btnnagaarmorup1.blp"];
+const CVFS_NAMES: &[&str] = &["|cffffff00Vile Fin Scale|r"];
+const CVFS_TIP_LEVELS: &[&str] = &["Purchase Vile Fin Scale"];
+const CVFS_UBERTIP_LEVELS: &[&str] = &["Quest Item Covered in muck, slime and murloc blood."];
+const CVPE_ICONS: &[&str] = &["commandbuttons/btnvialfull.blp"];
+const CVPE_NAMES: &[&str] = &["|cffffff00Vial of Plague Essence|r"];
+const CVPE_TIP_LEVELS: &[&str] = &["Purchase Vial of Plague Essence"];
+const CVPE_UBERTIP_LEVELS: &[&str] =
+    &["Quest Item The contents of the vial glow with an unusual turquoise hue."];
+const CVVB_ICONS: &[&str] = &["commandbuttons/btnpotionred.blp"];
+const CVVB_NAMES: &[&str] = &["|cffffff00Vial of Vampire Bat Blood|r"];
+const CVVB_TIP_LEVELS: &[&str] = &["Purchase Vial of Vampire Bat Blood"];
+const CVVB_UBERTIP_LEVELS: &[&str] = &["Quest Item A fresh sample of a vampire bat's thick blood."];
 const DESC_ICONS: &[&str] = &["commandbuttons/btndaggerofescape.blp"];
 const DESC_NAMES: &[&str] = &["Kelen's Dagger of Escape"];
 const DESC_TIP_LEVELS: &[&str] = &["Purchase Dagger of Escape"];
@@ -57201,18 +61691,53 @@ const EATE_ICONS: &[&str] = &["commandbuttons/btnaltarofelders.blp"];
 const EATE_NAMES: &[&str] = &["Altar of Elders"];
 const EATE_TIP_LEVELS: &[&str] = &["Create Altar of Elders"];
 const EATE_UBERTIP_LEVELS: &[&str] = &["Summons Heroes. Revives slain Heroes."];
+const EBAC_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBAC_NAMES: &[&str] = &["|cff40da00Backpack|r"];
+const EBAC_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBAC_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
 const EBAL_ICONS: &[&str] = &["commandbuttons/btnglaivethrower.blp"];
 const EBAL_NAMES: &[&str] = &["Glaive Thrower"];
 const EBAL_TIP_LEVELS: &[&str] = &["Train Glaive Thrower"];
 const EBAL_UBERTIP_LEVELS: &[&str] = &[
     "Long-range siege weaponry. Exceptional damage versus buildings. Can gain the Vorpal Blades upgrade to attack trees. Attacks land units.",
 ];
+const EBHG_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBHG_NAMES: &[&str] = &["|cff40da00Garek's Backpack|r"];
+const EBHG_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBHG_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
+const EBHI_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBHI_NAMES: &[&str] = &["|cff40da00Ilastar's Backpack|r"];
+const EBHI_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBHI_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
+const EBHL_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBHL_NAMES: &[&str] = &["|cff40da00Landen's Backpack|r"];
+const EBHL_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBHL_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
 const EBSH_ICONS: &[&str] = &["commandbuttons/btnnightelfbattlecruiser.blp"];
 const EBSH_NAMES: &[&str] = &["Night Elf Battleship"];
 const EBSH_TIP_LEVELS: &[&str] = &["Hire Battleship"];
 const EBSH_UBERTIP_LEVELS: &[&str] = &[
     "Massive battleship good at destroying enemy ships and bombarding buildings from the sea. Attacks land units.",
 ];
+const EBUA_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBUA_NAMES: &[&str] = &["|cff40da00Anya's Backpack|r"];
+const EBUA_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBUA_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
+const EBUG_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBUG_NAMES: &[&str] = &["|cff40da00Garek's Backpack|r"];
+const EBUG_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBUG_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
+const EBUL_ICONS: &[&str] = &["commandbuttons/btnbackpack.blp"];
+const EBUL_NAMES: &[&str] = &["|cff40da00Leonid's Backpack|r"];
+const EBUL_TIP_LEVELS: &[&str] = &["Purchase Backpack"];
+const EBUL_UBERTIP_LEVELS: &[&str] =
+    &["Click to open your backpack where you can store additional items."];
 const ECEN_ICONS: &[&str] = &["commandbuttons/btnkeeperofthegrove.blp"];
 const ECEN_NAMES: &[&str] = &["Demigod"];
 const ECHM_ICONS: &[&str] = &["commandbuttons/btnchimaera.blp"];
@@ -57533,7 +62058,7 @@ const FRGD_UBERTIP_LEVELS: &[&str] = &[
 const FRHG_ICONS: &[&str] = &["commandbuttons/btnadvancedunholystrength.blp"];
 const FRHG_NAMES: &[&str] = &["Firehand Gauntlets"];
 const FRHG_TIP_LEVELS: &[&str] = &["Purchase Firehand Gauntlets"];
-const FRHG_UBERTIP_LEVELS: &[&str] = &["Increases armor by 5 and attack rate by 20% when worn."];
+const FRHG_UBERTIP_LEVELS: &[&str] = &["Increases armor by 5 and attack rate by 0% when worn."];
 const FWSS_ICONS: &[&str] = &["commandbuttons/btngrimward.blp"];
 const FWSS_NAMES: &[&str] = &["Frost Wyrm Skull Shield"];
 const FWSS_TIP_LEVELS: &[&str] = &["Purchase Frost Wyrm Skull Shield"];
@@ -57566,6 +62091,11 @@ const GLSK_TIP_LEVELS: &[&str] = &["Purchase Skull of Gul'dan"];
 const GLSK_UBERTIP_LEVELS: &[&str] = &[
     "Once a powerful user of Demonic magics, the Demons answered his calls, and found a greater use for his head.",
 ];
+const GLXB_ICONS: &[&str] = &["commandbuttons/btnfragmentationbombs.blp"];
+const GLXB_NAMES: &[&str] = &["Glix's Special"];
+const GLXB_TIP_LEVELS: &[&str] = &["Purchase Glix's Special"];
+const GLXB_UBERTIP_LEVELS: &[&str] =
+    &["Glix's personal explosive recipe! Deals more damage to structures."];
 const GMFR_ICONS: &[&str] = &["commandbuttons/btngem.blp"];
 const GMFR_NAMES: &[&str] = &["Gem Fragment"];
 const GMFR_TIP_LEVELS: &[&str] = &["Purchase Gem Fragment"];
@@ -57709,8 +62239,24 @@ const HCAS_NAMES: &[&str] = &["Castle"];
 const HCAS_TIP_LEVELS: &[&str] = &["Upgrade to Castle"];
 const HCAS_UBERTIP_LEVELS: &[&str] =
     &["Upgrade to Castle to enable the production of additional types of structures and units."];
+const HCT1_ICONS: &[&str] = &["commandbuttons/btngarek.blp"];
+const HCT1_NAMES: &[&str] = &["Guard Lieutenant"];
+const HCT1_TIP_LEVELS: &[&str] = &[];
+const HCT1_UBERTIP_LEVELS: &[&str] = &[""];
+const HCTA_ICONS: &[&str] = &["commandbuttons/btnhumancaptureflag.blp"];
+const HCTA_NAMES: &[&str] = &["Lordaeron Banner"];
+const HCTG_ICONS: &[&str] = &["commandbuttons/btncityguard.blp"];
+const HCTG_NAMES: &[&str] = &["City Guard"];
 const HCTH_ICONS: &[&str] = &["commandbuttons/btnthecaptain.blp"];
 const HCTH_NAMES: &[&str] = &["Captain"];
+const HCTL_ICONS: &[&str] = &["commandbuttons/btnlanden.blp"];
+const HCTL_NAMES: &[&str] = &["Guard Captain"];
+const HCTL_TIP_LEVELS: &[&str] = &[];
+const HCTL_UBERTIP_LEVELS: &[&str] = &[""];
+const HCTR_ICONS: &[&str] = &["commandbuttons/btngarek.blp"];
+const HCTR_NAMES: &[&str] = &["Guard Lieutenant"];
+const HCTR_TIP_LEVELS: &[&str] = &[];
+const HCTR_UBERTIP_LEVELS: &[&str] = &[""];
 const HCTW_ICONS: &[&str] = &["commandbuttons/btncannontower.blp"];
 const HCTW_NAMES: &[&str] = &["Cannon Tower"];
 const HCTW_TIP_LEVELS: &[&str] = &["Upgrade to Cannon Tower"];
@@ -57798,6 +62344,10 @@ const HJAI_TIP_LEVELS: &[&str] = &[];
 const HJAI_UBERTIP_LEVELS: &[&str] = &[
     "Mystical Hero, adept at ranged assaults. Can learn Blizzard, Summon Water Elemental, Brilliance Aura and Mass Teleport. Attacks land and air units.",
 ];
+const HJSM_ICONS: &[&str] = &["commandbuttons/btnilastar.blp"];
+const HJSM_NAMES: &[&str] = &["Cleric"];
+const HJSM_TIP_LEVELS: &[&str] = &[];
+const HJSM_UBERTIP_LEVELS: &[&str] = &[""];
 const HKAL_ICONS: &[&str] = &["commandbuttons/btnbloodmage2.blp"];
 const HKAL_NAMES: &[&str] = &["Blood Mage"];
 const HKAL_TIP_LEVELS: &[&str] = &[];
@@ -57815,6 +62365,10 @@ const HKNI_TIP_LEVELS: &[&str] = &["Train Knight"];
 const HKNI_UBERTIP_LEVELS: &[&str] = &[
     "Powerful mounted warrior. Can learn Animal War Training and Sundering Blades. Attacks land units.",
 ];
+const HLEO_ICONS: &[&str] = &["commandbuttons/btnleonid.blp"];
+const HLEO_NAMES: &[&str] = &["Warrior"];
+const HLEO_TIP_LEVELS: &[&str] = &[];
+const HLEO_UBERTIP_LEVELS: &[&str] = &[""];
 const HLGR_ICONS: &[&str] = &["commandbuttons/btngarithos.blp"];
 const HLGR_NAMES: &[&str] = &["Dark Knight"];
 const HLGR_TIP_LEVELS: &[&str] = &[];
@@ -57947,6 +62501,10 @@ const HSPT_TIP_LEVELS: &[&str] = &["Train Spellbreaker"];
 const HSPT_UBERTIP_LEVELS: &[&str] = &[
     "Elven warrior trained to destroy spellcasters. Initially has Spell Steal, which manipulates buffs to your advantage, Spell Immunity and Feedback. Can also learn Control Magic. Attacks land units.",
 ];
+const HTMX_ICONS: &[&str] = &["commandbuttons/btnheropaladin.blp"];
+const HTMX_NAMES: &[&str] = &["Paladin"];
+const HTMX_TIP_LEVELS: &[&str] = &[];
+const HTMX_UBERTIP_LEVELS: &[&str] = &[""];
 const HTOW_ICONS: &[&str] = &["commandbuttons/btntownhall.blp"];
 const HTOW_NAMES: &[&str] = &["Town Hall"];
 const HTOW_TIP_LEVELS: &[&str] = &["Build Town Hall"];
@@ -58821,6 +63379,8 @@ const NDTW_NAMES: &[&str] = &["Dark Troll Warlord"];
 const NDTW_TIP_LEVELS: &[&str] = &["Hire Dark Troll Warlord"];
 const NDTW_UBERTIP_LEVELS: &[&str] =
     &["Heavy ranged unit with Trueshot Aura. Attacks land and air units."];
+const NDUM_ICONS: &[&str] = &["commandbuttons/btntemp.blp"];
+const NDUM_NAMES: &[&str] = &["Dummy"];
 const NDWM_ICONS: &[&str] = &["commandbuttons/btnduneworm.blp"];
 const NDWM_NAMES: &[&str] = &["Dune Worm"];
 const NDWM_TIP_LEVELS: &[&str] = &["Invoke Dune Worm"];
@@ -59188,6 +63748,10 @@ const NGIR_UBERTIP_LEVELS: &[&str] = &[
 ];
 const NGLM_ICONS: &[&str] = &["commandbuttons/btngoblinlandmine.blp"];
 const NGLM_NAMES: &[&str] = &["Goblin Land Mine"];
+const NGLX_ICONS: &[&str] = &["commandbuttons/btnherotinker.blp"];
+const NGLX_NAMES: &[&str] = &["Merchant"];
+const NGLX_TIP_LEVELS: &[&str] = &[];
+const NGLX_UBERTIP_LEVELS: &[&str] = &[""];
 const NGME_ICONS: &[&str] = &["commandbuttons/btnmerchant.blp"];
 const NGME_NAMES: &[&str] = &["Goblin Merchant"];
 const NGME_TIP_LEVELS: &[&str] = &["Build Goblin Merchant"];
@@ -59911,6 +64475,12 @@ const NOWK_UBERTIP_LEVELS: &[&str] =
     &["Heavy melee unit with Bash and War Stomp. Attacks land units."];
 const NOWL_ICONS: &[&str] = &["commandbuttons/btnscout.blp"];
 const NOWL_NAMES: &[&str] = &["Owl Scout"];
+const NPAL_ICONS: &[&str] = &["commandbuttons/btnforsakenpaladin.blp"];
+const NPAL_NAMES: &[&str] = &["Forsaken Paladin"];
+const NPAL_TIP_LEVELS: &[&str] = &["Summon Forsaken Paladin"];
+const NPAL_UBERTIP_LEVELS: &[&str] = &[
+    "Warrior Hero, adept at wielding the Light offensively and defensively. Can learn Consecration, Righteous Fury, Sacred Aura, and Cleansing Fire. Attacks land units.",
+];
 const NPBM_ICONS: &[&str] = &["commandbuttons/btnpandarenbrewmaster.blp"];
 const NPBM_NAMES: &[&str] = &["Brewmaster"];
 const NPBM_TIP_LEVELS: &[&str] = &["Summon Brewmaster"];
@@ -60881,6 +65451,64 @@ const OHUN_UBERTIP_LEVELS: &[&str] = &[
 ];
 const OHWD_ICONS: &[&str] = &["commandbuttons/btnhealingward.blp"];
 const OHWD_NAMES: &[&str] = &["Healing Ward"];
+const OIDB_ICONS: &[&str] = &["commandbuttons/btnbanshee.blp"];
+const OIDB_NAMES: &[&str] = &["Forsaken Banshee"];
+const OIDB_TIP_LEVELS: &[&str] = &["Train Forsaken Banshee."];
+const OIDB_UBERTIP_LEVELS: &[&str] =
+    &["Basic ranged attack unit with an effective magic attack. Attacks land and air units."];
+const OIDG_ICONS: &[&str] = &["commandbuttons/btndeathguard.blp"];
+const OIDG_NAMES: &[&str] = &["Deathguard"];
+const OIDG_TIP_LEVELS: &[&str] = &["Train Deathguard"];
+const OIDG_UBERTIP_LEVELS: &[&str] = &["Versatile foot soldier. Attacks land units."];
+const OIE1_ICONS: &[&str] = &["commandbuttons/btnearthquake.blp"];
+const OIE1_NAMES: &[&str] = &["Item Essencium Blizzard"];
+const OIE1_TIP_LEVELS: &[&str] = &["Train Essencium Blizzard."];
+const OIE1_UBERTIP_LEVELS: &[&str] = &["You found me!"];
+const OIE2_ICONS: &[&str] = &["commandbuttons/btnearthquake.blp"];
+const OIE2_NAMES: &[&str] = &["Item Essencium Rain of Fire"];
+const OIE2_TIP_LEVELS: &[&str] = &["Train Essencium Rain of Fire."];
+const OIE2_UBERTIP_LEVELS: &[&str] = &["You found me!"];
+const OIE3_ICONS: &[&str] = &["commandbuttons/btnearthquake.blp"];
+const OIE3_NAMES: &[&str] = &["Item Essencium Chain Lightning"];
+const OIE3_TIP_LEVELS: &[&str] = &["Train Essencium Chain Lightning."];
+const OIE3_UBERTIP_LEVELS: &[&str] = &["You found me!"];
+const OIE4_ICONS: &[&str] = &["commandbuttons/btnearthquake.blp"];
+const OIE4_NAMES: &[&str] = &["Item Essencium Crushing Wave"];
+const OIE4_TIP_LEVELS: &[&str] = &["Train Essencium Crushing Wave."];
+const OIE4_UBERTIP_LEVELS: &[&str] = &["You found me!"];
+const OIFR_ICONS: &[&str] = &["commandbuttons/btnranger.blp"];
+const OIFR_NAMES: &[&str] = &["Forsaken Ranger"];
+const OIFR_TIP_LEVELS: &[&str] = &["Train Forsaken Ranger"];
+const OIFR_UBERTIP_LEVELS: &[&str] = &["Basic long-ranged attacker. Attacks land and air units."];
+const OIGS_ICONS: &[&str] = &["commandbuttons/btnzigguratupgrade.blp"];
+const OIGS_NAMES: &[&str] = &["Gravelight Soul"];
+const OIGS_TIP_LEVELS: &[&str] = &["Train Gravelight Soul."];
+const OIGS_UBERTIP_LEVELS: &[&str] = &["A lost soul seeking vengeance."];
+const OIMD_ICONS: &[&str] = &["commandbuttons/btncrate.blp"];
+const OIMD_NAMES: &[&str] = &["Item Moonglaive Dummy"];
+const OIMD_TIP_LEVELS: &[&str] = &["Train Item Moonglaive Dummy."];
+const OIMD_UBERTIP_LEVELS: &[&str] = &["You found me!"];
+const OIRF_ICONS: &[&str] = &["commandbuttons/btnfirebolt.blp"];
+const OIRF_NAMES: &[&str] = &["Roaming Fireball"];
+const OIRF_TIP_LEVELS: &[&str] = &["Train Roaming Fireball."];
+const OIRF_UBERTIP_LEVELS: &[&str] = &["A roaming fireball."];
+const OISG_ICONS: &[&str] = &["commandbuttons/btnskeletonwarrior.blp"];
+const OISG_NAMES: &[&str] = &["Giant Skeleton Warrior"];
+const OISG_TIP_LEVELS: &[&str] = &["Hire Giant Skeleton Warrior"];
+const OISG_UBERTIP_LEVELS: &[&str] = &["Large melee unit. Attacks land units."];
+const OISK_ICONS: &[&str] = &["commandbuttons/btnskeletonwarrior.blp"];
+const OISK_NAMES: &[&str] = &["Skeleton Warrior"];
+const OISK_TIP_LEVELS: &[&str] = &["Summon Skeleton Warrior"];
+const OISK_UBERTIP_LEVELS: &[&str] = &["Basic melee unit. Attacks land units."];
+const OISM_ICONS: &[&str] = &["commandbuttons/btnskeletonarcher.blp"];
+const OISM_NAMES: &[&str] = &["Skeletal Marksman"];
+const OISM_TIP_LEVELS: &[&str] = &["Hire Skeletal Marksman"];
+const OISM_UBERTIP_LEVELS: &[&str] = &["Light ranged unit. Attacks land and air units."];
+const OISP_ICONS: &[&str] = &["commandbuttons/btnspiderblue.blp"];
+const OISP_NAMES: &[&str] = &["Spitting Spider"];
+const OISP_TIP_LEVELS: &[&str] = &["Summon Spitting Spider"];
+const OISP_UBERTIP_LEVELS: &[&str] =
+    &["Light ranged unit that spits poison at opponents. Attacks land and air units."];
 const OJGN_ICONS: &[&str] = &["commandbuttons/btnjuggernaut.blp"];
 const OJGN_NAMES: &[&str] = &["Orc Juggernaught"];
 const OJGN_TIP_LEVELS: &[&str] = &["Train Orc Juggernaught"];
@@ -61121,6 +65749,10 @@ const PENR_ICONS: &[&str] = &["commandbuttons/btnpendantofenergy.blp"];
 const PENR_NAMES: &[&str] = &["Pendant of Energy"];
 const PENR_TIP_LEVELS: &[&str] = &["Purchase Pendant of Energy"];
 const PENR_UBERTIP_LEVELS: &[&str] = &["Increases the mana capacity of the Hero by 100 when worn."];
+const PEOU_ICONS: &[&str] = &["commandbuttons/btnessenceofundeath.blp"];
+const PEOU_NAMES: &[&str] = &["Essence of Undeath"];
+const PEOU_TIP_LEVELS: &[&str] = &["Purchase Essence of Undeath"];
+const PEOU_UBERTIP_LEVELS: &[&str] = &["Heals 1250 hit points when used."];
 const PGHE_ICONS: &[&str] = &["commandbuttons/btnpotiongreen.blp"];
 const PGHE_NAMES: &[&str] = &["Potion of Greater Healing"];
 const PGHE_TIP_LEVELS: &[&str] = &["Purchase Potion of Greater Healing"];
@@ -61192,6 +65824,14 @@ const PSPD_NAMES: &[&str] = &["Potion of Speed"];
 const PSPD_TIP_LEVELS: &[&str] = &["Purchase Potion of Speed"];
 const PSPD_UBERTIP_LEVELS: &[&str] =
     &["Increases the movement speed of the Hero by 60% for 45 seconds."];
+const PUHE_ICONS: &[&str] = &["commandbuttons/btnpotionofultimatehealing.blp"];
+const PUHE_NAMES: &[&str] = &["Potion of Ultimate Healing"];
+const PUHE_TIP_LEVELS: &[&str] = &["Purchase Potion of Ultimate Healing"];
+const PUHE_UBERTIP_LEVELS: &[&str] = &["Heals 1000 hit points when used."];
+const PUMA_ICONS: &[&str] = &["commandbuttons/btnpotionofultimatemana.blp"];
+const PUMA_NAMES: &[&str] = &["Potion of Ultimate Mana"];
+const PUMA_TIP_LEVELS: &[&str] = &["Purchase Potion of Ultimate Mana"];
+const PUMA_UBERTIP_LEVELS: &[&str] = &["Restores 500 mana when used."];
 const RAG1_ICONS: &[&str] = &["commandbuttons/btnslippersofagility.blp"];
 const RAG1_NAMES: &[&str] = &["Slippers of Agility +3"];
 const RAG1_TIP_LEVELS: &[&str] = &["Purchase Slippers of Agility +3"];
@@ -62634,6 +67274,10 @@ const TSTR_NAMES: &[&str] = &["Tome of Strength"];
 const TSTR_TIP_LEVELS: &[&str] = &["Purchase Tome of Strength"];
 const TSTR_UBERTIP_LEVELS: &[&str] =
     &["Permanently increases the Strength of the Hero by 1 when used."];
+const TTAL_ICONS: &[&str] = &["commandbuttons/btntomered.blp"];
+const TTAL_NAMES: &[&str] = &["Tome of Talent"];
+const TTAL_TIP_LEVELS: &[&str] = &["Purchase Tome of Talent"];
+const TTAL_UBERTIP_LEVELS: &[&str] = &["Grants 1 Talent Point."];
 const UABC_ICONS: &[&str] = &["commandbuttons/btnabomination.blp"];
 const UABC_NAMES: &[&str] = &["Abomination"];
 const UABC_TIP_LEVELS: &[&str] = &["Train Abomination"];
@@ -62656,6 +67300,12 @@ const UANB_TIP_LEVELS: &[&str] = &[];
 const UANB_UBERTIP_LEVELS: &[&str] = &[
     "Warrior Hero, adept at summoning insect minions and crushing enemies. Can learn Impale, Spiked Carapace, Carrion Beetles and Locust Swarm. Attacks land units.",
 ];
+const UANY_ICONS: &[&str] = &["commandbuttons/btnanya.blp"];
+const UANY_NAMES: &[&str] = &["Dark Ranger"];
+const UANY_TIP_LEVELS: &[&str] = &["Summon Dark Ranger"];
+const UANY_UBERTIP_LEVELS: &[&str] = &[
+    "Cunning Hero, adept at manipulating opponents. Can learn Silence, Black Arrow, Life Drain, and Charm. Attacks land and air units.",
+];
 const UAOD_ICONS: &[&str] = &["commandbuttons/btnaltarofdarkness.blp"];
 const UAOD_NAMES: &[&str] = &["Altar of Darkness"];
 const UAOD_TIP_LEVELS: &[&str] = &["Summon Altar of Darkness"];
@@ -62664,6 +67314,14 @@ const UARB_ICONS: &[&str] = &["commandbuttons/btnundeadairbarge.blp"];
 const UARB_NAMES: &[&str] = &["Sky Barge"];
 const UARB_TIP_LEVELS: &[&str] = &["Summon Sky Barge"];
 const UARB_UBERTIP_LEVELS: &[&str] = &["A massive air transport."];
+const UARF_ICONS: &[&str] = &["commandbuttons/btnherodeathknight.blp"];
+const UARF_NAMES: &[&str] = &["Death Knight"];
+const UARF_TIP_LEVELS: &[&str] = &[];
+const UARF_UBERTIP_LEVELS: &[&str] = &[
+    "Warrior Hero, evil counterpart to the Human Paladin. Can learn Death Coil, Death Pact, Unholy Aura, and Animate Dead. Attacks land units.",
+];
+const UASS_ICONS: &[&str] = &["commandbuttons/btncultassassin.blp"];
+const UASS_NAMES: &[&str] = &["Assassin"];
 const UBAL_ICONS: &[&str] = &["commandbuttons/btntichondrius.blp"];
 const UBAL_NAMES: &[&str] = &["Dreadlord"];
 const UBAL_TIP_LEVELS: &[&str] = &[];
@@ -62680,6 +67338,8 @@ const UBDD_ICONS: &[&str] = &["commandbuttons/btnfrostwyrm.blp"];
 const UBDD_NAMES: &[&str] = &["Sapphiron"];
 const UBDR_ICONS: &[&str] = &["commandbuttons/btnazuredragon.blp"];
 const UBDR_NAMES: &[&str] = &["Sapphiron"];
+const UBLW_ICONS: &[&str] = &["commandbuttons/btncultblightweaver.blp"];
+const UBLW_NAMES: &[&str] = &["Blightweaver"];
 const UBON_ICONS: &[&str] = &["commandbuttons/btnboneyard.blp"];
 const UBON_NAMES: &[&str] = &["Boneyard"];
 const UBON_TIP_LEVELS: &[&str] = &["Summon Boneyard"];
@@ -62690,12 +67350,20 @@ const UBOT_NAMES: &[&str] = &["Undead Transport Ship"];
 const UBOT_TIP_LEVELS: &[&str] = &["Hire Transport Ship"];
 const UBOT_UBERTIP_LEVELS: &[&str] =
     &["A sturdy transport ship capable of carrying units over the sea."];
+const UBRU_ICONS: &[&str] = &["commandbuttons/btnrivendareundead.blp"];
+const UBRU_NAMES: &[&str] = &["Death Knight"];
+const UBRU_TIP_LEVELS: &[&str] = &[];
+const UBRU_UBERTIP_LEVELS: &[&str] = &[""];
 const UBSP_ICONS: &[&str] = &["commandbuttons/btndestroyer.blp"];
 const UBSP_NAMES: &[&str] = &["Destroyer"];
 const UBSP_TIP_LEVELS: &[&str] = &["Morph into Destroyer"];
 const UBSP_UBERTIP_LEVELS: &[&str] = &[
     "Large flying unit that must consume magic to sustain its mana. Excellent at destroying enemy casters and clusters of ground forces. Destroyers have Magic and Spell Immunity, Devour Magic, Absorb Mana, and Orb of Annihilation. Attacks land and air units.",
 ];
+const UBTR_ICONS: &[&str] = &["commandbuttons/btnrivendare.blp"];
+const UBTR_NAMES: &[&str] = &["Death Knight"];
+const UBTR_TIP_LEVELS: &[&str] = &[];
+const UBTR_UBERTIP_LEVELS: &[&str] = &[""];
 const UCLC_ICONS: &[&str] = &["commandbuttons/btnlichversion2.blp"];
 const UCLC_NAMES: &[&str] = &["Lich"];
 const UCLC_TIP_LEVELS: &[&str] = &[];
@@ -62730,6 +67398,12 @@ const UCSB_ICONS: &[&str] = &["commandbuttons/btncarrionscarabs.blp"];
 const UCSB_NAMES: &[&str] = &["Burrowed Carrion Beetle"];
 const UCSC_ICONS: &[&str] = &["commandbuttons/btncarrionscarabs.blp"];
 const UCSC_NAMES: &[&str] = &["Burrowed Carrion Beetle"];
+const UCTL_ICONS: &[&str] = &["commandbuttons/btnlandenundead.blp"];
+const UCTL_NAMES: &[&str] = &["Fallen Captain"];
+const UCTL_TIP_LEVELS: &[&str] = &[];
+const UCTL_UBERTIP_LEVELS: &[&str] = &[""];
+const UCZE_ICONS: &[&str] = &["commandbuttons/btnbandit.blp"];
+const UCZE_NAMES: &[&str] = &["Brute"];
 const UDEA_ICONS: &[&str] = &["commandbuttons/btnherodeathknight.blp"];
 const UDEA_NAMES: &[&str] = &["Death Knight"];
 const UDEA_TIP_LEVELS: &[&str] = &["Summon Death Knight"];
@@ -62764,6 +67438,10 @@ const UFLG_NAMES: &[&str] = &["Undead Flag"];
 const UFLG_TIP_LEVELS: &[&str] = &["Purchase Undead Flag"];
 const UFLG_UBERTIP_LEVELS: &[&str] =
     &["An object that is often captured in special scenarios as a win condition."];
+const UFR2_ICONS: &[&str] = &["commandbuttons/btnbansheescall.blp"];
+const UFR2_NAMES: &[&str] = &["Banshee"];
+const UFRB_ICONS: &[&str] = &["commandbuttons/btnbansheescall.blp"];
+const UFRB_NAMES: &[&str] = &["Banshee"];
 const UFRO_ICONS: &[&str] = &["commandbuttons/btnfrostwyrm.blp"];
 const UFRO_NAMES: &[&str] = &["Frost Wyrm"];
 const UFRO_TIP_LEVELS: &[&str] = &["Train Frost Wyrm"];
@@ -62775,6 +67453,8 @@ const UGAR_NAMES: &[&str] = &["Gargoyle"];
 const UGAR_TIP_LEVELS: &[&str] = &["Train Gargoyle"];
 const UGAR_UBERTIP_LEVELS: &[&str] =
     &["Flying attack creature. Can learn the Stone Form ability. Attacks land and air units."];
+const UGBO_ICONS: &[&str] = &["commandbuttons/btngarithosabomination.blp"];
+const UGBO_NAMES: &[&str] = &["Garithos Abomination"];
 const UGHO_ICONS: &[&str] = &["commandbuttons/btnghoul.blp"];
 const UGHO_NAMES: &[&str] = &["Ghoul"];
 const UGHO_TIP_LEVELS: &[&str] = &["Train Ghoul"];
@@ -62786,6 +67466,18 @@ const UGOL_NAMES: &[&str] = &["Haunted Gold Mine"];
 const UGOL_TIP_LEVELS: &[&str] = &["Haunt Gold Mine"];
 const UGOL_UBERTIP_LEVELS: &[&str] =
     &["Haunts a gold mine so that Acolytes can mine. Use on gold mines to corrupt them."];
+const UGR2_ICONS: &[&str] = &["commandbuttons/btngarekt2.blp"];
+const UGR2_NAMES: &[&str] = &["Forsaken"];
+const UGR2_TIP_LEVELS: &[&str] = &[];
+const UGR2_UBERTIP_LEVELS: &[&str] = &[""];
+const UGR3_ICONS: &[&str] = &["commandbuttons/btngarekt3.blp"];
+const UGR3_NAMES: &[&str] = &["Forsaken"];
+const UGR3_TIP_LEVELS: &[&str] = &[];
+const UGR3_UBERTIP_LEVELS: &[&str] = &[""];
+const UGRK_ICONS: &[&str] = &["commandbuttons/btngarekundead.blp"];
+const UGRK_NAMES: &[&str] = &["Forsaken"];
+const UGRK_TIP_LEVELS: &[&str] = &[];
+const UGRK_UBERTIP_LEVELS: &[&str] = &[""];
 const UGRM_ICONS: &[&str] = &["commandbuttons/btnstoneform.blp"];
 const UGRM_NAMES: &[&str] = &["Stone Form Gargoyle"];
 const UGRM_TIP_LEVELS: &[&str] = &["Train Gargoyle"];
@@ -62796,6 +67488,15 @@ const UGRV_TIP_LEVELS: &[&str] = &["Summon Graveyard"];
 const UGRV_UBERTIP_LEVELS: &[&str] = &[
     "Provides attack and armor upgrades for Undead units. Also produces corpses and serves as a drop-off point for harvested lumber.",
 ];
+const UIGH_ICONS: &[&str] = &["commandbuttons/btnghoul.blp"];
+const UIGH_NAMES: &[&str] = &["Infectious Ghoul"];
+const UIGH_TIP_LEVELS: &[&str] = &["Train Infectious Ghoul"];
+const UIGH_UBERTIP_LEVELS: &[&str] =
+    &["Basic attack unit. Has the Infectious Claws ability. Attacks land units."];
+const UJSM_ICONS: &[&str] = &["commandbuttons/btnilastarundead.blp"];
+const UJSM_NAMES: &[&str] = &["Shadow Priest"];
+const UJSM_TIP_LEVELS: &[&str] = &[];
+const UJSM_UBERTIP_LEVELS: &[&str] = &[""];
 const UKTG_ICONS: &[&str] = &["commandbuttons/btnghostofkelthuzad.blp"];
 const UKTG_NAMES: &[&str] = &["Kel'Thuzad"];
 const UKTL_ICONS: &[&str] = &["commandbuttons/btnlichversion2.blp"];
@@ -62858,6 +67559,22 @@ const UOBS_UBERTIP_LEVELS: &[&str] = &[
 ];
 const UPLG_ICONS: &[&str] = &["passivebuttons/pasbtnplaguecloud.blp"];
 const UPLG_NAMES: &[&str] = &["Disease Cloud"];
+const UPUT_ICONS: &[&str] = &["commandbuttons/btnputress.blp"];
+const UPUT_NAMES: &[&str] = &["Grand Apothecary"];
+const UPUT_TIP_LEVELS: &[&str] = &[];
+const UPUT_UBERTIP_LEVELS: &[&str] = &[""];
+const URFF_ICONS: &[&str] = &["commandbuttons/btnheroarchmage.blp"];
+const URFF_NAMES: &[&str] = &["Hedge Mage"];
+const URFF_TIP_LEVELS: &[&str] = &[];
+const URFF_UBERTIP_LEVELS: &[&str] = &[""];
+const URFM_ICONS: &[&str] = &["commandbuttons/btnheroarchmage.blp"];
+const URFM_NAMES: &[&str] = &["Hedge Mage"];
+const URFM_TIP_LEVELS: &[&str] = &[];
+const URFM_UBERTIP_LEVELS: &[&str] = &[""];
+const URFU_ICONS: &[&str] = &["commandbuttons/btnherolich.blp"];
+const URFU_NAMES: &[&str] = &["Lich"];
+const URFU_TIP_LEVELS: &[&str] = &[];
+const URFU_UBERTIP_LEVELS: &[&str] = &[""];
 const USAP_ICONS: &[&str] = &["commandbuttons/btnsacrificialpit.blp"];
 const USAP_NAMES: &[&str] = &["Sacrificial Pit"];
 const USAP_TIP_LEVELS: &[&str] = &["Summon Sacrificial Pit"];
@@ -62958,6 +67675,18 @@ const UZIG_TIP_LEVELS: &[&str] = &["Summon Ziggurat"];
 const UZIG_UBERTIP_LEVELS: &[&str] = &[
     "Provides food, which increases the maximum number of units that can be trained. Can be upgraded to a defensive structure that attacks land and air units.",
 ];
+const UZKF_ICONS: &[&str] = &["commandbuttons/btnherodeathknight.blp"];
+const UZKF_NAMES: &[&str] = &["Death Knight"];
+const UZKF_TIP_LEVELS: &[&str] = &[];
+const UZKF_UBERTIP_LEVELS: &[&str] = &[""];
+const UZKM_ICONS: &[&str] = &["commandbuttons/btnherodeathknight.blp"];
+const UZKM_NAMES: &[&str] = &["Death Knight"];
+const UZKM_TIP_LEVELS: &[&str] = &[];
+const UZKM_UBERTIP_LEVELS: &[&str] = &[""];
+const UZRM_ICONS: &[&str] = &["commandbuttons/btnherodeathknight.blp"];
+const UZRM_NAMES: &[&str] = &["Deathcharger"];
+const UZRM_TIP_LEVELS: &[&str] = &[];
+const UZRM_UBERTIP_LEVELS: &[&str] = &[""];
 const VAMP_ICONS: &[&str] = &["commandbuttons/btnpotionofvampirism.blp"];
 const VAMP_NAMES: &[&str] = &["Vampiric Potion"];
 const VAMP_TIP_LEVELS: &[&str] = &["Purchase Vampiric Potion"];
@@ -63074,22 +67803,50 @@ const BSPD_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIms")];
 const BTST_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIfx")];
 const BZBE_ABILITIES: &[WarcraftObjectId] = &[];
 const BZBF_ABILITIES: &[WarcraftObjectId] = &[];
+const CABL_ABILITIES: &[WarcraftObjectId] = &[];
+const CAGH_ABILITIES: &[WarcraftObjectId] = &[];
+const CBMV_ABILITIES: &[WarcraftObjectId] = &[];
+const CCCG_ABILITIES: &[WarcraftObjectId] = &[];
+const CCCM_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Accm")];
+const CCEC_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Acec")];
+const CCEM_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Acem")];
 const CCMD_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIco")];
+const CCVW_ABILITIES: &[WarcraftObjectId] = &[];
+const CDHB_ABILITIES: &[WarcraftObjectId] = &[];
+const CEGI_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Acgi")];
+const CELI_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Acli")];
+const CESE_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ASYR")];
+const CEXP_ABILITIES: &[WarcraftObjectId] = &[];
 const CHES_ABILITIES: &[WarcraftObjectId] = &[];
 const CIRI_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIi6")];
+const CKCM_ABILITIES: &[WarcraftObjectId] = &[];
+const CKDK_ABILITIES: &[WarcraftObjectId] = &[];
 const CKNG_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIx5")];
 const CLFM_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIcf")];
+const CLOM_ABILITIES: &[WarcraftObjectId] = &[];
 const CLSD_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIhm")];
+const CMAG_ABILITIES: &[WarcraftObjectId] = &[];
 const CNHN_ABILITIES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Arel"), WarcraftObjectId::new("AIl1")];
 const CNOB_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIx2")];
 const COSL_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIrx")];
+const CPOR_ABILITIES: &[WarcraftObjectId] = &[];
+const CPRK_ABILITIES: &[WarcraftObjectId] = &[];
+const CPTZ_ABILITIES: &[WarcraftObjectId] = &[];
 const CRDT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AIfz"),
     WarcraftObjectId::new("AIlf"),
     WarcraftObjectId::new("AImz"),
 ];
 const CRYS_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIta")];
+const CTAT_ABILITIES: &[WarcraftObjectId] = &[];
+const CTOA_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIam")];
+const CTOI_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIim")];
+const CTOS_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIsm")];
+const CVDT_ABILITIES: &[WarcraftObjectId] = &[];
+const CVFS_ABILITIES: &[WarcraftObjectId] = &[];
+const CVPE_ABILITIES: &[WarcraftObjectId] = &[];
+const CVVB_ABILITIES: &[WarcraftObjectId] = &[];
 const DESC_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIbk")];
 const DKFW_ABILITIES: &[WarcraftObjectId] = &[];
 const DPHE_ABILITIES: &[WarcraftObjectId] = &[];
@@ -63186,6 +67943,7 @@ const EATE_UNIT_TRAINS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Emoo"),
     WarcraftObjectId::new("Ewar"),
 ];
+const EBAC_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIni")];
 const EBAL_UNIT_ABILITIES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Aimp"), WarcraftObjectId::new("Ault")];
 const EBAL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -63194,6 +67952,24 @@ const EBAL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const EBAL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const EBAL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const EBAL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const EBHG_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AIni"),
+    WarcraftObjectId::new("AEqu"),
+    WarcraftObjectId::new("AThg"),
+    WarcraftObjectId::new("ASde"),
+];
+const EBHI_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AIni"),
+    WarcraftObjectId::new("AEqu"),
+    WarcraftObjectId::new("AThi"),
+    WarcraftObjectId::new("ASde"),
+];
+const EBHL_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AIni"),
+    WarcraftObjectId::new("AEqu"),
+    WarcraftObjectId::new("AThl"),
+    WarcraftObjectId::new("ASde"),
+];
 const EBSH_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Ault")];
 const EBSH_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const EBSH_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -63201,6 +67977,24 @@ const EBSH_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const EBSH_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const EBSH_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const EBSH_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const EBUA_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AIni"),
+    WarcraftObjectId::new("AEqu"),
+    WarcraftObjectId::new("ATua"),
+    WarcraftObjectId::new("ASde"),
+];
+const EBUG_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AIni"),
+    WarcraftObjectId::new("AEqu"),
+    WarcraftObjectId::new("ATug"),
+    WarcraftObjectId::new("ASde"),
+];
+const EBUL_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AIni"),
+    WarcraftObjectId::new("AEqu"),
+    WarcraftObjectId::new("ATul"),
+    WarcraftObjectId::new("ASde"),
+];
 const ECEN_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("SCc1"),
     WarcraftObjectId::new("AInv"),
@@ -63862,6 +68656,7 @@ const GEMT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Adt1")];
 const GFOR_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIgf")];
 const GLDO_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIgd")];
 const GLSK_ABILITIES: &[WarcraftObjectId] = &[];
+const GLXB_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aglx")];
 const GMFR_ABILITIES: &[WarcraftObjectId] = &[];
 const GOBM_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIpm")];
 const GOLD_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIgo")];
@@ -64074,6 +68869,32 @@ const HCAS_UNIT_RESEARCHES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Rhpm"
 const HCAS_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HCAS_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HCAS_UNIT_TRAINS: &[WarcraftObjectId] = &[WarcraftObjectId::new("hpea")];
+const HCT1_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const HCT1_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HCT1_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHsw"),
+    WarcraftObjectId::new("AHbd"),
+    WarcraftObjectId::new("AHch"),
+    WarcraftObjectId::new("AHwc"),
+];
+const HCT1_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HCT1_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HCT1_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HCT1_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HCTA_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aaca")];
+const HCTA_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HCTA_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const HCTA_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HCTA_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HCTA_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HCTA_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HCTG_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const HCTH_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Adef")];
 const HCTH_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const HCTH_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -64081,6 +68902,30 @@ const HCTH_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HCTH_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HCTH_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HCTH_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HCTL_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const HCTL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HCTL_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHhs"),
+    WarcraftObjectId::new("AHen"),
+    WarcraftObjectId::new("AHic"),
+    WarcraftObjectId::new("AHct"),
+];
+const HCTL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HCTL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HCTL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HCTL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HCTR_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const HCTR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HCTR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHsw"),
+    WarcraftObjectId::new("AHbd"),
+    WarcraftObjectId::new("AHch"),
+    WarcraftObjectId::new("AHwc"),
+];
+const HCTR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HCTR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HCTR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HCTR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const HCTW_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Abds"),
     WarcraftObjectId::new("Adts"),
@@ -64225,6 +69070,18 @@ const HJAI_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HJAI_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HJAI_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HJAI_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HJSM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const HJSM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HJSM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHas"),
+    WarcraftObjectId::new("AHsf"),
+    WarcraftObjectId::new("AHmc"),
+    WarcraftObjectId::new("AHsl"),
+];
+const HJSM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HJSM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HJSM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HJSM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const HKAL_UNIT_ABILITIES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("AInv"), WarcraftObjectId::new("Asph")];
 const HKAL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -64261,6 +69118,19 @@ const HKNI_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HKNI_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HKNI_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HKNI_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HLEO_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const HLEO_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HLEO_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHhr"),
+    WarcraftObjectId::new("AHhc"),
+    WarcraftObjectId::new("AHgr"),
+    WarcraftObjectId::new("AHgh"),
+    WarcraftObjectId::new("Aaml"),
+];
+const HLEO_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HLEO_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HLEO_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HLEO_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const HLGR_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
 const HLGR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const HLGR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
@@ -64510,6 +69380,13 @@ const HSPT_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const HSPT_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const HSPT_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const HSPT_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const HTMX_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const HTMX_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const HTMX_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const HTMX_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const HTMX_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const HTMX_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const HTMX_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const HTOW_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Abdl"),
     WarcraftObjectId::new("Amic"),
@@ -64706,6 +69583,10 @@ const NAKA_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AOcl"),
     WarcraftObjectId::new("AEsh"),
     WarcraftObjectId::new("ANr2"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NAKA_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NAKA_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64718,6 +69599,10 @@ const NAL2_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANab"),
     WarcraftObjectId::new("ANcr"),
     WarcraftObjectId::new("ANtm"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NAL2_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NAL2_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64730,6 +69615,10 @@ const NAL3_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANab"),
     WarcraftObjectId::new("ANcr"),
     WarcraftObjectId::new("ANtm"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NAL3_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NAL3_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64749,6 +69638,10 @@ const NALC_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANab"),
     WarcraftObjectId::new("ANcr"),
     WarcraftObjectId::new("ANtm"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NALC_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NALC_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64761,6 +69654,10 @@ const NALM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANab"),
     WarcraftObjectId::new("ANcr"),
     WarcraftObjectId::new("ANtm"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NALM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NALM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64864,6 +69761,10 @@ const NBBC_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AOcr"),
     WarcraftObjectId::new("AOmi"),
     WarcraftObjectId::new("AOww"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NBBC_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NBBC_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -64993,6 +69894,10 @@ const NBRN_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANba"),
     WarcraftObjectId::new("ANdr"),
     WarcraftObjectId::new("ANch"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NBRN_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NBRN_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -65026,6 +69931,10 @@ const NBST_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANsq"),
     WarcraftObjectId::new("ANsw"),
     WarcraftObjectId::new("ANst"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NBST_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NBST_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -65930,6 +70839,14 @@ const NDTW_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NDTW_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NDTW_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NDTW_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const NDUM_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Aloc"), WarcraftObjectId::new("Avul")];
+const NDUM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const NDUM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const NDUM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const NDUM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const NDUM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const NDUM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NDWM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Awan")];
 const NDWM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const NDWM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -66244,6 +71161,10 @@ const NFIR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANlm"),
     WarcraftObjectId::new("ANvc"),
     WarcraftObjectId::new("ANia"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NFIR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NFIR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -66631,6 +71552,18 @@ const NGLM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NGLM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NGLM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NGLM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const NGLX_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const NGLX_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const NGLX_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
+];
+const NGLX_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const NGLX_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const NGLX_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const NGLX_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NGME_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Aneu"),
     WarcraftObjectId::new("Avul"),
@@ -67164,14 +72097,24 @@ const NJKS_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NJKS_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NKJX_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
 const NKJX_UNIT_BUILDS: &[WarcraftObjectId] = &[];
-const NKJX_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const NKJX_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
+];
 const NKJX_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NKJX_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NKJX_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NKJX_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NKLJ_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
 const NKLJ_UNIT_BUILDS: &[WarcraftObjectId] = &[];
-const NKLJ_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const NKLJ_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
+];
 const NKLJ_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NKLJ_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NKLJ_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
@@ -67309,6 +72252,10 @@ const NMAG_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANht"),
     WarcraftObjectId::new("ANca"),
     WarcraftObjectId::new("ANdo"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NMAG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NMAG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -67328,6 +72275,10 @@ const NMAN_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AHtc"),
     WarcraftObjectId::new("AOeq"),
     WarcraftObjectId::new("ANrn"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NMAN_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NMAN_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -67763,7 +72714,13 @@ const NMSN_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NMSN_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NMSR_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
 const NMSR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
-const NMSR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ANrf")];
+const NMSR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("ANrf"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
+];
 const NMSR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NMSR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NMSR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
@@ -67826,6 +72783,10 @@ const NNGS_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANfa"),
     WarcraftObjectId::new("ANms"),
     WarcraftObjectId::new("ANto"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NNGS_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NNGS_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68092,6 +73053,22 @@ const NOWL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NOWL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const NOWL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const NOWL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const NPAL_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const NPAL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const NPAL_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AHcr"),
+    WarcraftObjectId::new("ANcp"),
+    WarcraftObjectId::new("AHpa"),
+    WarcraftObjectId::new("AHcl"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
+];
+const NPAL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const NPAL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const NPAL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const NPAL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NPBM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
 const NPBM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const NPBM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
@@ -68099,6 +73076,10 @@ const NPBM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANdh"),
     WarcraftObjectId::new("ANdb"),
     WarcraftObjectId::new("ANef"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NPBM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NPBM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68154,6 +73135,10 @@ const NPLD_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("AHtc"),
     WarcraftObjectId::new("AOeq"),
     WarcraftObjectId::new("ANrn"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NPLD_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NPLD_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68173,6 +73158,10 @@ const NPLH_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANht"),
     WarcraftObjectId::new("ANca"),
     WarcraftObjectId::new("ANdo"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NPLH_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NPLH_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68334,6 +73323,10 @@ const NROB_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANcs"),
     WarcraftObjectId::new("ANeg"),
     WarcraftObjectId::new("ANrg"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NROB_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NROB_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68608,6 +73601,10 @@ const NSJS_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Acdb"),
     WarcraftObjectId::new("Acef"),
     WarcraftObjectId::new("Aamk"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NSJS_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NSJS_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68966,6 +73963,10 @@ const NSWT_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANfa"),
     WarcraftObjectId::new("ANms"),
     WarcraftObjectId::new("ANto"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NSWT_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NSWT_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -68989,6 +73990,7 @@ const NTAV_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Npbm"),
     WarcraftObjectId::new("Nplh"),
     WarcraftObjectId::new("Nbst"),
+    WarcraftObjectId::new("Npal"),
 ];
 const NTAV_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const NTEN_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
@@ -69034,6 +74036,10 @@ const NTIN_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("ANcs"),
     WarcraftObjectId::new("ANeg"),
     WarcraftObjectId::new("ANrg"),
+    WarcraftObjectId::new("AHDq"),
+    WarcraftObjectId::new("AHDw"),
+    WarcraftObjectId::new("AUDq"),
+    WarcraftObjectId::new("AUDw"),
 ];
 const NTIN_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const NTIN_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
@@ -69876,6 +74882,116 @@ const OHWD_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const OHWD_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const OHWD_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const OHWD_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIDB_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIDG_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIE1_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Aloc"), WarcraftObjectId::new("Aes6")];
+const OIE1_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIE1_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIE1_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIE1_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIE1_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIE1_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIE2_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Aloc"), WarcraftObjectId::new("Aes7")];
+const OIE2_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIE2_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIE2_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIE2_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIE2_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIE2_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIE3_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Aloc"), WarcraftObjectId::new("Aes8")];
+const OIE3_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIE3_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIE3_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIE3_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIE3_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIE3_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIE4_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Aloc"), WarcraftObjectId::new("Aes9")];
+const OIE4_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIE4_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIE4_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIE4_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIE4_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIE4_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIFR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIGS_UNIT_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("Aloc"),
+    WarcraftObjectId::new("Agr1"),
+    WarcraftObjectId::new("Agr5"),
+];
+const OIGS_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIGS_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIGS_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIGS_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIGS_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIGS_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIMD_UNIT_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("Aloc"),
+    WarcraftObjectId::new("Amgl"),
+    WarcraftObjectId::new("Amgi"),
+];
+const OIMD_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIMD_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIMD_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIMD_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIMD_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIMD_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OIRF_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aloc")];
+const OIRF_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OIRF_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OIRF_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OIRF_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OIRF_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OIRF_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OISG_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const OISG_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OISG_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OISG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OISG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OISG_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OISG_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OISK_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const OISK_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OISK_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OISK_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OISK_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OISK_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OISK_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OISM_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const OISM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OISM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OISM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OISM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OISM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OISM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const OISP_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ACvs")];
+const OISP_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const OISP_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const OISP_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const OISP_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const OISP_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const OISP_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const OJGN_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
 const OJGN_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const OJGN_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -70338,6 +75454,7 @@ const PCLR_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIpr")];
 const PDI2_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIvg")];
 const PDIV_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIdv")];
 const PENR_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AImb")];
+const PEOU_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIh5")];
 const PGHE_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIh2")];
 const PGIN_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIv2")];
 const PGMA_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIm2")];
@@ -70353,6 +75470,8 @@ const POMN_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIrv")];
 const PRES_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIre")];
 const PRVT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIlf")];
 const PSPD_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIsp")];
+const PUHE_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIh4")];
+const PUMA_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIm4")];
 const RAG1_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIa3")];
 const RAM1_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIx1")];
 const RAM2_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIx2")];
@@ -70527,6 +75646,7 @@ const TRET_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aret")];
 const TSCT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIbt")];
 const TST2_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInm")];
 const TSTR_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIsm")];
+const TTAL_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ATap")];
 const UABC_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aap1")];
 const UABC_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UABC_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -70581,6 +75701,19 @@ const UANB_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UANB_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UANB_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UANB_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UANY_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UANY_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UANY_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AUwf"),
+    WarcraftObjectId::new("AUla"),
+    WarcraftObjectId::new("AUdb"),
+    WarcraftObjectId::new("AUwc"),
+    WarcraftObjectId::new("Aaml"),
+];
+const UANY_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UANY_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UANY_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UANY_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UAOD_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Abgs")];
 const UAOD_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UAOD_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -70605,6 +75738,25 @@ const UARB_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UARB_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UARB_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UARB_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UARF_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UARF_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UARF_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AUdc"),
+    WarcraftObjectId::new("AUdp"),
+    WarcraftObjectId::new("AUau"),
+    WarcraftObjectId::new("AUa2"),
+];
+const UARF_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UARF_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UARF_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UARF_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UASS_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("ACct")];
+const UASS_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UASS_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UASS_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UASS_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UASS_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UASS_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UBAL_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
 const UBAL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UBAL_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
@@ -70644,6 +75796,13 @@ const UBDR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UBDR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UBDR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UBDR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UBLW_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Apbw")];
+const UBLW_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UBLW_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UBLW_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UBLW_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UBLW_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UBLW_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UBON_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Abgs")];
 const UBON_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UBON_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -70662,6 +75821,13 @@ const UBOT_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UBOT_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UBOT_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UBOT_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UBRU_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UBRU_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UBRU_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UBRU_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UBRU_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UBRU_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UBRU_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UBSP_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Advm"),
     WarcraftObjectId::new("Afak"),
@@ -70675,6 +75841,13 @@ const UBSP_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UBSP_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UBSP_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UBSP_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UBTR_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UBTR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UBTR_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UBTR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UBTR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UBTR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UBTR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UCLC_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
 const UCLC_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UCLC_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
@@ -70753,6 +75926,20 @@ const UCSC_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UCSC_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UCSC_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UCSC_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UCTL_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UCTL_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UCTL_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UCTL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UCTL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UCTL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UCTL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UCZE_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UDEA_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
 const UDEA_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UDEA_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
@@ -70809,6 +75996,25 @@ const UEAR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UEAR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UEAR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UFLG_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIfe")];
+const UFR2_UNIT_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("Abns"),
+    WarcraftObjectId::new("Amda"),
+    WarcraftObjectId::new("Absc"),
+];
+const UFR2_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UFR2_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UFR2_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UFR2_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UFR2_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UFR2_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UFRB_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Abns"), WarcraftObjectId::new("Amda")];
+const UFRB_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UFRB_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UFRB_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UFRB_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UFRB_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UFRB_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UFRO_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Afrz"),
     WarcraftObjectId::new("Afrb"),
@@ -70828,6 +76034,14 @@ const UGAR_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UGAR_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UGAR_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UGAR_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UGBO_UNIT_ABILITIES: &[WarcraftObjectId] =
+    &[WarcraftObjectId::new("Aiun"), WarcraftObjectId::new("Acn2")];
+const UGBO_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UGBO_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UGBO_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UGBO_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UGBO_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UGBO_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UGHO_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Acan"),
     WarcraftObjectId::new("Ahrl"),
@@ -70848,6 +76062,45 @@ const UGOL_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UGOL_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UGOL_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UGOL_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UGR2_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UGR2_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UGR2_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AUsw"),
+    WarcraftObjectId::new("AUbd"),
+    WarcraftObjectId::new("AUbr"),
+    WarcraftObjectId::new("AUvg"),
+    WarcraftObjectId::new("Aaml"),
+];
+const UGR2_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UGR2_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UGR2_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UGR2_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UGR3_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UGR3_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UGR3_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AUsw"),
+    WarcraftObjectId::new("AUbd"),
+    WarcraftObjectId::new("AUbr"),
+    WarcraftObjectId::new("AUvg"),
+    WarcraftObjectId::new("Aaml"),
+];
+const UGR3_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UGR3_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UGR3_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UGR3_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UGRK_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UGRK_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UGRK_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[
+    WarcraftObjectId::new("AUsw"),
+    WarcraftObjectId::new("AUbd"),
+    WarcraftObjectId::new("AUbr"),
+    WarcraftObjectId::new("AUvg"),
+    WarcraftObjectId::new("Aaml"),
+];
+const UGRK_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UGRK_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UGRK_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UGRK_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UGRM_UNIT_ABILITIES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Astn"), WarcraftObjectId::new("ACmi")];
 const UGRM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -70872,6 +76125,20 @@ const UGRV_UNIT_RESEARCHES: &[WarcraftObjectId] = &[
 const UGRV_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UGRV_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UGRV_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UIGH_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Auic")];
+const UIGH_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UIGH_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UIGH_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UIGH_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UIGH_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UIGH_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UJSM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UJSM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UJSM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UJSM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UJSM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UJSM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UJSM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const UKTG_UNIT_ABILITIES: &[WarcraftObjectId] = &[];
 const UKTG_UNIT_BUILDS: &[WarcraftObjectId] = &[];
 const UKTG_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
@@ -71009,6 +76276,34 @@ const UPLG_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
 const UPLG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UPLG_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UPLG_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UPUT_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UPUT_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UPUT_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UPUT_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UPUT_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UPUT_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UPUT_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const URFF_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const URFF_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const URFF_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const URFF_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const URFF_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const URFF_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const URFF_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const URFM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const URFM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const URFM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const URFM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const URFM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const URFM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const URFM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const URFU_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const URFU_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const URFU_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const URFU_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const URFU_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const URFU_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const URFU_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const USAP_UNIT_ABILITIES: &[WarcraftObjectId] =
     &[WarcraftObjectId::new("Abgs"), WarcraftObjectId::new("Asac")];
 const USAP_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -71217,6 +76512,27 @@ const UZIG_UNIT_RESEARCHES: &[WarcraftObjectId] =
 const UZIG_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
 const UZIG_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
 const UZIG_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UZKF_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UZKF_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UZKF_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UZKF_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UZKF_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UZKF_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UZKF_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UZKM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UZKM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UZKM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UZKM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UZKM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UZKM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UZKM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
+const UZRM_UNIT_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AInv")];
+const UZRM_UNIT_BUILDS: &[WarcraftObjectId] = &[];
+const UZRM_UNIT_HERO_ABILITIES: &[WarcraftObjectId] = &[];
+const UZRM_UNIT_RESEARCHES: &[WarcraftObjectId] = &[];
+const UZRM_UNIT_SELL_ITEMS: &[WarcraftObjectId] = &[];
+const UZRM_UNIT_SELL_UNITS: &[WarcraftObjectId] = &[];
+const UZRM_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const VAMP_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIpv")];
 const VDDL_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIi1")];
 const VPUR_ABILITIES: &[WarcraftObjectId] = &[];
@@ -71234,511 +76550,566 @@ const WOMS_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Aste")];
 const WSHS_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("Ashs")];
 const WSWD_ABILITIES: &[WarcraftObjectId] = &[WarcraftObjectId::new("AIsw")];
 const WTLG_ABILITIES: &[WarcraftObjectId] = &[];
-const AABS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AADM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAHA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAKB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AALL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAM2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAMK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAMS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAP1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAP2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAP3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AASL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAST_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AATP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAVE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AAWA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABDL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABDS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABGL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABGM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABGS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABLO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABOF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABRF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABSK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABTL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABU2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABU3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABU5_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABUN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ABUR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACAV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACBZ_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACC2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACC3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCW_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACCY_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACD2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDH_COOLDOWNS: [u32; 4] = [12000, 12000, 12000, 12000];
-const ACDM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACDV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACEF_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const ACEN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACEV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACF2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACF3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACFU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACHD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACHE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACHT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACHV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACHW_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACHX_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACIF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACIM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACLF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACLS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACM2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACMF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACMG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACMI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACMO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACN2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACNR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACNY_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACO2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACO3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACOA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACOH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACOR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACPA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACPF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACPS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACPU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACPV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACPY_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACR2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRJ_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACRS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACS7_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACS9_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACSW_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACT2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACTB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACTC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACTN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACUA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACUF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACVP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACVS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACWB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACWE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ACYC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADCN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADEC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADEF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADEV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADIS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADRI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADRO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADSM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADT1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADTG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADTN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADTS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADVC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ADVM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEAH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEAT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEBL_COOLDOWNS: [u32; 4] = [10000, 5000, 2500, 4000];
-const AEBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEER_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const AEEV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEFK_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const AEFN_COOLDOWNS: [u32; 4] = [20000, 20000, 20000, 20000];
-const AEGM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEGR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEIB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEIL_COOLDOWNS: [u32; 4] = [120000, 120000, 120000, 120000];
-const AEIM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEMB_COOLDOWNS: [u32; 4] = [7000, 6000, 5000, 5000];
-const AEME_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const AEMK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AENC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AENR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AENS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AENT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AENW_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AESB_COOLDOWNS: [u32; 4] = [100000, 120000, 120000, 120000];
-const AESF_COOLDOWNS: [u32; 4] = [120000, 120000, 120000, 120000];
-const AESH_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const AESN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AESR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEST_COOLDOWNS: [u32; 4] = [20000, 20000, 20000, 20000];
-const AESV_COOLDOWNS: [u32; 4] = [180000, 20000, 20000, 20000];
-const AETH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AETQ_COOLDOWNS: [u32; 4] = [100000, 100000, 100000, 120000];
-const AEVI_COOLDOWNS: [u32; 4] = [120000, 120000, 120000, 120000];
-const AEWS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEXH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AEYE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFA2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFAE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFAK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFBB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFBK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFBT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFLA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFLK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFR2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFRA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFRB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFRC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFRZ_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFSH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AFZY_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AGHO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AGLD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AGRA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AGYB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AGYD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AGYV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHAB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHAD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHAN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHAV_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const AHBH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHBN_COOLDOWNS: [u32; 4] = [4000, 2000, 0, 1000];
-const AHBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHBZ_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const AHCA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHDR_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 6000];
-const AHDS_COOLDOWNS: [u32; 4] = [35000, 50000, 65000, 65000];
-const AHEA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHFA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHFS_COOLDOWNS: [u32; 4] = [10000, 10000, 10000, 10000];
-const AHHB_COOLDOWNS: [u32; 4] = [5500, 5500, 5500, 5500];
-const AHID_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHLH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHMT_COOLDOWNS: [u32; 4] = [30000, 30000, 30000, 30000];
-const AHNL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHPE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHPX_COOLDOWNS: [u32; 4] = [180000, 120000, 120000, 120000];
-const AHR3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHRE_COOLDOWNS: [u32; 4] = [240000, 240000, 240000, 240000];
-const AHRI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHRL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHRP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHSB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHTA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHTB_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const AHTC_COOLDOWNS: [u32; 4] = [7000, 7000, 7000, 7000];
-const AHWD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AHWE_COOLDOWNS: [u32; 4] = [20000, 20000, 20000, 20000];
-const AIEN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AIHM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AIHN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AIMP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AINF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AINV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AION_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AIUN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AIUV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AIVS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ALAM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ALIQ_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ALIT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ALOA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ALOC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ALSH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMBB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMBD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMBT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMED_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMEL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMFL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMGI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMGL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMGR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMIC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMIL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMIM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMIN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMLS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMNX_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AMRF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANAB_COOLDOWNS: [u32; 4] = [12000, 12000, 12000, 12000];
-const ANAV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANB2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANBA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANBF_COOLDOWNS: [u32; 4] = [10000, 10000, 10000, 10000];
-const ANBH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANBL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANC1_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const ANC2_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const ANC3_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const ANCA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANCF_COOLDOWNS: [u32; 4] = [10000, 10000, 10000, 10000];
-const ANCH_COOLDOWNS: [u32; 4] = [45000, 30000, 30000, 30000];
-const ANCL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANCR_COOLDOWNS: [u32; 4] = [30000, 30000, 30000, 30000];
-const ANCS_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const AND1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AND2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AND3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANDB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANDC_COOLDOWNS: [u32; 4] = [100, 100, 100, 100];
-const ANDE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANDH_COOLDOWNS: [u32; 4] = [12000, 12000, 12000, 12000];
-const ANDM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANDO_COOLDOWNS: [u32; 4] = [120000, 120000, 120000, 120000];
-const ANDP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANDR_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const ANDT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANE2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANEF_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const ANEG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANEI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANEN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANEU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANFA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANFB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANFD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANFL_COOLDOWNS: [u32; 4] = [11000, 11000, 11000, 11000];
-const ANG1_COOLDOWNS: [u32; 4] = [1000, 1000, 1000, 1000];
-const ANG2_COOLDOWNS: [u32; 4] = [1000, 1000, 1000, 1000];
-const ANG3_COOLDOWNS: [u32; 4] = [1000, 1000, 1000, 1000];
-const ANH1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANH2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANHA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANHS_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const ANHT_COOLDOWNS: [u32; 4] = [12000, 12000, 12000, 12000];
-const ANHW_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const ANHX_COOLDOWNS: [u32; 4] = [7000, 7000, 7000, 7000];
-const ANIA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANIC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANIN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANLM_COOLDOWNS: [u32; 4] = [32000, 32000, 32000, 35000];
-const ANMS_COOLDOWNS: [u32; 4] = [10000, 10000, 10000, 10000];
-const ANPA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANPI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANR2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANR3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANRC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANRE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANRF_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const ANRG_COOLDOWNS: [u32; 4] = [1000, 1000, 1000, 1000];
-const ANRN_COOLDOWNS: [u32; 4] = [240000, 240000, 240000, 240000];
-const ANS1_COOLDOWNS: [u32; 4] = [35000, 35000, 35000, 35000];
-const ANS2_COOLDOWNS: [u32; 4] = [35000, 35000, 35000, 35000];
-const ANS3_COOLDOWNS: [u32; 4] = [35000, 35000, 35000, 35000];
-const ANSB_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const ANSG_COOLDOWNS: [u32; 4] = [40000, 40000, 40000, 40000];
-const ANSH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANSI_COOLDOWNS: [u32; 4] = [15000, 15000, 15000, 15000];
-const ANSK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANSL_COOLDOWNS: [u32; 4] = [100, 100, 100, 100];
-const ANSO_COOLDOWNS: [u32; 4] = [12000, 12000, 12000, 12000];
-const ANSQ_COOLDOWNS: [u32; 4] = [25000, 25000, 25000, 25000];
-const ANST_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const ANSW_COOLDOWNS: [u32; 4] = [70000, 70000, 70000, 70000];
-const ANSY_COOLDOWNS: [u32; 4] = [35000, 35000, 35000, 35000];
-const ANT2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANTA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANTH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANTM_COOLDOWNS: [u32; 4] = [45000, 45000, 45000, 45000];
-const ANTO_COOLDOWNS: [u32; 4] = [120000, 120000, 120000, 120000];
-const ANTR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ANVC_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const ANWK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOAE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOBK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOBS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOCL_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const AOCR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOEQ_COOLDOWNS: [u32; 4] = [90000, 90000, 90000, 90000];
-const AOFS_COOLDOWNS: [u32; 4] = [30000, 30000, 30000, 30000];
-const AOHW_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const AOHX_COOLDOWNS: [u32; 4] = [7000, 7000, 7000, 7000];
-const AOLS_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const AOMI_COOLDOWNS: [u32; 4] = [5000, 5000, 5000, 3000];
-const AOR2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOR3_COOLDOWNS: [u32; 4] = [240000, 120000, 240000, 240000];
-const AORB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AORE_COOLDOWNS: [u32; 4] = [240000, 240000, 240000, 240000];
-const AOS2_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const AOSF_COOLDOWNS: [u32; 4] = [30000, 30000, 30000, 30000];
-const AOSH_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const AOSP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOSW_COOLDOWNS: [u32; 4] = [6500, 6500, 6500, 6500];
-const AOTR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOVD_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const AOW2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AOWK_COOLDOWNS: [u32; 4] = [2000, 2000, 2000, 2000];
-const AOWS_COOLDOWNS: [u32; 4] = [7000, 7000, 7000, 7000];
-const AOWW_COOLDOWNS: [u32; 4] = [120000, 240000, 240000, 240000];
-const APAK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APG2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APHX_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APIG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APIT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APIV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APLY_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APOS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APRG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APS2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APSH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APTS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const APXF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARA2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARAI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARAL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARAV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARBR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AREJ_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AREN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AREP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARGL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARLM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARNG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARO1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARO2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AROA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AROC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARPL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARPM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARSG_COOLDOWNS: [u32; 4] = [30000, 30000, 30000, 30000];
-const ARSK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARSP_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const ARSQ_COOLDOWNS: [u32; 4] = [20000, 20000, 20000, 20000];
-const ARST_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ARSW_COOLDOWNS: [u32; 4] = [6500, 6500, 6500, 6500];
-const ASAC_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASAL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASB1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASB2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASB3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASD2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASD3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASDG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASDS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASHM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASID_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASLO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASLP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASP1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASPY_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASSK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASSP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASTA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASTD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASTH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASTN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ASUD_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ATAU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ATDG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ATOL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ATRU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ATSP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const ATWA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUA2_COOLDOWNS: [u32; 4] = [180000, 240000, 240000, 240000];
-const AUAN_COOLDOWNS: [u32; 4] = [180000, 240000, 240000, 240000];
-const AUAU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUAV_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUBU_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUCB_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const AUCO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUCS_COOLDOWNS: [u32; 4] = [10000, 10000, 10000, 10000];
-const AUDC_COOLDOWNS: [u32; 4] = [6000, 6000, 6000, 6000];
-const AUDD_COOLDOWNS: [u32; 4] = [150000, 150000, 150000, 150000];
-const AUDP_COOLDOWNS: [u32; 4] = [15000, 15000, 15000, 15000];
-const AUDR_COOLDOWNS: [u32; 4] = [20000, 20000, 20000, 15000];
-const AUFA_COOLDOWNS: [u32; 4] = [2000, 2000, 2000, 2000];
-const AUFN_COOLDOWNS: [u32; 4] = [8000, 8000, 8000, 8000];
-const AUFU_COOLDOWNS: [u32; 4] = [2000, 2000, 2000, 2000];
-const AUGF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUGH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUHF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUIM_COOLDOWNS: [u32; 4] = [9000, 9000, 9000, 9000];
-const AUIN_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const AULS_COOLDOWNS: [u32; 4] = [180000, 180000, 180000, 180000];
-const AULT_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUNS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUSL_COOLDOWNS: [u32; 4] = [4000, 4000, 4000, 4000];
-const AUSM_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AUTS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AVEN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AVNG_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AVUL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWAN_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWAR_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWEB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWFB_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWHA_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWRH_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWRP_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const AWRS_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SBSK_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SBTL_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SCAE_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SCC1_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SCH2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SCH3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SCH5_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SCRI_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SDRO_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SLO2_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SLO3_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
-const SNIN_COOLDOWNS: [u32; 4] = [30000, 30000, 30000, 30000];
-const SUHF_COOLDOWNS: [u32; 4] = [0, 0, 0, 0];
+const AABS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AACA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AADM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAHA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAKB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AALL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAM2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAMK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAML_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAMS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAP1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAP2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAP3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AASL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAST_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AATP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAVE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AAWA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABDL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABDS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABGL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABGM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABGS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABLO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABNS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABOF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABRF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABSC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABSK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABTL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABU2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABU3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABU5_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABUN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ABUR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACAV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACBZ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACC2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACC3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACCY_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACD2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDH_COOLDOWNS: [u32; 5] = [12000, 12000, 12000, 12000, 0];
+const ACDM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACDV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACEF_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const ACEN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACEV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACF2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACF3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACFU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACHD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACHE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACHT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACHV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACHW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACHX_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACIF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACIM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACLF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACLS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACM2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACMF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACMG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACMI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACMO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACN2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACNR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACNY_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACO2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACO3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACOA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACOH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACOR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACPA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACPF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACPS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACPU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACPV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACPY_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACR2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRJ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACRS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACS7_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACS9_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACSW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACT2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACTB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACTC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACTN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACUA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACUF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACVP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACVS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACWB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACWE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ACYC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADCN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADEC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADEF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADEV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADIS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADRI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADRO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADSM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADT1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADTG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADTN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADTS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADVC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ADVM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEAH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEAR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEAT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEBL_COOLDOWNS: [u32; 5] = [10000, 5000, 2500, 4000, 0];
+const AEBU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEER_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const AEEV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEFK_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const AEFN_COOLDOWNS: [u32; 5] = [20000, 20000, 20000, 20000, 0];
+const AEGM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEGR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEIB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEIL_COOLDOWNS: [u32; 5] = [120000, 120000, 120000, 120000, 0];
+const AEIM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEMB_COOLDOWNS: [u32; 5] = [7000, 6000, 5000, 5000, 0];
+const AEME_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const AEMK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AENC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AENR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AENS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AENT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AENW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AES6_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AES7_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AES8_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AES9_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AESB_COOLDOWNS: [u32; 5] = [100000, 120000, 120000, 120000, 0];
+const AESF_COOLDOWNS: [u32; 5] = [120000, 120000, 120000, 120000, 0];
+const AESH_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const AESN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AESR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEST_COOLDOWNS: [u32; 5] = [20000, 20000, 20000, 20000, 0];
+const AESV_COOLDOWNS: [u32; 5] = [180000, 20000, 20000, 20000, 0];
+const AETH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AETQ_COOLDOWNS: [u32; 5] = [100000, 100000, 100000, 120000, 0];
+const AEVI_COOLDOWNS: [u32; 5] = [120000, 120000, 120000, 120000, 0];
+const AEWS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEXH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AEYE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFA2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFAB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFAE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFAK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFBB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFBK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFBT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFHS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFLA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFLK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFR2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFRA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFRB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFRC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFRZ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFSH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFUF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AFZY_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGHO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGLD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGR1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGR5_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGRA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGYB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGYD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AGYV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHAB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHAD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHAN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHAR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHAS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHAV_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const AHBD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHBH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHBN_COOLDOWNS: [u32; 5] = [4000, 2000, 0, 1000, 0];
+const AHBU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHBZ_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const AHCA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHCH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHCL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHCR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHCT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHDQ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHDR_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 6000, 0];
+const AHDS_COOLDOWNS: [u32; 5] = [35000, 50000, 65000, 65000, 0];
+const AHDW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHEA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHEN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHFA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHFS_COOLDOWNS: [u32; 5] = [10000, 10000, 10000, 10000, 0];
+const AHGH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHGR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHHB_COOLDOWNS: [u32; 5] = [5500, 5500, 5500, 5500, 0];
+const AHHC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHHR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHHS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHIC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHID_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHLH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHMC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHMT_COOLDOWNS: [u32; 5] = [30000, 30000, 30000, 30000, 0];
+const AHNL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHPA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHPE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHPX_COOLDOWNS: [u32; 5] = [180000, 120000, 120000, 120000, 0];
+const AHR3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHRE_COOLDOWNS: [u32; 5] = [240000, 240000, 240000, 240000, 0];
+const AHRI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHRL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHRP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHSB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHSF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHSL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHSW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHTA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHTB_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const AHTC_COOLDOWNS: [u32; 5] = [7000, 7000, 7000, 7000, 0];
+const AHWC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHWD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AHWE_COOLDOWNS: [u32; 5] = [20000, 20000, 20000, 20000, 0];
+const AIEN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AIHM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AIHN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AIMP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AINF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AINV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AION_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AIUN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AIUV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AIVS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ALAM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ALIQ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ALIT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ALOA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ALOC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ALSH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMBB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMBD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMBT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMDA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMED_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMEL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMFL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMGI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMGL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMGR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMIC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMIL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMIM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMIN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMLS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMNX_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AMRF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANAB_COOLDOWNS: [u32; 5] = [12000, 12000, 12000, 12000, 0];
+const ANAV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANB2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANBA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANBF_COOLDOWNS: [u32; 5] = [10000, 10000, 10000, 10000, 0];
+const ANBH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANBL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANC1_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const ANC2_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const ANC3_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const ANCA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANCF_COOLDOWNS: [u32; 5] = [10000, 10000, 10000, 10000, 0];
+const ANCH_COOLDOWNS: [u32; 5] = [45000, 30000, 30000, 30000, 0];
+const ANCL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANCP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANCR_COOLDOWNS: [u32; 5] = [30000, 30000, 30000, 30000, 0];
+const ANCS_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const AND1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AND2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AND3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANDB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANDC_COOLDOWNS: [u32; 5] = [100, 100, 100, 100, 0];
+const ANDE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANDH_COOLDOWNS: [u32; 5] = [12000, 12000, 12000, 12000, 0];
+const ANDM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANDO_COOLDOWNS: [u32; 5] = [120000, 120000, 120000, 120000, 0];
+const ANDP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANDR_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const ANDT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANE2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANEF_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const ANEG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANEI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANEN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANEU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANFA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANFB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANFD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANFL_COOLDOWNS: [u32; 5] = [11000, 11000, 11000, 11000, 0];
+const ANG1_COOLDOWNS: [u32; 5] = [1000, 1000, 1000, 1000, 0];
+const ANG2_COOLDOWNS: [u32; 5] = [1000, 1000, 1000, 1000, 0];
+const ANG3_COOLDOWNS: [u32; 5] = [1000, 1000, 1000, 1000, 0];
+const ANH1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANH2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANHA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANHS_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const ANHT_COOLDOWNS: [u32; 5] = [12000, 12000, 12000, 12000, 0];
+const ANHW_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const ANHX_COOLDOWNS: [u32; 5] = [7000, 7000, 7000, 7000, 0];
+const ANIA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANIC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANIN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANLM_COOLDOWNS: [u32; 5] = [32000, 32000, 32000, 35000, 0];
+const ANMS_COOLDOWNS: [u32; 5] = [10000, 10000, 10000, 10000, 0];
+const ANPA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANPI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANR2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANR3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANRC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANRE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANRF_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const ANRG_COOLDOWNS: [u32; 5] = [1000, 1000, 1000, 1000, 0];
+const ANRN_COOLDOWNS: [u32; 5] = [240000, 240000, 240000, 240000, 0];
+const ANS1_COOLDOWNS: [u32; 5] = [35000, 35000, 35000, 35000, 0];
+const ANS2_COOLDOWNS: [u32; 5] = [35000, 35000, 35000, 35000, 0];
+const ANS3_COOLDOWNS: [u32; 5] = [35000, 35000, 35000, 35000, 0];
+const ANSB_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const ANSG_COOLDOWNS: [u32; 5] = [40000, 40000, 40000, 40000, 0];
+const ANSH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANSI_COOLDOWNS: [u32; 5] = [15000, 15000, 15000, 15000, 0];
+const ANSK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANSL_COOLDOWNS: [u32; 5] = [100, 100, 100, 100, 0];
+const ANSO_COOLDOWNS: [u32; 5] = [12000, 12000, 12000, 12000, 0];
+const ANSQ_COOLDOWNS: [u32; 5] = [25000, 25000, 25000, 25000, 0];
+const ANST_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const ANSW_COOLDOWNS: [u32; 5] = [70000, 70000, 70000, 70000, 0];
+const ANSY_COOLDOWNS: [u32; 5] = [35000, 35000, 35000, 35000, 0];
+const ANT2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANTA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANTH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANTM_COOLDOWNS: [u32; 5] = [45000, 45000, 45000, 45000, 0];
+const ANTO_COOLDOWNS: [u32; 5] = [120000, 120000, 120000, 120000, 0];
+const ANTR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ANVC_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const ANWK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOAE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOAR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOBK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOBS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOBU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOCL_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const AOCR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOEQ_COOLDOWNS: [u32; 5] = [90000, 90000, 90000, 90000, 0];
+const AOFS_COOLDOWNS: [u32; 5] = [30000, 30000, 30000, 30000, 0];
+const AOHW_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const AOHX_COOLDOWNS: [u32; 5] = [7000, 7000, 7000, 7000, 0];
+const AOLS_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const AOMB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOMI_COOLDOWNS: [u32; 5] = [5000, 5000, 5000, 3000, 0];
+const AOR2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOR3_COOLDOWNS: [u32; 5] = [240000, 120000, 240000, 240000, 0];
+const AORB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AORE_COOLDOWNS: [u32; 5] = [240000, 240000, 240000, 240000, 0];
+const AOS2_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const AOSF_COOLDOWNS: [u32; 5] = [30000, 30000, 30000, 30000, 0];
+const AOSH_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const AOSP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOSW_COOLDOWNS: [u32; 5] = [6500, 6500, 6500, 6500, 0];
+const AOTR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOVD_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const AOW2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AOWK_COOLDOWNS: [u32; 5] = [2000, 2000, 2000, 2000, 0];
+const AOWS_COOLDOWNS: [u32; 5] = [7000, 7000, 7000, 7000, 0];
+const AOWW_COOLDOWNS: [u32; 5] = [120000, 240000, 240000, 240000, 0];
+const APAK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APBW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APG2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APHX_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APIG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APIT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APIV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APLY_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APOS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APRG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APS2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APSH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APTS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const APXF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARA2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARAI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARAL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARAV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARBR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AREJ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AREN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AREP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARGL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARLM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARNG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARO1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARO2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AROA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AROC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARPL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARPM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARSG_COOLDOWNS: [u32; 5] = [30000, 30000, 30000, 30000, 0];
+const ARSK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARSP_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const ARSQ_COOLDOWNS: [u32; 5] = [20000, 20000, 20000, 20000, 0];
+const ARST_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ARSW_COOLDOWNS: [u32; 5] = [6500, 6500, 6500, 6500, 0];
+const ASAC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASAL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASB1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASB2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASB3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASD2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASD3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASDG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASDI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASDS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASEA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASFS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASHM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASID_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASIF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASLO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASLP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASP1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASPY_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASSB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASSK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASSP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASTA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASTD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASTH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASTN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ASUD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ATAU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ATDG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ATOL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ATRU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ATSP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const ATWA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUA2_COOLDOWNS: [u32; 5] = [180000, 240000, 240000, 240000, 0];
+const AUAN_COOLDOWNS: [u32; 5] = [180000, 240000, 240000, 240000, 0];
+const AUAU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUAV_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUBD_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUBR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUBU_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUCB_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const AUCO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUCS_COOLDOWNS: [u32; 5] = [10000, 10000, 10000, 10000, 0];
+const AUDB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUDC_COOLDOWNS: [u32; 5] = [6000, 6000, 6000, 6000, 0];
+const AUDD_COOLDOWNS: [u32; 5] = [150000, 150000, 150000, 150000, 0];
+const AUDP_COOLDOWNS: [u32; 5] = [15000, 15000, 15000, 15000, 0];
+const AUDQ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUDR_COOLDOWNS: [u32; 5] = [20000, 20000, 20000, 15000, 0];
+const AUDW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUFA_COOLDOWNS: [u32; 5] = [2000, 2000, 2000, 2000, 0];
+const AUFN_COOLDOWNS: [u32; 5] = [8000, 8000, 8000, 8000, 0];
+const AUFU_COOLDOWNS: [u32; 5] = [2000, 2000, 2000, 2000, 0];
+const AUGF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUGH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUHF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUIC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUIM_COOLDOWNS: [u32; 5] = [9000, 9000, 9000, 9000, 0];
+const AUIN_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const AULA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AULS_COOLDOWNS: [u32; 5] = [180000, 180000, 180000, 180000, 0];
+const AULT_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUNS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUSL_COOLDOWNS: [u32; 5] = [4000, 4000, 4000, 4000, 0];
+const AUSM_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUSW_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUTS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUVG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUWC_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AUWF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AVEN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AVIQ_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AVNG_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AVUL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWAN_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWAR_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWEB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWFB_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWHA_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWRH_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWRP_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const AWRS_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SBSK_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SBTL_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SCAE_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SCC1_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SCH2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SCH3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SCH5_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SCRI_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SDRO_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SLO2_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SLO3_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];
+const SNIN_COOLDOWNS: [u32; 5] = [30000, 30000, 30000, 30000, 0];
+const SUHF_COOLDOWNS: [u32; 5] = [0, 0, 0, 0, 0];

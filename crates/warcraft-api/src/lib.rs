@@ -12,12 +12,13 @@ pub use keycode::KeyCode;
 pub use meta::{
     AbilityMeta, AgilityBonuses, AttackType, AttributeBase, AttributeGrowth, CommandMeta,
     DamageEffectiveness, DamageMatrix, DefenseType, GameplayConstants, HeroAttributes,
-    IntelligenceBonuses, ItemMeta, ManaPool, PrimaryAttribute, RegenType, StrengthBonuses,
-    UnitAttack, UnitCombat, UnitFlags, UnitMeta, UnitProduction, UpgradeMeta, WeaponType,
+    IntelligenceBonuses, ItemMeta, MAX_ABILITY_LEVEL, ManaPool, PrimaryAttribute, RegenType,
+    StrengthBonuses, UnitAttack, UnitCombat, UnitFlags, UnitMeta, UnitProduction, UpgradeMeta,
+    WeaponType,
 };
 pub use object::{
     ColumnIndex, GridCoordinate, ItemClass, ObjectMap, ParseGridCoordinateError, Race, RowIndex,
-    UnitKind, UnitUpgradeSwap, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
+    TalentVariant, UnitKind, UnitUpgradeSwap, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
     WarcraftObjectKind, WarcraftObjectMeta, WarcraftObjectText,
 };
 pub use player::{
