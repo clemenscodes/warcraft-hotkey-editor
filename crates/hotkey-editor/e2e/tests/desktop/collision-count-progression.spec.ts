@@ -24,7 +24,7 @@ async function inAttentionState(
 }
 
 test.describe("Collision count progression across the resolve workflow", () => {
-  test("default template → resolve → apply grid drops the count from 99+ to 55 to 0", async ({
+  test("default template → resolve → apply grid drops the count from 99+ to 68 to 0", async ({
     page,
   }) => {
     await page.goto(APP);
@@ -55,7 +55,7 @@ test.describe("Collision count progression across the resolve workflow", () => {
     await page.locator(".unit-card").first().waitFor();
 
     const afterResolve = await collisionCount(page);
-    expect(afterResolve).toBe(55);
+    expect(afterResolve).toBe(68);
     expect(afterResolve).toBeLessThan(initialCount);
     expect(await inAttentionState(page)).toBe(true);
 

@@ -30,8 +30,8 @@ warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag
 # The change ships by tagging warcraft-data and bumping the tags above; a
 # committed patch breaks CI.
 [patch."https://github.com/clemenscodes/warcraft-data"]
-warcraft-api = { path = "/home/clemens/.local/src/warcraft-data/crates/warcraft-api" }
-warcraft-keybinds = { path = "/home/clemens/.local/src/warcraft-data/crates/warcraft-keybinds" }
+warcraft-api = { path = "/home/clemens/.local/src/warcraft-data-forsaken/crates/warcraft-api" }
+warcraft-keybinds = { path = "/home/clemens/.local/src/warcraft-data-forsaken/crates/warcraft-keybinds" }
 
 # Tuned for a shipped WASM SPA: size is the Lighthouse lever, and the app is
 # DOM-bound (per-frame Rust work is light), so trading compile time and raw
