@@ -5,7 +5,7 @@ pub use warcraft_api::{ColumnIndex, GridCoordinate, RowIndex};
 use warcraft_api::{
     SystemKeybindClass, SystemKeybindModifier, WarcraftObjectId, WarcraftObjectKind,
 };
-use warcraft_database::{WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
+use warcraft_database::{TALENT_VARIANTS, WARCRAFT_DATABASE, WARCRAFT_SYSTEM_KEYBINDS};
 
 use crate::custom_keys::CustomKeys;
 use crate::identity::ability_id::AbilityId;
@@ -719,6 +719,18 @@ impl SectionResolution {
             return Some(Self {
                 canonical_id,
                 kind: SectionKind::System(system_class),
+            });
+        }
+        // Hero talents are no database objects of their own, yet the live game
+        // reads each one's section once the talent replaces its base button, so
+        // their sections are kept as ability bindings.
+        if let Some(talent_variant) = TALENT_VARIANTS.iter().find(|talent_variant| {
+            talent_variant.variant_id().value().to_ascii_lowercase() == lowercase_id
+        }) {
+            let canonical_id = talent_variant.variant_id();
+            return Some(Self {
+                canonical_id,
+                kind: SectionKind::Ability,
             });
         }
         None

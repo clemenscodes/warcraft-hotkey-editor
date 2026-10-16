@@ -748,6 +748,20 @@ mod unit_collision_report_tests {
         };
         builder = builder.entry(entry);
 
+        // Uany (Dark Ranger)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aaml")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Uany", "Dark Ranger", empty_pos, empty_hot);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
         // ndth (Dark Troll High Priest)
         let entry = {
             let main_pos = PositionCollisionCardBuilder::new(GridRole::MainCommand)
@@ -785,6 +799,20 @@ mod unit_collision_report_tests {
                 .build();
             let eb = UnitCollisionEntryBuilder::new("nwzd", "Dark Wizard", empty_pos, empty_hot);
             let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Uarf (Death Knight)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AUdc"), GridSlotId::ability("AUau")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Uarf", "Death Knight", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
@@ -955,7 +983,7 @@ mod unit_collision_report_tests {
                 .collision_at(
                     0,
                     2,
-                    &[GridSlotId::ability("AChv"), GridSlotId::ability("ACsw")],
+                    &[GridSlotId::ability("ACsw"), GridSlotId::ability("AChv")],
                 )
                 .build();
             let eb = UnitCollisionEntryBuilder::new("ndrs", "Draenei Seer", empty_pos, empty_hot);
@@ -1253,6 +1281,63 @@ mod unit_collision_report_tests {
                 .build();
             let eb = UnitCollisionEntryBuilder::new("nfgo", "Forgotten One", empty_pos, empty_hot);
             let eb = eb.main_position_card(main_pos);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Ugr2 (Forsaken)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aaml")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Ugr2", "Forsaken", empty_pos, empty_hot);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Ugr3 (Forsaken)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aaml")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Ugr3", "Forsaken", empty_pos, empty_hot);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Ugrk (Forsaken)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aaml")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Ugrk", "Forsaken", empty_pos, empty_hot);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Npal (Forsaken Paladin)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'C',
+                    &[GridSlotId::ability("AHcr"), GridSlotId::ability("AHpa")],
+                )
+                .build();
+            let eb =
+                UnitCollisionEntryBuilder::new("Npal", "Forsaken Paladin", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };
@@ -1716,7 +1801,7 @@ mod unit_collision_report_tests {
                 .collision_at(
                     0,
                     2,
-                    &[GridSlotId::ability("AChv"), GridSlotId::ability("ACfn")],
+                    &[GridSlotId::ability("ACfn"), GridSlotId::ability("AChv")],
                 )
                 .build();
             let eb = UnitCollisionEntryBuilder::new(
@@ -2215,6 +2300,20 @@ mod unit_collision_report_tests {
                 )
                 .build();
             let eb = UnitCollisionEntryBuilder::new("Uwar", "Warlock", empty_pos, empty_hot);
+            let eb = eb.main_hotkey_card(main_hot);
+            eb.build()
+        };
+        builder = builder.entry(entry);
+
+        // Hleo (Warrior)
+        let entry = {
+            let main_hot = HotkeyCollisionCardBuilder::new(GridRole::MainCommand, layout)
+                .collision(
+                    'S',
+                    &[GridSlotId::ability("CmdStop"), GridSlotId::ability("Aaml")],
+                )
+                .build();
+            let eb = UnitCollisionEntryBuilder::new("Hleo", "Warrior", empty_pos, empty_hot);
             let eb = eb.main_hotkey_card(main_hot);
             eb.build()
         };

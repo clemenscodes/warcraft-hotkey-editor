@@ -1,6 +1,8 @@
 #[cfg(test)]
 mod tests {
-    use warcraft_api::{ItemClass, Race, UnitKind, WarcraftObjectKind, WarcraftObjectMeta};
+    use warcraft_api::{
+        ItemClass, MAX_ABILITY_LEVEL, Race, UnitKind, WarcraftObjectKind, WarcraftObjectMeta,
+    };
 
     use crate::WARCRAFT_DATABASE;
 
@@ -100,7 +102,7 @@ mod tests {
                 .expect("ability missing max_level");
 
             assert!(
-                (1..=4).contains(&max_level),
+                (1..=MAX_ABILITY_LEVEL).contains(&max_level),
                 "ability {id:?} has invalid max_level {max_level}"
             );
 
@@ -151,7 +153,7 @@ mod tests {
     }
 
     #[test]
-    fn test_non_ultimate_abilities_have_max_level_at_most_four() {
+    fn test_non_ultimate_abilities_have_max_level_at_most_five() {
         for (id, object) in WARCRAFT_DATABASE.iter() {
             if object.kind() != WarcraftObjectKind::Ability {
                 continue;
@@ -163,8 +165,8 @@ mod tests {
                 continue;
             }
             assert!(
-                ability_meta.max_level() <= 4,
-                "non-ultimate ability {id:?} has max_level {} (> 4)",
+                ability_meta.max_level() <= MAX_ABILITY_LEVEL,
+                "non-ultimate ability {id:?} has max_level {} (> {MAX_ABILITY_LEVEL})",
                 ability_meta.max_level()
             );
         }
@@ -201,8 +203,10 @@ mod tests {
                 .get_unit_build_time(id.value().into())
                 .expect("unit missing build time");
 
+            // A build time of 0 is valid: helper units such as the
+            // campaign `ndum` Dummy are never built.
             assert!(
-                build_time > 0 && build_time < 1000,
+                build_time < 1000,
                 "unit {id:?} has suspicious build time {build_time}"
             );
         }

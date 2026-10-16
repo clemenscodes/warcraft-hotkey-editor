@@ -10,6 +10,9 @@ mod unit_mode;
 mod variant_groups;
 
 pub use catalog::{BuildingTraits, CommandCatalog};
+pub use db::DEFAULT_HOTKEYS;
+pub use db::LOCALIZED_HOTKEYS;
+pub use db::TALENT_VARIANTS;
 pub use db::TIERED_UNIT_GROUPS;
 pub use db::UNIT_UPGRADE_SWAPS;
 pub use db::WARCRAFT_DATABASE;

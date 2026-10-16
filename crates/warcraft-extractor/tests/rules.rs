@@ -88,7 +88,7 @@ E
         assert_eq!(ability.race(), Race::Human);
         assert_eq!(ability.max_level(), 3);
         assert!(!ability.is_ultimate());
-        assert_eq!(ability.cooldowns(), [7500, 5500, 3500, 0]);
+        assert_eq!(ability.cooldowns(), [7500, 5500, 3500, 0, 0]);
     }
 
     #[test]
@@ -903,7 +903,7 @@ mod rule_5_same_slot_dedup {
     /// Drunken Brawler (`ANdb`) in `DataD` (its `DataA`/`DataB` are the
     /// critical-strike chance/multiplier). Only the real `levels` count is
     /// read, so the filler `DataA4`/`DataD4` past a 3-level ability stays 0.
-    /// Non-evasion abilities get `[0.0; 4]`. Tooltip text is never consulted.
+    /// Non-evasion abilities get `[0.0; MAX_ABILITY_LEVEL]`. Tooltip text is never consulted.
     #[test]
     fn evasion_chance_comes_from_real_data_field_per_base_code() {
         let meta_slk_text = "ID;P\n\
@@ -948,19 +948,66 @@ mod rule_5_same_slot_dedup {
             .get("AEev")
             .expect("AEev present")
             .evasion_chance_per_level();
-        assert_eq!(evasion, [0.1, 0.2, 0.3, 0.0]);
+        assert_eq!(evasion, [0.1, 0.2, 0.3, 0.0, 0.0]);
 
         let drunken_brawler = database
             .get("Acdb")
             .expect("Acdb present")
             .evasion_chance_per_level();
-        assert_eq!(drunken_brawler, [0.07, 0.14, 0.21, 0.0]);
+        assert_eq!(drunken_brawler, [0.07, 0.14, 0.21, 0.0, 0.0]);
 
         let shop = database
             .get("Shop")
             .expect("Shop present")
             .evasion_chance_per_level();
-        assert_eq!(shop, [0.0, 0.0, 0.0, 0.0]);
+        assert_eq!(shop, [0.0, 0.0, 0.0, 0.0, 0.0]);
+    }
+
+    /// A hero talent (patch 3.0.0) is a hero ability row whose `comments` name
+    /// it a talent, spelled out (`Guiding Hand - talent 1`) or as a tier token
+    /// (`Warcry - T1 - Magic Immunity`). Its base hero ability and non-hero
+    /// rows that merely mention a talent are not talents.
+    #[test]
+    fn talent_rows_are_hero_abilities_whose_comments_name_a_talent() {
+        let meta_slk_text = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X3;Y1;K\"hero\"\n\
+             C;X4;Y1;K\"comments\"\n\
+             C;X1;Y2;K\"AHgh\"\n\
+             C;X2;Y2;K\"AHgh\"\n\
+             C;X3;Y2;K\"1\"\n\
+             C;X4;Y2;K\"Guiding Hand\"\n\
+             C;X1;Y3;K\"AHq1\"\n\
+             C;X2;Y3;K\"AHgh\"\n\
+             C;X3;Y3;K\"1\"\n\
+             C;X4;Y3;K\"Guiding Hand - talent 1\"\n\
+             C;X1;Y4;K\"AHw1\"\n\
+             C;X2;Y4;K\"AHwc\"\n\
+             C;X3;Y4;K\"1\"\n\
+             C;X4;Y4;K\"Warcry - T1 - Magic Immunity\"\n\
+             C;X1;Y5;K\"ATcr\"\n\
+             C;X2;Y5;K\"AIcr\"\n\
+             C;X3;Y5;K\"0\"\n\
+             C;X4;Y5;K\"TalentCooldownReduction15\"\n\
+             E\n"
+        .to_string();
+
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let ExtractResult::AbilityMetadata(database) = meta_result else {
+            panic!("expected an AbilityMetadata extraction result");
+        };
+
+        let base = database.get("AHgh").expect("AHgh present");
+        assert!(!base.is_talent());
+        let spelled_out_talent = database.get("AHq1").expect("AHq1 present");
+        assert!(spelled_out_talent.is_talent());
+        let tier_token_talent = database.get("AHw1").expect("AHw1 present");
+        assert!(tier_token_talent.is_talent());
+        let non_hero_row = database.get("ATcr").expect("ATcr present");
+        assert!(!non_hero_row.is_talent());
     }
 
     fn ability_defaults_txt(id_a: &str, id_b: &str, column: u8, row: u8) -> String {
@@ -1602,5 +1649,78 @@ mod rule_2_transform_and_morph_suppression {
             has_own,
             "transformed unit must keep its own spell Aown (abilities: {abilities:?})",
         );
+    }
+}
+
+mod blp_decoding {
+    use warcraft_extractor::BlpDecoder;
+
+    /// A paletted BLP1 header with its first mipmap starting right after the
+    /// 256-entry palette, as the game's classic command button textures are
+    /// laid out.
+    fn paletted_blp(alpha_bits: u32, width: u32, height: u32) -> Vec<u8> {
+        let first_mipmap_offset: u32 = 156 + 256 * 4;
+        let mut bytes: Vec<u8> = Vec::new();
+        bytes.extend_from_slice(b"BLP1");
+        let header_fields: [u32; 6] = [1, alpha_bits, width, height, 4, 1];
+        for field in header_fields {
+            let field_bytes = field.to_le_bytes();
+            bytes.extend_from_slice(&field_bytes);
+        }
+        let mipmap_offset_bytes = first_mipmap_offset.to_le_bytes();
+        bytes.extend_from_slice(&mipmap_offset_bytes);
+        let remaining_offsets_and_sizes: Vec<u8> = vec![0; 15 * 4 + 16 * 4];
+        bytes.extend_from_slice(&remaining_offsets_and_sizes);
+        let mut palette: Vec<u8> = vec![0; 256 * 4];
+        // Entry 1: red, entry 2: blue — stored BGRA, with the unused fourth
+        // byte left at 0 the way the game ships it.
+        palette[4..8].copy_from_slice(&[0, 0, 255, 0]);
+        palette[8..12].copy_from_slice(&[255, 0, 0, 0]);
+        bytes.extend_from_slice(&palette);
+        bytes
+    }
+
+    #[test]
+    fn paletted_blp_reads_colors_from_bgra_palette_and_alpha_from_its_own_array() {
+        let mut bytes = paletted_blp(8, 2, 1);
+        let palette_indices: [u8; 2] = [1, 2];
+        bytes.extend_from_slice(&palette_indices);
+        let alpha_values: [u8; 2] = [255, 128];
+        bytes.extend_from_slice(&alpha_values);
+        let decoded = BlpDecoder::decode(&bytes).expect("decodes");
+        assert_eq!(decoded.width(), 2);
+        assert_eq!(decoded.height(), 1);
+        assert_eq!(decoded.rgba(), vec![255, 0, 0, 255, 0, 0, 255, 128]);
+    }
+
+    #[test]
+    fn paletted_blp_unpacks_four_bit_alpha_least_significant_nibble_first() {
+        let mut bytes = paletted_blp(4, 2, 1);
+        let palette_indices: [u8; 2] = [1, 1];
+        bytes.extend_from_slice(&palette_indices);
+        let packed_alpha: [u8; 1] = [0x0F];
+        bytes.extend_from_slice(&packed_alpha);
+        let decoded = BlpDecoder::decode(&bytes).expect("decodes");
+        assert_eq!(decoded.rgba(), vec![255, 0, 0, 255, 255, 0, 0, 0]);
+    }
+
+    #[test]
+    fn paletted_blp_without_alpha_bits_is_opaque_despite_zero_palette_alpha() {
+        let mut bytes = paletted_blp(0, 1, 1);
+        let palette_indices: [u8; 1] = [2];
+        bytes.extend_from_slice(&palette_indices);
+        let decoded = BlpDecoder::decode(&bytes).expect("decodes");
+        assert_eq!(decoded.rgba(), vec![0, 0, 255, 255]);
+    }
+
+    #[test]
+    fn jpeg_compressed_or_foreign_textures_are_rejected() {
+        let mut jpeg_blp = paletted_blp(8, 1, 1);
+        let jpeg_compression_value: u32 = 0;
+        let jpeg_compression = jpeg_compression_value.to_le_bytes();
+        jpeg_blp[4..8].copy_from_slice(&jpeg_compression);
+        assert!(BlpDecoder::decode(&jpeg_blp).is_err());
+        let foreign_bytes: [u8; 4] = *b"DDS ";
+        assert!(BlpDecoder::decode(&foreign_bytes).is_err());
     }
 }

@@ -29,6 +29,15 @@ impl AbilitySkinIcons {
 pub struct SkinParser;
 
 impl SkinParser {
+    /// The id of a `[section]` header line. Blizzard occasionally trails the
+    /// bracket with a remark (`[Hleo] leonid` in patch 3.0.0's `unitskin.txt`),
+    /// so the id ends at the first `]` rather than at the end of the line.
+    fn section_id(line: &str) -> Option<&str> {
+        let after_bracket = line.strip_prefix('[')?;
+        let id = after_bracket.split_once(']').map(|parts| parts.0)?;
+        Some(id)
+    }
+
     pub fn parse(text: &str) -> SkinDatabase {
         let mut skin_database = SkinDatabase::new();
 
@@ -64,10 +73,7 @@ impl SkinParser {
                 continue;
             }
 
-            if let Some(id) = line
-                .strip_prefix('[')
-                .and_then(|line_inner| line_inner.strip_suffix(']'))
-            {
+            if let Some(id) = Self::section_id(line) {
                 flush(&mut skin_database, &mut current_id, &mut art, &mut art_sd);
                 current_id = Some(id.to_string());
                 continue;
@@ -132,10 +138,7 @@ impl SkinParser {
                 continue;
             }
 
-            if let Some(id) = line
-                .strip_prefix('[')
-                .and_then(|line_inner| line_inner.strip_suffix(']'))
-            {
+            if let Some(id) = Self::section_id(line) {
                 flush(
                     &mut on_icons,
                     &mut off_icons,

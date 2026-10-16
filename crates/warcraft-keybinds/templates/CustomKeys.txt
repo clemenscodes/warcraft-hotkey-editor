@@ -105,6 +105,7 @@ Tip=Stop
 Ubertip=Orders your units to stop whatever order they were previously given. Units that have been told to stop will attack enemy units and move to engage nearby enemies.
 
 [ACac]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Command Aura
 Ubertip=Gives extra damage to the attacks of nearby friendly units.
@@ -116,6 +117,7 @@ Tip=Animate Dead
 Ubertip=Raises 6 dead units in an area for 40 seconds.
 
 [ACah]
+Hotkey=C
 Buttonpos=2,2
 Tip=Thorns Aura
 Ubertip=An aura that gives nearby friendly units a damage shield, which deals 10% of an enemy unit's attack damage back to it.
@@ -127,16 +129,19 @@ Tip=Anti-magic Shell
 Ubertip=Creates a barrier that stops spells from affecting a target unit. Lasts 90 seconds.
 
 [ACat]
+Hotkey=C
 Buttonpos=2,2
 Tip=Trueshot Aura
 Ubertip=An aura that gives nearby friendly units a 10% bonus damage to their ranged attacks.
 
 [ACav]
+Hotkey=C
 Buttonpos=2,2
 Tip=Devotion Aura
 Ubertip=Gives 3 additional armor to nearby friendly units.
 
 [ACba]
+Hotkey=C
 Buttonpos=2,2
 Tip=Brilliance Aura
 Ubertip=Gives additional mana regeneration to nearby friendly units of 0.5 mana per second.
@@ -164,6 +169,7 @@ Tip=Breath of Frost
 Ubertip=Breathes a cone of frost at enemy units that deals 50 initial damage, and 7 damage per second over 5 seconds.
 
 [ACbh]
+Hotkey=C
 Buttonpos=2,2
 Tip=Bash
 Ubertip=Gives a 15% chance that an attack will do 25 bonus damage and stun the target for 2 seconds.
@@ -223,6 +229,7 @@ Tip=Frost Bolt
 Ubertip=Throws a magical shard of ice at a target enemy unit, dealing 100 damage and stunning the target for 5 seconds.
 
 [ACce]
+Hotkey=X
 Buttonpos=1,2
 Tip=Cleaving Attack
 Ubertip=The creature strikes with such force that 25% of their damage strikes through to enemies near the primary attacked unit.
@@ -262,6 +269,7 @@ Ubertip=Curses a target enemy unit, causing it to have a 33% chance to miss on a
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 
 [ACct]
+Hotkey=C
 Buttonpos=2,2
 Tip=Critical Strike
 Ubertip=Gives a 20% chance to do 2 times total damage on an attack.
@@ -350,6 +358,7 @@ Tip=Ensnare
 Ubertip=Causes a target enemy unit to be bound to the ground so that it cannot move for 8 seconds. Air units that are ensnared can be attacked as though they were land units.
 
 [ACev]
+Hotkey=C
 Buttonpos=2,2
 Tip=Evasion
 Ubertip=Gives a 15% percent chance to avoid an attack.
@@ -471,6 +480,7 @@ Tip=Lightning Shield
 Ubertip=Forms a shield of electricity around a target unit, dealing 20 damage per second to units around it. Lasts 20 seconds.
 
 [ACm2]
+Hotkey=S
 Buttonpos=1,1
 Tip=Spell Immunity,Spell Immunity
 Ubertip=Renders this unit immune to all spells.,Renders this unit immune to all spells.
@@ -485,6 +495,7 @@ Untip=Deactivate Mana Shield
 Ubertip=Activates a shield that absorbs 2 damage per point of mana.
 
 [ACmi]
+Hotkey=C
 Buttonpos=2,2
 Tip=Spell Immunity
 Ubertip=Renders this unit immune to magic and most spells.
@@ -521,6 +532,7 @@ Tip=Purge
 Ubertip=Removes all buffs from a target unit, and slows its movement speed by a factor of 5. Purged units will slowly regain their movement speed over 5 seconds. Deals 200 damage to summoned units.
 
 [ACpv]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Pulverize
 Ubertip=Gives a 15% chance that an attack will deal 30 damage to nearby units.
@@ -560,11 +572,13 @@ Tip=Rejuvenation
 Ubertip=Heals a target friendly unit for 400 hit points over 12 seconds.
 
 [ACrk]
+Hotkey=V
 Buttonpos=3,2
 Tip=Resistant Skin
 Ubertip=Reduces the duration of negative spells and renders the unit immune to certain spells.
 
 [ACrn]
+Hotkey=V
 Buttonpos=3,2
 Tip=Reincarnation
 Ubertip=When killed, this unit will come back to life. Reincarnation has a 240 second cooldown.
@@ -615,6 +629,7 @@ Tip=Silence
 Ubertip=Stops all enemies in a target area from casting spells for 40 seconds.
 
 [ACsk]
+Hotkey=F
 Buttonpos=3,1
 Tip=Resistant Skin
 Ubertip=Reduces the duration of negative spells and renders the unit immune to certain spells.
@@ -668,6 +683,7 @@ Tip=Spawn Tentacle
 Ubertip=Unleashes a mighty tentacle upon the enemy.
 
 [ACua]
+Hotkey=C
 Buttonpos=2,2
 Tip=Unholy Aura
 Ubertip=Increases nearby friendly units' movement speed by 10% and life regeneration rate by 50%.
@@ -679,11 +695,13 @@ Tip=Unholy Frenzy
 Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
 [ACvp]
+Hotkey=C
 Buttonpos=2,2
 Tip=Vampiric Aura
 Ubertip=Nearby friendly melee units gain 20% of their attack damage when they hit enemy units.
 
 [ACvs]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Envenomed Weapons
 Ubertip=Deals 2 poison damage per second. Lasts 20 seconds.
@@ -716,6 +734,7 @@ Ubertip=Transforms the Demon Hunter into a powerful Demon with a ranged attack.
 Researchubertip=Transforms the Demon Hunter into a powerful Demon with a ranged attack.
 
 [AEah]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=R
 ResearchButtonpos=2,0
@@ -724,6 +743,7 @@ Ubertip=An aura that gives friendly nearby units a damage reflection, which deal
 Researchubertip=An aura that causes enemies to take a percentage of melee damage dealt to nearby friendly units. |n|n|cffffcc00Level 1|r - Returns 15% damage. |n|cffffcc00Level 2|r - Returns 30% damage. |n|cffffcc00Level 3|r - Returns 45% damage.
 
 [AEar]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=T
 ResearchButtonpos=2,0
@@ -740,6 +760,12 @@ Tip=Blink - [Level 1],Blink - [Level 2],Blink - [Level 3]
 Ubertip=Teleports the Warden a short distance, allowing her to move in and out of combat.,Teleports the Warden a short distance, allowing her to move in and out of combat.,Teleports the Warden a short distance, allowing her to move in and out of combat.
 Researchubertip=Short distance teleportation that allows the Warden to move in and out of combat. |n|n|cffffcc00Level 1|r - 10 second cooldown, 50 mana. |n|cffffcc00Level 2|r - 5 second cooldown, 10 mana. |n|cffffcc00Level 3|r - 2.5 second cooldown, 10 mana.
 
+[AEbu]
+Hotkey=Z
+Buttonpos=0,2
+ResearchHotkey=Z
+ResearchButtonpos=0,2
+
 [AEer]
 Hotkey=E
 Buttonpos=0,2
@@ -750,6 +776,7 @@ Ubertip=Causes roots to burst from the ground, immobilizing and disarming a targ
 Researchubertip=Causes roots to burst from the ground, immobilizing, disarming and damaging a target enemy temporarily. |n|n|cffffcc00Level 1|r - 15 damage per second for 9 seconds. |n|cffffcc00Level 2|r - 20 damage per second for 17 seconds. |n|cffffcc00Level 3|r - 30 damage per second for 25 seconds.
 
 [AEev]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=E
 ResearchButtonpos=2,0
@@ -870,6 +897,7 @@ Ubertip=Transforms the Demon Hunter into a powerful Demon with a ranged attack.
 Researchubertip=Transforms the Demon Hunter into a powerful Demon with a ranged attack.
 
 [AHab]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=R
 ResearchButtonpos=2,0
@@ -878,12 +906,22 @@ Ubertip=Gives additional mana regeneration to nearby friendly units.,Gives addit
 Researchubertip=Gives additional mana regeneration to nearby friendly units. |n|n|cffffcc00Level 1|r - Grants minor mana regeneration. |n|cffffcc00Level 2|r - Grants moderate mana regeneration. |n|cffffcc00Level 3|r - Grants heavy mana regeneration.
 
 [AHad]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=V
 ResearchButtonpos=2,0
 Tip=Devotion Aura - [Level 1],Devotion Aura - [Level 2],Devotion Aura - [Level 3]
 Ubertip=Gives 2 additional armor to nearby friendly units.,Gives 3.5 additional armor to nearby friendly units.,Gives 5 additional armor to nearby friendly units.
 Researchubertip=Gives additional armor to nearby friendly units. |n|n|cffffcc00Level 1|r - Increases base armor by 2. |n|cffffcc00Level 2|r - Increases base armor by 3.5. |n|cffffcc00Level 3|r - Increases base armor by 5.
+
+[AHas]
+Hotkey=E
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Sacred Aura - [Level 1],Sacred Aura - [Level 2],Sacred Aura - [Level 3]
+Ubertip=Gives 15% Magic Resistance and 15% increased healing received to nearby friendly units.,Gives 25% Magic Resistance and 20% increased healing received to nearby friendly units.,Gives 35% Magic Resistance and 25% increased healing recieved to nearby friendly units.
+Researchubertip=Gives additional Magic Resistance and increased healing received to nearby friendly units. |n|n|cffffcc00Level 1|r - 15% Magic Resistance, 15% increased healing received. |n|cffffcc00Level 2|r - 25% Magic Resistance, 20% increased healing received. |n|cffffcc00Level 3|r - 35% Magic Resistance, 25% increased healing received.
 
 [AHav]
 Hotkey=V
@@ -897,7 +935,17 @@ Untip=Deactivate Avatar
 Ubertip=Activate Avatar to give the Mountain King 5 bonus armor, 500 bonus hit points, 20 bonus damage and spell immunity. Lasts 60 seconds.
 Researchubertip=When Avatar is activated, it gives the Mountain King 5 bonus armor, 500 bonus hit points, 20 bonus damage and spell immunity. |nLasts 60 seconds.
 
+[AHbd]
+Hotkey=W
+Buttonpos=1,2
+ResearchHotkey=W
+ResearchButtonpos=1,0
+Tip=Unyielding Guard - [Level 1],Unyielding Guard - [Level 2],Unyielding Guard - [Level 3]
+Ubertip=Enter a defensive stance, reducing incoming damage by 40% and movement speed by 40%. During this time, if Garek takes any damage, he gains 15% attack rate for 3 seconds. Lasts 10 seconds.,Enter a defensive stance, reducing incoming damage by 50% and movement speed by 40%. During this time, if Garek takes any damage, he gains 20% attack rate for 3 seconds. Lasts 10 seconds.,Enter a defensive stance, reducing incoming damage by 60% and movement speed by 40%. During this time, if Garek takes any damage, he gains 25% attack rate for 3 seconds. Lasts 10 seconds.
+Researchubertip=Take reduced damage, at the cost of movement speed. Taking damage grants increased attack rate. |n|n|cffffcc00Level 1|r - 40% reduced damage, 40% reduced movement speed, 15% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 2|r - 50% reduced damage, 40% reduced movement speed, 20% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 3|r - 60% reduced damage, 40% reduced movement speed, 25% attack rate for 3 seconds. Lasts 10 seconds.
+
 [AHbh]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=B
 ResearchButtonpos=2,0
@@ -913,6 +961,12 @@ ResearchButtonpos=1,0
 Tip=Banish - [Level 1],Banish - [Level 2],Banish - [Level 3]
 Ubertip=Turns a non-mechanical unit ethereal and slows its movement speed by 50% for 12 seconds. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect.,Turns a unit ethereal and slows its movement speed by 50% for 15 seconds. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect.,Turns a unit ethereal and slows its movement speed by 50% for 18 seconds. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect.
 Researchubertip=Turns a non-mechanical unit ethereal and slows its movement speed by 50% for a short duration. Ethereal creatures cannot attack, but they can cast spells and certain spells cast upon them will have a greater effect. |n|n|cffffcc00Level 1|r - 75 mana, lasts 12 seconds. |n|cffffcc00Level 2|r - 60 mana, lasts 15 seconds. |n|cffffcc00Level 3|r - 50 mana, lasts 18 seconds.
+
+[AHbu]
+Hotkey=Z
+Buttonpos=0,2
+ResearchHotkey=Z
+ResearchButtonpos=0,2
 
 [AHbz]
 Hotkey=B
@@ -936,6 +990,42 @@ Ubertip=Adds a cold effect to each attack, slowing a target enemy unit's attacks
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 Researchubertip=Adds a cold effect to each attack, slowing a target enemy unit's attacks and movement. |n|n|cffffcc00Level 1|r - 30% attack rate, 30% movement speed, lasts 6 seconds. |n|cffffcc00Level 2|r - 50% attack rate, 50% movement speed, lasts 6 seconds. |n|cffffcc00Level 3|r - 70% attack rate, 70% movement speed, lasts 6 seconds.
 
+[AHch]
+Hotkey=E
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Valiant Charge - [Level 1],Valiant Charge - [Level 2],Valiant Charge - [Level 3]
+Ubertip=Dashes towards a target point, dealing 100 damage to enemy units hit along the way, and stunning them for 1 seconds.,Dashes towards a target point, dealing 125 damage to enemy units hit along the way, and stunning them for 2 seconds.,Dashes towards a target point, dealing 150 damage to enemy units hit along the way, and stunning them for 3 seconds.
+Researchubertip=Dash towards a target point, dealing damage and stunning enemy units.|n|n|cffffcc00Level 1|r - 100 damage, 1 second stun. |n|cffffcc00Level 2|r - 125 damage, 2 second stun. |n|cffffcc00Level 3|r - 150 damage, 3 second stun.
+
+[AHcl]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Tip=Cleansing Fire
+Ubertip=Call upon the Light, removing all debuffs from nearby friendly units and all buffs from nearby enemy units. Friendly units are healed for 125 hit points, and gain 25% bonus to damage for 25 seconds. For each debuff removed from a friendly unit, that unit heals an additional 50 hitpoints and gains an additional 15% bonus to damage. Enemy units are stunned for 3 seconds. Deals 400 damage to summoned units.
+Researchubertip=Call upon the Light, removing all debuffs from nearby friendly units and all buffs from nearby enemy units. Friendly units are healed for 125 hit points, and gain 25% bonus to damage for 25 seconds. For each debuff removed from a friendly unit, that unit heals an additional 50 hitpoints and gains an additional 15% bonus to damage.Enemy units are stunned for 3 seconds.|n|cffffcc00Deals 400 damage to summoned units.|r
+
+[AHcr]
+Hotkey=C
+Buttonpos=1,2
+ResearchHotkey=C
+ResearchButtonpos=1,0
+Tip=Consecration - [Level 1],Consecration - [Level 2],Consecration - [Level 3]
+Ubertip=Bless the ground, healing nearby friendly living units for 25 hit points per second. Enemy Undead units take 20 damage per second and have incoming healing reduced by 25%. Lasts 5 seconds.,Bless the ground, healing nearby friendly living units for 35 hit points per second. Enemy Undead units take 30 damage per second and have incoming healing reduced by 33%. Lasts 5 seconds.,Bless the ground, healing nearby friendly living units for 50 hit points per second. Enemy Undead units take 40 damage per second and have incoming healing reduced by 50%. Lasts 5 seconds.
+Researchubertip=Bless the ground, healing living allies and burning enemy Undead while reducing their healing received. |n|n|cffffcc00Level 1|r - Heals 25 hit points per second, deals 20 damage per second, reduces healing by 25%. Lasts 5 seconds. |n|cffffcc00Level 2|r - Heals 35 hit points per second, deals 30 damage per second, reduces healing by 33%. Lasts 5 seconds. |n|cffffcc00Level 3|r - Heals 50 hit points per second, deals 40 damage per second, reduces healing by 50%. Lasts 5 seconds.
+
+[AHct]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Tip=Raise the Banner
+Ubertip=Place a banner at a target location, increasing nearby allied unit's Critical Strike chance by 50% and Spell Critical chance by 50%. Lasts 20 seconds.
+Researchubertip=Place a banner at a target location, increasing nearby allied unit's Critical Strike chance by 50% and Spell Critical chance by 50%.|nLasts 20 seconds.
+
 [AHdr]
 Hotkey=N
 Buttonpos=2,2
@@ -956,6 +1046,15 @@ Tip=Divine Shield - [Level 1],Divine Shield - [Level 2],Divine Shield - [Level 3
 Untip=Deactivate Divine Shield
 Ubertip=An impenetrable shield surrounds this unit, protecting it from all damage and spells for 15 seconds.,An impenetrable shield surrounds this unit, protecting it from all damage and spells for 25 seconds.,An impenetrable shield surrounds this unit, protecting it from all damage and spells for 35 seconds.
 Researchubertip=An impenetrable shield surrounds the Paladin, protecting him from all damage and spells for a set amount of time. |n|n|cffffcc00Level 1|r - Lasts 15 seconds. |n|cffffcc00Level 2|r - Lasts 25 seconds. |n|cffffcc00Level 3|r - Lasts 35 seconds.
+
+[AHen]
+Hotkey=W
+Buttonpos=1,2
+ResearchHotkey=W
+ResearchButtonpos=1,0
+Tip=Apprehend - [Level 1],Apprehend - [Level 2],Apprehend - [Level 3]
+Ubertip=Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 30% and cannot move. Lasts 8 seconds.,Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 45% and cannot move. Lasts 10 seconds.,Throw a net at an enemy, ensnaring them. Ensnared units have their attack rate reduced by 60% and cannot move. Lasts 15 seconds.
+Researchubertip=Throw a net at an enemy, ensnaring them and reducing their attack rate. |n|n|cffffcc00Level 1|r - 30% attack rate, 8 seconds. |n|cffffcc00Level 2|r - 45% attack rate, 10 seconds.|n|cffffcc00Level 3|r - 60% attack rate, 15 seconds.
 
 [AHfa]
 Hotkey=R
@@ -979,6 +1078,28 @@ Tip=Flame Strike - [Level 1],Flame Strike - [Level 2],Flame Strike - [Level 3]
 Ubertip=Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.,Conjures a pillar of flame that burns ground units for 80 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take light damage.,Conjures a pillar of flame that burns ground units for 110 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take moderate damage.
 Researchubertip=Conjures a pillar of fire which damages ground units in a target area over time. |n|n|cffffcc00Level 1|r - 45 damage a second for 3 seconds, followed by minor damage for 6 seconds. |n|cffffcc00Level 2|r - 80 damage a second for 3 seconds, followed by light damage for 6 seconds. |n|cffffcc00Level 3|r - 110 damage a second for 3 seconds, followed by moderate damage for 6 seconds.
 
+[AHgh]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Unhotkey=R
+Unbuttonpos=3,2
+Tip=Activate Guiding Hand - [Level 1],Activate Guiding Hand - [Level 2],Activate Guiding Hand - [Level 3]
+Untip=Deactivate Guiding Hand - [|cffffcc00Level 1|r]
+Ubertip=Leonid inspires friendly units within 900 range. Affected units gain 20% attack rate, 10% Ability Speed, and 10% movement speed. Drains 15 mana per second until deactivated.,Leonid inspires friendly units within 900 range. Affected units gain 30% attack rate, 25% Ability Speed, and 15% movement speed. Drains 15 mana per second until deactivated.,Leonid inspires friendly units within 900 range. Affected units gain 40% attack rate, 40% Ability Speed, and 20% movement speed. Drains 15 mana per second until deactivated.
+Unubertip=Deactivate Guiding Hand to stop draining mana.
+Researchubertip=Leonid inspires nearby friendly units, granting several bonuses.|nDrains mana until deactivated. |n|n|cffffcc00Level 1|r - 20% attack rate, 10% Ability Speed, 10% movement speed. |n|cffffcc00Level 2|r - 30% attack rate, 25% Ability Speed, 15% movement speed. |n|cffffcc00Level 3|r - 40% attack rate, 40% Ability Speed, 20% movement speed
+
+[AHgr]
+Hotkey=E
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Grit - [Level 1],Grit - [Level 2],Grit - [Level 3],Grit - [Level 4],Grit - [Level 5]
+Ubertip=Every attack against Leonid increases his armor by 0.25, to a maximum of 15. Resets after 5 seconds of not being attacked.,Every attack against Leonid increases his armor by 0.5, to a maximum of 15. Resets after 5 seconds of not being attacked.,Every attack against Leonid increases his armor by 0.75, to a maximum of 15. Resets after 5 seconds of not being attacked.,Every attack against Leonid increases his armor by 1, to a maximum of 15. Resets after 5 seconds of not being attacked.,Every attack against Leonid increases his armor by 1.25, to a maximum of 15. Resets after 5 seconds of not being attacked.
+Researchubertip=Every attack against Leonid increases his armor for a short duration.|n|n|cffffcc00Level 1|r - 0.25 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds.|n|cffffcc00Level 2|r - 0.5 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds. |n|cffffcc00Level 3|r - 0.75 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds.|n|cffffcc00Level 4|r - 1 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds. |n|cffffcc00Level 5|r - 1.25 bonus armor per stack, maximum of 15 armor. Resets after 5 seconds.
+
 [AHhb]
 Hotkey=T
 Buttonpos=0,2
@@ -988,6 +1109,51 @@ Tip=Holy Light - [Level 1],Holy Light - [Level 2],Holy Light - [Level 3]
 Ubertip=A holy light that can heal a friendly living unit for 200 or deal half damage to an enemy Undead unit. Healing pierces spell immunity.,A holy light that can heal a friendly living unit for 400 or deal half damage to an enemy Undead unit. Healing pierces spell immunity.,A holy light that can heal a friendly living unit for 600 or deal half damage to an enemy Undead unit. Healing pierces spell immunity.
 Researchubertip=A holy light that can heal a friendly living unit or damage an enemy Undead unit. Healing pierces spell immunity. |n|n|cffffcc00Level 1|r - Heals for 200 hit points. |n|cffffcc00Level 2|r - Heals for 400 hit points. |n|cffffcc00Level 3|r - Heals for 600 hit points.
 
+[AHhc]
+Hotkey=W
+Buttonpos=1,2
+ResearchHotkey=W
+ResearchButtonpos=1,0
+Tip=Provoke - [Level 1],Provoke - [Level 2],Provoke - [Level 3],Provoke - [Level 4],Provoke - [Level 5]
+Ubertip=Gain a shield that can absorb 200 damage, and taunt all nearby enemies within 450 range for 5 seconds.,Gain a shield that can absorb 275 damage, and taunt all nearby enemies within 500 range for 5 seconds.,Gain a shield that can absorb 350 damage, and taunt all nearby enemies within 550 range for 5 seconds.,Gain a shield that can absorb 425 damage, and taunt all nearby enemies within 600 range for 5 seconds.,Gain a shield that can absorb 500 damage, and taunt all nearby enemies within 650 range for 5 seconds.
+Researchubertip=Gain a shield and taunt nearby enemies.|n|n|cffffcc00Level 1|r - 200 damage shield, 450 range taunt for 5 seconds.|n|cffffcc00Level 2|r - 275 damage shield, 500 range taunt for 5 seconds. |n|cffffcc00Level 3|r - 350 damage shield, 550 range taunt for 5 seconds.|n|cffffcc00Level 4|r - 425 damage shield, 600 range taunt for 5 seconds. |n|cffffcc00Level 5|r - 500 damage shield, 650 range taunt for 5 seconds.
+
+[AHhr]
+Hotkey=Q
+Buttonpos=0,2
+ResearchHotkey=Q
+ResearchButtonpos=0,0
+Tip=Headsplitter - [Level 1],Headsplitter - [Level 2],Headsplitter - [Level 3],Headsplitter - [Level 4],Headsplitter - [Level 5]
+Ubertip=Empower the next attack, dealing 100 bonus damage and stunning the target for 2 seconds.,Empower the next attack, dealing 150 bonus damage and stunning the target for 2.25 seconds.,Empower the next attack, dealing 200 bonus damage and stunning the target for 2.5 seconds.,Empower the next attack, dealing 250 bonus damage and stunning the target for 3 seconds.,Empower the next attack, dealing 300 bonus damage and stunning the target for 3.5 seconds.
+Researchubertip=Empower the next attack, dealing bonus damage and stunning the target.|n|n|cffffcc00Level 1|r - 100 bonus damage, 2 second stun duration.|n|cffffcc00Level 2|r - 150 bonus damage, 2.25 second stun duration. |n|cffffcc00Level 3|r - 200 bonus damage, 2.5 second stun duration.|n|cffffcc00Level 4|r - 250 bonus damage, 3 second stun duration. |n|cffffcc00Level 5|r - 300 bonus damage, 3.5 second stun duration.
+
+[AHhs]
+Hotkey=Q
+Buttonpos=0,2
+ResearchHotkey=Q
+ResearchButtonpos=0,0
+Tip=Heroic Slash - [Level 1],Heroic Slash - [Level 2],Heroic Slash - [Level 3]
+Ubertip=Attack a target, dealing 100 damage. Deals 25% extra damage to debuffed enemies.,Attack a target, dealing 200 damage. Deals 35% extra damage to debuffed enemies.,Attack a target, dealing 300 damage. Deals 45% extra damage to debuffed enemies.
+Researchubertip=Attack a target, dealing bonus damage to them if they are debuffed. |n|n|cffffcc00Level 1|r - 100 damage, 25% bonus damage. |n|cffffcc00Level 2|r - 200 damage, 35% bonus damage. |n|cffffcc00Level 3|r - 300 damage, 45% bonus damage.
+
+[AHic]
+Hotkey=E
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Inspire Courage - [Level 1],Inspire Courage - [Level 2],Inspire Courage - [Level 3]
+Ubertip=Landen inspires his allies, increasing their armor by 3 and Magic Resistance by 15%. Lasts 15 seconds.,Landen inspires his allies, increasing their armor by 7 and Magic Resistance by 25%. Lasts 15 seconds.,Landen inspires his allies, increasing their armor by 10 and Magic Resistance by 35%. Lasts 15 seconds.
+Researchubertip=Nearby friendly units gain increased armor and Magic Resistance for a duration.|n|n|cffffcc00Level 1|r - 3 armor, 15% Magic Resistance for 15 seconds. |n|cffffcc00Level 2|r - 7 armor, 25% Magic Resistance for 15 seconds. |n|cffffcc00Level 3|r - 10 armor, 35% Magic Resistance for 15 seconds.
+
+[AHmc]
+Hotkey=W
+Buttonpos=1,2
+ResearchHotkey=W
+ResearchButtonpos=1,0
+Tip=Mind Control - [Level 1],Mind Control - [Level 2],Mind Control - [Level 3]
+Ubertip=Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 2 units. Lasts 60 seconds.,Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 3 units. Lasts 60 seconds.,Takes control of a target enemy unit for a period of time. Mind Control cannot be used on Heroes, or creeps above level 5. Can control up to a maximum of 4 units. Lasts 60 seconds.
+Researchubertip=Takes control of a target enemy unit for a period of time. |n|n|cffffcc00Level 1|r - Maximum 2 units, up to level 5 for 60 seconds. |n|cffffcc00Level 2|r - Maximum 3 units, up to level 5 for 60 seconds. |n|cffffcc00Level 3|r - Maximum 4 units, up to level 5 for 60 seconds.
+
 [AHmt]
 Hotkey=T
 Buttonpos=3,2
@@ -996,6 +1162,15 @@ ResearchButtonpos=3,0
 Tip=Mass Teleport
 Ubertip=Teleports 24 of the player's nearby units, including the Archmage, to a friendly ground unit or structure.
 Researchubertip=Teleports 24 of the player's nearby units, including the Archmage, to a friendly ground unit or structure.
+
+[AHpa]
+Hotkey=C
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Sacred Aura - [Level 1],Sacred Aura - [Level 2],Sacred Aura - [Level 3]
+Ubertip=Gives 15% Magic Resistance and 15% increased healing received to nearby friendly units.,Gives 25% Magic Resistance and 20% increased healing received to nearby friendly units.,Gives 35% Magic Resistance and 25% increased healing recieved to nearby friendly units.
+Researchubertip=Gives additional Magic Resistance and increased healing received to nearby friendly units. |n|n|cffffcc00Level 1|r - 15% Magic Resistance, 15% increased healing received. |n|cffffcc00Level 2|r - 25% Magic Resistance, 20% increased healing received. |n|cffffcc00Level 3|r - 35% Magic Resistance, 25% increased healing received.
 
 [AHpx]
 Hotkey=X
@@ -1014,6 +1189,33 @@ ResearchButtonpos=3,0
 Tip=Resurrection
 Ubertip=Brings back to life the corpses of 6 friendly nearby units.
 Researchubertip=Brings back to life the corpses of 6 friendly nearby units.
+
+[AHsf]
+Hotkey=Q
+Buttonpos=0,2
+ResearchHotkey=Q
+ResearchButtonpos=0,0
+Tip=Light's Mercy - [Level 1],Light's Mercy - [Level 2],Light's Mercy - [Level 3]
+Ubertip=Conjures holy fire onto a target area. Friendly living units are healed for 100 hit points, while enemy Undead units take 10 damage per second over 10 seconds.,Conjures holy fire onto a target area. Friendly living units are healed for 125 hit points, while enemy Undead units take 15 damage per second over 10 seconds.,Conjures holy fire onto a target area. Friendly living units are healed for 150 hit points, while enemy Undead units take 20 damage per second over 10 seconds.
+Researchubertip=Conjures holy fire onto a target area, healing friendly living units and burning enemy Undead units. |n|n|cffffcc00Level 1|r - Heals 100 hit points, deals 10 damage per second for 10 seconds. |n|cffffcc00Level 2|r - Heals 125 hit points, deals 15 damage per second for 10 seconds. |n|cffffcc00Level 3|r - Heals 150 hit points, deals 20 damage per second for 10 seconds.
+
+[AHsl]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Tip=Surge of Light
+Ubertip=Passive: Ilastar's attacks against enemies cast a Holy Bolt on the most damaged friendly unit within 800 range, healing 25 hit points. Active: Ilastar becomes imbued with the Light, increasing his attack rate by 50% and movement speed by 50%, and increasing the effectiveness of Holy Bolt by 100%. Lasts 10 seconds.
+Researchubertip=|cffffcc00Passive:|r Ilastar's attacks against enemies cast a Holy Bolt on the most damaged friendly unit within 800 range, healing 25 hit points.|n|n|cffffcc00Active:|r Ilastar becomes imbued with the Light, increasing his attack rate by 50% and movement speed by 50%, and increasing the effectiveness of Holy Bolt by 100%.|nLasts 10 seconds.
+
+[AHsw]
+Hotkey=Q
+Buttonpos=0,2
+ResearchHotkey=Q
+ResearchButtonpos=0,0
+Tip=Sweeping Strike - [Level 1],Sweeping Strike - [Level 2],Sweeping Strike - [Level 3]
+Ubertip=Strikes the target area, dealing 100 damage to enemy units, and restoring 25 hit points per unit hit.,Strikes the target area, dealing 175 damage to enemy units, and restoring 35 hit points per unit hit.,Strikes the target area, dealing 250 damage to enemy units, and restoring 45 hit points per unit hit.
+Researchubertip=Strikes the target area, dealing damage and restoring hit points per enemy hit. |n|n|cffffcc00Level 1|r - 100 damage, 25 hit points. |n|cffffcc00Level 2|r - 175 damage, 35 hit points. |n|cffffcc00Level 3|r - 250 damage 45 hit points.
 
 [AHta]
 Hotkey=R
@@ -1038,6 +1240,15 @@ ResearchButtonpos=1,0
 Tip=Thunder Clap - [Level 1],Thunder Clap - [Level 2],Thunder Clap - [Level 3]
 Ubertip=Slams the ground, dealing 60 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%.,Slams the ground, dealing 110 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%.,Slams the ground, dealing 150 damage to nearby enemy land units and slowing their movement by 50% and attack rate by 50%.
 Researchubertip=Slams the ground, dealing damage to and slowing the movement speed and attack rate of nearby enemy land units. |n|n|cffffcc00Level 1|r - 60 damage, 50% move, 50% attack. |n|cffffcc00Level 2|r - 110 damage, 50% move, 50% attack. |n|cffffcc00Level 3|r - 150 damage, 50% move, 50% attack.
+
+[AHwc]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Tip=Warcry
+Ubertip=Garek lets out a defiant battle cry, granting his attacks 50% cleave damage, 50% Lifesteal, and 25% Ability Vamp. Lasts 20 seconds.
+Researchubertip=Garek lets out a defiant battle cry, granting his attacks 50% cleave damage, 50% Lifesteal, and 25% Ability Vamp. |nLasts 20 seconds.
 
 [AHwe]
 Hotkey=W
@@ -1078,6 +1289,7 @@ Ubertip=Activate Avatar to give Lord Garithos 5 bonus armor, 500 bonus hit point
 Researchubertip=When Avatar is activated, it gives Lord Garithos 5 bonus armor, 500 bonus hit points, 20 bonus damage and spell immunity. |nLasts 60 seconds.
 
 [ANb2]
+Hotkey=X
 Buttonpos=1,2
 Tip=Maul
 Ubertip=Gives a 35% chance that an attack will do 50 bonus damage and stun the target for 2 seconds.
@@ -1105,6 +1317,7 @@ Ubertip=Breathes a cone of fire at enemy units, dealing 80 initial damage. Units
 Researchubertip=Breathes a cone of fire at enemy units which deals damage. Units that have Drunken Haze on them will ignite and take burn damage over time. |nLasts 5 seconds. |n|n|cffffcc00Level 1|r - 80 initial damage, 10 damage per second. |n|cffffcc00Level 2|r - 130 initial damage, 15 damage per second. |n|cffffcc00Level 3|r - 180 initial damage, 25 damage per second.
 
 [ANbh]
+Hotkey=X
 Buttonpos=1,2
 Tip=Bash
 Ubertip=Gives a 25% chance that an attack will do 25 bonus damage and stun the target for 2 seconds.
@@ -1143,6 +1356,7 @@ Ubertip=Bombards an area with rockets, dealing up to 45 damage to nearby enemy u
 Researchubertip=Bombards an area with rockets, stunning enemy units for 1.01 second and damaging nearby enemy units.|n|n|cffffcc00Level 1|r - 45 damage.|n|cffffcc00Level 2|r - 75 damage.|n|cffffcc00Level 3|r - 110 damage
 
 [ANca]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=C
 ResearchButtonpos=2,0
@@ -1173,6 +1387,15 @@ Hotkey=E
 Buttonpos=2,0
 Tip=Channel
 Ubertip=Channels powerful warding magic.
+
+[ANcp]
+Hotkey=F
+Buttonpos=0,2
+ResearchHotkey=F
+ResearchButtonpos=0,0
+Tip=Righteous Fury - [Level 1],Righteous Fury - [Level 2],Righteous Fury - [Level 3]
+Ubertip=Dashes towards a target point up to 725 range away, dealing 100 damage to enemy land units hit along the way, and slowing their movement by 20% and attack rate by 30%.,Dashes towards a target point up to 725 range away, dealing 150 damage to enemy land units hit along the way, and slowing their movement by 30% and attack rate by 40%.,Dashes towards a target point up to 725 range away, dealing 200 damage to enemy land units hit along the way, and slowing their movement by 40% and attack rate by 50%.
+Researchubertip=Dash towards a target point, dealing damage to and slowing the movement speed and attack rate of enemy land units passed through.|n|n|cffffcc00Level 1|r - 725 range, 100 damage, 20% movement speed, 30% attack rate. |n|cffffcc00Level 2|r - 725 range, 150 damage, 30% movement speed, 40% attack rate. |n|cffffcc00Level 3|r - 725 range, 200 damage, 40% movement speed, 50% attack rate.
 
 [ANcr]
 Hotkey=R
@@ -1208,6 +1431,7 @@ Tip=Demolish - Upgrade Level 3
 Ubertip=Causes attacks to do 3.5 times normal damage to buildings.
 
 [ANdb]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=B
 ResearchButtonpos=2,0
@@ -1469,11 +1693,13 @@ Ubertip=Afflicts a target enemy unit with a deadly parasite that deals 5 damage 
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [ANpi]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Permanent Immolation
 Ubertip=Burns nearby enemy units for 10 points of damage per second.
 
 [ANr2]
+Hotkey=V
 Buttonpos=3,2
 ResearchHotkey=R
 ResearchButtonpos=3,0
@@ -1522,6 +1748,7 @@ Unubertip=Returns to normal Tinker form, losing the benefits of Robo-Goblin but 
 Researchubertip=Transforms the Tinker into a Robo-Goblin, a powerful armored form that has the following traits:|n|n- Bonus Strength and armor.|n- Use of the Demolish ability, which grants bonus damage against buildings.|n- The Tinker becomes mechanical, rendering him immune to most forms of stun, most offensive spells, and several beneficial spells.
 
 [ANrn]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=E
 ResearchButtonpos=2,0
@@ -1647,6 +1874,7 @@ Ubertip=Creates a factory which automatically constructs Clockwerk Goblins. Cloc
 Researchubertip=Creates a factory which automatically constructs Clockwerk Goblins. These artificial Goblins, in addition to being potent attackers, explode upon death, causing damage to nearby enemy units. |n|n|cffffcc00Level 1|r - Explosion does 30 damage.|n|cffffcc00Level 2|r - Explosion does 60 damage.|n|cffffcc00Level 3|r - Explosion does 80 damage.|nFactory lasts 40 seconds.
 
 [ANt2]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=W
 ResearchButtonpos=1,0
@@ -1660,6 +1888,7 @@ Tip=Taunt
 Ubertip=The closest 10 enemies are forced to attack this unit.
 
 [ANth]
+Hotkey=X
 Buttonpos=1,2
 ResearchHotkey=W
 ResearchButtonpos=1,0
@@ -1687,6 +1916,7 @@ Ubertip=Summons a fierce controllable Tornado that slows enemy units' movement s
 Researchubertip=Summons a fierce controllable Tornado that slows enemy units' movement speed, randomly tosses enemy ground units into the air and damages enemy buildings. Pierces spell immunity. |nLasts 20 seconds.
 
 [ANtr]
+Hotkey=Z
 Buttonpos=0,2
 Tip=True Sight
 Ubertip=Reveals nearby invisible units.
@@ -1709,12 +1939,19 @@ Tip=Wind Walk
 Ubertip=Allows the Pandaren to become invisible, and move 10% faster. If the Pandaren attacks a unit to break invisibility, the attack will do 50 bonus damage.
 
 [AOae]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=E
 ResearchButtonpos=2,0
 Tip=Endurance Aura - [Level 1],Endurance Aura - [Level 2],Endurance Aura - [Level 3]
 Ubertip=Increases nearby friendly units' movement speed by 10% and attack rate by 5%.,Increases nearby friendly units' movement speed by 15% and attack rate by 10%.,Increases nearby friendly units' movement speed by 20% and attack rate by 15%.
 Researchubertip=Increases the movement speed and attack rate of nearby friendly units. |n|n|cffffcc00Level 1|r - 10% movement, 5% attack. |n|cffffcc00Level 2|r - 15% movement, 10% attack. |n|cffffcc00Level 3|r - 20% movement, 15% attack.
+
+[AObu]
+Hotkey=Z
+Buttonpos=0,2
+ResearchHotkey=Z
+ResearchButtonpos=0,2
 
 [AOcl]
 Hotkey=C
@@ -1726,6 +1963,7 @@ Ubertip=Calls forth a bolt of lightning that bounces up to 4 times, dealing 85 d
 Researchubertip=Hurls a bolt of damaging lightning at a target enemy that jumps to nearby enemies. Each jump deals less damage. |n|n|cffffcc00Level 1|r - 85 damage, jumps 4 times. |n|cffffcc00Level 2|r - 125 damage, jumps 6 times. |n|cffffcc00Level 3|r - 180 damage, jumps 8 times.
 
 [AOcr]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=C
 ResearchButtonpos=2,0
@@ -1788,6 +2026,7 @@ Ubertip=Confuses the enemy by creating 1 illusion of the Blademaster. Dispels al
 Researchubertip=Confuses the enemy by creating illusions of the Blademaster and dispelling all magic from the Blademaster. |n|n|cffffcc00Level 1|r - Creates 1 illusion. |n|cffffcc00Level 2|r - Creates 2 illusions. |n|cffffcc00Level 3|r - Creates 3 illusions.
 
 [AOr2]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=E
 ResearchButtonpos=2,0
@@ -1796,6 +2035,7 @@ Ubertip=Increases nearby friendly units' movement speed by 10% and attack rate b
 Researchubertip=Increases the movement speed and attack rate of nearby friendly units. |n|n|cffffcc00Level 1|r - 10% movement, 5% attack. |n|cffffcc00Level 2|r - 20% movement, 10% attack. |n|cffffcc00Level 3|r - 30% movement, 15% attack. |n|cffffcc00Level 4|r - 40% movement, 25% attack.
 
 [AOr3]
+Hotkey=V
 Buttonpos=3,2
 ResearchHotkey=R
 ResearchButtonpos=3,0
@@ -1804,6 +2044,7 @@ Ubertip=When killed, Cairne will come back to life. Reincarnation has a 240 seco
 Researchubertip=When killed, the Tauren Chieftain will come back to life. |n|n|cffffcc00Level 1|r - 240 second cooldown. |n|cffffcc00Level 2|r - 120 second cooldown.
 
 [AOre]
+Hotkey=V
 Buttonpos=3,2
 ResearchHotkey=R
 ResearchButtonpos=3,0
@@ -1915,6 +2156,7 @@ Ubertip=Raises 6 dead units in an area to fight for the Death Knight for 40 seco
 Researchubertip=Raises 6 dead units in an area to fight for the Death Knight for 40 seconds.
 
 [AUau]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=U
 ResearchButtonpos=2,0
@@ -1923,12 +2165,37 @@ Ubertip=Increases nearby friendly units' movement speed by 10% and life regenera
 Researchubertip=Increases the movement speed and life regeneration rate of nearby friendly units. |n|n|cffffcc00Level 1|r - 10% movement, minor regeneration bonus. |n|cffffcc00Level 2|r - 15% movement, moderate regeneration bonus. |n|cffffcc00Level 3|r - 20% movement, greater regeneration bonus.
 
 [AUav]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=V
 ResearchButtonpos=2,0
 Tip=Vampiric Aura - [Level 1],Vampiric Aura - [Level 2],Vampiric Aura - [Level 3]
 Ubertip=Nearby friendly melee units gain 20% of their attack damage when they hit enemy units.,Nearby friendly melee units gain 35% of their attack damage when they hit enemy units.,Nearby friendly melee units gain 50% of their attack damage when they hit enemy units.
 Researchubertip=Nearby friendly melee units gain hit points when they hit enemy units. |n|n|cffffcc00Level 1|r - Gains 20% of attack damage. |n|cffffcc00Level 2|r - Gains 35% of attack damage. |n|cffffcc00Level 3|r - Gains 50% of attack damage.
+
+[AUbd]
+Hotkey=W
+Buttonpos=1,2
+ResearchHotkey=W
+ResearchButtonpos=1,0
+Tip=Undying Defiance - [Level 1],Undying Defiance - [Level 2],Undying Defiance - [Level 3],Undying Defiance - [Level 4],Undying Defiance - [Level 5]
+Ubertip=Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 30% attack rate for 3 seconds. Lasts 10 seconds.,Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 35% attack rate for 3 seconds. Lasts 10 seconds.,Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 40% attack rate for 3 seconds. Lasts 10 seconds.,Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 45% attack rate for 3 seconds. Lasts 10 seconds.,Enter a defensive stance, reducing incoming damage by 65% and movement speed by 40%. During this time, if Garek takes any damage, he gains 50% attack rate for 3 seconds. Lasts 10 seconds.
+Researchubertip=Take reduced damage, at the cost of movement speed. Taking damage grants increased attack rate. |n|n|cffffcc00Level 1|r - 65% reduced damage, 40% reduced movement speed, 30% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 2|r - 65% reduced damage, 40% reduced movement speed, 35% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 3|r - 65% reduced damage, 40% reduced movement speed, 40% attack rate for 3 seconds. Lasts 10 seconds. |n|cffffcc00Level 4|r - 65% reduced damage, 40% reduced movement speed, 45% attack rate for 3 seconds. Lasts 10 seconds.
+
+[AUbr]
+Hotkey=E
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Battering Ram - [Level 1],Battering Ram - [Level 2],Battering Ram - [Level 3],Battering Ram - [Level 4],Battering Ram - [Level 5]
+Ubertip=Dashes towards a target point, dealing 100 damage to enemy units hit along the way, and gaining 3 bonus damage for every enemy unit hit. Lasts 7 seconds.,Dashes towards a target point, dealing 125 damage to enemy units hit along the way, and gaining 6 bonus damage for every enemy unit hit. Lasts 7 seconds.,Dashes towards a target point, dealing 150 damage to enemy units hit along the way, and gaining 9 bonus damage for every enemy unit hit. Lasts 7 seconds.,Dashes towards a target point, dealing 175 damage to enemy units hit along the way, and gaining 12 bonus damage for every enemy unit hit. Lasts 7 seconds.,Dashes towards a target point, dealing 200 damage to enemy units hit along the way, and gaining 15 bonus damage for every enemy unit hit. Lasts 7 seconds.
+Researchubertip=Dash towards a target point, dealing damage and gaining bonus attack damage per enemy hit.|n|n|cffffcc00Level 1|r - 100 damage, 3 bonus damage per enemy unit hit. |n|cffffcc00Level 2|r - 125 damage, 6 bonus damage per enemy unit hit. |n|cffffcc00Level 3|r - 150 damage, 9 bonus damage per enemy unit hit.|n|cffffcc00Level 4|r - 175 damage, 12 bonus damage per enemy unit hit.|n|cffffcc00Level 5|r - 200 damage, 15 bonus damage per enemy unit hit.
+
+[AUbu]
+Hotkey=Z
+Buttonpos=0,2
+ResearchHotkey=Z
+ResearchButtonpos=0,2
 
 [AUcb]
 Hotkey=C
@@ -1951,6 +2218,15 @@ ResearchButtonpos=0,0
 Tip=Carrion Swarm - [Level 1],Carrion Swarm - [Level 2],Carrion Swarm - [Level 3]
 Ubertip=Sends a horde of bats to deal 75 damage to each enemy unit in a cone.,Sends a horde of bats to deal 135 damage to each enemy unit in a cone.,Sends a horde of bats to deal 200 damage to each enemy unit in a cone.
 Researchubertip=Sends a horde of bats to damage enemies. |n|n|cffffcc00Level 1|r - 75 damage per unit. |n|cffffcc00Level 2|r - 135 damage per unit. |n|cffffcc00Level 3|r - 200 damage per unit.
+
+[AUdb]
+Hotkey=C
+Buttonpos=2,2
+ResearchHotkey=E
+ResearchButtonpos=2,0
+Tip=Deathseeker Arrows - [Level 1],Deathseeker Arrows - [Level 2],Deathseeker Arrows - [Level 3],Deathseeker Arrows - [Level 4],Deathseeker Arrows - [Level 5]
+Ubertip=Every 4 attacks against a target deals 80 bonus damage. Resets after 5 seconds.,Every 4 attacks against a target deals 115 bonus damage. Resets after 5 seconds.,Every 4 attacks against a target deals 150 bonus damage. Resets after 5 seconds.,Every 4 attacks against a target deals 185 bonus damage. Resets after 5 seconds.,Every 4 attacks against a target deals 220 bonus damage. Resets after 5 seconds.
+Researchubertip=Deal bonus damage after attacking a target several times.|n|n|cffffcc00Level 1|r - 4 attacks, 80 bonus damage. |n|cffffcc00Level 2|r - 4 attacks, 115 bonus damage. |n|cffffcc00Level 3|r - 4 attacks, 150 bonus damage.|n|cffffcc00Level 4|r - 4 attacks, 185 bonus damage.|n|cffffcc00Level 5|r - 4 attacks, 220 bonus damage.
 
 [AUdc]
 Hotkey=C
@@ -2037,6 +2313,19 @@ Tip=Inferno
 Ubertip=Calls an Infernal down from the sky, dealing 50 damage and stunning enemy land units for 4 seconds in an area. The Infernal lasts 180 seconds.
 Researchubertip=Calls an Infernal down from the sky, dealing 50 damage and stunning enemy land units for 4 seconds in an area. The Infernal lasts 180 seconds.
 
+[AUla]
+Hotkey=W
+Buttonpos=1,2
+ResearchHotkey=W
+ResearchButtonpos=1,0
+Unhotkey=W
+Unbuttonpos=1,2
+Tip=Activate Soul Lantern - [Level 1],Activate Soul Lantern - [Level 2],Activate Soul Lantern - [Level 3],Activate Soul Lantern - [Level 4],Activate Soul Lantern - [Level 5]
+Untip=Deactivate Soul Lantern - [|cffffcc00Level 1|r]
+Ubertip=Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 25 hit points per second. Drains 15 mana per second until deactivated.,Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 35 hit points per second. Drains 15 mana per second until deactivated.,Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 45 hit points per second. Drains 15 mana per second until deactivated.,Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 55 hit points per second. Drains 15 mana per second until deactivated.,Create a tether between Anya and a friendly unit. Dispels negative debuffs on the target. While the tether is active, the target is healed for 65 hit points per second. Drains 15 mana per second until deactivated.
+Unubertip=Deactivate Soul Lantern to stop draining mana.
+Researchubertip=Create a tether between Anya and a friendly unit, dispelling negative debuffs and healing the target.|nDrains mana until deactivated. |n|n|cffffcc00Level 1|r - 25 hit points per second, drains 15 mana per second. |n|cffffcc00Level 2|r - 35 hit points per second, drains 15 mana per second. |n|cffffcc00Level 3|r - 45 hit points per second, drains 15 mana per second. |n|cffffcc00Level 4|r - 55 hit points per second, drains 15 mana per second. |n|cffffcc00Level 5|r - 65 hit points per second, drains 15 mana per second.
+
 [AUls]
 Hotkey=L
 Buttonpos=3,2
@@ -2055,7 +2344,17 @@ Tip=Sleep - [Level 1],Sleep - [Level 2],Sleep - [Level 3]
 Ubertip=Puts a target enemy unit to sleep for 15 seconds. A sleeping unit can be awoken by attacking it.,Puts a target enemy unit to sleep for 35 seconds. A sleeping unit can be awoken by attacking it.,Puts a target enemy unit to sleep for 55 seconds. A sleeping unit can be awoken by attacking it.
 Researchubertip=Puts a target enemy unit to sleep. A sleeping unit can be awoken by attacking it. |n|n|cffffcc00Level 1|r - 15 second sleep for 80 mana. |n|cffffcc00Level 2|r - 35 second sleep for 65 mana. |n|cffffcc00Level 3|r - 55 second sleep for 50 mana.
 
+[AUsw]
+Hotkey=Q
+Buttonpos=0,2
+ResearchHotkey=Q
+ResearchButtonpos=0,0
+Tip=Relentless Cleave - [Level 1],Relentless Cleave - [Level 2],Relentless Cleave - [Level 3],Relentless Cleave - [Level 4],Relentless Cleave - [Level 5]
+Ubertip=Strikes the target area, dealing 100 damage to enemy units, reducing their armor by 2, and restoring 25 hit points per unit hit.,Strikes the target area, dealing 175 damage to enemy units, reducing their armor by 2, and restoring 35 hit points per unit hit.,Strikes the target area, dealing 250 damage to enemy units, reducing their armor by 3, and restoring 45 hit points per unit hit.,Strikes the target area, dealing 325 damage to enemy units, reducing their armor by 3, and restoring 55 hit points per unit hit.,Strikes the target area, dealing 400 damage to enemy units, reducing their armor by 4, and restoring 65 hit points per unit hit.
+Researchubertip=Strikes the target area, dealing damage, reducing armor and restoring hit points per unit hit. |n|n|cffffcc00Level 1|r - 100 damage, 2 armor reduction, 25 hit points. |n|cffffcc00Level 2|r - 175 damage, 2 armor reduction, 35 hit points. |n|cffffcc00Level 3|r - 250 damage, 3 armor reduction, 45 hit points. |n|cffffcc00Level 4|r - 325 damage, 3 armor reduction, 55 hit points. |n|cffffcc00Level 5|r - 400 damage, 4 armor reduction, 65 hit points.
+
 [AUts]
+Hotkey=X
 Buttonpos=1,2
 ResearchHotkey=S
 ResearchButtonpos=1,0
@@ -2064,6 +2363,31 @@ Unbuttonpos=1,2
 Tip=Spiked Carapace - [Level 1],Spiked Carapace - [Level 2],Spiked Carapace - [Level 3]
 Ubertip=Enhances the Crypt Lord's chitinous armor with organic barbs, giving the Crypt Lord 4 bonus armor and returning 15% of melee attack damage to enemies.,Enhances the Crypt Lord's chitinous armor with organic barbs, giving him 8 bonus armor and returning 30% of melee attack damage to enemies.,Enhances the Crypt Lord's chitinous armor with organic barbs, giving him 12 bonus armor and returning 45% of melee attack damage to enemies.
 Researchubertip=The Crypt Lord forms barbed layers of chitinous armor that increases its defense and returns damage to enemy melee attackers.  |n|n|cffffcc00Level 1|r - 15% damage returned, 4 bonus armor. |n|cffffcc00Level 2|r -  30% damage returned, 8 bonus armor. |n|cffffcc00Level 3|r -  45% damage returned, 12 bonus armor.
+
+[AUvg]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Tip=Grim Conviction - [Level 1],Grim Conviction - [Level 2],Grim Conviction - [Level 3]
+Ubertip=Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 15 bonus Strength, 25% bonus Resolve, and 25% Lifesteal. Lasts 20 seconds.,Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 25 bonus Strength, 30% bonus Resolve, and 30% Lifesteal. Lasts 20 seconds.,Garek draws upon his inner strength, sacrificing 35% of his current hit points to gain 35 bonus Strength, 35% bonus Resolve, and 35% Lifesteal. Lasts 20 seconds.
+Researchubertip=Garek draws upon his inner strength, sacrificing hit points to gain bonus Strength, Resolve, and Lifesteal. |n|n|cffffcc00Level 1|r - Costs 35% hit points; gain 15 Strength, 25% Resolve, 25% Lifesteal for 20 seconds. |n|cffffcc00Level 2|r - Costs 35% hit points; gain 25 Strength, 30% Resolve, 30% Lifesteal for 20 seconds. |n|cffffcc00Level 3|r - Costs 35% hit points; gain 35 Strength, 35% Resolve, 35% Lifesteal for 20 seconds.
+
+[AUwc]
+Hotkey=R
+Buttonpos=3,2
+ResearchHotkey=R
+ResearchButtonpos=3,0
+Tip=Banshee's Wail - [Level 1],Banshee's Wail - [Level 2],Banshee's Wail - [Level 3]
+Ubertip=Anya summons 5 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. Lasts 30 seconds.,Anya summons 7 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. Lasts 30 seconds.,Anya summons 9 Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%. Lasts 30 seconds.
+Researchubertip=Anya summons Banshees to attack nearby enemies. Banshee attacks apply a debuff that increases Magic Damage taken by 30%.|n|n|cffffcc00Level 1|r - 5 Banshees |n|cffffcc00Level 2|r - 7 Banshees |n|cffffcc00Level 3|r - 9 Banshees
+
+[AUwf]
+Hotkey=Q
+Buttonpos=0,2
+Tip=Withering Fire - [Level 1],Withering Fire - [Level 2],Withering Fire - [Level 3],Withering Fire - [Level 4],Withering Fire - [Level 5]
+Ubertip=Fires a magical arrow at a target area, dealing 100 damage. Applies a stack of Deathseeker Arrows to enemies hit. 2 charges, recharges every 10 seconds.,Fires a magical arrow at a target area, dealing 150 damage. Applies a stack of Deathseeker Arrows to enemies hit. 2 charges, recharges every 10 seconds.,Fires a magical arrow at a target area, dealing 175 damage. Applies a stack of Deathseeker Arrows to enemies hit. 3 charges, recharges every 10 seconds.,Fires a magical arrow at a target area, dealing 200 damage. Applies a stack of Deathseeker Arrows to enemies hit. 3 charges, recharges every 10 seconds.,Fires a magical arrow at a target area, dealing 250 damage. Applies a stack of Deathseeker Arrows to enemies hit. 4 charges, recharges every 10 seconds.
+Researchubertip=Fire a magical arrow at a target area, dealing damage and applying a stack of Deathseeker Arrows to enemies hit.|n|n|cffffcc00Level 1|r - 100 damage, max 2 charges, recharges every 10 seconds. |n|cffffcc00Level 2|r - 150 damage, max 2 charges, recharges every 10 seconds. |n|cffffcc00Level 3|r - 175 damage, max 3 charges, recharges every 10 seconds.|n|cffffcc00Level 4|r - 200 damage, max 3 charges, recharges every 10 seconds.|n|cffffcc00Level 5|r - 250 damage, max 4 charges, recharges every 10 seconds.
 
 [Aabs]
 Hotkey=B
@@ -2092,6 +2416,7 @@ Ubertip=Mines gold from Haunted Gold Mines.
 Unubertip=Return the carried resources to the nearest town hall.
 
 [Aakb]
+Hotkey=X
 Buttonpos=1,2
 Tip=War Drums
 Ubertip=Adds a damage increase to the attacks of nearby friendly units.
@@ -2109,6 +2434,7 @@ Tip=Anti-magic Shell
 Ubertip=Creates a barrier that stops 300 points of spell, summon, or magic damage from affecting a target unit. Lasts 90 seconds.
 
 [Aamk]
+Hotkey=S
 Buttonpos=1,1
 ResearchHotkey=F
 ResearchButtonpos=3,1
@@ -2116,23 +2442,35 @@ Tip=Attribute Bonus - [Level 1],Attribute Bonus - [Level 2],Attribute Bonus - [L
 Ubertip=Gives a total of 3 points to Agility, Intelligence, and Strength,Gives a total of 6 points to Agility, Intelligence, and Strength,Gives a total of 9 points to Agility, Intelligence, and Strength,Gives a total of 12 points to Agility, Intelligence, and Strength
 Researchubertip=Gives a permanent bonus to Agility, Intelligence, and Strength. |n|n|cffffcc00Level 1|r - Adds three points to all stats.|n|cffffcc00Level 2|r - Adds three additional points.|n|cffffcc00Level 3|r - Adds three additional points.|n|cffffcc00Level 4|r - Adds three additional points.
 
+[Aaml]
+Hotkey=S
+Buttonpos=1,1
+ResearchHotkey=F
+ResearchButtonpos=3,1
+Tip=Attribute Bonus - [Level 1],Attribute Bonus - [Level 2]
+Ubertip=Gives a total of 5 points to Agility, Intelligence, and Strength,Gives a total of 10 points to Agility, Intelligence, and Strength
+Researchubertip=Gives a permanent bonus to Agility, Intelligence, and Strength. |n|n|cffffcc00Level 1|r - Grants 5 points to all stats.|n|cffffcc00Level 2|r - Grants an additional 5 points to all stats.
+
 [Aams]
-Hotkey=X
+Hotkey=N
 Buttonpos=1,2
 Tip=Anti-magic Shell
 Ubertip=Creates a barrier that stops spells from affecting a target unit. Lasts 90 seconds.
 
 [Aap1]
+Hotkey=X
 Buttonpos=1,2
 Tip=Disease Cloud
 Ubertip=Infects nearby enemy living units with Disease Cloud. Disease Cloud deals 2 damage per second. Lasts 75 seconds.
 
 [Aap2]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Disease Cloud
 Ubertip=Infects nearby enemy living units with Disease Cloud. Disease Cloud deals 2 damage per second. Lasts 75 seconds.
 
 [Aap3]
+Hotkey=X
 Buttonpos=1,2
 Tip=Disease Cloud
 Ubertip=Infects nearby enemy living units with Disease Cloud. Disease Cloud deals 1 damage per second. Lasts 75 seconds.
@@ -2160,6 +2498,7 @@ Ubertip=Increases a friendly unit's attack rate by 40% and movement speed by 25%
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Abof]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Burning Oil
 Ubertip=Drenches the Demolisher ammo in burning oil, causing them to light the ground on fire and burn enemy units.
@@ -2233,6 +2572,7 @@ Tip=Cannibalize
 Ubertip=Consumes a nearby corpse to heal 16 hit points per second.
 
 [Acdb]
+Hotkey=C
 Buttonpos=2,2
 ResearchHotkey=E
 ResearchButtonpos=2,0
@@ -2319,6 +2659,7 @@ Tip=Pick up Archer
 Ubertip=Picks up an Archer so that the Archer can attack from the air. The mounted unit cannot dismount. Attacks land and air units.
 
 [Acor]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Corrosive Breath
 Ubertip=Hurls a ball of corrosive bile that is effective against buildings.
@@ -2412,6 +2753,7 @@ Hotkey=Z
 Buttonpos=0,2
 
 [Adtg]
+Hotkey=Z
 Buttonpos=0,2
 Tip=True Sight
 Ubertip=Reveals nearby invisible units.
@@ -2423,6 +2765,7 @@ Tip=Detonate
 Ubertip=Destroys the Wisp, dispelling all magical buffs and draining 40 mana from each unit in an area around the Wisp. Deals 225 damage to summoned units.
 
 [Adts]
+Hotkey=D
 Buttonpos=2,1
 Tip=Magic Sentry
 Ubertip=Reveals nearby invisible units.
@@ -2440,16 +2783,19 @@ Tip=Eat Tree
 Ubertip=Consume a tree to restore 500 hit points over 30 seconds.
 
 [Aegr]
+Hotkey=X
 Buttonpos=1,2
 Tip=Elune's Grace
 Ubertip=Reduces the damage taken from Piercing attacks to 65%, and spells and Magic attacks to 80%.
 
 [Aeib]
+Hotkey=C
 Buttonpos=2,2
 Tip=Improved Bows
 Ubertip=Increases attack range.
 
 [Aemk]
+Hotkey=V
 Buttonpos=3,2
 Tip=Marksmanship
 Ubertip=Increases damage of Archers and Hippogryph Riders by 4.
@@ -2501,11 +2847,13 @@ Tip=Sentinel
 Ubertip=Send an owl to a nearby tree to reveal the area around it. Can see invisible units.
 
 [Aews]
+Hotkey=W
 Buttonpos=1,0
 Tip=Well Spring
 Ubertip=Increases the amount of mana that can be stored in Moon Wells by 100, and their rate of mana regeneration by 52%.
 
 [Aexh]
+Hotkey=V
 Buttonpos=3,2
 Tip=Exhume Corpses
 Ubertip=Generates a corpse within the Meat Wagon every 15 seconds.
@@ -2525,6 +2873,12 @@ Tip=Faerie Fire
 Untip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Reduces a target enemy unit's armor by 4 and gives vision of that unit. Lasts 70 seconds.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
+
+[Afab]
+Hotkey=C
+Buttonpos=2,2
+Tip=Acid Bomb
+Ubertip=Hurls a flask of acid at a target. The flask breaks upon impact, splashing a powerful acid on nearby hostile units. Decreases armor by 3; deals 5 damage per second to the primary target; deals slightly less damage to nearby targets. Lasts 15 seconds.
 
 [Afae]
 Hotkey=R
@@ -2547,19 +2901,28 @@ Ubertip=Adds 15 bonus damage to the Destroyer's attack and causes his attacks to
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Afbb]
+Hotkey=X
 Buttonpos=1,2
 Tip=Feedback
 Ubertip=Spirit Beast attacks destroy 20 mana per hit. The mana combusts, dealing damage to the attacked unit.
 
 [Afbk]
+Hotkey=V
 Buttonpos=3,2
 Tip=Feedback
 Ubertip=Spellbreaker attacks destroy 20 mana per hit. The mana combusts, dealing damage to the attacked unit.
 
 [Afbt]
+Hotkey=V
 Buttonpos=3,2
 Tip=Feedback
 Ubertip=This tower's attacks destroy 24 mana per hit against any unit, causing bonus damage equal to the mana destroyed. Additionally, attacks made by this tower cause 20 bonus damage against summoned units.
+
+[Afhs]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Healing Spray
+Ubertip=Sprays 3 waves of healing mist; each wave heals 50 damage to all friendly units in an area.
 
 [Afla]
 Hotkey=F
@@ -2568,34 +2931,46 @@ Tip=Flare
 Ubertip=Launches a Dwarven flare above a target point, which reveals that area for 15 seconds. Reveals invisible units.
 
 [Aflk]
+Hotkey=C
 Buttonpos=2,2
 Tip=Flak Cannons
 Ubertip=Uses powerful cannons to deal area effect damage against air units.
 
 [Afr2]
+Hotkey=X
 Buttonpos=1,2
 Tip=Frost Attack
 Ubertip=Adds a cold effect to this unit's attacks that slows enemy units' movement speed.
 
 [Afra]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Frost Attack
 Ubertip=Adds a cold effect to this unit's attacks that slows enemy units' movement speed.
 
 [Afrc]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Frost Attack
 Ubertip=Adds a cold effect to this unit's attacks that slows enemy units' movement speed.
 
 [Afrz]
+Hotkey=X
 Buttonpos=1,2
 Tip=Freezing Breath
 Ubertip=When used on a building, temporarily stops all building activities. Lasts 5 seconds.
 
 [Afsh]
+Hotkey=X
 Buttonpos=1,2
 Tip=Fragmentation Shards
 Ubertip=Uses fragmentation mortars to increase damage dealt to Unarmored and Medium armor units.
+
+[Afuf]
+Hotkey=X
+Buttonpos=1,2
+Tip=Chemical Frenzy
+Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
 [Afzy]
 Hotkey=F
@@ -2614,16 +2989,19 @@ Tip=War Club
 Ubertip=Picks up a tree to give the Mountain Giant Siege damage, and increased attack range. Lasts for 15 strikes.
 
 [Agyb]
+Hotkey=X
 Buttonpos=1,2
 Tip=Flying Machine Bombs
 Ubertip=Allows Flying Machines to attack land units.
 
 [Agyv]
+Hotkey=Z
 Buttonpos=0,2
 Tip=True Sight
 Ubertip=Reveals nearby invisible units.
 
 [Ahan]
+Hotkey=V
 Buttonpos=3,2
 Tip=Animal War Training
 Ubertip=Increases the maximum hit points of this unit by 100.
@@ -2655,6 +3033,7 @@ Tip=Hide
 Ubertip=Stops the unit from auto-acquiring enemies, allowing it to Shadowmeld and remain unseen at night.
 
 [Ahlh]
+Hotkey=D
 Buttonpos=2,1
 Tip=Improved Lumber Harvesting,Improved Lumber Harvesting,Advanced Lumber Harvesting
 Ubertip=Increases the amount of lumber that Peasants can carry by 10.,Increases the amount of lumber that Peasants can carry by 10.,Further increases the amount of lumber that Peasants can carry by 10.
@@ -2666,6 +3045,7 @@ Tip=Summoning Ritual
 Ubertip=Summons energies from the twisting nether.
 
 [Ahpe]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Phoenix
 Ubertip=The Phoenix spreads enchanted flames to nearby enemies, dealing 20 damage on impact and burning them for 2 per second over 10 seconds. Its flames burn with such intensity that the Phoenix damages itself as well. When it dies, it creates an egg that will hatch into a Phoenix.
@@ -2681,6 +3061,7 @@ Ubertip=Harvests lumber from trees.
 Unubertip=Return the carried lumber to the nearest building capable of receiving it.
 
 [Ahri]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Long Rifles
 Ubertip=Increases attack range.
@@ -2706,6 +3087,7 @@ Ubertip=Repairs mechanical units and structures at the cost of resources.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Ahsb]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Sundering Blades
 Ubertip=Increases damage dealt to enemy targets with Medium armor by 10%.
@@ -2739,6 +3121,7 @@ Tip=Sacrifice
 Ubertip=Target a Sacrificial Pit to sacrifice the Acolyte and turn it into a Shade. Shades are invisible spirits that can see invisible units. Shades cannot attack.
 
 [Aliq]
+Hotkey=X
 Buttonpos=1,2
 Tip=Liquid Fire
 Ubertip=Flings a volatile liquid that causes buildings to take damage over time. Buildings that are currently taking damage from Liquid Fire have their repair time increased by 175%, and have their attack rate reduced by 60%.
@@ -2808,11 +3191,13 @@ Ubertip=Causes the Faerie Dragon to channel negative magical energies that damag
 Unubertip=Stops channeling Mana Flare.
 
 [Amgl]
+Hotkey=X
 Buttonpos=1,2
 Tip=Moon Glaive
 Ubertip=Gives the Huntress the ability to strike additional units with her bouncing glaive attacks, and changes their armor type to Heavy.
 
 [Amgr]
+Hotkey=X
 Buttonpos=1,2
 Tip=Moon Glaive
 Ubertip=Gives the Huntress the ability to strike additional units with her bouncing glaive attacks.
@@ -2838,6 +3223,7 @@ Ubertip=Run to the nearest Keep, Castle or starting Town Hall to arm the Peasant
 Unubertip=Run to the nearest Keep, Castle or starting Town Hall to disarm the Militia, converting it into a Peasant.
 
 [Amim]
+Hotkey=C
 Buttonpos=2,2
 Tip=Spell Immunity
 Ubertip=Renders this unit immune to magic and most spells.
@@ -2918,34 +3304,56 @@ Ubertip=Heals a target friendly non-mechanical wounded unit.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Ansk]
+Hotkey=C
 Buttonpos=2,2
 Tip=Hardened Skin
 Ubertip=Reduces all attacks on the unit by 12 damage. Attacks cannot be reduced below 3 damage.
 
 [Aobk]
+Hotkey=X
 Buttonpos=1,2
 Tip=Berserker Upgrade
 Ubertip=Transforms Headhunters into Berserkers, giving them increased hit points and the Berserk ability.
 
 [Aobs]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Brute Strength
 Ubertip=Improves the fighting capabilities of Grunts with a 125 hit point increase, and 3 bonus attack damage.
 
+[Aomb]
+Hotkey=Z
+Buttonpos=0,2
+Unhotkey=Z
+Unbuttonpos=0,2
+Tip=Bloodlust
+Untip=|cffc3dbffRight-click to activate auto-casting.|r
+Ubertip=Increases a friendly unit's attack rate by 40% and movement speed by 25%. Lasts 20 seconds.
+Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
+
 [Aorb]
+Hotkey=V
 Buttonpos=3,2
 Tip=Reinforced Defenses
 Ubertip=Upgrades Burrows and Watch Towers so that they have Fortified armor.
 
 [Aosp]
+Hotkey=V
 Buttonpos=3,2
 Tip=Spiked Barricades,Spiked Barricades,Improved Spiked Barricades
 Ubertip=Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.,Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.,Surrounds Orc buildings with spikes that damage enemy melee attackers. Deals 5 damage per attack plus an additional 20% of the attacker's damage.
 
 [Aotr]
+Hotkey=V
 Buttonpos=3,2
 Tip=Troll Regeneration
 Ubertip=Increases the hit point regeneration rate of Headhunters, Witch Doctors and Batriders.
+
+[Apbw]
+Hotkey=C
+Buttonpos=2,2
+Tip=Disease Cloud
+Ubertip=Drops a Disease Cloud with each attack. Disease Cloud deals 2 damage per second. Lasts 75 seconds.
 
 [Apg2]
 Hotkey=G
@@ -2954,6 +3362,7 @@ Tip=Purge
 Ubertip=Removes all buffs from a target unit. Enemy units are also immobilized for 3 seconds and their movement speed is reduced by a factor of 5; they will slowly regain their movement speed over 15 seconds. Deals 400 damage to summoned units.
 
 [Apig]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Permanent Immolation
 Ubertip=Burns nearby enemy units for 10 points of damage per second.
@@ -2965,13 +3374,13 @@ Tip=Polymorph
 Ubertip=Turns a target enemy unit into a sheep. The targeted unit retains its hit points and armor, but cannot attack. Cannot be cast on Heroes. Lasts 60 seconds.
 
 [Apos]
-Hotkey=C
+Hotkey=O
 Buttonpos=2,2
 Tip=Possession
 Ubertip=Displaces the soul of an enemy, giving you permanent control of it, but destroying the caster's body. Possession cannot be used on flying units, Heroes, or creeps above level 5.
 
 [Aprg]
-Hotkey=Z
+Hotkey=G
 Buttonpos=0,2
 Tip=Purge
 Ubertip=Removes all buffs from a target unit, and slows its movement speed by a factor of 5. Purged units will slowly regain their movement speed over 15 seconds. Deals 400 damage to summoned units.
@@ -2993,6 +3402,7 @@ Ubertip=Causes this unit to shift out of existence whenever it takes damage, tem
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Apts]
+Hotkey=C
 Buttonpos=2,2
 Tip=Disease Cloud
 Ubertip=Drops a Disease Cloud with each attack. Disease Cloud deals 2 damage per second. Lasts 75 seconds.
@@ -3082,6 +3492,7 @@ Tip=Roar
 Ubertip=Gives friendly nearby units a 25% bonus to damage. Lasts 45 seconds.
 
 [Aroc]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Barrage
 Ubertip=Allows Siege Engines to fire powerful rockets at nearby enemy air units.
@@ -3116,6 +3527,7 @@ Ubertip=Summons Misha, a powerful 900 hit point bear, to attack your enemies.,Su
 Researchubertip=Summons Misha, a powerful bear, to attack your enemies. |n|n|cffffcc00Level 1|r - 900 hit points, 28 to 31 damage. |n|cffffcc00Level 2|r - 1200 hit points, 38 to 41 damage, has Bash. |n|cffffcc00Level 3|r - 1800 hit points, 46 to 49 damage, has Maul. |n|cffffcc00Level 4|r - 2250 hit points, 59 to 69 damage, has Maul.
 
 [Arsk]
+Hotkey=V
 Buttonpos=3,2
 Tip=Resistant Skin
 Ubertip=Reduces the duration of negative spells and renders the Mountain Giant immune to certain spells.
@@ -3164,6 +3576,7 @@ Tip=Sacrifice
 Ubertip=Target an Acolyte to sacrifice it and turn it into a Shade. Shades are invisible spirits that can see invisible units. Shades cannot attack.
 
 [Asal]
+Hotkey=X
 Buttonpos=1,2
 Tip=Pillage
 Ubertip=Each attack that does damage to an enemy building also gains resources.
@@ -3228,6 +3641,12 @@ Untip=|cffc3dbff|cffc3dbffRight-click to activate auto-casting.|r|r
 Ubertip=Deals 30 damage in a small area.
 Unubertip=|cffc3dbff|cffc3dbffRight-click to deactivate auto-casting.|r|r
 
+[Asdi]
+Hotkey=X
+Buttonpos=1,2
+Tip=Dispel Magic
+Ubertip=Removes all buffs from units in a target area. Deals 200 damage to summoned units.
+
 [Asds]
 Hotkey=B
 Buttonpos=0,2
@@ -3238,11 +3657,37 @@ Untip=|cffc3dbff|cffc3dbffRight-click to activate auto-casting.|r|r
 Ubertip=Deals 250 damage in a small area. Effective against buildings and trees.
 Unubertip=|cffc3dbff|cffc3dbffRight-click to deactivate auto-casting.|r|r
 
+[Asea]
+Hotkey=Z
+Buttonpos=0,2
+Unhotkey=Z
+Unbuttonpos=0,2
+Tip=Heal
+Untip=|cffc3dbffRight-click to activate auto-casting.|r
+Ubertip=Heals a target friendly non-mechanical wounded unit for 100 hit points.
+Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
+
+[Asfs]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Flame Strike
+Ubertip=Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.
+
 [Ashm]
 Hotkey=I
 Buttonpos=2,1
 Tip=Hide
 Ubertip=Stops the unit from auto-acquiring enemies, allowing it to Shadowmeld and remain unseen at night.
+
+[Asif]
+Hotkey=C
+Buttonpos=2,2
+Unhotkey=C
+Unbuttonpos=2,2
+Tip=Inner Fire
+Untip=|cffc3dbffRight-click to activate auto-casting.|r
+Ubertip=Increases a target friendly unit's damage by 25% and armor by 5. Lasts 60 seconds.
+Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Aslo]
 Hotkey=W
@@ -3271,6 +3716,7 @@ Tip=Spirit Link
 Ubertip=Links 4 units together in a chain. All units with Spirit Link on them will live longer, by distributing 50% of the damage they take across other Spirit Linked units. Lasts 75 seconds.
 
 [Aspo]
+Hotkey=X
 Buttonpos=1,2
 Tip=Slow Poison
 Ubertip=A poison attack that deals 4 damage per second, and slows the target enemy's movement by 50% and attack by 25% for 5 seconds.
@@ -3285,7 +3731,14 @@ Untip=|cffc3dbffRight-click to activate auto-casting.|r
 Ubertip=Steals a positive buff from an enemy unit and applies it to a nearby friendly unit, or takes a negative buff from a friendly unit and applies it to a nearby enemy unit.
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
+[Assb]
+Hotkey=Z
+Buttonpos=0,2
+Tip=Soul Burn
+Ubertip=Wreaths an enemy unit in magical flames which cause 25 damage per second, prevent the casting of spells, and reduce attack damage by 75%. Lasts 16 seconds.
+
 [Assk]
+Hotkey=C
 Buttonpos=2,2
 Tip=Hardened Skin
 Ubertip=Reduces all attacks on the Mountain Giant by 8 damage. Attacks cannot be reduced below 3 damage.
@@ -3303,6 +3756,7 @@ Tip=Stand Down
 Ubertip=Causes Peons within the Burrow to return to work.
 
 [Asth]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Storm Hammers
 Ubertip=Causes a Gryphon Rider's attacks to damage multiple units.
@@ -3324,6 +3778,7 @@ Tip=Taunt
 Ubertip=The closest 10 enemies are forced to attack this unit. After 3 seconds Taunt will activate again.
 
 [Atru]
+Hotkey=Z
 Buttonpos=0,2
 Tip=True Sight
 Ubertip=Reveals nearby invisible units.
@@ -3339,11 +3794,13 @@ Ubertip=Causes a powerful explosion that deals 600 damage to a target air unit, 
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.|r
 
 [Augf]
+Hotkey=X
 Buttonpos=1,2
 Tip=Ghoul Frenzy
 Ubertip=Increases Ghoul movement speed, and attack rate by 35%.
 
 [Augh]
+Hotkey=X
 Buttonpos=1,2
 Tip=Shade
 Ubertip=This unit is permanently invisible.
@@ -3354,6 +3811,16 @@ Buttonpos=1,2
 Tip=Unholy Frenzy
 Ubertip=Increases the attack rate of a target unit by 75%, but drains 2 hit points per second. Lasts 45 seconds.
 
+[Auic]
+Hotkey=Z
+Buttonpos=0,2
+ResearchHotkey=Z
+ResearchButtonpos=0,2
+Unhotkey=Z
+Unbuttonpos=0,2
+Tip=Infectious Claws
+Ubertip=Units killed while under the effect of Infectious Claws will turn into more Infectious Ghouls.
+
 [Auns]
 Hotkey=U
 Buttonpos=1,2
@@ -3361,11 +3828,13 @@ Tip=Unsummon Building
 Ubertip=Unsummons your building to regain 50% of the spent resources.
 
 [Ausm]
+Hotkey=V
 Buttonpos=3,2
 Tip=Skeletal Mastery
 Ubertip=Causes one of the two skeletons created by Raise Dead to be a Skeletal Mage and increases the duration of raised Skeleton Warriors and Skeletal Mages by 20 seconds.
 
 [Aven]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Envenomed Spears
 Ubertip=Deals 3 poison damage per second. Lasts 25 seconds.
@@ -3383,6 +3852,7 @@ Ubertip=Raises an invulnerable feral spirit from a corpse. Lasts 50 seconds or u
 Unubertip=|cffc3dbffRight-click to deactivate auto-casting.
 
 [Awar]
+Hotkey=Z
 Buttonpos=0,2
 Tip=Pulverize,Enhanced Pulverize
 Ubertip=Gives a 25% chance that an attack will deal 20 damage to nearby units.,Gives a 25% chance that an attack will deal 60 damage to nearby units.
@@ -3424,6 +3894,7 @@ Tip=War Stomp
 Ubertip=Slams the ground, dealing 25 damage to nearby enemy land units and stunning them for 3 seconds.
 
 [SCae]
+Hotkey=C
 Buttonpos=2,2
 Tip=Endurance Aura
 Ubertip=Increases nearby friendly units' movement speed by 10% and attack rate by 5%.,Increases nearby friendly units' movement speed by ?% and attack rate by ?%.,Increases nearby friendly units' movement speed by ?% and attack rate by ?%.
@@ -3536,6 +4007,11 @@ Hotkey=A
 Buttonpos=0,1
 Ubertip=Mystical Hero Spirit, adept at ranged assaults. Can learn Blizzard, Summon Water Elemental, Brilliance Aura and Mass Teleport. Attacks land and air units.
 
+[Hjsm]
+Hotkey=I
+Buttonpos=0,1
+Ubertip=
+
 [Hkal]
 Hotkey=B
 Buttonpos=0,1
@@ -3615,6 +4091,12 @@ Hotkey=G
 Buttonpos=0,1
 Tip=Summon Sea Witch
 Ubertip=Mystical Hero, adept at ranged combat. Can learn Forked Lightning, Frost Arrows, Mana Shield, and Tornado. Attacks land and air units.
+
+[Npal]
+Hotkey=F
+Buttonpos=3,0
+Tip=Summon Forsaken Paladin
+Ubertip=Warrior Hero, adept at wielding the Light offensively and defensively. Can learn Consecration, Righteous Fury, Sacred Aura, and Cleansing Fire. Attacks land units.
 
 [Npbm]
 Hotkey=N
@@ -3710,6 +4192,12 @@ Hotkey=C
 Buttonpos=0,1
 Ubertip=Warrior Hero, adept at summoning insect minions and crushing enemies. Can learn Impale, Spiked Carapace, Carrion Beetles and Locust Swarm. Attacks land units.
 
+[Uany]
+Hotkey=A
+Buttonpos=0,0
+Tip=Summon Dark Ranger
+Ubertip=Cunning Hero, adept at manipulating opponents. Can learn Silence, Black Arrow, Life Drain, and Charm. Attacks land and air units.
+
 [Ucrl]
 Hotkey=C
 Buttonpos=0,1
@@ -3728,11 +4216,31 @@ Buttonpos=1,2
 Tip=Summon Dreadlord
 Ubertip=Cunning Hero, adept at controlling combat. Can learn Carrion Swarm, Sleep, Vampiric Aura, and Inferno. Attacks land units.
 
+[Ujsm]
+Hotkey=S
+Buttonpos=0,1
+Ubertip=
+
 [Ulic]
 Hotkey=L
 Buttonpos=2,2
 Tip=Summon Lich
 Ubertip=Mystical Hero, particularly adept at cold magic. Can learn Frost Armor, Frost Nova, Dark Ritual and Death And Decay. Attacks land and air units.
+
+[Urff]
+Hotkey=A
+Buttonpos=0,2
+Ubertip=
+
+[Urfm]
+Hotkey=A
+Buttonpos=0,2
+Ubertip=
+
+[Urfu]
+Hotkey=C
+Buttonpos=0,2
+Ubertip=
 
 [Usyl]
 Hotkey=D
@@ -3978,7 +4486,7 @@ Tip=Upgrade to Castle
 Ubertip=Upgrade to Castle to enable the production of additional types of structures and units.
 
 [hctw]
-Hotkey=C
+Hotkey=G
 Buttonpos=1,2
 Tip=Upgrade to Cannon Tower
 Ubertip=Heavy defensive structure. Particularly effective against clusters of troops. Can learn Fragmentation Shards and Magic Sentry ability. Attacks land units and trees.
@@ -5319,6 +5827,42 @@ Buttonpos=1,0
 Tip=Train Headhunter
 Ubertip=Versatile spear-thrower, effective against air units. Can learn Troll Regeneration. Can be upgraded to Berserker, which has the Berserk ability. Attacks land and air units.
 
+[oidb]
+Buttonpos=1,0
+Tip=Train Forsaken Banshee.
+Ubertip=Basic ranged attack unit with an effective magic attack. Attacks land and air units.
+
+[oidg]
+Hotkey=D
+Buttonpos=0,0
+Tip=Train Deathguard
+Ubertip=Versatile foot soldier. Attacks land units.
+
+[oie1]
+Buttonpos=0,0
+Tip=Train Essencium Blizzard.
+Ubertip=You found me!
+
+[oie2]
+Buttonpos=0,0
+Tip=Train Essencium Rain of Fire.
+Ubertip=You found me!
+
+[oie3]
+Buttonpos=0,0
+Tip=Train Essencium Chain Lightning.
+Ubertip=You found me!
+
+[oie4]
+Buttonpos=0,0
+Tip=Train Essencium Crushing Wave.
+Ubertip=You found me!
+
+[oimd]
+Buttonpos=0,0
+Tip=Train Item Moonglaive Dummy.
+Ubertip=You found me!
+
 [okod]
 Hotkey=K
 Buttonpos=2,0
@@ -5460,6 +6004,9 @@ Ubertip=Supporting caster. Can initially cast Curse, which causes enemy units to
 [ubdd]
 Buttonpos=0,0
 
+[ublw]
+Buttonpos=0,0
+
 [ubon]
 Hotkey=B
 Buttonpos=1,2
@@ -5489,6 +6036,12 @@ Hotkey=F
 Buttonpos=1,0
 Tip=Hire Frigate
 Ubertip=A versatile attack ship good at destroying air attackers. Attacks land and air units.
+
+[ufr2]
+Buttonpos=1,0
+
+[ufrb]
+Buttonpos=1,0
 
 [ufro]
 Hotkey=F
@@ -5525,6 +6078,12 @@ Hotkey=V
 Buttonpos=3,0
 Tip=Summon Graveyard
 Ubertip=Provides attack and armor upgrades for Undead units. Also produces corpses and serves as a drop-off point for harvested lumber.
+
+[uigh]
+Hotkey=G
+Buttonpos=0,0
+Tip=Train Infectious Ghoul
+Ubertip=Basic attack unit. Has the Infectious Claws ability. Attacks land units.
 
 [umtw]
 Hotkey=M

@@ -7,7 +7,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::meta::{AbilityMeta, CommandMeta, ItemMeta, UnitMeta, UpgradeMeta};
+use crate::meta::{AbilityMeta, CommandMeta, ItemMeta, MAX_ABILITY_LEVEL, UnitMeta, UpgradeMeta};
 use crate::primitives::Identifier;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -261,6 +261,36 @@ impl UnitUpgradeSwap {
     }
 }
 
+/// A hero talent (patch 3.0.0): a variant of a hero ability that replaces its
+/// base on the same command card button once the talent is picked (e.g. Guiding
+/// Hand `AHgh` and its talents `AHq1`..`AHq3`). The live game then reads the
+/// variant's own `CustomKeys.txt` section, so the variant must carry its base's
+/// keybind. Extracted from the talent rows of `units/abilitydata.slk`.
+#[derive(Default, Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct TalentVariant {
+    variant_id: WarcraftObjectId,
+    base_id: WarcraftObjectId,
+}
+
+impl TalentVariant {
+    pub const fn new(variant_id: &'static str, base_id: &'static str) -> Self {
+        let variant_id = WarcraftObjectId::new(variant_id);
+        let base_id = WarcraftObjectId::new(base_id);
+        Self {
+            variant_id,
+            base_id,
+        }
+    }
+
+    pub fn variant_id(&self) -> WarcraftObjectId {
+        self.variant_id
+    }
+
+    pub fn base_id(&self) -> WarcraftObjectId {
+        self.base_id
+    }
+}
+
 impl Borrow<str> for WarcraftObjectId {
     fn borrow(&self) -> &str {
         self.value
@@ -500,7 +530,7 @@ impl WarcraftDatabase {
         }
     }
 
-    pub fn get_ability_cooldowns(&self, id: Identifier) -> Option<[u32; 4]> {
+    pub fn get_ability_cooldowns(&self, id: Identifier) -> Option<[u32; MAX_ABILITY_LEVEL]> {
         match self.get(id)?.meta {
             WarcraftObjectMeta::Ability(ref meta) => Some(meta.cooldowns()),
             _ => None,
@@ -715,7 +745,7 @@ impl WarcraftObject {
         }
     }
 
-    pub fn cooldowns(&self) -> Option<[u32; 4]> {
+    pub fn cooldowns(&self) -> Option<[u32; MAX_ABILITY_LEVEL]> {
         match self.meta() {
             WarcraftObjectMeta::Ability(ability_meta) => Some(ability_meta.cooldowns()),
             _ => None,

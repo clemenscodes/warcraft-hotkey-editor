@@ -4,6 +4,7 @@ use std::{
     sync::LazyLock,
 };
 
+use warcraft_api::MAX_ABILITY_LEVEL;
 use warcraft_slk::SlkTable;
 
 use crate::{ExtractError, ExtractResult, ExtractTarget, ExtractionRule, Race, casc_filename};
@@ -27,7 +28,7 @@ pub struct HeroAbility {
     is_ultimate: bool,
     ability: String,
     id: String,
-    cooldowns: [u32; 4],
+    cooldowns: [u32; MAX_ABILITY_LEVEL],
 }
 
 impl HeroAbility {
@@ -51,7 +52,7 @@ impl HeroAbility {
         &self.id
     }
 
-    pub fn cooldowns(&self) -> [u32; 4] {
+    pub fn cooldowns(&self) -> [u32; MAX_ABILITY_LEVEL] {
         self.cooldowns
     }
 }
@@ -135,16 +136,15 @@ impl HeroesExtraction {
                 _ => continue,
             };
 
-            let cool1 = row.get("Cool1");
-            let cool2 = row.get("Cool2");
-            let cool3 = row.get("Cool3");
-            let cool4 = row.get("Cool4");
-            let cooldowns = [
-                Self::parse_cooldown_milliseconds(cool1),
-                Self::parse_cooldown_milliseconds(cool2),
-                Self::parse_cooldown_milliseconds(cool3),
-                Self::parse_cooldown_milliseconds(cool4),
-            ];
+            let mut cooldowns: [u32; MAX_ABILITY_LEVEL] = [0; MAX_ABILITY_LEVEL];
+            let mut level_index = 0;
+            while level_index < MAX_ABILITY_LEVEL {
+                let column_number = level_index + 1;
+                let column_name = format!("Cool{column_number}");
+                let raw_cooldown = row.get(&column_name);
+                cooldowns[level_index] = Self::parse_cooldown_milliseconds(raw_cooldown);
+                level_index += 1;
+            }
 
             let ability = HeroAbility {
                 race,

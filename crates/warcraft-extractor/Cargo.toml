@@ -31,3 +31,4 @@ warcraft-slk = { path = "../warcraft-slk" }
 [[test]]
 name = "rules"
 path = "tests/rules.rs"
+

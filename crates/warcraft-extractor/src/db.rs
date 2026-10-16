@@ -1,8 +1,8 @@
 use warcraft_api::{
     AbilityMeta, AttackType, AttributeBase, AttributeGrowth, CommandMeta, DefenseType,
-    GameplayConstants, GridCoordinate, HeroAttributes, ItemMeta, ManaPool, ObjectMap,
-    PrimaryAttribute, Race, RegenType, UnitAttack, UnitCombat, UnitFlags, UnitKind, UnitMeta,
-    UnitProduction, UpgradeMeta, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
+    GameplayConstants, GridCoordinate, HeroAttributes, ItemMeta, MAX_ABILITY_LEVEL, ManaPool,
+    ObjectMap, PrimaryAttribute, Race, RegenType, UnitAttack, UnitCombat, UnitFlags, UnitKind,
+    UnitMeta, UnitProduction, UpgradeMeta, WarcraftDatabase, WarcraftObject, WarcraftObjectId,
     WarcraftObjectKind, WarcraftObjectMeta, WarcraftObjectText, WeaponType,
 };
 
@@ -33,18 +33,20 @@ impl WarcraftObjectIdentity {
 }
 
 use crate::{
-    AbilityDefaultsDatabase, AbilityMetadataDatabase, AbilitySkins, CampaignAbilityStringsDatabase,
-    CampaignUnitStringsDatabase, CommandDefaultsDatabase, CommonAbilityStringsDatabase,
-    CommonUnitStringsDatabase, DataTablesDatabase, DefaultPositionsDatabase, ExtractResult,
-    HeroDatabase, HumanAbilityStringsDatabase, HumanUnitStringsDatabase, HumanUpgradeArtDatabase,
+    AbilityDefaultsDatabase, AbilityDefaultsEntry, AbilityMetadataDatabase, AbilitySkins,
+    CampaignAbilityStringsDatabase, CampaignUnitStringsDatabase, CommandDefaultsDatabase,
+    CommonAbilityStringsDatabase, CommonUnitStringsDatabase, DataTablesDatabase,
+    DefaultHotkeysDatabase, DefaultPositionsDatabase, ExtractResult, HeroDatabase,
+    HumanAbilityStringsDatabase, HumanUnitStringsDatabase, HumanUpgradeArtDatabase,
     HumanUpgradeNameDatabase, ItemAbilityStringsDatabase, ItemDatabase, ItemSkins,
     ItemUnitStringsDatabase, NeutralAbilityStringsDatabase, NeutralUnitStringsDatabase,
     NightelfAbilityStringsDatabase, NightelfUnitStringsDatabase, NightelfUpgradeArtDatabase,
     NightelfUpgradeNameDatabase, ObjectTextDatabase, OrcAbilityStringsDatabase,
     OrcUnitStringsDatabase, OrcUpgradeArtDatabase, OrcUpgradeNameDatabase, SystemKeybindsDatabase,
-    UndeadAbilityStringsDatabase, UndeadUnitStringsDatabase, UndeadUpgradeArtDatabase,
-    UndeadUpgradeNameDatabase, UnitAbilitiesDatabase, UnitDataDatabase, UnitDatabase, UnitSkins,
-    UnitUiFlagsDatabase, UpgradeSwapDatabase, race_from_unit_id, upgrades::RaceUpgradeEntry,
+    TalentVariantDatabase, TalentVariantEntry, UndeadAbilityStringsDatabase,
+    UndeadUnitStringsDatabase, UndeadUpgradeArtDatabase, UndeadUpgradeNameDatabase,
+    UnitAbilitiesDatabase, UnitDataDatabase, UnitDatabase, UnitSkins, UnitUiFlagsDatabase,
+    UpgradeSwapDatabase, race_from_unit_id, upgrades::RaceUpgradeEntry,
 };
 
 impl From<WarcraftDataAggregation> for WarcraftDatabase {
@@ -74,6 +76,16 @@ impl TransformSuppression {
     }
 }
 
+/// What a hero ability's command card button looks like: its icon and its two
+/// grid cells. A talent replaces its base on the very same button, so the two
+/// share this signature exactly.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct TalentButtonSignature {
+    icon: String,
+    button_position: GridCoordinate,
+    research_button_position: Option<GridCoordinate>,
+}
+
 #[derive(Default, Debug, Clone)]
 pub struct WarcraftDataAggregation {
     heroes: HeroDatabase,
@@ -89,6 +101,8 @@ pub struct WarcraftDataAggregation {
     default_positions: DefaultPositionsDatabase,
     object_texts: ObjectTextDatabase,
     system_keybinds: SystemKeybindsDatabase,
+    localized_default_hotkeys: DefaultHotkeysDatabase,
+    shipped_default_hotkeys: DefaultHotkeysDatabase,
     items: ItemDatabase,
     upgrades: UpgradeDatabase,
     skins: SkinDatabase,
@@ -133,12 +147,126 @@ impl WarcraftDataAggregation {
         &self.system_keybinds
     }
 
+    /// The hotkeys of Blizzard's shipped `customkeys.txt`, verbatim.
+    pub fn shipped_default_hotkeys(&self) -> &DefaultHotkeysDatabase {
+        &self.shipped_default_hotkeys
+    }
+
+    /// The hotkeys of the localized `*strings.txt` files, verbatim.
+    pub fn localized_default_hotkeys(&self) -> &DefaultHotkeysDatabase {
+        &self.localized_default_hotkeys
+    }
+
     pub fn ability_metadata(&self) -> &AbilityMetadataDatabase {
         &self.ability_metadata
     }
 
     pub fn upgrade_swaps(&self) -> &UpgradeSwapDatabase {
         &self.upgrade_swaps
+    }
+
+    /// Every hero talent paired with the hero ability it replaces. A talent
+    /// row carries no unit of its own (map scripts grant it), so its base is
+    /// found among the abilities heroes actually list, in falling order of
+    /// certainty, each step taken only when it yields exactly one ability with
+    /// the talent's button signature:
+    ///
+    /// 1. the ability whose id is the talent's `code` (`AHq1` → `AHgh`; this
+    ///    also settles the Sacred Aura talents on `AHas`, whose code the
+    ///    Forsaken Paladin's `AHpa` reuses),
+    /// 2. the ability sharing the talent's `code` (Apprehend talents `AHe2`/
+    ///    `AHe3` run on `Aens`, as does their base `AHen`),
+    /// 3. the ability with the same button alone (`AHap` runs on `Aena` while
+    ///    its base `AHen` runs on `Aens`).
+    ///
+    /// Stat talents (`AT1a`, `BT5a`, …) sit off the grid (`Buttonpos=0,-11`),
+    /// have no button signature and are skipped.
+    pub fn talent_variants(&self) -> TalentVariantDatabase {
+        let hero_ability_ids: std::collections::BTreeSet<&str> = self
+            .unit_abilities
+            .values()
+            .flat_map(|entry| entry.hero_abilities().iter())
+            .map(String::as_str)
+            .collect();
+        let mut talent_variants = TalentVariantDatabase::new();
+        for (variant_id, metadata) in &self.ability_metadata {
+            if !metadata.is_talent() || hero_ability_ids.contains(variant_id.as_str()) {
+                continue;
+            }
+            let Some(variant_signature) = self.talent_button_signature(variant_id) else {
+                continue;
+            };
+            let variant_code = metadata.code();
+            let base_option =
+                self.talent_base_id(variant_code, &variant_signature, &hero_ability_ids);
+            let Some(base_id) = base_option else {
+                continue;
+            };
+            let variant_string = variant_id.clone();
+            let base_string = base_id.to_string();
+            let entry = TalentVariantEntry::new(variant_string, base_string);
+            talent_variants.insert(entry);
+        }
+        talent_variants
+    }
+
+    fn talent_base_id<'a>(
+        &self,
+        variant_code: Option<&str>,
+        variant_signature: &TalentButtonSignature,
+        hero_ability_ids: &std::collections::BTreeSet<&'a str>,
+    ) -> Option<&'a str> {
+        let signature_matches = |candidate_id: &&'a str| {
+            let candidate_signature = self.talent_button_signature(candidate_id);
+            candidate_signature.as_ref() == Some(variant_signature)
+        };
+        if let Some(code) = variant_code
+            && let Some(code_ability_id) = hero_ability_ids.get(code)
+            && signature_matches(code_ability_id)
+        {
+            return Some(code_ability_id);
+        }
+        let same_code_matches: Vec<&'a str> = hero_ability_ids
+            .iter()
+            .copied()
+            .filter(|candidate_id| {
+                let candidate_code = self
+                    .ability_metadata
+                    .get(*candidate_id)
+                    .and_then(|entry| entry.code());
+                variant_code.is_some() && candidate_code == variant_code
+            })
+            .filter(signature_matches)
+            .collect();
+        if let [single_match] = same_code_matches.as_slice() {
+            return Some(single_match);
+        }
+        let same_button_matches: Vec<&'a str> = hero_ability_ids
+            .iter()
+            .copied()
+            .filter(signature_matches)
+            .collect();
+        match same_button_matches.as_slice() {
+            [single_match] => Some(single_match),
+            _ => None,
+        }
+    }
+
+    fn talent_button_signature(&self, ability_id: &str) -> Option<TalentButtonSignature> {
+        let defaults = self.ability_defaults_for(ability_id)?;
+        let button_position = defaults.button_position()?;
+        let research_button_position = defaults.research_button_position();
+        let raw_icon = self.get_ability_icon_by_id(ability_id)?;
+        let icon = self.normalize_icon_path(&raw_icon);
+        if icon.is_empty() {
+            return None;
+        }
+        let signature = TalentButtonSignature {
+            icon,
+            button_position,
+            research_button_position,
+        };
+        Some(signature)
     }
 
     fn object_text_lookup(&self, id: &str) -> Option<&crate::ObjectText> {
@@ -296,6 +424,20 @@ impl WarcraftDataAggregation {
 
     fn get_item_icon_by_id(&self, id: &str) -> Option<String> {
         Self::case_insensitive_get(&self.skins.item, id)
+    }
+
+    /// The `*func.txt` defaults of an ability. Section ids in the game data
+    /// are not reliably cased like the references to them (patch 3.0.0 defines
+    /// `[AChV]` while units carry `AChv`), so a direct miss falls back to a
+    /// case-insensitive match, the same way icon lookups do.
+    fn ability_defaults_for(&self, ability_id: &str) -> Option<&AbilityDefaultsEntry> {
+        if let Some(direct) = self.ability_defaults.get(ability_id) {
+            return Some(direct);
+        }
+        self.ability_defaults
+            .iter()
+            .find(|entry| entry.0.eq_ignore_ascii_case(ability_id))
+            .map(|entry| entry.1)
     }
 
     fn case_insensitive_get(
@@ -1081,7 +1223,11 @@ impl WarcraftDataAggregation {
                 let leaked_name = Self::leak(name);
                 let leaked_icon = Self::leak(icon.as_str());
                 let names = Self::leak_slice(&[leaked_name]);
-                let icons = Self::leak_slice(&[leaked_icon]);
+                let icons: &'static [&'static str] = if leaked_icon.is_empty() {
+                    &[]
+                } else {
+                    Self::leak_slice(&[leaked_icon])
+                };
                 let build_time = unit.build_time();
                 let level = unit.level();
                 let gold_cost = unit.gold_cost();
@@ -1118,8 +1264,7 @@ impl WarcraftDataAggregation {
                     });
                     if is_pre_upgrade_form {
                         combined.retain(|ability_id| {
-                            self.ability_defaults
-                                .get(ability_id.as_str())
+                            self.ability_defaults_for(ability_id.as_str())
                                 .and_then(|entry| entry.requires())
                                 .is_none()
                         });
@@ -1392,7 +1537,7 @@ impl WarcraftDataAggregation {
                 let max_level = hero_ability.max_level();
                 let is_ultimate = hero_ability.is_ultimate();
                 let cooldowns = hero_ability.cooldowns();
-                let defaults = self.ability_defaults.get(hero_id);
+                let defaults = self.ability_defaults_for(hero_id);
                 let default_position = defaults.and_then(|entry| entry.button_position());
                 let default_research_position =
                     defaults.and_then(|entry| entry.research_button_position());
@@ -1412,7 +1557,7 @@ impl WarcraftDataAggregation {
                 let code_static = metadata.and_then(|entry| entry.code()).map(Self::leak);
                 let evasion_chances = metadata
                     .map(|entry| entry.evasion_chance_per_level())
-                    .unwrap_or([0.0; 4]);
+                    .unwrap_or([0.0; MAX_ABILITY_LEVEL]);
                 let morph_target = metadata
                     .and_then(|entry| entry.morph_target_unit())
                     .map(Self::leak)
@@ -1501,7 +1646,7 @@ impl WarcraftDataAggregation {
                 } else {
                     Self::leak_slice(&[leaked_icon])
                 };
-                let defaults = self.ability_defaults.get(ability_string_id);
+                let defaults = self.ability_defaults_for(ability_string_id);
                 let default_position = defaults.and_then(|entry| entry.button_position());
                 let default_research_position =
                     defaults.and_then(|entry| entry.research_button_position());
@@ -1544,12 +1689,12 @@ impl WarcraftDataAggregation {
                     resolved_max_level = 1;
                     resolved_is_ultimate = false;
                 }
-                let zero_cooldowns: [u32; 4] = [0, 0, 0, 0];
+                let zero_cooldowns: [u32; MAX_ABILITY_LEVEL] = [0; MAX_ABILITY_LEVEL];
                 let metadata = self.ability_metadata.get(ability_string_id);
                 let code_static = metadata.and_then(|entry| entry.code()).map(Self::leak);
                 let evasion_chances = metadata
                     .map(|entry| entry.evasion_chance_per_level())
-                    .unwrap_or([0.0; 4]);
+                    .unwrap_or([0.0; MAX_ABILITY_LEVEL]);
                 let morph_target = metadata
                     .and_then(|entry| entry.morph_target_unit())
                     .map(Self::leak)
@@ -1707,7 +1852,7 @@ impl WarcraftDataAggregation {
             } else {
                 Self::leak_slice(&[leaked_icon])
             };
-            let defaults = self.ability_defaults.get(ability_id_str.as_str());
+            let defaults = self.ability_defaults_for(ability_id_str.as_str());
             let default_position = defaults.and_then(|entry| entry.button_position());
             let raw_ubertip = self
                 .resolve_ability_ubertip(*race, ability_id_str)
@@ -1719,7 +1864,7 @@ impl WarcraftDataAggregation {
             let code_static = metadata.and_then(|entry| entry.code()).map(Self::leak);
             let evasion_chances = metadata
                 .map(|entry| entry.evasion_chance_per_level())
-                .unwrap_or([0.0; 4]);
+                .unwrap_or([0.0; MAX_ABILITY_LEVEL]);
             let morph_target = metadata
                 .and_then(|entry| entry.morph_target_unit())
                 .map(Self::leak)
@@ -1751,7 +1896,7 @@ impl WarcraftDataAggregation {
             let ability_meta = AbilityMeta::with_ubertips(
                 1,
                 false,
-                [0, 0, 0, 0],
+                [0; MAX_ABILITY_LEVEL],
                 default_position,
                 default_research_position,
                 ubertip_static,
@@ -2057,7 +2202,7 @@ impl WarcraftDataAggregation {
             std::collections::HashMap::new();
 
         for ability_id in abilities.iter() {
-            let defaults = aggregation.ability_defaults.get(ability_id.as_str());
+            let defaults = aggregation.ability_defaults_for(ability_id.as_str());
             let Some(position) = defaults.and_then(|entry| entry.button_position()) else {
                 continue;
             };
@@ -2206,6 +2351,17 @@ impl From<Vec<ExtractResult>> for WarcraftDataAggregation {
                 }
                 ExtractResult::SystemKeybinds(entries) => {
                     db.system_keybinds = entries;
+                }
+                ExtractResult::LocalizedDefaultHotkeys(entries) => {
+                    for (section_id, entry) in entries {
+                        db.localized_default_hotkeys
+                            .entry(section_id)
+                            .or_default()
+                            .overlay(&entry);
+                    }
+                }
+                ExtractResult::ShippedDefaultHotkeys(entries) => {
+                    db.shipped_default_hotkeys = entries;
                 }
                 ExtractResult::Items(items) => db.merge_items(items),
                 ExtractResult::HumanUpgradesArt(art) => db.upgrades.human_art = art,
