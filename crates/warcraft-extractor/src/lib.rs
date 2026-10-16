@@ -3,6 +3,7 @@ mod ability_defaults;
 mod command_defaults;
 mod data_tables;
 mod db;
+mod default_hotkeys;
 mod default_positions;
 mod gameplay_constants;
 mod heroes;
@@ -27,6 +28,7 @@ pub use abilities::*;
 pub use ability_defaults::*;
 pub use command_defaults::*;
 pub use data_tables::*;
+pub use default_hotkeys::*;
 pub use default_positions::*;
 pub use gameplay_constants::*;
 pub use heroes::*;
@@ -75,6 +77,8 @@ pub enum ExtractResult {
     DefaultPositions(DefaultPositionsDatabase),
     ObjectTexts(ObjectTextDatabase),
     SystemKeybinds(SystemKeybindsDatabase),
+    LocalizedDefaultHotkeys(DefaultHotkeysDatabase),
+    ShippedDefaultHotkeys(DefaultHotkeysDatabase),
     Items(ItemDatabase),
     AbilitySkin(AbilitySkins),
     ItemSkin(ItemSkins),

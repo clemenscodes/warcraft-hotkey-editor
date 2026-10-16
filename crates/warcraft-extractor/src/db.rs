@@ -36,16 +36,17 @@ use crate::{
     AbilityDefaultsDatabase, AbilityDefaultsEntry, AbilityMetadataDatabase, AbilitySkins,
     CampaignAbilityStringsDatabase, CampaignUnitStringsDatabase, CommandDefaultsDatabase,
     CommonAbilityStringsDatabase, CommonUnitStringsDatabase, DataTablesDatabase,
-    DefaultPositionsDatabase, ExtractResult, HeroDatabase, HumanAbilityStringsDatabase,
-    HumanUnitStringsDatabase, HumanUpgradeArtDatabase, HumanUpgradeNameDatabase,
-    ItemAbilityStringsDatabase, ItemDatabase, ItemSkins, ItemUnitStringsDatabase,
-    NeutralAbilityStringsDatabase, NeutralUnitStringsDatabase, NightelfAbilityStringsDatabase,
-    NightelfUnitStringsDatabase, NightelfUpgradeArtDatabase, NightelfUpgradeNameDatabase,
-    ObjectTextDatabase, OrcAbilityStringsDatabase, OrcUnitStringsDatabase, OrcUpgradeArtDatabase,
-    OrcUpgradeNameDatabase, SystemKeybindsDatabase, TalentVariantDatabase, TalentVariantEntry,
-    UndeadAbilityStringsDatabase, UndeadUnitStringsDatabase, UndeadUpgradeArtDatabase,
-    UndeadUpgradeNameDatabase, UnitAbilitiesDatabase, UnitDataDatabase, UnitDatabase, UnitSkins,
-    UnitUiFlagsDatabase, UpgradeSwapDatabase, race_from_unit_id, upgrades::RaceUpgradeEntry,
+    DefaultHotkeysDatabase, DefaultPositionsDatabase, ExtractResult, HeroDatabase,
+    HumanAbilityStringsDatabase, HumanUnitStringsDatabase, HumanUpgradeArtDatabase,
+    HumanUpgradeNameDatabase, ItemAbilityStringsDatabase, ItemDatabase, ItemSkins,
+    ItemUnitStringsDatabase, NeutralAbilityStringsDatabase, NeutralUnitStringsDatabase,
+    NightelfAbilityStringsDatabase, NightelfUnitStringsDatabase, NightelfUpgradeArtDatabase,
+    NightelfUpgradeNameDatabase, ObjectTextDatabase, OrcAbilityStringsDatabase,
+    OrcUnitStringsDatabase, OrcUpgradeArtDatabase, OrcUpgradeNameDatabase, SystemKeybindsDatabase,
+    TalentVariantDatabase, TalentVariantEntry, UndeadAbilityStringsDatabase,
+    UndeadUnitStringsDatabase, UndeadUpgradeArtDatabase, UndeadUpgradeNameDatabase,
+    UnitAbilitiesDatabase, UnitDataDatabase, UnitDatabase, UnitSkins, UnitUiFlagsDatabase,
+    UpgradeSwapDatabase, race_from_unit_id, upgrades::RaceUpgradeEntry,
 };
 
 impl From<WarcraftDataAggregation> for WarcraftDatabase {
@@ -100,6 +101,8 @@ pub struct WarcraftDataAggregation {
     default_positions: DefaultPositionsDatabase,
     object_texts: ObjectTextDatabase,
     system_keybinds: SystemKeybindsDatabase,
+    localized_default_hotkeys: DefaultHotkeysDatabase,
+    shipped_default_hotkeys: DefaultHotkeysDatabase,
     items: ItemDatabase,
     upgrades: UpgradeDatabase,
     skins: SkinDatabase,
@@ -142,6 +145,16 @@ impl WarcraftDataAggregation {
 
     pub fn system_keybinds(&self) -> &SystemKeybindsDatabase {
         &self.system_keybinds
+    }
+
+    /// The hotkeys of Blizzard's shipped `customkeys.txt`, verbatim.
+    pub fn shipped_default_hotkeys(&self) -> &DefaultHotkeysDatabase {
+        &self.shipped_default_hotkeys
+    }
+
+    /// The hotkeys of the localized `*strings.txt` files, verbatim.
+    pub fn localized_default_hotkeys(&self) -> &DefaultHotkeysDatabase {
+        &self.localized_default_hotkeys
     }
 
     pub fn ability_metadata(&self) -> &AbilityMetadataDatabase {
@@ -2338,6 +2351,17 @@ impl From<Vec<ExtractResult>> for WarcraftDataAggregation {
                 }
                 ExtractResult::SystemKeybinds(entries) => {
                     db.system_keybinds = entries;
+                }
+                ExtractResult::LocalizedDefaultHotkeys(entries) => {
+                    for (section_id, entry) in entries {
+                        db.localized_default_hotkeys
+                            .entry(section_id)
+                            .or_default()
+                            .overlay(&entry);
+                    }
+                }
+                ExtractResult::ShippedDefaultHotkeys(entries) => {
+                    db.shipped_default_hotkeys = entries;
                 }
                 ExtractResult::Items(items) => db.merge_items(items),
                 ExtractResult::HumanUpgradesArt(art) => db.upgrades.human_art = art,

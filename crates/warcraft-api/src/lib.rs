@@ -7,7 +7,9 @@ pub mod primitives;
 pub mod race_labels;
 pub mod version;
 
-pub use keybind::{ContextSet, SystemKeybind, SystemKeybindClass, SystemKeybindModifier};
+pub use keybind::{
+    ContextSet, DefaultHotkeys, SystemKeybind, SystemKeybindClass, SystemKeybindModifier,
+};
 pub use keycode::KeyCode;
 pub use meta::{
     AbilityMeta, AgilityBonuses, AttackType, AttributeBase, AttributeGrowth, CommandMeta,
