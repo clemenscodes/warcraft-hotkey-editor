@@ -86,7 +86,11 @@ test.describe("Editor selection history (back/forward)", () => {
     const search = page.locator('input[type="search"]');
     const before = await page.evaluate(() => history.length);
 
-    await search.pressSequentially("Footman", { delay: 60 });
+    // Key by key, but without an artificial delay: WebKit already spends ~60ms
+    // per keystroke, so an added 60ms delay brings a single gap under load
+    // past the 150ms search debounce. That commits "F" early and pushes the
+    // final commit out of the 500ms coalescing window.
+    await search.pressSequentially("Footman");
     await expect(page).toHaveURL(/search_query=Footman/);
 
     const after = await page.evaluate(() => history.length);
