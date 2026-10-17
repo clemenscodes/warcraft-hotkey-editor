@@ -70218,6 +70218,7 @@ const EARC_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Aco2"),
     WarcraftObjectId::new("Aien"),
     WarcraftObjectId::new("Aegr"),
+    WarcraftObjectId::new("Aeib"),
     WarcraftObjectId::new("Aemk"),
 ];
 const EARC_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -70547,6 +70548,7 @@ const EHIP_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const EHPR_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Ault"),
     WarcraftObjectId::new("Adec"),
+    WarcraftObjectId::new("Aeib"),
     WarcraftObjectId::new("Aemk"),
 ];
 const EHPR_UNIT_BUILDS: &[WarcraftObjectId] = &[];
@@ -77575,6 +77577,7 @@ const OTAU_UNIT_TRAINS: &[WarcraftObjectId] = &[];
 const OTBK_UNIT_ABILITIES: &[WarcraftObjectId] = &[
     WarcraftObjectId::new("Absk"),
     WarcraftObjectId::new("Aion"),
+    WarcraftObjectId::new("Aobk"),
     WarcraftObjectId::new("Aotr"),
 ];
 const OTBK_UNIT_BUILDS: &[WarcraftObjectId] = &[];

@@ -1337,6 +1337,9 @@ impl WarcraftDataAggregation {
                     // in the merged list and win.  Earlier alternative-mode entries
                     // (e.g. ACdm, ACfu from custom_v0/melee_v0) are superseded.
                     // Self-references (ability.code == ability itself) are skipped.
+                    // So is `APai`, Blizzard's generic passive-icon base: every
+                    // upgrade icon (Aeib, Aemk, Aobk, Aotr, …) is an alias of it, so
+                    // sharing that code never marks a balance variant.
                     {
                         let mut last_seen_codes: std::collections::HashMap<String, String> =
                             std::collections::HashMap::new();
@@ -1346,7 +1349,9 @@ impl WarcraftDataAggregation {
                                 .get(ability_id.as_str())
                                 .and_then(|meta| meta.code());
                             if let Some(code_id) = code_option {
-                                if code_id.eq_ignore_ascii_case(ability_id) {
+                                if code_id.eq_ignore_ascii_case(ability_id)
+                                    || code_id.eq_ignore_ascii_case("APai")
+                                {
                                     continue;
                                 }
                                 let code_lower = code_id.to_ascii_lowercase();
@@ -1363,7 +1368,9 @@ impl WarcraftDataAggregation {
                                     .get(ability_id.as_str())
                                     .and_then(|meta| meta.code());
                                 if let Some(code_id) = code_option {
-                                    if code_id.eq_ignore_ascii_case(ability_id) {
+                                    if code_id.eq_ignore_ascii_case(ability_id)
+                                        || code_id.eq_ignore_ascii_case("APai")
+                                    {
                                         return None;
                                     }
                                     let code_lower = code_id.to_ascii_lowercase();

@@ -25,7 +25,7 @@ async function collisionState(
 // Hard-coded counts intentionally — they are the ground truth for the
 // algorithm and any change in them should be a conscious decision.
 test.describe("Collision count progression across the resolve workflow", () => {
-  test("default template → resolve → apply grid drops the count from 99+ to 68 to 0", async ({
+  test("default template → resolve → apply grid drops the count from 99+ to 62 to 0", async ({
     page,
   }) => {
     await page.goto(APP);
@@ -79,7 +79,7 @@ test.describe("Collision count progression across the resolve workflow", () => {
     // Self Destruct ids Asd2/Asd3/Asdg fan out as one button, deduping
     // one more clash; 68 since patch 3.0.0 added the Forsaken campaign and
     // the Forsaken Paladin, whose default hotkeys add thirteen more.)
-    expect(afterResolve).toBe(68);
+    expect(afterResolve).toBe(62);
     expect(afterResolve).toBeLessThan(initialCount);
     expect(await collisionState(page)).toBe("attention");
 

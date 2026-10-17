@@ -1,5 +1,4 @@
 [ACac]
-Hotkey=W
 Buttonpos=0,2
 
 [ACad]
@@ -7,7 +6,6 @@ Hotkey=V
 Buttonpos=3,2
 
 [ACah]
-Hotkey=C
 Buttonpos=2,2
 
 [ACam]
@@ -15,15 +13,12 @@ Hotkey=X
 Buttonpos=1,2
 
 [ACat]
-Hotkey=C
 Buttonpos=2,2
 
 [ACav]
-Hotkey=V
 Buttonpos=3,2
 
 [ACba]
-Hotkey=C
 Buttonpos=2,2
 
 [ACbb]
@@ -41,7 +36,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [ACbh]
-Hotkey=C
 Buttonpos=2,2
 
 [ACbk]
@@ -81,7 +75,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [ACce]
-Hotkey=X
 Buttonpos=1,2
 
 [ACch]
@@ -107,7 +100,6 @@ Buttonpos=1,2
 Unbuttonpos=1,2
 
 [ACct]
-Hotkey=C
 Buttonpos=2,2
 
 [ACcv]
@@ -165,7 +157,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [ACev]
-Hotkey=C
 Buttonpos=2,2
 
 [ACf2]
@@ -243,7 +234,6 @@ Hotkey=C
 Buttonpos=2,2
 
 [ACm2]
-Hotkey=S
 Buttonpos=1,1
 
 [ACmf]
@@ -253,7 +243,6 @@ Buttonpos=1,2
 Unbuttonpos=1,2
 
 [ACmi]
-Hotkey=C
 Buttonpos=2,2
 
 [ACmo]
@@ -277,7 +266,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [ACpv]
-Hotkey=F
 Buttonpos=3,1
 
 [ACpy]
@@ -303,11 +291,9 @@ Hotkey=X
 Buttonpos=1,2
 
 [ACrk]
-Hotkey=V
 Buttonpos=3,2
 
 [ACrn]
-Hotkey=V
 Buttonpos=3,2
 
 [ACro]
@@ -341,7 +327,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [ACsk]
-Hotkey=F
 Buttonpos=3,1
 
 [ACsl]
@@ -377,7 +362,6 @@ Hotkey=X
 Buttonpos=1,2
 
 [ACua]
-Hotkey=F
 Buttonpos=3,1
 
 [ACuf]
@@ -385,11 +369,9 @@ Hotkey=X
 Buttonpos=1,2
 
 [ACvp]
-Hotkey=C
 Buttonpos=2,2
 
 [ACvs]
-Hotkey=X
 Buttonpos=1,2
 
 [ACwb]
@@ -411,13 +393,11 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AEah]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AEar]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -441,7 +421,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [AEev]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -539,13 +518,11 @@ Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AHab]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AHad]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -557,7 +534,6 @@ Researchhotkey=Z
 Researchbuttonpos=1,0
 
 [AHas]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -595,7 +571,6 @@ Researchhotkey=Z
 Researchbuttonpos=1,0
 
 [AHbh]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -741,7 +716,6 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AHgr]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -861,7 +835,6 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AHpa]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1059,7 +1032,6 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [ANb2]
-Hotkey=X
 Buttonpos=1,2
 
 [ANba]
@@ -1077,7 +1049,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [ANbh]
-Hotkey=X
 Buttonpos=1,2
 
 [ANbl]
@@ -1103,7 +1074,6 @@ Researchhotkey=Z
 Researchbuttonpos=1,0
 
 [ANca]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1143,19 +1113,15 @@ Researchhotkey=Z
 Researchbuttonpos=1,0
 
 [ANd1]
-Hotkey=S
 Buttonpos=1,1
 
 [ANd2]
-Hotkey=S
 Buttonpos=1,1
 
 [ANd3]
-Hotkey=S
 Buttonpos=1,1
 
 [ANdb]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1167,7 +1133,6 @@ Researchhotkey=E
 Researchbuttonpos=2,0
 
 [ANde]
-Hotkey=S
 Buttonpos=1,1
 
 [ANdh]
@@ -1221,7 +1186,6 @@ Researchbuttonpos=1,0
 [ANfb]
 Hotkey=X
 Buttonpos=1,2
-Researchhotkey=B
 
 [ANfd]
 Hotkey=F
@@ -1297,7 +1261,6 @@ Unbuttonpos=2,2
 Researchhotkey=C
 
 [ANic]
-Hotkey=C
 Researchhotkey=E
 Researchbuttonpos=2,0
 
@@ -1328,11 +1291,9 @@ Buttonpos=0,2
 Unbuttonpos=0,2
 
 [ANpi]
-Hotkey=W
 Buttonpos=0,2
 
 [ANr2]
-Hotkey=V
 Buttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
@@ -1364,8 +1325,6 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [ANrn]
-Hotkey=C
-Unhotkey=R
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1449,7 +1408,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [ANt2]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=Z
 Researchbuttonpos=1,0
@@ -1459,7 +1417,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [ANth]
-Hotkey=X
 Unhotkey=X
 Buttonpos=1,2
 Unbuttonpos=1,2
@@ -1479,7 +1436,6 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [ANtr]
-Hotkey=W
 Buttonpos=0,2
 
 [ANvc]
@@ -1495,7 +1451,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [AOae]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1513,7 +1468,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [AOcr]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1555,19 +1509,16 @@ Researchhotkey=Z
 Researchbuttonpos=1,0
 
 [AOr2]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AOr3]
-Hotkey=V
 Buttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AOre]
-Hotkey=V
 Buttonpos=3,2
 Researchhotkey=R
 Researchbuttonpos=3,0
@@ -1643,13 +1594,11 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AUau]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AUav]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1717,7 +1666,6 @@ Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AUdb]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1883,7 +1831,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [AUts]
-Hotkey=X
 Unhotkey=X
 Buttonpos=1,2
 Unbuttonpos=1,2
@@ -1957,7 +1904,6 @@ Buttonpos=3,1
 Unbuttonpos=3,1
 
 [Aakb]
-Hotkey=X
 Buttonpos=1,2
 
 [Aam2]
@@ -1965,13 +1911,11 @@ Hotkey=X
 Buttonpos=1,2
 
 [Aamk]
-Hotkey=S
 Buttonpos=1,1
 Researchhotkey=F
 Researchbuttonpos=3,1
 
 [Aaml]
-Hotkey=S
 Buttonpos=1,1
 Researchhotkey=F
 Researchbuttonpos=3,1
@@ -1981,15 +1925,12 @@ Hotkey=X
 Buttonpos=1,2
 
 [Aap1]
-Hotkey=X
 Buttonpos=1,2
 
 [Aap2]
-Hotkey=W
 Buttonpos=0,2
 
 [Aap3]
-Hotkey=X
 Buttonpos=1,2
 
 [Aast]
@@ -2015,7 +1956,6 @@ Buttonpos=2,2
 Unbuttonpos=2,2
 
 [Abof]
-Hotkey=W
 Buttonpos=0,2
 
 [Abrf]
@@ -2061,7 +2001,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Acdb]
-Hotkey=C
 Buttonpos=2,2
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -2119,7 +2058,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Acor]
-Hotkey=W
 Buttonpos=0,2
 
 [Acpf]
@@ -2177,7 +2115,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Adtg]
-Hotkey=W
 Buttonpos=0,2
 
 [Adtn]
@@ -2185,7 +2122,6 @@ Hotkey=X
 Buttonpos=1,2
 
 [Adts]
-Hotkey=D
 Buttonpos=2,1
 
 [Advm]
@@ -2197,15 +2133,12 @@ Hotkey=W
 Buttonpos=0,2
 
 [Aegr]
-Hotkey=X
 Buttonpos=1,2
 
 [Aeib]
-Hotkey=C
 Buttonpos=2,2
 
 [Aemk]
-Hotkey=V
 Buttonpos=3,2
 
 [Aenc]
@@ -2239,11 +2172,9 @@ Hotkey=W
 Buttonpos=0,2
 
 [Aews]
-Hotkey=Z
 Buttonpos=1,0
 
 [Aexh]
-Hotkey=V
 Buttonpos=3,2
 
 [Aeye]
@@ -2273,15 +2204,12 @@ Buttonpos=1,2
 Unbuttonpos=1,2
 
 [Afbb]
-Hotkey=X
 Buttonpos=1,2
 
 [Afbk]
-Hotkey=V
 Buttonpos=3,2
 
 [Afbt]
-Hotkey=V
 Buttonpos=3,2
 
 [Afhs]
@@ -2293,27 +2221,21 @@ Hotkey=W
 Buttonpos=0,2
 
 [Aflk]
-Hotkey=C
 Buttonpos=2,2
 
 [Afr2]
-Hotkey=X
 Buttonpos=1,2
 
 [Afra]
-Hotkey=W
 Buttonpos=0,2
 
 [Afrc]
-Hotkey=X
 Buttonpos=1,2
 
 [Afrz]
-Hotkey=C
 Buttonpos=2,2
 
 [Afsh]
-Hotkey=X
 Buttonpos=1,2
 
 [Afuf]
@@ -2331,15 +2253,12 @@ Hotkey=X
 Buttonpos=1,2
 
 [Agyb]
-Hotkey=X
 Buttonpos=1,2
 
 [Agyv]
-Hotkey=W
 Buttonpos=0,2
 
 [Ahan]
-Hotkey=V
 Buttonpos=3,2
 
 [Ahar]
@@ -2359,7 +2278,6 @@ Hotkey=D
 Buttonpos=2,1
 
 [Ahlh]
-Hotkey=D
 Buttonpos=2,1
 
 [Ahnl]
@@ -2367,7 +2285,6 @@ Hotkey=V
 Buttonpos=3,2
 
 [Ahpe]
-Hotkey=W
 Buttonpos=0,2
 
 [Ahr3]
@@ -2377,7 +2294,6 @@ Buttonpos=3,1
 Unbuttonpos=3,1
 
 [Ahri]
-Hotkey=W
 Buttonpos=0,2
 
 [Ahrl]
@@ -2393,7 +2309,6 @@ Buttonpos=1,1
 Unbuttonpos=1,1
 
 [Ahsb]
-Hotkey=W
 Buttonpos=0,2
 
 [Ahwd]
@@ -2415,7 +2330,6 @@ Hotkey=V
 Buttonpos=3,2
 
 [Aliq]
-Hotkey=X
 Buttonpos=1,2
 
 [Ally]
@@ -2465,11 +2379,9 @@ Buttonpos=1,2
 Unbuttonpos=1,2
 
 [Amgl]
-Hotkey=X
 Buttonpos=1,2
 
 [Amgr]
-Hotkey=X
 Buttonpos=1,2
 
 [Amic]
@@ -2485,7 +2397,6 @@ Buttonpos=1,2
 Unbuttonpos=2,2
 
 [Amim]
-Hotkey=C
 Buttonpos=2,2
 
 [Amls]
@@ -2527,15 +2438,12 @@ Buttonpos=1,2
 Unbuttonpos=1,2
 
 [Ansk]
-Hotkey=V
 Buttonpos=3,2
 
 [Aobk]
-Hotkey=X
 Buttonpos=1,2
 
 [Aobs]
-Hotkey=W
 Buttonpos=0,2
 
 [Aomb]
@@ -2545,19 +2453,15 @@ Buttonpos=0,2
 Unbuttonpos=0,2
 
 [Aorb]
-Hotkey=V
 Buttonpos=3,2
 
 [Aosp]
-Hotkey=V
 Buttonpos=3,2
 
 [Aotr]
-Hotkey=V
 Buttonpos=3,2
 
 [Apbw]
-Hotkey=C
 Buttonpos=2,2
 
 [Apg2]
@@ -2565,7 +2469,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Apig]
-Hotkey=W
 Buttonpos=0,2
 
 [Aply]
@@ -2591,7 +2494,6 @@ Buttonpos=0,2
 Unbuttonpos=0,2
 
 [Apts]
-Hotkey=C
 Buttonpos=2,2
 
 [Apxf]
@@ -2647,7 +2549,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Aroc]
-Hotkey=W
 Buttonpos=0,2
 
 [Arpl]
@@ -2669,7 +2570,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [Arsk]
-Hotkey=V
 Buttonpos=3,2
 
 [Arsp]
@@ -2701,7 +2601,6 @@ Hotkey=A
 Buttonpos=0,0
 
 [Asal]
-Hotkey=X
 Buttonpos=1,2
 
 [Asb1]
@@ -2789,7 +2688,6 @@ Buttonpos=0,2
 Unbuttonpos=0,2
 
 [Aspo]
-Hotkey=X
 Buttonpos=1,2
 
 [Asps]
@@ -2803,7 +2701,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Assk]
-Hotkey=C
 Buttonpos=2,2
 
 [Asta]
@@ -2815,7 +2712,6 @@ Hotkey=X
 Buttonpos=1,2
 
 [Asth]
-Hotkey=W
 Buttonpos=0,2
 
 [Astn]
@@ -2829,7 +2725,6 @@ Hotkey=W
 Buttonpos=0,2
 
 [Atru]
-Hotkey=W
 Buttonpos=0,2
 
 [Auco]
@@ -2839,11 +2734,9 @@ Buttonpos=0,2
 Unbuttonpos=0,2
 
 [Augf]
-Hotkey=X
 Buttonpos=1,2
 
 [Augh]
-Hotkey=X
 Buttonpos=1,2
 
 [Auhf]
@@ -2863,11 +2756,9 @@ Hotkey=X
 Buttonpos=1,2
 
 [Ausm]
-Hotkey=V
 Buttonpos=3,2
 
 [Aven]
-Hotkey=W
 Buttonpos=0,2
 
 [Avng]
@@ -2879,7 +2770,6 @@ Researchhotkey=A
 Researchbuttonpos=0,0
 
 [Awar]
-Hotkey=W
 Buttonpos=0,2
 
 [Aweb]
@@ -3688,7 +3578,6 @@ Hotkey=C
 Buttonpos=2,2
 
 [SCae]
-Hotkey=F
 Buttonpos=3,1
 
 [SCc1]
