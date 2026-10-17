@@ -16,9 +16,9 @@ classes! {
         "rounded-card",
     ],
     mobile: tw![
-        "mobile:grid-cols-[minmax(0,1fr)]",
-        "mobile:[grid-template-areas:'vitality'_'attributes'_'combat'_'defense']",
-        "mobile:gap-[1.82cqi]",
+        "mobile:flex",
+        "mobile:flex-col",
+        "mobile:gap-[calc(1.82cqi+var(--stats-spread,0)*1px)]",
         "mobile:p-[1.82cqi]",
     ],
     tablet: tw![

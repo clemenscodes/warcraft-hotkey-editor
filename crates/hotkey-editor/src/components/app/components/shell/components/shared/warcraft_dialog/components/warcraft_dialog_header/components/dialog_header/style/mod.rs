@@ -16,7 +16,9 @@ classes! {
     ],
     mobile: tw![
         "mobile:gap-2",
+        "mobile:min-h-10",
         "mobile:px-14",
+        "mobile:py-3",
     ],
     tablet: tw![
         "tablet:gap-2",

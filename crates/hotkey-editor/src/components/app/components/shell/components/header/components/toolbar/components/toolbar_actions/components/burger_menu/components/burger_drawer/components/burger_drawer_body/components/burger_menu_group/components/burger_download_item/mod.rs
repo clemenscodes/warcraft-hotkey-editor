@@ -1,16 +1,21 @@
 mod data;
+mod model;
 mod presentation;
 mod style;
+mod view;
+
+pub use view::BurgerDownloadItemView;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::BurgerMenuItem;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::info_dialogs::download_info_dialog::DownloadInfoDialog;
 use dioxus::prelude::*;
+use model::BurgerDownloadItemModel;
 use presentation::{BurgerDownloadItemPresentation, use_burger_download_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn BurgerDownloadItem() -> Element {
+pub fn BurgerDownloadItem(props: BurgerDownloadItemModel) -> Element {
     let BurgerDownloadItemPresentation {
         hidden,
         icon,
@@ -20,7 +25,7 @@ pub fn BurgerDownloadItem() -> Element {
         open,
         onclick,
         on_open_change,
-    } = use_burger_download_item();
+    } = use_burger_download_item(&props);
     if hidden {
         return rsx! {};
     }

@@ -19,9 +19,9 @@ pub(super) fn use_burger_undo_item(props: &BurgerUndoItemModel) -> BurgerUndoIte
     let can_undo = history.can_undo();
     let disabled = !can_undo;
     let on_close = props.on_close;
-    let onclick = EventHandler::new(move |event: MouseEvent| {
+    let onclick = EventHandler::new(move |_event: MouseEvent| {
         history.undo();
-        on_close.call(event);
+        on_close.call(());
     });
     BurgerUndoItemPresentation {
         icon: ICON_UNDO,

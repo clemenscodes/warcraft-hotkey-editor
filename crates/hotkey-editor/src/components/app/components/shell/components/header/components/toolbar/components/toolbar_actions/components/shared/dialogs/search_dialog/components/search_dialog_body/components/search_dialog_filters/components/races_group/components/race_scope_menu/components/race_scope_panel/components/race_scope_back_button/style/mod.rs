@@ -19,4 +19,7 @@ classes! {
         "focus:outline-none",
         "kb-focus:text-white",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

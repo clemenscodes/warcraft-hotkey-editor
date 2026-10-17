@@ -9,7 +9,7 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:text-[3cqi]",
+        "mobile:text-sm",
     ],
     tablet: tw![
         "tablet:text-md",

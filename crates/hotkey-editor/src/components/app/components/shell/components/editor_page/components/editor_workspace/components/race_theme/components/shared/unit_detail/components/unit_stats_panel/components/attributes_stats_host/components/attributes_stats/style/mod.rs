@@ -5,7 +5,7 @@ classes! {
         "flex",
         "flex-row",
         "items-stretch",
-        "gap-[1.34cqi]",
+        "gap-[3.74cqi]",
         "min-w-0",
         "relative",
         "size-full",

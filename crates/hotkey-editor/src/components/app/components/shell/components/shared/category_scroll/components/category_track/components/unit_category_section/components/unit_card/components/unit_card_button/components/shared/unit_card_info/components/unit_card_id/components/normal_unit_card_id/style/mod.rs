@@ -9,6 +9,10 @@ classes! {
         "whitespace-nowrap",
         "text-warcraft-text-faint",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+        "mobile:leading-heading",
+    ],
     tablet: tw![
         "tablet:block",
         "tablet:w-full",

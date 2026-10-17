@@ -10,6 +10,10 @@ classes! {
         "opacity-70",
         "text-(--race-color,var(--color-warcraft-gold))",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+        "mobile:leading-heading",
+    ],
     tablet: tw![
         "tablet:block",
         "tablet:w-full",

@@ -6,4 +6,7 @@ classes! {
         "text-(--coordinate-color,var(--color-warcraft-text-primary))",
         "whitespace-nowrap",
     ],
+    mobile: tw![
+        "mobile:text-lg",
+    ],
 }

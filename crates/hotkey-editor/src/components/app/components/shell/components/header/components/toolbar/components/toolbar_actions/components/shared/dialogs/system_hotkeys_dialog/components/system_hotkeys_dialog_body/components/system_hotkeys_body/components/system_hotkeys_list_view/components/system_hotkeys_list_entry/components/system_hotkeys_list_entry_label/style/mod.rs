@@ -11,7 +11,7 @@ classes! {
     mobile: tw![
         "mobile:flex-auto",
         "mobile:min-w-0",
-        "mobile:text-xs",
+        "mobile:text-sm",
         "mobile:tracking-label",
         "mobile:leading-title",
         "mobile:whitespace-normal",

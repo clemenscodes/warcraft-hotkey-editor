@@ -6,6 +6,7 @@ pub struct UnitListSearchInputView {
     pub placeholder: &'static str,
     pub on_input: EventHandler<FormEvent>,
     pub on_keydown: EventHandler<KeyboardEvent>,
+    pub autofocus: bool,
 }
 
 impl ddd::Layered for UnitListSearchInputView {

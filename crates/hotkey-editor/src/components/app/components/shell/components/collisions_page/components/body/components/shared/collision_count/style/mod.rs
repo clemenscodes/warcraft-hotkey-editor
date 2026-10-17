@@ -7,4 +7,7 @@ classes! {
         "whitespace-nowrap",
         "flex-none",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

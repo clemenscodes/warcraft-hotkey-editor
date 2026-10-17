@@ -2,7 +2,6 @@ use tw_macro::tw;
 
 classes! {
     base: tw![
-        "@container",
         "min-h-36",
         "text-xl",
         "leading-body",
@@ -17,7 +16,7 @@ classes! {
         "mobile:min-h-0",
         "mobile:max-w-full",
         "mobile:text-sm",
-        "mobile:leading-body",
+        "mobile:leading-heading",
         "mobile:wrap-break-word",
         "mobile:[word-break:break-word]",
     ],

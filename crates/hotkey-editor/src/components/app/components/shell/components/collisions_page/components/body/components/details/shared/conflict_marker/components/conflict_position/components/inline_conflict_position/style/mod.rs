@@ -9,4 +9,9 @@ classes! {
         "self-start",
         "h-18",
     ],
+    mobile: tw![
+        "mobile:*:w-26",
+        "mobile:*:h-19.5",
+        "mobile:h-auto",
+    ],
 }

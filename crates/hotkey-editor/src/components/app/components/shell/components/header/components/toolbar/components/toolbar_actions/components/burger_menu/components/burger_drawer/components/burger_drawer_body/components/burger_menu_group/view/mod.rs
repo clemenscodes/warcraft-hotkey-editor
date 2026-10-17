@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 #[derive(Clone, PartialEq)]
 pub struct BurgerMenuGroupView {
-    pub on_close: EventHandler<MouseEvent>,
+    pub on_close: EventHandler<()>,
 }
 
 impl ddd::Layered for BurgerMenuGroupView {

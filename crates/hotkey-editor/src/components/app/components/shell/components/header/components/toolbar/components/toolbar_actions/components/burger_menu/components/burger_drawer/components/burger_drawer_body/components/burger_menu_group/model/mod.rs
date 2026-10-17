@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerMenuGroupModel {
-    pub on_close: EventHandler<MouseEvent>,
+    pub on_close: EventHandler<()>,
 }
 
 impl From<&BurgerMenuGroupView> for BurgerMenuGroupModel {

@@ -7,6 +7,7 @@ pub struct UnitListSearchInputModel {
     pub placeholder: &'static str,
     pub on_input: EventHandler<FormEvent>,
     pub on_keydown: EventHandler<KeyboardEvent>,
+    pub autofocus: bool,
 }
 
 impl From<&UnitListSearchInputView> for UnitListSearchInputModel {
@@ -16,12 +17,14 @@ impl From<&UnitListSearchInputView> for UnitListSearchInputModel {
             placeholder,
             on_input,
             on_keydown,
+            autofocus,
         } = view.clone();
         Self {
             value,
             placeholder,
             on_input,
             on_keydown,
+            autofocus,
         }
     }
 }

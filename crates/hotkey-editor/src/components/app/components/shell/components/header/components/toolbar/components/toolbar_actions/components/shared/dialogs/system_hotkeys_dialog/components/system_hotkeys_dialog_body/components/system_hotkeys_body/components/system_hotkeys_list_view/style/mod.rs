@@ -12,6 +12,7 @@ classes! {
     ],
     mobile: tw![
         "mobile:max-w-full",
+        "mobile:px-3",
         "mobile:touch-pan-y",
     ],
     tablet: tw![

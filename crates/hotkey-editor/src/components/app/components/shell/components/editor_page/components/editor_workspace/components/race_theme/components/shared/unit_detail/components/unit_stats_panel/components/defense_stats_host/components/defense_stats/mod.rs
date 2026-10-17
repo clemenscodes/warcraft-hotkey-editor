@@ -7,6 +7,7 @@ pub use view::DefenseStatsView;
 mod style;
 
 use super::super::super::shared::stat_icon_frame_host::StatIconFrameHost;
+use components::defense_matchup_row::DefenseMatchupRow;
 use components::defense_rows::DefenseRows;
 use dioxus::prelude::*;
 use model::DefenseStatsModel;
@@ -36,6 +37,9 @@ pub fn DefenseStats(props: DefenseStatsModel) -> Element {
                 defense_type,
                 effective_hit_points,
                 evasion,
+            }
+            DefenseMatchupRow {
+                defense_type,
             }
         }
     }

@@ -23,11 +23,12 @@ classes! {
         "kb-focus:shadow-focus",
     ],
     mobile: tw![
+        "mobile:mt-auto",
         "mobile:w-full",
         "mobile:min-h-11",
         "mobile:px-6",
         "mobile:py-3",
-        "mobile:text-base",
+        "mobile:text-sm",
     ],
     tablet: tw![
         "tablet:w-full",

@@ -10,4 +10,7 @@ classes! {
         "h-16.5",
         "text-xs",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

@@ -8,6 +8,7 @@ mod style;
 
 use super::super::super::shared::stat_icon_frame_host::StatIconFrameHost;
 use components::combat_rows::CombatRows;
+use components::damage_matchup_row::DamageMatchupRow;
 use dioxus::prelude::*;
 use model::CombatStatsModel;
 use presentation::CombatFigures;
@@ -40,6 +41,9 @@ pub fn CombatStats(props: CombatStatsModel) -> Element {
                 range,
                 speed,
                 damage_per_second,
+                attack_type,
+            }
+            DamageMatchupRow {
                 attack_type,
             }
         }

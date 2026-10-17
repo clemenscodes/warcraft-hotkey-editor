@@ -4,7 +4,7 @@ classes! {
         "@container",
         "flex",
         "flex-col",
-        "gap-[1.68cqi]",
+        "gap-[calc(1.68cqi+var(--stats-spread,0)*1px)]",
         "min-w-0",
         "flex-auto",
     ],

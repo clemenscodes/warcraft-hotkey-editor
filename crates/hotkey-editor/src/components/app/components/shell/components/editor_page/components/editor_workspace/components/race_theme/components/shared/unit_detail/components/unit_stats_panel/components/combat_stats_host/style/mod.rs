@@ -3,6 +3,10 @@ classes! {
     base: tw![
         "@container",
         "min-w-0",
+        "empty:hidden",
         "[grid-area:combat]",
+    ],
+    mobile: tw![
+        "mobile:order-3",
     ],
 }

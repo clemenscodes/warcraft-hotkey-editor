@@ -10,6 +10,6 @@ classes! {
         "py-2",
         "px-1",
         "text-warcraft-text-primary",
-        "text-[13.5px]",
+        "text-sm",
     ],
 }

@@ -25,6 +25,11 @@ classes! {
         "[--glow-color:var(--race-color)]",
         "shadow-glow-soft",
     ],
+    mobile: tw![
+        "mobile:gap-3",
+        "mobile:p-2",
+        "mobile:text-sm",
+    ],
     tablet: tw![
         "tablet:h-full",
         "tablet:py-2",

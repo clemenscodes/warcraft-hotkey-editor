@@ -6,4 +6,7 @@ classes! {
         "whitespace-normal",
         "leading-flush",
     ],
+    mobile: tw![
+        "mobile:text-lg",
+    ],
 }

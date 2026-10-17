@@ -108,8 +108,8 @@ test.describe("Mobile unit pager", () => {
     });
 
     expect(swipe).not.toBeNull();
-    // A wheel scroll is real user input on every engine, so it releases the card
-    // the pager is holding in place exactly the way a finger does.
+    // A wheel turns one card on every engine, along the same spring a swipe
+    // ends in, so it proves the settle without driving touch input.
     await page.mouse.move(swipe!.pointerX, swipe!.pointerY);
     await page.mouse.wheel(0, swipe!.cardHeight);
     const nextUnit = swipe!.nextUnit;
@@ -173,5 +173,49 @@ test.describe("Mobile unit pager", () => {
 
     await expect.poll(() => urlUnit(page)).toBe(expectedUnit);
     expect(await alignedUnit(page)).toBe(expectedUnit);
+  });
+
+  // The grids sit in a sideways carousel, its own scroll container, so the
+  // touch-action that leaves vertical swipes to the pager must hold inside it
+  // too; otherwise the browser takes the swipe and the card never moves.
+  test("a swipe that starts on a grid tile turns the card", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "touch input is driven through CDP");
+    const devtools = await page.context().newCDPSession(page);
+    await devtools.send("Emulation.setTouchEmulationEnabled", {
+      enabled: true,
+      maxTouchPoints: 1,
+    });
+    await openUnit(page, "hpea");
+    await page.waitForTimeout(1000);
+    const start = await page.evaluate(() => {
+      const pager = document.querySelector('section[aria-label="Mobile editor"]');
+      const pagerTop = pager?.getBoundingClientRect().top ?? 0;
+      const cards = [...(pager?.querySelectorAll(".pager-card-host") ?? [])];
+      const aligned = cards.find((card) => Math.abs(card.getBoundingClientRect().top - pagerTop) < 2);
+      const next = aligned ? cards[cards.indexOf(aligned) + 1] : undefined;
+      const tile = aligned?.querySelector(".grid-editor-tile")?.getBoundingClientRect();
+      return tile
+        ? {
+            x: tile.x + tile.width / 2,
+            y: tile.y + tile.height / 2,
+            nextUnit: next?.querySelector(".pager-card-id")?.textContent?.trim() ?? null,
+          }
+        : null;
+    });
+    expect(start).not.toBeNull();
+    await devtools.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x: start!.x, y: start!.y }],
+    });
+    for (let step = 1; step <= 12; step++) {
+      await devtools.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: start!.x, y: start!.y - 25 * step }],
+      });
+      await page.waitForTimeout(16);
+    }
+    await devtools.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+
+    await expect.poll(() => urlUnit(page)).toBe(start!.nextUnit);
   });
 });

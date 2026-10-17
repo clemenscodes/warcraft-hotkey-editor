@@ -19,9 +19,9 @@ pub(super) fn use_burger_redo_item(props: &BurgerRedoItemModel) -> BurgerRedoIte
     let can_redo = history.can_redo();
     let disabled = !can_redo;
     let on_close = props.on_close;
-    let onclick = EventHandler::new(move |event: MouseEvent| {
+    let onclick = EventHandler::new(move |_event: MouseEvent| {
         history.redo();
-        on_close.call(event);
+        on_close.call(());
     });
     BurgerRedoItemPresentation {
         icon: ICON_REDO,

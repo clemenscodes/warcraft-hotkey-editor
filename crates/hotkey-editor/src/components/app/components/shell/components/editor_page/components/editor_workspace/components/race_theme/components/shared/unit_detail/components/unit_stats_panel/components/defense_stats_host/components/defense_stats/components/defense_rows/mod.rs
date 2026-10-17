@@ -6,7 +6,6 @@ pub use view::DefenseRowsView;
 mod style;
 
 use components::armor_row::ArmorRow;
-use components::defense_matchup_row::DefenseMatchupRow;
 use components::defense_type_row::DefenseTypeRow;
 use components::effective_hit_points_row::EffectiveHitPointsRow;
 use components::evasion_row::EvasionRow;
@@ -35,9 +34,6 @@ pub fn DefenseRows(props: DefenseRowsModel) -> Element {
             }
             EvasionRow {
                 value: evasion,
-            }
-            DefenseMatchupRow {
-                defense_type,
             }
         }
     }

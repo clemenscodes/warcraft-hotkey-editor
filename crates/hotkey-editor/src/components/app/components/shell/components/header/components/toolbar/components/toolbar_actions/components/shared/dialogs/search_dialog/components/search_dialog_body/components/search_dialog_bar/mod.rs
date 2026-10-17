@@ -36,6 +36,7 @@ pub fn SearchDialogBar(props: SearchDialogBarModel) -> Element {
                 placeholder,
                 on_input,
                 on_keydown,
+                autofocus: true,
             }
         }
     }

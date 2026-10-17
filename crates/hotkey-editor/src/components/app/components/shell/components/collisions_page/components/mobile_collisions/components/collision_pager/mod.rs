@@ -16,17 +16,13 @@ use tw_macro::assert_component;
 #[component]
 pub fn CollisionPager(props: CollisionPagerModel) -> Element {
     let presentation = use_collision_pager(&props);
-    let CollisionPagerPresentation {
-        onmounted,
-        onscrollend,
-        content,
-    } = presentation;
+    let CollisionPagerPresentation { onmounted, content } = presentation;
     rsx! {
         section {
             class: CLASS,
             aria_label: "Collision pager",
+            tabindex: "-1",
             onmounted: move |event| onmounted.call(event),
-            onscrollend: move |event| onscrollend.call(event),
             CollisionPagerCards {
                 content,
             }

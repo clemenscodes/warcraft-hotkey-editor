@@ -76,13 +76,16 @@ test.describe("Drag and drop on command grid", () => {
 
     await sourceCell.dragTo(targetCell);
 
-    const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
-    expect(stored).not.toBeNull();
+    // The swap reaches localStorage after the drop, so poll until it has landed.
+    const storedField = async (section: string): Promise<string | null> => {
+      const stored = await page.evaluate((key) => localStorage.getItem(key), LS_KEY);
+      return stored === null ? null : fieldInSection(stored, section, "Unbuttonpos");
+    };
 
     // ACdm dragged from (0,2) to (1,2) — its Unbuttonpos must follow.
-    expect(fieldInSection(stored!, "ACdm", "Unbuttonpos")).toBe("1,2");
+    await expect.poll(() => storedField("ACdm")).toBe("1,2");
     // ACsw displaced from (1,2) to (0,2) — its Unbuttonpos must follow.
-    expect(fieldInSection(stored!, "ACsw", "Unbuttonpos")).toBe("0,2");
+    await expect.poll(() => storedField("ACsw")).toBe("0,2");
   });
 
   test("pressing Escape during a drag cancels it and tile count is unchanged", async ({ page }) => {

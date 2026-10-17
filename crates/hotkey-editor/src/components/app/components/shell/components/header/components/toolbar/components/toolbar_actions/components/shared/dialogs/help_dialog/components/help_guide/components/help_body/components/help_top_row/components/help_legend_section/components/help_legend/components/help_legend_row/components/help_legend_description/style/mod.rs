@@ -6,7 +6,7 @@ classes! {
         "text-warcraft-text-secondary",
     ],
     mobile: tw![
-        "mobile:text-xs",
+        "mobile:text-sm",
         "mobile:leading-prose",
     ],
     tablet: tw![

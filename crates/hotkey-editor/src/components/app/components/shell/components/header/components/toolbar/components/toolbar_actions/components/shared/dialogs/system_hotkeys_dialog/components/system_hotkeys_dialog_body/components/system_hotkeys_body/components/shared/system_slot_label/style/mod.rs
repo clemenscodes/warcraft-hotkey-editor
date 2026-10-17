@@ -9,7 +9,7 @@ classes! {
         "text-shadow-drop",
     ],
     mobile: tw![
-        "mobile:text-xs",
+        "mobile:text-sm",
         "mobile:tracking-caps",
     ],
     tablet: tw![

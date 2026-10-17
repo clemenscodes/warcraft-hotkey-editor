@@ -23,7 +23,7 @@ classes! {
         "mobile:cursor-pointer",
         "mobile:uppercase",
         "mobile:text-warcraft-gold",
-        "mobile:text-base",
+        "mobile:text-sm",
         "mobile:tracking-caps",
         "mobile:bg-panel-gold-resting",
         "mobile:text-shadow-drop",

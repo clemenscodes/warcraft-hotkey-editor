@@ -8,4 +8,8 @@ classes! {
         "flex-none",
         "pt-4",
     ],
+    mobile: tw![
+        "mobile:flex-nowrap",
+        "mobile:*:flex-1",
+    ],
 }

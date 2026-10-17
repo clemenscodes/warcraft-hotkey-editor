@@ -25,6 +25,11 @@ classes! {
         "hover:text-white",
         "hover:border-(--race-color)",
     ],
+    mobile: tw![
+        "mobile:gap-3",
+        "mobile:p-2",
+        "mobile:text-sm",
+    ],
     tablet: tw![
         "tablet:h-full",
         "tablet:py-2",

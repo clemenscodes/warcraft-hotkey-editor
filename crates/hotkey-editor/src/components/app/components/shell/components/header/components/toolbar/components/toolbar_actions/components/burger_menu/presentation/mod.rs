@@ -3,7 +3,8 @@ use dioxus::prelude::*;
 pub struct BurgerMenuView {
     pub(super) is_open: bool,
     pub(super) toggle: EventHandler<MouseEvent>,
-    pub(super) on_close: EventHandler<MouseEvent>,
+    pub(super) on_close: EventHandler<()>,
+    pub(super) on_close_click: EventHandler<MouseEvent>,
 }
 
 pub fn use_burger_menu() -> BurgerMenuView {
@@ -29,11 +30,13 @@ pub fn use_burger_menu() -> BurgerMenuView {
         let next = !*burger_open.read();
         burger_open.set(next);
     });
-    let on_close = EventHandler::new(move |_event: MouseEvent| burger_open.set(false));
+    let on_close = EventHandler::new(move |()| burger_open.set(false));
+    let on_close_click = EventHandler::new(move |_event: MouseEvent| burger_open.set(false));
     let is_open = burger_open();
     BurgerMenuView {
         is_open,
         toggle,
         on_close,
+        on_close_click,
     }
 }

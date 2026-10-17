@@ -6,9 +6,9 @@ pub use view::MatchupView;
 mod state;
 mod subject;
 
-use components::neutral_matchup::NeutralMatchup;
-use components::strong_matchup::StrongMatchup;
-use components::weak_matchup::WeakMatchup;
+use components::neutral_matchup_host::NeutralMatchupHost;
+use components::strong_matchup_host::StrongMatchupHost;
+use components::weak_matchup_host::WeakMatchupHost;
 use dioxus::prelude::*;
 use model::MatchupModel;
 pub use state::MatchupStrength;
@@ -22,21 +22,21 @@ pub fn Matchup(props: MatchupModel) -> Element {
     let title = props.title;
     match props.strength {
         MatchupStrength::Strong => rsx! {
-            StrongMatchup {
+            StrongMatchupHost {
                 subject,
                 multiplier,
                 title,
             }
         },
         MatchupStrength::Weak => rsx! {
-            WeakMatchup {
+            WeakMatchupHost {
                 subject,
                 multiplier,
                 title,
             }
         },
         MatchupStrength::Neutral => rsx! {
-            NeutralMatchup {
+            NeutralMatchupHost {
                 subject,
                 multiplier,
                 title,

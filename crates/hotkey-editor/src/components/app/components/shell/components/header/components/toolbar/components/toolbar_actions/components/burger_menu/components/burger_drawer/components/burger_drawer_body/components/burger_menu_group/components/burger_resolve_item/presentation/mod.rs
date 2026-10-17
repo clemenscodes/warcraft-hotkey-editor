@@ -26,9 +26,9 @@ pub(super) fn use_burger_resolve_item(
     let has_file = has_file_memo();
     let disabled = !has_file;
     let on_close = props.on_close;
-    let onclick = EventHandler::new(move |event: MouseEvent| {
+    let onclick = EventHandler::new(move |_event: MouseEvent| {
         navigation.apply(AppView::Resolve);
-        on_close.call(event);
+        on_close.call(());
     });
     BurgerResolveItemPresentation {
         icon: ICON_RESOLVE,

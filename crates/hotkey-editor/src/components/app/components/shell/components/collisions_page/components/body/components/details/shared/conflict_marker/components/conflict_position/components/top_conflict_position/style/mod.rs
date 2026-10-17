@@ -10,4 +10,8 @@ classes! {
         "h-auto",
         "pb-2.5",
     ],
+    mobile: tw![
+        "mobile:*:w-26",
+        "mobile:*:h-19.5",
+    ],
 }

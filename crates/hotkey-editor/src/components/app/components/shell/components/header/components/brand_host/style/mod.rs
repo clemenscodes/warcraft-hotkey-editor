@@ -7,7 +7,7 @@ classes! {
         "w-[26cqi]",
     ],
     mobile: tw![
-        "mobile:w-[72cqi]",
+        "mobile:w-[54cqi]",
     ],
     tablet: tw![
         "tablet:w-[55cqi]",

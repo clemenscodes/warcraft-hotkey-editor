@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct BurgerResolveItemModel {
-    pub on_close: EventHandler<MouseEvent>,
+    pub on_close: EventHandler<()>,
 }
 
 impl From<&BurgerResolveItemView> for BurgerResolveItemModel {

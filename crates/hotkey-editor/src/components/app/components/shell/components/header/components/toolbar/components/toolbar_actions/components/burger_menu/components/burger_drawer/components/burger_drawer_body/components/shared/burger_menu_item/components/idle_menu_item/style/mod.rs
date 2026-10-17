@@ -28,5 +28,8 @@ classes! {
         "kb-focus:text-white",
         "kb-focus:[--focus-color:var(--color-warcraft-highlight)]",
         "kb-focus:shadow-focus",
+        "disabled:opacity-40",
+        "disabled:cursor-default",
+        "disabled:pointer-events-none",
     ],
 }

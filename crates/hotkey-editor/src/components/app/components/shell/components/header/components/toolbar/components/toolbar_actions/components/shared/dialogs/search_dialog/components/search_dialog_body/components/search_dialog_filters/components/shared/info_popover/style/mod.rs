@@ -14,7 +14,7 @@ classes! {
         "border-warcraft-gold/45",
         "bg-transparent",
         "text-warcraft-text-secondary",
-        "text-[10px]",
+        "text-2xs",
         "font-bold",
         "leading-none",
         "cursor-pointer",

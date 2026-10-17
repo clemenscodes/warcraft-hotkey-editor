@@ -1,5 +1,5 @@
 use super::TemplatesDialogBody;
-use super::components::template_gallery::components::template_card::TemplateCardView;
+use super::components::shared::template_card::TemplateCardView;
 use super::model::TemplatesDialogBodyModel;
 use browser_kit::frame::Render;
 use dioxus::prelude::*;

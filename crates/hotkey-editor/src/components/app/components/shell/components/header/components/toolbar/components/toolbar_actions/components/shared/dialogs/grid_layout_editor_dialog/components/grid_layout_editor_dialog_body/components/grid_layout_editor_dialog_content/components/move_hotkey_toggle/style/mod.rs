@@ -13,7 +13,9 @@ classes! {
     ],
     mobile: tw![
         "mobile:gap-2",
+        "mobile:normal-case",
         "mobile:text-sm",
+        "mobile:tracking-normal",
     ],
     tablet: tw![
         "tablet:gap-2",

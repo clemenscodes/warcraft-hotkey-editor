@@ -8,9 +8,9 @@ classes! {
         "gap-5",
     ],
     mobile: tw![
-        "mobile:justify-center",
-        "mobile:grid-cols-[repeat(4,4rem)]",
-        "mobile:auto-rows-[4rem]",
+        "mobile:w-full",
+        "mobile:grid-cols-4",
+        "mobile:auto-rows-auto",
         "mobile:gap-2",
     ],
     tablet: tw![

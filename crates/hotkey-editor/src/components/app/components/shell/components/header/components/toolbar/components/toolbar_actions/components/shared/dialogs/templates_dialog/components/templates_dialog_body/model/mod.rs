@@ -1,4 +1,4 @@
-use super::components::template_gallery::components::template_card::TemplateCardView;
+use super::components::shared::template_card::TemplateCardView;
 use super::view::TemplatesDialogBodyView;
 use dioxus::prelude::*;
 

@@ -5,10 +5,7 @@ mod view;
 pub use view::VitalityStatsView;
 mod style;
 
-use components::hit_points_regen_row::HitPointsRegenRow;
-use components::hit_points_row::HitPointsRow;
-use components::mana_regen_row::ManaRegenRow;
-use components::mana_row::ManaRow;
+use components::vitality_table::VitalityTable;
 use dioxus::prelude::*;
 use model::VitalityStatsModel;
 use style::CLASS;
@@ -23,17 +20,11 @@ pub fn VitalityStats(props: VitalityStatsModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            HitPointsRow {
-                value: hit_points,
-            }
-            HitPointsRegenRow {
-                value: hit_points_regen,
-            }
-            ManaRow {
-                value: mana,
-            }
-            ManaRegenRow {
-                value: mana_regen,
+            VitalityTable {
+                hit_points,
+                hit_points_regen,
+                mana,
+                mana_regen,
             }
         }
     }

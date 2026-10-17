@@ -1,16 +1,21 @@
 mod data;
+mod model;
 mod presentation;
 mod style;
+mod view;
+
+pub use view::BurgerTemplatesItemView;
 
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::BurgerMenuItem;
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::templates_dialog::TemplatesDialog;
 use dioxus::prelude::*;
+use model::BurgerTemplatesItemModel;
 use presentation::{BurgerTemplatesItemPresentation, use_burger_templates_item};
 use style::CLASS;
 use tw_macro::assert_component;
 
 #[component]
-pub fn BurgerTemplatesItem() -> Element {
+pub fn BurgerTemplatesItem(props: BurgerTemplatesItemModel) -> Element {
     let BurgerTemplatesItemPresentation {
         icon,
         label,
@@ -21,7 +26,7 @@ pub fn BurgerTemplatesItem() -> Element {
         open,
         onclick,
         on_open_change,
-    } = use_burger_templates_item();
+    } = use_burger_templates_item(&props);
     rsx! {
         div {
             class: CLASS,

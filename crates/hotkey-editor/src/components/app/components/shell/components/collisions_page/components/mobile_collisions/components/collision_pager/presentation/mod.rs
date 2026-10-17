@@ -1,15 +1,22 @@
 use super::model::CollisionPagerModel;
 use crate::components::app::components::shell::components::collisions_page::components::body::ContentModel;
+use crate::components::app::components::shell::components::shared::spring_pager::{
+    CardResizeWatch, PagerAnchor, PagerMotion, PagerWindow, PassiveInputListeners,
+};
 use crate::services::collision_selection::context::use_collision_selection;
+use crate::services::drag_state::context::use_drag_state;
 use crate::services::navigation::context::use_view_navigation;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+// The card hosts of every kind, the elements the pager's motion measures and moves.
+const CARD_SELECTOR: &str =
+    ".island-pager-card-host, .hotkey-pager-card-host, .unit-position-pager-card-host";
+
 pub(super) struct CollisionPagerPresentation {
     pub(super) onmounted: EventHandler<MountedEvent>,
-    pub(super) onscrollend: EventHandler<ScrollEvent>,
     pub(super) content: ContentModel,
 }
 
@@ -50,127 +57,150 @@ pub(super) fn use_collision_pager(props: &CollisionPagerModel) -> CollisionPager
 
     let view_navigation = use_view_navigation();
 
-    let viewport_px = use_signal::<i32>(|| 0);
-    let active_index = use_signal::<usize>(|| 0);
-    // Set while the pager scrolls itself to follow a selection made elsewhere, so
-    // the scroll it causes is not mistaken for a swipe. See `onscrollend`.
-    let following_navigation = use_signal::<bool>(|| false);
+    // Every card stays mounted, so the window always spans the whole list and a
+    // slot is the entry's own index. It follows the list whenever its length changes.
+    let center_slot = isize::try_from(entry_count / 2).unwrap_or(0);
+    let window = use_signal(|| PagerWindow::centered_on(center_slot, entry_count, entry_count));
+    // The card the strip last came to rest on, reported by the motion after a
+    // swipe, a wheel or a key and cleared by the settle below once acted on.
+    let rested_anchor = use_signal(|| None::<PagerAnchor>);
+    let dragging_slot = use_drag_state().dragging_slot();
     let element_ref = use_hook(|| Rc::new(RefCell::new(None::<web_sys::Element>)));
-
-    let mounted_element_ref = element_ref.clone();
-    let mut mounted_viewport_px = viewport_px;
-    let onmounted = EventHandler::new(move |event: MountedEvent| {
-        let Some(element) = event.data().try_as_web_event() else {
-            return;
-        };
-        let measured_height = element.client_height();
-        *mounted_element_ref.borrow_mut() = Some(element);
-        if *mounted_viewport_px.peek() != measured_height {
-            mounted_viewport_px.set(measured_height);
-        }
+    let hook_element_ref = element_ref.clone();
+    let motion = use_hook(move || {
+        PagerMotion::new(
+            hook_element_ref,
+            window,
+            rested_anchor,
+            dragging_slot,
+            None,
+            CARD_SELECTOR,
+        )
     });
+    // Created on mount, once the pager exists; dropping them disconnects.
+    let resize_watch = use_hook(|| Rc::new(RefCell::new(None::<CardResizeWatch>)));
+    let input_listeners = use_hook(|| Rc::new(RefCell::new(None::<PassiveInputListeners>)));
 
-    let scroll_element_ref = element_ref.clone();
-    let scroll_entry_keys = entry_keys.clone();
-    let scroll_selected_signal = selected_signal;
-    let mut scroll_viewport_px = viewport_px;
-    let mut scroll_active_index = active_index;
-    let mut scroll_following_navigation = following_navigation;
-    let onscrollend = EventHandler::new(move |_event: ScrollEvent| {
-        let borrowed = scroll_element_ref.borrow();
-        let Some(element) = borrowed.as_ref() else {
+    // Commits the card the strip has come to rest on as the selected entry. The
+    // motion reports a rest only after the user's own input, never after the
+    // pager follows a selection made elsewhere, so a settle is always a swipe.
+    let settle_entry_keys = entry_keys.clone();
+    let mut settle_rested_anchor = rested_anchor;
+    use_effect(move || {
+        let Some(anchor) = *settle_rested_anchor.read() else {
             return;
         };
-        let measured_height = element.client_height();
-        if measured_height <= 0 {
+        settle_rested_anchor.set(None);
+        let Some(key) = usize::try_from(anchor.slot())
+            .ok()
+            .and_then(|entry_index| settle_entry_keys.get(entry_index))
+            .cloned()
+        else {
             return;
-        }
-        let scroll_top = element.scroll_top();
-        let rounded_index = (scroll_top + measured_height / 2) / measured_height;
-        let last_index = entry_count.saturating_sub(1);
-        let clamped_index = usize::try_from(rounded_index).unwrap_or(0).min(last_index);
-        if *scroll_viewport_px.peek() != measured_height {
-            scroll_viewport_px.set(measured_height);
-        }
-        // The pager scrolls itself whenever a card is chosen elsewhere, and that
-        // scroll settles here too. It must not be read as a swipe, or navigating
-        // to a card would immediately overwrite the entry that was asked for.
-        if *scroll_following_navigation.peek() {
-            scroll_following_navigation.set(false);
-            return;
-        }
-        if *scroll_active_index.peek() != clamped_index {
-            scroll_active_index.set(clamped_index);
-            // `select_collision_entry` derives the active kind from the current
-            // view itself and replaces the navigation snapshot, so swiping keeps
-            // the `entry` query parameter in step with the card on screen. The
-            // guard against the already selected key stops a redundant replace.
-            if let Some(key) = scroll_entry_keys.get(clamped_index).cloned() {
-                let already_selected = *scroll_selected_signal.peek() == Some(key.clone());
-                if !already_selected {
-                    view_navigation.select_collision_entry(key);
-                }
-            }
+        };
+        // `select_collision_entry` derives the active kind from the current view
+        // itself and replaces the navigation snapshot, so swiping keeps the
+        // `entry` query parameter in step with the card on screen. The guard
+        // against the already selected key stops a redundant replace.
+        let already_selected = *selected_signal.peek() == Some(key.clone());
+        if !already_selected {
+            view_navigation.select_collision_entry(key);
         }
     });
 
     // The other direction: a card chosen anywhere but the pager itself, above all
     // by switching the kind or by browser back and forward, has to bring itself on
     // screen. The card the pager follows is the selected entry when it survives the
-    // active kind, and the first entry otherwise, which keeps the active index
-    // inside the list rather than dangling past a shorter one.
+    // active kind, and the first entry otherwise. Holding the card a swipe just
+    // settled on again is harmless, the strip already rests there.
     let effect_entry_keys = entry_keys.clone();
     let selected_key = selected_signal.read().clone();
-    let current_viewport_px = *viewport_px.read();
     let effect_element_ref = element_ref.clone();
-    let mut effect_active_index = active_index;
-    let mut effect_following_navigation = following_navigation;
-    use_effect(use_reactive!(|(
-        effect_entry_keys,
-        selected_key,
-        current_viewport_px,
-    )| {
-        let _ = current_viewport_px;
-        if effect_entry_keys.is_empty() {
+    let effect_motion = motion.clone();
+    let effect_resize_watch = resize_watch.clone();
+    let mut effect_window = window;
+    use_effect(use_reactive!(|(effect_entry_keys, selected_key)| {
+        let entry_count = effect_entry_keys.len();
+        if entry_count == 0 {
             return;
+        }
+        let center_slot = isize::try_from(entry_count / 2).unwrap_or(0);
+        let spanning_window = PagerWindow::centered_on(center_slot, entry_count, entry_count);
+        if *effect_window.peek() != spanning_window {
+            effect_window.set(spanning_window);
         }
         let matched_index = selected_key
             .as_ref()
-            .and_then(|key| effect_entry_keys.iter().position(|entry| entry == key));
-        let target_index = matched_index.unwrap_or(0);
-        if *effect_active_index.peek() == target_index {
-            return;
-        }
+            .and_then(|key| effect_entry_keys.iter().position(|entry| entry == key))
+            .unwrap_or(0);
+        let target_slot = isize::try_from(matched_index).unwrap_or(0);
         let borrowed = effect_element_ref.borrow();
         let Some(element) = borrowed.as_ref() else {
             return;
         };
-        let measured_height = element.client_height();
-        if measured_height <= 0 {
-            return;
+        // The cards of a new kind replace the old ones, so the watch moves to them.
+        if let Some(watch) = effect_resize_watch.borrow().as_ref() {
+            watch.observe_cards(element, CARD_SELECTOR);
         }
-        effect_active_index.set(target_index);
-        effect_following_navigation.set(true);
-        // Scrolling has to wait for the cards this index change re-renders. The
-        // card at `target_index` only sits at `target_index * height` once the
-        // new content has laid out, so scrolling in this same tick measures the
-        // old layout and lands elsewhere. Deferring one tick lets it settle.
-        let scroll_element = element.clone();
-        spawn(async move {
-            gloo_timers::future::TimeoutFuture::new(0).await;
-            let laid_out_height = scroll_element.client_height();
-            if laid_out_height <= 0 {
-                return;
-            }
-            let target_index_px = i32::try_from(target_index).unwrap_or(0);
-            let target_scroll_top = target_index_px * laid_out_height;
-            scroll_element.set_scroll_top(target_scroll_top);
-        });
+        drop(borrowed);
+        // If the cards are not laid out yet, the resize watch applies the held
+        // anchor once they are.
+        let target_card = PagerAnchor::aligned(target_slot);
+        effect_motion.hold(target_card);
     }));
 
-    CollisionPagerPresentation {
-        onmounted,
-        onscrollend,
-        content,
-    }
+    let mounted_element_ref = element_ref.clone();
+    let mounted_entry_keys = entry_keys.clone();
+    let onmounted = EventHandler::new(move |event: MountedEvent| {
+        let Some(element) = event.data().try_as_web_event() else {
+            return;
+        };
+        *mounted_element_ref.borrow_mut() = Some(element.clone());
+        let resized_motion = motion.clone();
+        let created_watch = CardResizeWatch::new(move || {
+            resized_motion.reapply();
+        });
+        if let Some(watch) = created_watch.as_ref() {
+            watch.observe_cards(&element, CARD_SELECTOR);
+        }
+        *resize_watch.borrow_mut() = created_watch;
+        let mut listeners = PassiveInputListeners::new(&element);
+        let pointer_down_motion = motion.clone();
+        listeners.listen("pointerdown", move |event| {
+            pointer_down_motion.pointer_down(&event)
+        });
+        let pointer_move_motion = motion.clone();
+        listeners.listen("pointermove", move |event| {
+            pointer_move_motion.pointer_move(&event)
+        });
+        let pointer_up_motion = motion.clone();
+        listeners.listen("pointerup", move |event| {
+            pointer_up_motion.pointer_up(&event)
+        });
+        let pointer_cancel_motion = motion.clone();
+        listeners.listen("pointercancel", move |event| {
+            pointer_cancel_motion.pointer_cancel(&event)
+        });
+        let wheel_motion = motion.clone();
+        listeners.listen("wheel", move |event| wheel_motion.wheel(&event));
+        let key_motion = motion.clone();
+        listeners.listen("keydown", move |event| key_motion.key_down(&event));
+        let transition_motion = motion.clone();
+        listeners.listen("transitionend", move |event| {
+            transition_motion.transition_end(&event)
+        });
+        *input_listeners.borrow_mut() = Some(listeners);
+        // The follow effect ran before the pager existed, so the selected card is
+        // placed here the first time.
+        let matched_index = selected_signal
+            .peek()
+            .as_ref()
+            .and_then(|key| mounted_entry_keys.iter().position(|entry| entry == key))
+            .unwrap_or(0);
+        let target_slot = isize::try_from(matched_index).unwrap_or(0);
+        let target_card = PagerAnchor::aligned(target_slot);
+        motion.hold(target_card);
+    });
+
+    CollisionPagerPresentation { onmounted, content }
 }

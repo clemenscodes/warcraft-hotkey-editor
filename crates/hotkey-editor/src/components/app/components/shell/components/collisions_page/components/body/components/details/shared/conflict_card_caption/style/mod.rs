@@ -6,4 +6,7 @@ classes! {
         "uppercase",
         "text-warcraft-text-faint",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

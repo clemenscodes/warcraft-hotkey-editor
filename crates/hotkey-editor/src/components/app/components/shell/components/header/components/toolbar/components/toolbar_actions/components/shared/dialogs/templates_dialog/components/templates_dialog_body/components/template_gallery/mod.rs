@@ -1,11 +1,10 @@
-pub mod components;
 mod model;
 mod view;
 
 pub use view::TemplateGalleryView;
 mod style;
 
-use components::template_card::TemplateCard;
+use super::shared::template_card::TemplateCard;
 use dioxus::prelude::*;
 use model::TemplateGalleryModel;
 use style::CLASS;

@@ -8,6 +8,7 @@ classes! {
         "gap-16",
     ],
     mobile: tw![
+        "mobile:flex-1",
         "mobile:justify-start",
         "mobile:gap-5",
     ],

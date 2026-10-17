@@ -11,7 +11,7 @@ classes! {
         "text-shadow-glow",
     ],
     mobile: tw![
-        "mobile:text-(length:--slot-key-size,var(--text-xs))",
+        "mobile:text-(length:--slot-key-size,var(--text-sm))",
         "mobile:tracking-snug",
     ],
     tablet: tw![

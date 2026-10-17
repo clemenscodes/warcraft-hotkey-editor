@@ -13,7 +13,7 @@ classes! {
     mobile: tw![
         "mobile:max-w-full",
         "mobile:px-1",
-        "mobile:text-xs",
+        "mobile:text-sm",
         "mobile:tracking-label",
         "mobile:leading-heading",
     ],

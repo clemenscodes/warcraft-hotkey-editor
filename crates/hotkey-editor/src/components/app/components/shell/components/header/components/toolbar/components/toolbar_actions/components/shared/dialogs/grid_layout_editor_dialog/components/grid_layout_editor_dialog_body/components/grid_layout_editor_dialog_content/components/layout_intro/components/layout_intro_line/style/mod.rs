@@ -7,8 +7,9 @@ classes! {
         "text-warcraft-gold/85",
     ],
     mobile: tw![
-        "mobile:text-2xs",
-        "mobile:tracking-label",
+        "mobile:normal-case",
+        "mobile:text-sm",
+        "mobile:tracking-normal",
     ],
     tablet: tw![
         "tablet:text-2xs",

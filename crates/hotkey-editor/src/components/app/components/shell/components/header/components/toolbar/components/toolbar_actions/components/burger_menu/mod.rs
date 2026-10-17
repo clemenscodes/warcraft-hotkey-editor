@@ -17,6 +17,7 @@ pub fn BurgerMenu() -> Element {
         is_open,
         toggle,
         on_close,
+        on_close_click,
     } = view;
     rsx! {
         button {
@@ -30,7 +31,7 @@ pub fn BurgerMenu() -> Element {
         }
         if is_open {
             BurgerBackdrop {
-                onclick: on_close,
+                onclick: on_close_click,
             }
             BurgerDrawer {
                 on_close,

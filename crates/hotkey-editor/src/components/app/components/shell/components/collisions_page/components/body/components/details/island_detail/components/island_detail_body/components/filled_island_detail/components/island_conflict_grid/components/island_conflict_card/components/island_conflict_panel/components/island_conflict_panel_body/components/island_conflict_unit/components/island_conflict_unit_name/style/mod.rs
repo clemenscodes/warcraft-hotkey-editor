@@ -6,4 +6,7 @@ classes! {
         "text-center",
         "max-w-full",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

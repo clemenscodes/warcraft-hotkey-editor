@@ -10,6 +10,7 @@ classes! {
         "mobile:grid-cols-3",
         "mobile:gap-2",
         "mobile:w-full",
+        "mobile:[--slot-key-size:26cqi]",
         "mobile:max-w-120",
     ],
     tablet: tw![

@@ -4,4 +4,7 @@ classes! {
         "text-xs",
         "text-warcraft-text-faint",
     ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
 }

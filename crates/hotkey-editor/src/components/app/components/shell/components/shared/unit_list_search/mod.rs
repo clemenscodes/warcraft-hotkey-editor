@@ -31,6 +31,7 @@ pub fn UnitListSearch(props: UnitListSearchModel) -> Element {
                 placeholder,
                 on_input,
                 on_keydown,
+                autofocus: false,
             }
         }
     }

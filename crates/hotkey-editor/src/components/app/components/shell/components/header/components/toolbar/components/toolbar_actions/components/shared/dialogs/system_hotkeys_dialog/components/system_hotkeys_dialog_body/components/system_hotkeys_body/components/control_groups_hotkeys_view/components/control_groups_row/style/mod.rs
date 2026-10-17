@@ -24,7 +24,7 @@ classes! {
         "mobile:[--slot-frame-pad-x:var(--spacing)]",
         "mobile:[--slot-frame-pad-y:--spacing(1.5)]",
         "mobile:[--slot-frame-gap:var(--spacing)]",
-        "mobile:[--slot-key-size:var(--text-base)]",
+        "mobile:[--slot-key-size:45cqi]",
         "mobile:[--slot-host-min-h:0]",
     ],
     tablet: tw![

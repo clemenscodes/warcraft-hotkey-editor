@@ -19,5 +19,7 @@ classes! {
     ],
     mobile: tw![
         "mobile:text-sm",
+        "mobile:normal-case",
+        "mobile:tracking-normal",
     ],
 }

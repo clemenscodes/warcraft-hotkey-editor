@@ -5,6 +5,9 @@ classes! {
         "text-warcraft-text-muted",
         "uppercase",
         "tracking-caps",
-        "text-[10.5px]",
+        "text-xs",
+    ],
+    mobile: tw![
+        "mobile:text-sm",
     ],
 }

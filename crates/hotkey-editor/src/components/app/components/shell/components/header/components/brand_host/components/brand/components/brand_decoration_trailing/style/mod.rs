@@ -5,4 +5,7 @@ classes! {
         "flex-none",
         "-scale-x-100",
     ],
+    mobile: tw![
+        "mobile:hidden",
+    ],
 }

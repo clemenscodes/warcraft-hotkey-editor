@@ -1,4 +1,5 @@
 pub mod components;
+mod data;
 mod model;
 mod view;
 
@@ -6,6 +7,7 @@ pub use view::BurgerDrawerHeaderView;
 mod style;
 
 use components::burger_close::BurgerClose;
+use components::burger_drawer_title::BurgerDrawerTitle;
 use dioxus::prelude::*;
 use model::BurgerDrawerHeaderModel;
 use style::CLASS;
@@ -17,6 +19,9 @@ pub fn BurgerDrawerHeader(props: BurgerDrawerHeaderModel) -> Element {
     rsx! {
         div {
             class: CLASS,
+            BurgerDrawerTitle {
+                title: data::TITLE,
+            }
             BurgerClose {
                 onclick,
             }

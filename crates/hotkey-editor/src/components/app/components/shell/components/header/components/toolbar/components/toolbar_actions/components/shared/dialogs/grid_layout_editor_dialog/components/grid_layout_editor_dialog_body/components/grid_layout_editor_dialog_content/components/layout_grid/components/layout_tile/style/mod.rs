@@ -14,6 +14,7 @@ classes! {
         "kb-focus:outline-none",
     ],
     mobile: tw![
+        "mobile:aspect-square",
         "mobile:text-2xl",
     ],
     tablet: tw![

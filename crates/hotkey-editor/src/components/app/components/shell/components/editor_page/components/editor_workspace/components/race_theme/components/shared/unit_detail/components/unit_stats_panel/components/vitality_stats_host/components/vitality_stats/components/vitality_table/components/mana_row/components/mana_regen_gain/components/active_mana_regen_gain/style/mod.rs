@@ -1,0 +1,14 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "text-right",
+        "text-race-human",
+        "text-xl",
+        "font-normal",
+        "tabular-nums",
+        "text-shadow-drop",
+    ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
+}

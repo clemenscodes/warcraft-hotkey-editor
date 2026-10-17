@@ -9,6 +9,11 @@ classes! {
         "whitespace-nowrap",
         "min-w-0",
     ],
+    mobile: tw![
+        "mobile:pb-0",
+        "mobile:text-sm",
+        "mobile:leading-heading",
+    ],
     tablet: tw![
         "tablet:block",
         "tablet:w-full",

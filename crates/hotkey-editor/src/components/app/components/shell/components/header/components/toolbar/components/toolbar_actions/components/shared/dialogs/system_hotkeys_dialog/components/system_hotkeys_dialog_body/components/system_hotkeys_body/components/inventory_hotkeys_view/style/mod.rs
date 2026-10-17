@@ -10,6 +10,8 @@ classes! {
     ],
     mobile: tw![
         "mobile:gap-3.5",
+        "mobile:px-3",
+        "mobile:my-auto",
     ],
     tablet: tw![
         "tablet:gap-3.5",

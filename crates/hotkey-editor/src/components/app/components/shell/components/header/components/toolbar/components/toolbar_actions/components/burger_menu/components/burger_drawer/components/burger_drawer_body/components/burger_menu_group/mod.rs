@@ -33,15 +33,27 @@ pub fn BurgerMenuGroup(props: BurgerMenuGroupModel) -> Element {
             BurgerRedoItem {
                 on_close,
             }
-            BurgerUploadItem {}
-            BurgerTemplatesItem {}
-            BurgerSystemHotkeysItem {}
+            BurgerUploadItem {
+                on_close,
+            }
+            BurgerTemplatesItem {
+                on_close,
+            }
+            BurgerSystemHotkeysItem {
+                on_close,
+            }
             BurgerResolveItem {
                 on_close,
             }
-            BurgerPreviewItem {}
-            BurgerDownloadItem {}
-            BurgerHelpItem {}
+            BurgerPreviewItem {
+                on_close,
+            }
+            BurgerDownloadItem {
+                on_close,
+            }
+            BurgerHelpItem {
+                on_close,
+            }
         }
     }
 }

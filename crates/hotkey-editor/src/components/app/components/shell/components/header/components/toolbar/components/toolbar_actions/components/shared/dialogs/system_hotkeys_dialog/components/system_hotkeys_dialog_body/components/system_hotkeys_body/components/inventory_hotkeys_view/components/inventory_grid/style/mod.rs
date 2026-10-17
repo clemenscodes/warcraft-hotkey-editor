@@ -12,6 +12,7 @@ classes! {
         "mobile:auto-rows-[minmax(86px,auto)]",
         "mobile:gap-2.5",
         "mobile:w-full",
+        "mobile:[--slot-key-size:22cqi]",
         "mobile:max-w-104",
     ],
     tablet: tw![

@@ -1,6 +1,7 @@
 use super::data::{ARIA_LABEL, LABEL};
 use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::burger_menu::components::burger_drawer::components::burger_drawer_body::components::shared::burger_menu_item::BurgerItemState;
 use crate::components::app::components::shell::components::shared::icons::ICON_GRID;
+use super::model::BurgerLayoutItemModel;
 use dioxus::prelude::*;
 
 pub(super) struct BurgerLayoutItemPresentation {
@@ -15,14 +16,24 @@ pub(super) struct BurgerLayoutItemPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
-pub(super) fn use_burger_layout_item() -> BurgerLayoutItemPresentation {
+pub(super) fn use_burger_layout_item(
+    props: &BurgerLayoutItemModel,
+) -> BurgerLayoutItemPresentation {
     let mut open_signal = use_signal::<bool>(|| false);
     let open = open_signal();
     let onclick = EventHandler::new(move |_event: MouseEvent| {
         let next = !*open_signal.read();
         open_signal.set(next);
     });
-    let on_open_change = Callback::new(move |is_open: bool| open_signal.set(is_open));
+    let on_close = props.on_close;
+    // The dialog lives inside the menu, so the menu stays open behind it and
+    // closes with it: the user lands back in the editor, not in the menu.
+    let on_open_change = Callback::new(move |is_open: bool| {
+        open_signal.set(is_open);
+        if !is_open {
+            on_close.call(());
+        }
+    });
     let aria_haspopup = Some("dialog");
     let aria_expanded = if open { Some("true") } else { Some("false") };
     let aria_label = Some(ARIA_LABEL);

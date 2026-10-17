@@ -1,4 +1,5 @@
 mod model;
+mod presentation;
 mod view;
 
 pub use view::UnitListSearchInputView;
@@ -10,13 +11,17 @@ use style::CLASS;
 use tw_macro::assert_component;
 
 use model::UnitListSearchInputModel;
+use presentation::{UnitListSearchInputPresentation, use_unit_list_search_input};
 
 #[component]
 pub fn UnitListSearchInput(props: UnitListSearchInputModel) -> Element {
-    let value = props.value;
-    let placeholder = props.placeholder;
-    let on_input = props.on_input;
-    let on_keydown = props.on_keydown;
+    let UnitListSearchInputPresentation {
+        value,
+        placeholder,
+        on_input,
+        on_keydown,
+        onmounted,
+    } = use_unit_list_search_input(&props);
     rsx! {
         input {
             class: CLASS,
@@ -25,6 +30,7 @@ pub fn UnitListSearchInput(props: UnitListSearchInputModel) -> Element {
             value,
             oninput: move |event| on_input.call(event),
             onkeydown: move |event| on_keydown.call(event),
+            onmounted: move |event| onmounted.call(event),
         }
     }
 }

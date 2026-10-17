@@ -1,4 +1,4 @@
-use super::components::templates_dialog_body::components::template_gallery::components::template_card::TemplateCardView;
+use super::components::templates_dialog_body::components::shared::template_card::TemplateCardView;
 use super::model::TemplatesDialogModel;
 use crate::components::app::components::shell::components::toasts::ToastOptions;
 use crate::components::app::components::shell::components::toasts::use_toast;

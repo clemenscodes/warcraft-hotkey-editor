@@ -15,6 +15,7 @@ use tw_macro::assert_component;
 #[component]
 pub fn BurgerDrawer(props: BurgerDrawerModel) -> Element {
     let on_close = props.on_close;
+    let close_click = EventHandler::new(move |_event: MouseEvent| on_close.call(()));
     rsx! {
         aside {
             class: CLASS,
@@ -22,7 +23,7 @@ pub fn BurgerDrawer(props: BurgerDrawerModel) -> Element {
             role: "navigation",
             aria_label: "Menu",
             BurgerDrawerHeader {
-                onclick: on_close,
+                onclick: close_click,
             }
             BurgerDrawerBody {
                 on_close,

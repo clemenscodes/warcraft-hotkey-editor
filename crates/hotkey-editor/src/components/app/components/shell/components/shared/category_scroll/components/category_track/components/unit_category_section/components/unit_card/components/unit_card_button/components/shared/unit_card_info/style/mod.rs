@@ -7,6 +7,9 @@ classes! {
         "min-w-0",
         "flex-1",
     ],
+    mobile: tw![
+        "mobile:gap-0.5",
+    ],
     tablet: tw![
         "tablet:items-start",
         "tablet:text-left",

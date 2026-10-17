@@ -4,7 +4,6 @@ classes! {
         "@container",
         "flex",
         "flex-col",
-        "gap-[0.77cqi]",
         "min-w-0",
         "relative",
         "size-full",

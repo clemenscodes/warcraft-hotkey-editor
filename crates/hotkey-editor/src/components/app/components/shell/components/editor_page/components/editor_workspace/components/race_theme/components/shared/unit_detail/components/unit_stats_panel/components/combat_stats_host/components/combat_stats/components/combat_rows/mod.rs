@@ -7,7 +7,6 @@ mod style;
 
 use components::attack_speed_row::AttackSpeedRow;
 use components::attack_type_row::AttackTypeRow;
-use components::damage_matchup_row::DamageMatchupRow;
 use components::damage_per_second_row::DamagePerSecondRow;
 use components::damage_row::DamageRow;
 use components::range_row::RangeRow;
@@ -40,9 +39,6 @@ pub fn CombatRows(props: CombatRowsModel) -> Element {
             }
             AttackTypeRow {
                 value: attack_type,
-            }
-            DamageMatchupRow {
-                attack_type,
             }
         }
     }

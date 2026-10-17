@@ -8,7 +8,6 @@ classes! {
         "h-full",
         "min-w-0",
         "shrink-0",
-        "snap-start",
         "py-1.5",
     ],
     tablet: tw![

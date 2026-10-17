@@ -16,6 +16,7 @@ classes! {
         "mobile:overflow-x-auto",
         "mobile:overflow-y-hidden",
         "mobile:overscroll-x-contain",
+        "mobile:touch-pan-x",
         "mobile:snap-x",
         "mobile:snap-mandatory",
         "mobile:scrollbar-none",

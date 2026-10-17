@@ -7,10 +7,8 @@ classes! {
         "flex-1",
         "min-h-0",
         "min-w-0",
-        "overflow-y-auto",
-        "overscroll-contain",
-        "snap-y",
-        "snap-mandatory",
+        "overflow-hidden",
+        "touch-pan-x",
         "px-4",
     ],
     tablet: tw![

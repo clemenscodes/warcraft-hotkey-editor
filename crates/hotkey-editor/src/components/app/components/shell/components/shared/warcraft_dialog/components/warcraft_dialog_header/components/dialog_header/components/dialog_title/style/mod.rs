@@ -1,25 +1,23 @@
 use tw_macro::tw;
 classes! {
     base: tw![
+        "min-w-0",
         "text-3xl",
         "leading-none",
+        "whitespace-nowrap",
         "uppercase",
         "tracking-heading",
         "text-warcraft-gold",
         "text-glow",
     ],
-    // The header is the @container. The font is a fraction of its inline size,
-    // so it rides the dialog width the way the header brand does, and the
-    // fraction is tuned so the longest title still fits on one line at the
-    // narrowest phone, next to the flanking flourishes and the close button.
-    // No clip, no ellipsis, no wrap: overflow and truncation are impossible by
-    // construction rather than hidden after the fact.
+    // The token is the largest the title is drawn. A title wider than the room
+    // between the flourishes shrinks below it until it fits on one line (see
+    // `TitleFit`), so a short name is drawn large and a long one still fits,
+    // with no clip, no ellipsis and no wrap.
     mobile: tw![
-        "mobile:text-[3.5cqi]",
-        "mobile:whitespace-nowrap",
+        "mobile:text-2xl",
     ],
     tablet: tw![
-        "tablet:text-[3.5cqi]",
-        "tablet:whitespace-nowrap",
+        "tablet:text-2xl",
     ],
 }
