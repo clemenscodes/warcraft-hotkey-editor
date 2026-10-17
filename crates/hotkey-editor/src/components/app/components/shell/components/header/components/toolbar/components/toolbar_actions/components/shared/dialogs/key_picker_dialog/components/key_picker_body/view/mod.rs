@@ -12,6 +12,10 @@ pub struct KeyPickerBodyView {
     pub on_close: EventHandler<()>,
 }
 
+impl ddd::Layered for KeyPickerBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for KeyPickerBodyView {}
 
 impl Render for KeyPickerBodyView {

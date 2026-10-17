@@ -32,6 +32,10 @@ impl From<&AltStateControlsView> for AltStateControlsModel {
     }
 }
 
+impl ddd::Layered for AltStateControlsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AltStateControlsModel {
     type View = AltStateControlsView;
 }

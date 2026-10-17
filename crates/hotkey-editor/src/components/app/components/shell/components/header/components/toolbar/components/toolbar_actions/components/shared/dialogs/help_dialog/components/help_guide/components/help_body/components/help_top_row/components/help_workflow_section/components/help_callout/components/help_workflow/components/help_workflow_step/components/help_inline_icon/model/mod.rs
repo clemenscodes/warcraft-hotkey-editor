@@ -13,6 +13,10 @@ impl From<&HelpInlineIconView> for HelpInlineIconModel {
     }
 }
 
+impl ddd::Layered for HelpInlineIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpInlineIconModel {
     type View = HelpInlineIconView;
 }

@@ -21,6 +21,10 @@ impl From<&SystemHotkeysListEntryView> for SystemHotkeysListEntryModel {
     }
 }
 
+impl ddd::Layered for SystemHotkeysListEntryModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysListEntryModel {
     type View = SystemHotkeysListEntryView;
 }

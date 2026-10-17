@@ -27,6 +27,10 @@ impl From<&SpillSectionTabView> for SpillSectionTabModel {
     }
 }
 
+impl ddd::Layered for SpillSectionTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SpillSectionTabModel {
     type View = SpillSectionTabView;
 }

@@ -7,4 +7,8 @@ pub struct ToastOverlayView {
     pub on_remove: Callback<usize>,
 }
 
+impl ddd::Layered for ToastOverlayView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ToastOverlayView {}

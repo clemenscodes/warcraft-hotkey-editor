@@ -14,6 +14,10 @@ impl From<&CollisionListScrollView> for CollisionListScrollModel {
     }
 }
 
+impl ddd::Layered for CollisionListScrollModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionListScrollModel {
     type View = CollisionListScrollView;
 }

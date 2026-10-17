@@ -25,6 +25,10 @@ impl From<&WeakMatchupView> for WeakMatchupModel {
     }
 }
 
+impl ddd::Layered for WeakMatchupModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for WeakMatchupModel {
     type View = WeakMatchupView;
 }

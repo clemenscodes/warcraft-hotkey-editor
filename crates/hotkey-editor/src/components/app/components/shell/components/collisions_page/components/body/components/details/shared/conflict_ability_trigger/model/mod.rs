@@ -24,6 +24,10 @@ impl From<&ConflictAbilityTriggerView> for ConflictAbilityTriggerModel {
     }
 }
 
+impl ddd::Layered for ConflictAbilityTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictAbilityTriggerModel {
     type View = ConflictAbilityTriggerView;
 }

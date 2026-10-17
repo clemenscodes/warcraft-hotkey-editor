@@ -6,4 +6,8 @@ pub struct HotkeyDetailHeaderView {
     pub count: usize,
 }
 
+impl ddd::Layered for HotkeyDetailHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyDetailHeaderView {}

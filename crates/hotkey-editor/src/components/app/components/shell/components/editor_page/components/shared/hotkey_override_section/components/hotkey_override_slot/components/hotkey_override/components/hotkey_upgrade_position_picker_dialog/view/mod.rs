@@ -12,4 +12,8 @@ pub struct HotkeyUpgradePositionPickerDialogView {
     pub on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for HotkeyUpgradePositionPickerDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyUpgradePositionPickerDialogView {}

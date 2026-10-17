@@ -27,6 +27,10 @@ impl From<&GapPullSectionTabView> for GapPullSectionTabModel {
     }
 }
 
+impl ddd::Layered for GapPullSectionTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GapPullSectionTabModel {
     type View = GapPullSectionTabView;
 }

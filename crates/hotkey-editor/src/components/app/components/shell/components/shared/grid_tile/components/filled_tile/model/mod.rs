@@ -30,6 +30,10 @@ impl From<&FilledTileView> for FilledTileModel {
     }
 }
 
+impl ddd::Layered for FilledTileModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FilledTileModel {
     type View = FilledTileView;
 }

@@ -6,4 +6,8 @@ pub struct PopoverInactiveCategoryTabView {
     pub on_click: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for PopoverInactiveCategoryTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PopoverInactiveCategoryTabView {}

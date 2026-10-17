@@ -8,4 +8,8 @@ pub struct RaceTabInputView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for RaceTabInputView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for RaceTabInputView {}

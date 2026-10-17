@@ -33,6 +33,10 @@ impl From<&IdleSlotView> for IdleSlotModel {
     }
 }
 
+impl ddd::Layered for IdleSlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleSlotModel {
     type View = IdleSlotView;
 }

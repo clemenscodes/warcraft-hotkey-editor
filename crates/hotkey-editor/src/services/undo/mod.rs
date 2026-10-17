@@ -4,11 +4,13 @@ use crate::repository::editor_history_repository::EditorHistoryRepository;
 use ddd::ApplicationLayer;
 use ddd::ApplicationService;
 use ddd::Layered;
-use ddd::Repository;
-use ddd::Service;
+use ddd::SynchronousRepository;
+use ddd::SynchronousService;
 use dioxus::prelude::*;
+use std::convert::Infallible;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::EditorHistory;
+use warcraft_keybinds::EditorHistoryIdentity;
 use warcraft_keybinds::EditorSnapshot;
 use warcraft_keybinds::GridLayout;
 
@@ -38,7 +40,8 @@ impl UndoHistory {
     pub fn use_history(keys: Signal<Option<CustomKeys>>, grid_layout: Signal<GridLayout>) -> Self {
         let boot_present = snapshot_from_state(&keys, &grid_layout);
         let repository = EditorHistoryRepository;
-        let mut loaded_history = repository.load().unwrap_or_default();
+        let Ok(stored_history) = repository.find_by_id(&EditorHistoryIdentity);
+        let mut loaded_history = stored_history.unwrap_or_default();
         loaded_history.reseat_present(boot_present);
         let history = use_signal(|| loaded_history);
         let persist_generation = use_signal(|| 0_u32);
@@ -88,14 +91,14 @@ impl UndoHistory {
     }
 
     pub(crate) fn undo(&self) {
-        let restored = self.commit(EditorHistory::undo);
+        let Ok(restored) = self.commit(EditorHistory::undo);
         if let Some(snapshot) = restored {
             self.apply(&snapshot);
         }
     }
 
     pub(crate) fn redo(&self) {
-        let restored = self.commit(EditorHistory::redo);
+        let Ok(restored) = self.commit(EditorHistory::redo);
         if let Some(snapshot) = restored {
             self.apply(&snapshot);
         }
@@ -127,7 +130,7 @@ impl UndoHistory {
     fn persist(&self) {
         let aggregate = self.snapshot();
         let repository = self.repository();
-        repository.save(&aggregate);
+        let Ok(()) = repository.save(&aggregate);
     }
 }
 
@@ -137,7 +140,7 @@ impl Layered for UndoHistory {
 
 impl ApplicationService for UndoHistory {}
 
-impl Service<EditorHistory> for UndoHistory {
+impl SynchronousService<EditorHistory> for UndoHistory {
     type Repository = EditorHistoryRepository;
 
     fn repository(&self) -> Self::Repository {
@@ -153,12 +156,15 @@ impl Service<EditorHistory> for UndoHistory {
         history_signal.set(aggregate);
     }
 
-    fn commit<Outcome>(&self, change: impl FnOnce(&mut EditorHistory) -> Outcome) -> Outcome {
+    fn commit<Outcome>(
+        &self,
+        change: impl FnOnce(&mut EditorHistory) -> Outcome,
+    ) -> Result<Outcome, Infallible> {
         let mut aggregate = self.snapshot();
         let outcome = change(&mut aggregate);
         self.replace(aggregate);
         self.schedule_persist();
-        outcome
+        Ok(outcome)
     }
 }
 

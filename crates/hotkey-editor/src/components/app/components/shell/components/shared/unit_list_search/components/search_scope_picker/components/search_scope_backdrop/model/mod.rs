@@ -13,6 +13,10 @@ impl From<&SearchScopeBackdropView> for SearchScopeBackdropModel {
     }
 }
 
+impl ddd::Layered for SearchScopeBackdropModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchScopeBackdropModel {
     type View = SearchScopeBackdropView;
 }

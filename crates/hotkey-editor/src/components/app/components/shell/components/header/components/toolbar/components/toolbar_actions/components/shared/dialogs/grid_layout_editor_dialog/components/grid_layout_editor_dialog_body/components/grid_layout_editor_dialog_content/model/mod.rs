@@ -27,6 +27,10 @@ impl From<&GridLayoutEditorDialogContentView> for GridLayoutEditorDialogContentM
     }
 }
 
+impl ddd::Layered for GridLayoutEditorDialogContentModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GridLayoutEditorDialogContentModel {
     type View = GridLayoutEditorDialogContentView;
 }

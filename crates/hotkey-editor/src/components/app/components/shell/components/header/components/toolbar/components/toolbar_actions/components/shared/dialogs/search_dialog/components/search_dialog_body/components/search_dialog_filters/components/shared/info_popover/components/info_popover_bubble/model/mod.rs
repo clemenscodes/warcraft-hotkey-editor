@@ -13,6 +13,10 @@ impl From<&InfoPopoverBubbleView> for InfoPopoverBubbleModel {
     }
 }
 
+impl ddd::Layered for InfoPopoverBubbleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoPopoverBubbleModel {
     type View = InfoPopoverBubbleView;
 }

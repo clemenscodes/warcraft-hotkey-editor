@@ -13,6 +13,10 @@ impl From<&UploadButtonInputView> for UploadButtonInputModel {
     }
 }
 
+impl ddd::Layered for UploadButtonInputModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UploadButtonInputModel {
     type View = UploadButtonInputView;
 }

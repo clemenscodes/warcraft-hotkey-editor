@@ -14,6 +14,10 @@ impl From<&SwitchLabelView> for SwitchLabelModel {
     }
 }
 
+impl ddd::Layered for SwitchLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SwitchLabelModel {
     type View = SwitchLabelView;
 }

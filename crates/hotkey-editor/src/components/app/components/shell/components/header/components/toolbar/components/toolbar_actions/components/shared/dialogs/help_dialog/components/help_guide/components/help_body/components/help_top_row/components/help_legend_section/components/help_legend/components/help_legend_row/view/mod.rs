@@ -5,4 +5,8 @@ pub struct HelpLegendRowView {
     pub entry: HelpLegendEntry,
 }
 
+impl ddd::Layered for HelpLegendRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpLegendRowView {}

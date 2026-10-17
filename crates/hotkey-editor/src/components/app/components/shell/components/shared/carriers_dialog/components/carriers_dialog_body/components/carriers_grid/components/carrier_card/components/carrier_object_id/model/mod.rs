@@ -13,6 +13,10 @@ impl From<&CarrierObjectIdView> for CarrierObjectIdModel {
     }
 }
 
+impl ddd::Layered for CarrierObjectIdModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CarrierObjectIdModel {
     type View = CarrierObjectIdView;
 }

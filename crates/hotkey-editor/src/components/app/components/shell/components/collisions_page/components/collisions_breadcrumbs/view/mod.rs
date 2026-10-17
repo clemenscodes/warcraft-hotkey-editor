@@ -9,6 +9,10 @@ pub struct CollisionsBreadcrumbsView {
     pub breadcrumbs: Vec<BreadcrumbView>,
 }
 
+impl ddd::Layered for CollisionsBreadcrumbsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionsBreadcrumbsView {}
 
 impl Render for CollisionsBreadcrumbsView {

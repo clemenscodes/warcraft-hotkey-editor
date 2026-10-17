@@ -9,4 +9,8 @@ pub struct NormalKeyChipView {
     pub tooltip_placement: TooltipPlacement,
 }
 
+impl ddd::Layered for NormalKeyChipView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for NormalKeyChipView {}

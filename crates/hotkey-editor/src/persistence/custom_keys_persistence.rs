@@ -9,3 +9,7 @@ pub(crate) fn load_text() -> Option<String> {
 pub(crate) fn save_text(text: &str) {
     CUSTOM_KEYS_STORAGE.set(text);
 }
+
+pub(crate) fn remove_text() {
+    CUSTOM_KEYS_STORAGE.remove();
+}

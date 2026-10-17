@@ -14,6 +14,10 @@ impl From<&StuckReasonBadgeView> for StuckReasonBadgeModel {
     }
 }
 
+impl ddd::Layered for StuckReasonBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for StuckReasonBadgeModel {
     type View = StuckReasonBadgeView;
 }

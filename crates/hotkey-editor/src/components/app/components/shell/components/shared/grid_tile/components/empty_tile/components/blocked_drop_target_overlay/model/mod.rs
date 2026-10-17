@@ -13,6 +13,10 @@ impl From<&BlockedDropTargetOverlayView> for BlockedDropTargetOverlayModel {
     }
 }
 
+impl ddd::Layered for BlockedDropTargetOverlayModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BlockedDropTargetOverlayModel {
     type View = BlockedDropTargetOverlayView;
 }

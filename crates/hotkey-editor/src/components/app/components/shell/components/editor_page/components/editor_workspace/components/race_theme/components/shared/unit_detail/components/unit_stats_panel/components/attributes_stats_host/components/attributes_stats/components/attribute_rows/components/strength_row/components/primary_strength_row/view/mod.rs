@@ -7,4 +7,8 @@ pub struct PrimaryStrengthRowView {
     pub label: String,
 }
 
+impl ddd::Layered for PrimaryStrengthRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PrimaryStrengthRowView {}

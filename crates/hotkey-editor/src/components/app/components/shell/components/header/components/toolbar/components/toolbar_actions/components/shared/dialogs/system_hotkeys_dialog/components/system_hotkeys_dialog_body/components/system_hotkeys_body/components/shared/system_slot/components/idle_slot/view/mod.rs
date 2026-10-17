@@ -10,4 +10,8 @@ pub struct IdleSlotView {
     pub dragging: bool,
 }
 
+impl ddd::Layered for IdleSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleSlotView {}

@@ -6,4 +6,8 @@ pub struct EditableKeycapView {
     pub state: EditableKeycapState,
 }
 
+impl ddd::Layered for EditableKeycapView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for EditableKeycapView {}

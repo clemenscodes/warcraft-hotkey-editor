@@ -14,6 +14,10 @@ impl From<&StatLabelView> for StatLabelModel {
     }
 }
 
+impl ddd::Layered for StatLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for StatLabelModel {
     type View = StatLabelView;
 }

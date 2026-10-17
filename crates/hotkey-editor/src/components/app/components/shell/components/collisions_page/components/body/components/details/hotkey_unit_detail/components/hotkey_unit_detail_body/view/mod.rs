@@ -9,6 +9,10 @@ pub struct HotkeyUnitDetailBodyView {
     pub units: Vec<HotkeyUnitView>,
 }
 
+impl ddd::Layered for HotkeyUnitDetailBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyUnitDetailBodyView {}
 
 impl Render for HotkeyUnitDetailBodyView {

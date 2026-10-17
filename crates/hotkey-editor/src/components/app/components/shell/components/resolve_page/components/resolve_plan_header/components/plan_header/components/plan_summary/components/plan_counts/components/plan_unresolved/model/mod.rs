@@ -12,6 +12,10 @@ impl From<&PlanUnresolvedView> for PlanUnresolvedModel {
     }
 }
 
+impl ddd::Layered for PlanUnresolvedModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlanUnresolvedModel {
     type View = PlanUnresolvedView;
 }

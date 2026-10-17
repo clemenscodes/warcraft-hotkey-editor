@@ -13,6 +13,10 @@ impl From<&CollisionCountView> for CollisionCountModel {
     }
 }
 
+impl ddd::Layered for CollisionCountModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionCountModel {
     type View = CollisionCountView;
 }

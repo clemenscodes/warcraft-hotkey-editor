@@ -15,6 +15,10 @@ impl From<&PrimaryButtonView> for PrimaryButtonModel {
     }
 }
 
+impl ddd::Layered for PrimaryButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PrimaryButtonModel {
     type View = PrimaryButtonView;
 }

@@ -14,6 +14,10 @@ impl From<&CarriersGridView> for CarriersGridModel {
     }
 }
 
+impl ddd::Layered for CarriersGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CarriersGridModel {
     type View = CarriersGridView;
 }

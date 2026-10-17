@@ -4,4 +4,8 @@ pub struct CollisionsPageView {
     pub entry: Option<String>,
 }
 
+impl ddd::Layered for CollisionsPageView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionsPageView {}

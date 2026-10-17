@@ -5,4 +5,8 @@ pub struct ResolveSectionNavView {
     pub breadcrumbs: Vec<BreadcrumbView>,
 }
 
+impl ddd::Layered for ResolveSectionNavView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ResolveSectionNavView {}

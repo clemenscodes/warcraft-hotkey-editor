@@ -13,6 +13,10 @@ impl From<&FilterGroupLabelView> for FilterGroupLabelModel {
     }
 }
 
+impl ddd::Layered for FilterGroupLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FilterGroupLabelModel {
     type View = FilterGroupLabelView;
 }

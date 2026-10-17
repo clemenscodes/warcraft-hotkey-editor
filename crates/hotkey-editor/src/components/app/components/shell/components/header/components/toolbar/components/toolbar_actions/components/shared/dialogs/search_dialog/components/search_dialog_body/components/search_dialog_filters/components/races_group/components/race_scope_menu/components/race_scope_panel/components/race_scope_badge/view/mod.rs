@@ -10,4 +10,8 @@ pub struct RaceScopeBadgeView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for RaceScopeBadgeView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for RaceScopeBadgeView {}

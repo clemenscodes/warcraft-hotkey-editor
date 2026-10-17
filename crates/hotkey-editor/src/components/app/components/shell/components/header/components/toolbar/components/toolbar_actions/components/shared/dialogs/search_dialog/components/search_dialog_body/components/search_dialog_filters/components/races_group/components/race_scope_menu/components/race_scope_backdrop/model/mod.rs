@@ -13,6 +13,10 @@ impl From<&RaceScopeBackdropView> for RaceScopeBackdropModel {
     }
 }
 
+impl ddd::Layered for RaceScopeBackdropModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopeBackdropModel {
     type View = RaceScopeBackdropView;
 }

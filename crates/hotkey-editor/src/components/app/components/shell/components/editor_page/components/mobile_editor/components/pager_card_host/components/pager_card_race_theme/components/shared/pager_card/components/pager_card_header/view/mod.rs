@@ -7,4 +7,8 @@ pub struct PagerCardHeaderView {
     pub unit_id: WarcraftObjectId,
 }
 
+impl ddd::Layered for PagerCardHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PagerCardHeaderView {}

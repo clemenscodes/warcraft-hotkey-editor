@@ -8,4 +8,8 @@ pub struct ResolveSectionTabView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ResolveSectionTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ResolveSectionTabView {}

@@ -5,4 +5,8 @@ pub struct InventorySlotView {
     pub(crate) filled: Option<InventoryFilledSlotEntry>,
 }
 
+impl ddd::Layered for InventorySlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InventorySlotView {}

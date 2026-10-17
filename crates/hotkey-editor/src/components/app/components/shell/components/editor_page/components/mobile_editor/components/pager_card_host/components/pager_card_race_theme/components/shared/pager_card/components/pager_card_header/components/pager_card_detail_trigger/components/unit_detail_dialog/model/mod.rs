@@ -24,6 +24,10 @@ impl From<&UnitDetailDialogView> for UnitDetailDialogModel {
     }
 }
 
+impl ddd::Layered for UnitDetailDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitDetailDialogModel {
     type View = UnitDetailDialogView;
 }

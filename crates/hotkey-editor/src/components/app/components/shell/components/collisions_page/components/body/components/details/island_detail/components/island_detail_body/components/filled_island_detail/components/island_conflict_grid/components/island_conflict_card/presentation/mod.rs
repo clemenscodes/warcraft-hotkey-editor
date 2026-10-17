@@ -68,6 +68,10 @@ impl IslandConflictCardPresentation {
     }
 }
 
+impl ddd::Layered for IslandConflictCardPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for IslandConflictCardPresentation {
     type Model = IslandConflictCardModel;
 }

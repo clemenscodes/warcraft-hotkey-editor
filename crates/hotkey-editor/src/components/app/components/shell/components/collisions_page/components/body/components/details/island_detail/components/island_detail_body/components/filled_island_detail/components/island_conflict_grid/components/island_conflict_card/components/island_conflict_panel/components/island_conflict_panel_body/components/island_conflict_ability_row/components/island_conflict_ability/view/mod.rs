@@ -10,4 +10,8 @@ pub struct IslandConflictAbilityView {
     pub inspected: InspectedAbility,
 }
 
+impl ddd::Layered for IslandConflictAbilityView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandConflictAbilityView {}

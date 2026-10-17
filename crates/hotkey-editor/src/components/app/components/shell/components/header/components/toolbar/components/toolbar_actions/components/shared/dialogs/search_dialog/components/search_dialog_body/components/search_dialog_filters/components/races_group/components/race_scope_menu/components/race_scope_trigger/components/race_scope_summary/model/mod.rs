@@ -14,6 +14,10 @@ impl From<&RaceScopeSummaryView> for RaceScopeSummaryModel {
     }
 }
 
+impl ddd::Layered for RaceScopeSummaryModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopeSummaryModel {
     type View = RaceScopeSummaryView;
 }

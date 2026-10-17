@@ -5,4 +5,8 @@ pub struct HotkeyPagerCardHostView {
     pub unit: HotkeyUnitView,
 }
 
+impl ddd::Layered for HotkeyPagerCardHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyPagerCardHostView {}

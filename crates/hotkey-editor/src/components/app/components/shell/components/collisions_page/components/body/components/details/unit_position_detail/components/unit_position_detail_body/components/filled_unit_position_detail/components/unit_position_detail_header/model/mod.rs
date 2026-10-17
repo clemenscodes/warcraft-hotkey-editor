@@ -15,6 +15,10 @@ impl From<&UnitPositionDetailHeaderView> for UnitPositionDetailHeaderModel {
     }
 }
 
+impl ddd::Layered for UnitPositionDetailHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitPositionDetailHeaderModel {
     type View = UnitPositionDetailHeaderView;
 }

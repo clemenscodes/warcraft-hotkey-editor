@@ -34,4 +34,8 @@ pub struct GridEditorView {
     pub host_unit_id: WarcraftObjectId,
 }
 
+impl ddd::Layered for GridEditorView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GridEditorView {}

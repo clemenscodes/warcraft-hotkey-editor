@@ -8,4 +8,8 @@ pub struct BreadcrumbView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for BreadcrumbView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for BreadcrumbView {}

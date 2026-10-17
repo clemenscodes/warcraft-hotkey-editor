@@ -8,4 +8,8 @@ pub struct CatalogVisibilityButtonView {
     pub on_toggle: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for CatalogVisibilityButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CatalogVisibilityButtonView {}

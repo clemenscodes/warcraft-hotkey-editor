@@ -11,4 +11,8 @@ pub struct SearchDialogBarView {
     pub on_toggle_panel: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for SearchDialogBarView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SearchDialogBarView {}

@@ -14,6 +14,10 @@ impl From<&InactiveCategoryTabView> for InactiveCategoryTabModel {
     }
 }
 
+impl ddd::Layered for InactiveCategoryTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InactiveCategoryTabModel {
     type View = InactiveCategoryTabView;
 }

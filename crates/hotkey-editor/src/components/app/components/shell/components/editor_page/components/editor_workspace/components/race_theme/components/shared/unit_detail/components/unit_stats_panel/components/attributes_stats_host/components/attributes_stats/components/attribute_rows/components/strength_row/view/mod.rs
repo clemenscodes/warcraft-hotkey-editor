@@ -6,4 +6,8 @@ pub struct StrengthRowView {
     pub is_primary: bool,
 }
 
+impl ddd::Layered for StrengthRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for StrengthRowView {}

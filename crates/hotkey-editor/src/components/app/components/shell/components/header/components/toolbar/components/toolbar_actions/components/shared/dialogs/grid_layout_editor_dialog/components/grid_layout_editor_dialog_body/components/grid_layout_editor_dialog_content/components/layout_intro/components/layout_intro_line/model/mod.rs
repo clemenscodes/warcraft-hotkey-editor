@@ -13,6 +13,10 @@ impl From<&LayoutIntroLineView> for LayoutIntroLineModel {
     }
 }
 
+impl ddd::Layered for LayoutIntroLineModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for LayoutIntroLineModel {
     type View = LayoutIntroLineView;
 }

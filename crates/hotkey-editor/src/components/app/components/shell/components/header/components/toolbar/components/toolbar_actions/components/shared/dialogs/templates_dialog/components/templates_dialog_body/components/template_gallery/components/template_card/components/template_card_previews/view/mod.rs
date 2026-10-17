@@ -5,4 +5,8 @@ pub struct TemplateCardPreviewsView {
     pub resolved: ResolvedTemplate,
 }
 
+impl ddd::Layered for TemplateCardPreviewsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TemplateCardPreviewsView {}

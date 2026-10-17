@@ -7,4 +7,8 @@ pub struct InactiveResolveSectionTabView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for InactiveResolveSectionTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InactiveResolveSectionTabView {}

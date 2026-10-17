@@ -5,4 +5,8 @@ pub struct UnresolvedRowView {
     pub unresolved_view: UnresolvedView,
 }
 
+impl ddd::Layered for UnresolvedRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnresolvedRowView {}

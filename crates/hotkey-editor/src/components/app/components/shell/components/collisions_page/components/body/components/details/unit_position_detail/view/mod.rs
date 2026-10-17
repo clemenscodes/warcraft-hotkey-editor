@@ -5,4 +5,8 @@ pub struct UnitPositionDetailView {
     pub units: Vec<UnitPositionUnitView>,
 }
 
+impl ddd::Layered for UnitPositionDetailView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitPositionDetailView {}

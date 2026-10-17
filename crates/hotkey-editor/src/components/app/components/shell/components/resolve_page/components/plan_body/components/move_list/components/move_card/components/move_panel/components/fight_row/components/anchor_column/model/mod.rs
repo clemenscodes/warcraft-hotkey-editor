@@ -14,6 +14,10 @@ impl From<&AnchorColumnView> for AnchorColumnModel {
     }
 }
 
+impl ddd::Layered for AnchorColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AnchorColumnModel {
     type View = AnchorColumnView;
 }

@@ -15,4 +15,8 @@ pub struct CurrentHotkeySlotView {
     pub is_info_only: bool,
 }
 
+impl ddd::Layered for CurrentHotkeySlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CurrentHotkeySlotView {}

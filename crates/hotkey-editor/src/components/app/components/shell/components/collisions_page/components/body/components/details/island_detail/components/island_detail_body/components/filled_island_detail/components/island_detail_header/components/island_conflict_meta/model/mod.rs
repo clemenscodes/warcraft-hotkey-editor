@@ -15,6 +15,10 @@ impl From<&IslandConflictMetaView> for IslandConflictMetaModel {
     }
 }
 
+impl ddd::Layered for IslandConflictMetaModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictMetaModel {
     type View = IslandConflictMetaView;
 }

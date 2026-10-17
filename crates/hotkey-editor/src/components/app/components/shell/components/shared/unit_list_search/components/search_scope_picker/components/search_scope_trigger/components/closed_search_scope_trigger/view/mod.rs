@@ -6,4 +6,8 @@ pub struct ClosedSearchScopeTriggerView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ClosedSearchScopeTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ClosedSearchScopeTriggerView {}

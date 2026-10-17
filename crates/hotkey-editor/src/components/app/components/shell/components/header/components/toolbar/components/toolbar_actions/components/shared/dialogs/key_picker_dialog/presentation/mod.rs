@@ -75,6 +75,10 @@ pub(super) struct KeyPickerDialogPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for KeyPickerDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for KeyPickerDialogPresentation {
     type Model = KeyPickerDialogModel;
 }

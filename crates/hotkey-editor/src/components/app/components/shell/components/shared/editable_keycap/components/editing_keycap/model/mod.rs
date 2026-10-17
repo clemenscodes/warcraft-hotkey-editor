@@ -14,6 +14,10 @@ impl From<&EditingKeycapView> for EditingKeycapModel {
     }
 }
 
+impl ddd::Layered for EditingKeycapModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EditingKeycapModel {
     type View = EditingKeycapView;
 }

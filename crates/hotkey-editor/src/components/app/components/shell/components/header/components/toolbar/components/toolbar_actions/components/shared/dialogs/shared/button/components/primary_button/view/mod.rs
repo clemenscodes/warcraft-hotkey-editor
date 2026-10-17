@@ -6,4 +6,8 @@ pub struct PrimaryButtonView {
     pub label: String,
 }
 
+impl ddd::Layered for PrimaryButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PrimaryButtonView {}

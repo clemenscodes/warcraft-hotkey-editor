@@ -93,6 +93,10 @@ impl From<&HotkeyOverrideCardView> for HotkeyOverrideCardModel {
     }
 }
 
+impl ddd::Layered for HotkeyOverrideCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyOverrideCardModel {
     type View = HotkeyOverrideCardView;
 }

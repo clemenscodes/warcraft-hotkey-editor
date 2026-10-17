@@ -14,6 +14,10 @@ impl From<&UnresolvedMoveListView> for UnresolvedMoveListModel {
     }
 }
 
+impl ddd::Layered for UnresolvedMoveListModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnresolvedMoveListModel {
     type View = UnresolvedMoveListView;
 }

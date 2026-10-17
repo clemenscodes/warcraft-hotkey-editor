@@ -11,4 +11,8 @@ pub struct UnitCommandGridsView {
     pub research_menu_slots: Option<Rc<[GridSlotId]>>,
 }
 
+impl ddd::Layered for UnitCommandGridsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitCommandGridsView {}

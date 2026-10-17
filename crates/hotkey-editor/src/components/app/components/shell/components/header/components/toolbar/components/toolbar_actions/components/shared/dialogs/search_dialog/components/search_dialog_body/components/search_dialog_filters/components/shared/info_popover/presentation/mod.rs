@@ -29,6 +29,10 @@ pub(super) fn use_info_popover(props: &InfoPopoverModel) -> InfoPopoverPresentat
     }
 }
 
+impl ddd::Layered for InfoPopoverPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for InfoPopoverPresentation {
     type Model = InfoPopoverModel;
 }

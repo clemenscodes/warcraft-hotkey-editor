@@ -16,6 +16,10 @@ impl From<&ConflictMultiStackView> for ConflictMultiStackModel {
     }
 }
 
+impl ddd::Layered for ConflictMultiStackModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictMultiStackModel {
     type View = ConflictMultiStackView;
 }

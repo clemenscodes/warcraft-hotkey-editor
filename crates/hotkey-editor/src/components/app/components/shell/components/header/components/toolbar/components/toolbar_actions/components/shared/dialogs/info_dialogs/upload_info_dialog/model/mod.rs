@@ -20,6 +20,10 @@ impl From<&UploadInfoDialogView> for UploadInfoDialogModel {
     }
 }
 
+impl ddd::Layered for UploadInfoDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UploadInfoDialogModel {
     type View = UploadInfoDialogView;
 }

@@ -158,6 +158,10 @@ pub(super) fn use_system_key_picker(
     }
 }
 
+impl ddd::Layered for SystemKeyPickerDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for SystemKeyPickerDialogPresentation {
     type Model = SystemKeyPickerDialogModel;
 }

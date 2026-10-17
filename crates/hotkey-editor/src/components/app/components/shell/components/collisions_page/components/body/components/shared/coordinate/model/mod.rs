@@ -14,6 +14,10 @@ impl From<&CoordinateView> for CoordinateModel {
     }
 }
 
+impl ddd::Layered for CoordinateModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CoordinateModel {
     type View = CoordinateView;
 }

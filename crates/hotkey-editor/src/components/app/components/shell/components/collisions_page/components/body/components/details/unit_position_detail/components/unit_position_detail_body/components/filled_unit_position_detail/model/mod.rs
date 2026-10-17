@@ -14,6 +14,10 @@ impl From<&FilledUnitPositionDetailView> for FilledUnitPositionDetailModel {
     }
 }
 
+impl ddd::Layered for FilledUnitPositionDetailModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FilledUnitPositionDetailModel {
     type View = FilledUnitPositionDetailView;
 }

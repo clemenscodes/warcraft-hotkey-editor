@@ -20,6 +20,10 @@ impl From<&SearchDialogView> for SearchDialogModel {
     }
 }
 
+impl ddd::Layered for SearchDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchDialogModel {
     type View = SearchDialogView;
 }

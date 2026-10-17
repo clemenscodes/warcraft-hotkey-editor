@@ -14,6 +14,10 @@ impl From<&CollisionKindNavView> for CollisionKindNavModel {
     }
 }
 
+impl ddd::Layered for CollisionKindNavModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionKindNavModel {
     type View = CollisionKindNavView;
 }

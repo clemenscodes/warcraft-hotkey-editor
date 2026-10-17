@@ -13,6 +13,10 @@ impl From<&HelpDismissView> for HelpDismissModel {
     }
 }
 
+impl ddd::Layered for HelpDismissModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpDismissModel {
     type View = HelpDismissView;
 }

@@ -24,6 +24,10 @@ impl From<&HeroLevelTriggerView> for HeroLevelTriggerModel {
     }
 }
 
+impl ddd::Layered for HeroLevelTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HeroLevelTriggerModel {
     type View = HeroLevelTriggerView;
 }

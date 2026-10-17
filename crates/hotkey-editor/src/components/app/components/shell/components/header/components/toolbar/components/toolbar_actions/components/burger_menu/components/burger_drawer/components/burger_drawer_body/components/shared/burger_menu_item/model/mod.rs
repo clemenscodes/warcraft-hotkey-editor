@@ -45,6 +45,10 @@ impl From<&BurgerMenuItemView> for BurgerMenuItemModel {
     }
 }
 
+impl ddd::Layered for BurgerMenuItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerMenuItemModel {
     type View = BurgerMenuItemView;
 }

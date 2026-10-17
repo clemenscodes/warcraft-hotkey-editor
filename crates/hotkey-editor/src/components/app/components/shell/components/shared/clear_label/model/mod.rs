@@ -14,6 +14,10 @@ impl From<&ClearLabelView> for ClearLabelModel {
     }
 }
 
+impl ddd::Layered for ClearLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ClearLabelModel {
     type View = ClearLabelView;
 }

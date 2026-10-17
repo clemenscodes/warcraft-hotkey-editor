@@ -8,4 +8,8 @@ pub struct SectionTabBodyView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for SectionTabBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SectionTabBodyView {}

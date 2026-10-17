@@ -17,6 +17,10 @@ impl From<&EditableKeycapView> for EditableKeycapModel {
     }
 }
 
+impl ddd::Layered for EditableKeycapModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EditableKeycapModel {
     type View = EditableKeycapView;
 }

@@ -4,4 +4,8 @@ pub struct FollowerIconView {
     pub alt: String,
 }
 
+impl ddd::Layered for FollowerIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FollowerIconView {}

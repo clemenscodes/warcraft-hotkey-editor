@@ -20,6 +20,10 @@ pub(super) fn use_intelligence_row(props: &IntelligenceRowModel) -> Intelligence
     }
 }
 
+impl ddd::Layered for IntelligenceRowPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for IntelligenceRowPresentation {
     type Model = IntelligenceRowModel;
 }

@@ -14,6 +14,10 @@ impl From<&HumanPagerCardThemeView> for HumanPagerCardThemeModel {
     }
 }
 
+impl ddd::Layered for HumanPagerCardThemeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HumanPagerCardThemeModel {
     type View = HumanPagerCardThemeView;
 }

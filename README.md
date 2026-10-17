@@ -102,8 +102,8 @@ The image pins the same tool versions as the Nix dev shell:
 | Tool               | Version          |
 | ------------------ | ---------------- |
 | Rust               | 1.96.1           |
-| `dioxus-cli`       | 0.7.9            |
-| `wasm-bindgen-cli` | 0.2.126          |
+| `dioxus-cli`       | 0.7.10           |
+| `wasm-bindgen-cli` | 0.2.129          |
 | Tailwind CSS       | v4.3.0           |
 | Node.js / pnpm     | 24.15.0 / 11.0.9 |
 
@@ -128,8 +128,8 @@ This path is not supported on Windows. On Linux or macOS, you need
 matching local versions of:
 
 - Rust with the `wasm32-unknown-unknown` target
-- `dioxus-cli` 0.7.9
-- `wasm-bindgen-cli` 0.2.126
+- `dioxus-cli` 0.7.10
+- `wasm-bindgen-cli` 0.2.129
 - Tailwind CSS v4
 - binaryen / `wasm-opt`
 - Node.js 24.15.0 and pnpm 11.0.9

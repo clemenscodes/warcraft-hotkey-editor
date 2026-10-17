@@ -6,4 +6,8 @@ pub struct IdleHeroLevelOptionView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for IdleHeroLevelOptionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleHeroLevelOptionView {}

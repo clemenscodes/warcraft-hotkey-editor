@@ -5,4 +5,8 @@ pub struct TransitionColumnView {
     pub placements: Vec<MiniGridPlacement>,
 }
 
+impl ddd::Layered for TransitionColumnView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TransitionColumnView {}

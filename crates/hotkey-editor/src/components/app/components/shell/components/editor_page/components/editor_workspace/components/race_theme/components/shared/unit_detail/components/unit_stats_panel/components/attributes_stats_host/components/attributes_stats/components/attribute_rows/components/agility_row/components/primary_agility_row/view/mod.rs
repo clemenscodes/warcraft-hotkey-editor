@@ -7,4 +7,8 @@ pub struct PrimaryAgilityRowView {
     pub label: String,
 }
 
+impl ddd::Layered for PrimaryAgilityRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PrimaryAgilityRowView {}

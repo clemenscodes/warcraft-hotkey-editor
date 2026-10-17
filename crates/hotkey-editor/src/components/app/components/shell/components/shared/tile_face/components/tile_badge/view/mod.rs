@@ -7,4 +7,8 @@ pub struct TileBadgeView {
     pub state: HotkeyBadgeState,
 }
 
+impl ddd::Layered for TileBadgeView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TileBadgeView {}

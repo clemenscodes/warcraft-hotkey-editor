@@ -14,6 +14,10 @@ impl From<&AttackSpeedRowView> for AttackSpeedRowModel {
     }
 }
 
+impl ddd::Layered for AttackSpeedRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AttackSpeedRowModel {
     type View = AttackSpeedRowView;
 }

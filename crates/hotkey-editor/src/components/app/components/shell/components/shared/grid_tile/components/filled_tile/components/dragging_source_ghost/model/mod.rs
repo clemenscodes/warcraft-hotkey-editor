@@ -13,6 +13,10 @@ impl From<&DraggingSourceGhostView> for DraggingSourceGhostModel {
     }
 }
 
+impl ddd::Layered for DraggingSourceGhostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DraggingSourceGhostModel {
     type View = DraggingSourceGhostView;
 }

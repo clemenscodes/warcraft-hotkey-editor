@@ -15,6 +15,10 @@ impl From<&SecondaryButtonView> for SecondaryButtonModel {
     }
 }
 
+impl ddd::Layered for SecondaryButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SecondaryButtonModel {
     type View = SecondaryButtonView;
 }

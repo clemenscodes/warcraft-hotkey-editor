@@ -9,4 +9,8 @@ pub struct FramedIconView {
     pub placeholder: bool,
 }
 
+impl ddd::Layered for FramedIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FramedIconView {}

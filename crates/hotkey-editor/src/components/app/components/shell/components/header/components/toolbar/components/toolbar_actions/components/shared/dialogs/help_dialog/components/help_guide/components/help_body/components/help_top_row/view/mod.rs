@@ -5,4 +5,8 @@ pub struct HelpTopRowView {
     pub content: HelpContent,
 }
 
+impl ddd::Layered for HelpTopRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpTopRowView {}

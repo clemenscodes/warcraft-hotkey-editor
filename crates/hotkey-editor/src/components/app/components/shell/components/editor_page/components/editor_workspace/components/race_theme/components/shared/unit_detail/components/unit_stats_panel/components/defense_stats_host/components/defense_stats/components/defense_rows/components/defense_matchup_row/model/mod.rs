@@ -14,6 +14,10 @@ impl From<&DefenseMatchupRowView> for DefenseMatchupRowModel {
     }
 }
 
+impl ddd::Layered for DefenseMatchupRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DefenseMatchupRowModel {
     type View = DefenseMatchupRowView;
 }

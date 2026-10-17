@@ -14,6 +14,10 @@ impl From<&UnbindableNoteView> for UnbindableNoteModel {
     }
 }
 
+impl ddd::Layered for UnbindableNoteModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnbindableNoteModel {
     type View = UnbindableNoteView;
 }

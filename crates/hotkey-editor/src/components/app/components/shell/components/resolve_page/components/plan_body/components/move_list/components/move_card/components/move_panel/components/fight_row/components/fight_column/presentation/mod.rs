@@ -48,6 +48,10 @@ pub(super) fn use_fight_column(props: &FightColumnModel) -> FightColumnPresentat
     }
 }
 
+impl ddd::Layered for FightColumnPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for FightColumnPresentation {
     type Model = FightColumnModel;
 }

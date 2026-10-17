@@ -28,6 +28,10 @@ impl From<&ConflictAbilityView> for ConflictAbilityModel {
     }
 }
 
+impl ddd::Layered for ConflictAbilityModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictAbilityModel {
     type View = ConflictAbilityView;
 }

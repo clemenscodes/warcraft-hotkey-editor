@@ -13,6 +13,10 @@ impl From<&BurgerMenuGroupView> for BurgerMenuGroupModel {
     }
 }
 
+impl ddd::Layered for BurgerMenuGroupModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerMenuGroupModel {
     type View = BurgerMenuGroupView;
 }

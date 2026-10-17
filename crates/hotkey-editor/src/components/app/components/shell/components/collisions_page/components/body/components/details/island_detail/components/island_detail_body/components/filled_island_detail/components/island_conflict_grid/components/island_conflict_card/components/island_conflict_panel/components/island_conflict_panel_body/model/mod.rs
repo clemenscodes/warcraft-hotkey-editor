@@ -21,6 +21,10 @@ impl From<&IslandConflictPanelBodyView> for IslandConflictPanelBodyModel {
     }
 }
 
+impl ddd::Layered for IslandConflictPanelBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictPanelBodyModel {
     type View = IslandConflictPanelBodyView;
 }

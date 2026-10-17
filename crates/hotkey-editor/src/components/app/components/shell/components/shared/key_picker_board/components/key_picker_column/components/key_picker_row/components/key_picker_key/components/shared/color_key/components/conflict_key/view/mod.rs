@@ -13,4 +13,8 @@ pub struct ConflictKeyView {
     pub tooltip_anchor: TooltipAnchor,
 }
 
+impl ddd::Layered for ConflictKeyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictKeyView {}

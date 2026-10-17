@@ -7,4 +7,8 @@ pub struct InactiveCollisionKindTabView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for InactiveCollisionKindTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InactiveCollisionKindTabView {}

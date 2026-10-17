@@ -13,6 +13,10 @@ impl From<&UnitNameView> for UnitNameModel {
     }
 }
 
+impl ddd::Layered for UnitNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitNameModel {
     type View = UnitNameView;
 }

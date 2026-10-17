@@ -6,4 +6,8 @@ pub struct PreviewHeadedGridView {
     pub tiles: [RenderedTile; COMMAND_GRID_TILE_COUNT],
 }
 
+impl ddd::Layered for PreviewHeadedGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PreviewHeadedGridView {}

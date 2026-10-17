@@ -13,6 +13,10 @@ impl From<&RaceScopeChevronView> for RaceScopeChevronModel {
     }
 }
 
+impl ddd::Layered for RaceScopeChevronModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopeChevronModel {
     type View = RaceScopeChevronView;
 }

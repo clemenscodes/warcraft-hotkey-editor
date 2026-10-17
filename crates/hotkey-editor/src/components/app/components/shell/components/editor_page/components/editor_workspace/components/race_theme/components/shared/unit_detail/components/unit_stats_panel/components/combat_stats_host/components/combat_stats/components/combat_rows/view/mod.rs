@@ -10,4 +10,8 @@ pub struct CombatRowsView {
     pub attack_type: AttackType,
 }
 
+impl ddd::Layered for CombatRowsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CombatRowsView {}

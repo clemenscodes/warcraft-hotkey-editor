@@ -14,6 +14,10 @@ impl From<&ConflictHotkeyBadgeView> for ConflictHotkeyBadgeModel {
     }
 }
 
+impl ddd::Layered for ConflictHotkeyBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictHotkeyBadgeModel {
     type View = ConflictHotkeyBadgeView;
 }

@@ -14,6 +14,10 @@ impl From<&ClosedBreadcrumbsMenuView> for ClosedBreadcrumbsMenuModel {
     }
 }
 
+impl ddd::Layered for ClosedBreadcrumbsMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ClosedBreadcrumbsMenuModel {
     type View = ClosedBreadcrumbsMenuView;
 }

@@ -13,6 +13,10 @@ pub(super) struct TemplatesDialogPresentation {
     pub(super) cards: Vec<TemplateCardView>,
 }
 
+impl ddd::Layered for TemplatesDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for TemplatesDialogPresentation {
     type Model = TemplatesDialogModel;
 }

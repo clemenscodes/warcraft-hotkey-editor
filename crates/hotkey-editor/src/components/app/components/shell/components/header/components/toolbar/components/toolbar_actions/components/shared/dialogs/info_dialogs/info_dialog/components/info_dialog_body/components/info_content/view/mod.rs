@@ -4,4 +4,8 @@ pub struct InfoContentView {
     pub warning: Option<&'static str>,
 }
 
+impl ddd::Layered for InfoContentView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InfoContentView {}

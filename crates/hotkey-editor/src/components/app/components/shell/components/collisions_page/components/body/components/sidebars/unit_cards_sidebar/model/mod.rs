@@ -16,6 +16,10 @@ impl<Conflict: Clone + PartialEq + 'static> From<&UnitCardsSidebarView<Conflict>
     }
 }
 
+impl<Conflict: Clone + PartialEq + 'static> ddd::Layered for UnitCardsSidebarModel<Conflict> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Conflict: Clone + PartialEq + 'static> ddd::Model for UnitCardsSidebarModel<Conflict> {
     type View = UnitCardsSidebarView<Conflict>;
 }

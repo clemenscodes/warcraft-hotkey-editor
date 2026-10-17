@@ -6,4 +6,8 @@ pub struct UploadInfoDialogView {
     pub on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for UploadInfoDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UploadInfoDialogView {}

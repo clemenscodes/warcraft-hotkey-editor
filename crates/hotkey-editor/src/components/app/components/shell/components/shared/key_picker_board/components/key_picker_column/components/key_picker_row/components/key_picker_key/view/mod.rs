@@ -8,4 +8,8 @@ pub struct KeyPickerKeyView {
     pub on_pick: EventHandler<KeyCode>,
 }
 
+impl ddd::Layered for KeyPickerKeyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for KeyPickerKeyView {}

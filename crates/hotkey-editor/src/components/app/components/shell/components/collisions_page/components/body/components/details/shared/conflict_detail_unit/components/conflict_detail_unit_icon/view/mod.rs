@@ -4,4 +4,8 @@ pub struct ConflictDetailUnitIconView {
     pub alt: String,
 }
 
+impl ddd::Layered for ConflictDetailUnitIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictDetailUnitIconView {}

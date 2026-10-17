@@ -15,4 +15,8 @@ pub struct WideKeySlotView {
     pub tooltip_anchor: TooltipAnchor,
 }
 
+impl ddd::Layered for WideKeySlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for WideKeySlotView {}

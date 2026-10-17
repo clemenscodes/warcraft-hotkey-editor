@@ -14,6 +14,10 @@ impl From<&SystemSlotLabelView> for SystemSlotLabelModel {
     }
 }
 
+impl ddd::Layered for SystemSlotLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemSlotLabelModel {
     type View = SystemSlotLabelView;
 }

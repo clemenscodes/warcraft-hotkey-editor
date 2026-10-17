@@ -20,6 +20,10 @@ impl From<&PlanCountsView> for PlanCountsModel {
     }
 }
 
+impl ddd::Layered for PlanCountsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlanCountsModel {
     type View = PlanCountsView;
 }

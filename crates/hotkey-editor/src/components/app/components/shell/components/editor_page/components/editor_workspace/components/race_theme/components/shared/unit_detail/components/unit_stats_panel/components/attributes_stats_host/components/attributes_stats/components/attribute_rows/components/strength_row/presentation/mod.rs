@@ -20,6 +20,10 @@ pub(super) fn use_strength_row(props: &StrengthRowModel) -> StrengthRowPresentat
     }
 }
 
+impl ddd::Layered for StrengthRowPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for StrengthRowPresentation {
     type Model = StrengthRowModel;
 }

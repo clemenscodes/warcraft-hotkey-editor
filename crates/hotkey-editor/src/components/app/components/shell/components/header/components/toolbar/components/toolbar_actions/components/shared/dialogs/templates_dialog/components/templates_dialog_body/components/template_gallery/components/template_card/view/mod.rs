@@ -9,4 +9,8 @@ pub struct TemplateCardView {
     pub on_apply: EventHandler<()>,
 }
 
+impl ddd::Layered for TemplateCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TemplateCardView {}

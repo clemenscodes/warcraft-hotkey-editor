@@ -14,6 +14,10 @@ impl From<&MatchupLabelView> for MatchupLabelModel {
     }
 }
 
+impl ddd::Layered for MatchupLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MatchupLabelModel {
     type View = MatchupLabelView;
 }

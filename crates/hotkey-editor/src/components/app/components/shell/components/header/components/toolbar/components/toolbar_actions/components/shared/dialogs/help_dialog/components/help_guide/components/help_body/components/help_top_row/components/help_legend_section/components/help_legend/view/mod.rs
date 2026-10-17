@@ -5,4 +5,8 @@ pub struct HelpLegendView {
     pub rows: &'static [HelpLegendEntry],
 }
 
+impl ddd::Layered for HelpLegendView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpLegendView {}

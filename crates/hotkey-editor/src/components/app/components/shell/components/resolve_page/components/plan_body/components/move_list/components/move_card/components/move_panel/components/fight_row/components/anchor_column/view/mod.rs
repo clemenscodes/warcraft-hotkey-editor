@@ -5,4 +5,8 @@ pub struct AnchorColumnView {
     pub move_view: MoveView,
 }
 
+impl ddd::Layered for AnchorColumnView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AnchorColumnView {}

@@ -13,6 +13,10 @@ impl From<&ResolvePageView> for ResolvePageModel {
     }
 }
 
+impl ddd::Layered for ResolvePageModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolvePageModel {
     type View = ResolvePageView;
 }

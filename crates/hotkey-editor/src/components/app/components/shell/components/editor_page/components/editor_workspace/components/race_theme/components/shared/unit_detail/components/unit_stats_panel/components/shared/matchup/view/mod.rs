@@ -9,4 +9,8 @@ pub struct MatchupView {
     pub strength: MatchupStrength,
 }
 
+impl ddd::Layered for MatchupView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MatchupView {}

@@ -7,4 +7,8 @@ pub struct ToastListItemView {
     pub on_remove: Callback<usize>,
 }
 
+impl ddd::Layered for ToastListItemView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ToastListItemView {}

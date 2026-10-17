@@ -87,6 +87,10 @@ pub(super) fn use_slot_button(props: &SlotButtonModel) -> SlotButtonPresentation
     }
 }
 
+impl ddd::Layered for SlotButtonPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for SlotButtonPresentation {
     type Model = SlotButtonModel;
 }

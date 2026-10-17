@@ -13,6 +13,10 @@ impl From<&UnresolvedTitleView> for UnresolvedTitleModel {
     }
 }
 
+impl ddd::Layered for UnresolvedTitleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnresolvedTitleModel {
     type View = UnresolvedTitleView;
 }

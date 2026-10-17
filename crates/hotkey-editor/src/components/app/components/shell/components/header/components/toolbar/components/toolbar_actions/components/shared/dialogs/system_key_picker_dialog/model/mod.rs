@@ -35,6 +35,10 @@ impl From<&SystemKeyPickerDialogView> for SystemKeyPickerDialogModel {
     }
 }
 
+impl ddd::Layered for SystemKeyPickerDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemKeyPickerDialogModel {
     type View = SystemKeyPickerDialogView;
 }

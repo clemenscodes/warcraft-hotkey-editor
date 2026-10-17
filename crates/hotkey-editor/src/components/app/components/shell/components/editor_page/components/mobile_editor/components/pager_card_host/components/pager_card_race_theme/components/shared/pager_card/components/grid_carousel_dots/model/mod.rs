@@ -20,6 +20,10 @@ impl From<&GridCarouselDotsView> for GridCarouselDotsModel {
     }
 }
 
+impl ddd::Layered for GridCarouselDotsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GridCarouselDotsModel {
     type View = GridCarouselDotsView;
 }

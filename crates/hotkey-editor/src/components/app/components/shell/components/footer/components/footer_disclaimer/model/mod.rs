@@ -13,6 +13,10 @@ impl From<&FooterDisclaimerView> for FooterDisclaimerModel {
     }
 }
 
+impl ddd::Layered for FooterDisclaimerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FooterDisclaimerModel {
     type View = FooterDisclaimerView;
 }

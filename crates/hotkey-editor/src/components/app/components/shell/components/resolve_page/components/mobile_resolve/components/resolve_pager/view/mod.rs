@@ -8,4 +8,8 @@ pub struct ResolvePagerView {
     pub unresolved: Vec<UnresolvedView>,
 }
 
+impl ddd::Layered for ResolvePagerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ResolvePagerView {}

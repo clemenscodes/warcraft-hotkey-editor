@@ -20,6 +20,10 @@ impl From<&HelpDialogView> for HelpDialogModel {
     }
 }
 
+impl ddd::Layered for HelpDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpDialogModel {
     type View = HelpDialogView;
 }

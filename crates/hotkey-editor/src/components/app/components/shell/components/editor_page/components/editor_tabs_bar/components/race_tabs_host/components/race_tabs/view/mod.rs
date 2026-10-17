@@ -7,4 +7,8 @@ pub struct RaceTabsView {
     pub on_select: EventHandler<Race>,
 }
 
+impl ddd::Layered for RaceTabsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for RaceTabsView {}

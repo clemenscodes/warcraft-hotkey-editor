@@ -11,4 +11,8 @@ pub struct AttentionSurfaceView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for AttentionSurfaceView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AttentionSurfaceView {}

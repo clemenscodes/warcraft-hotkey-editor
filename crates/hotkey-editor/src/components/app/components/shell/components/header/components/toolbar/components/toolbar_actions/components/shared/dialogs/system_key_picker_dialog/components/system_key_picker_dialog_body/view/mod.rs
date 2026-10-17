@@ -12,6 +12,10 @@ pub struct SystemKeyPickerDialogBodyView {
     pub on_close: EventHandler<()>,
 }
 
+impl ddd::Layered for SystemKeyPickerDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SystemKeyPickerDialogBodyView {}
 
 impl Render for SystemKeyPickerDialogBodyView {

@@ -13,6 +13,10 @@ impl From<&AbilityFillView> for AbilityFillModel {
     }
 }
 
+impl ddd::Layered for AbilityFillModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AbilityFillModel {
     type View = AbilityFillView;
 }

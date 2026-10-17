@@ -4,4 +4,8 @@ pub struct TilePlainIconView {
     pub alt: String,
 }
 
+impl ddd::Layered for TilePlainIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TilePlainIconView {}

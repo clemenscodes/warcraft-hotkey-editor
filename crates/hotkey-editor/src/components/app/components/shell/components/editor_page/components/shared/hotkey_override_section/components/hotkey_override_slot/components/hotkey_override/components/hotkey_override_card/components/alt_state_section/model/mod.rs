@@ -35,6 +35,10 @@ impl From<&AltStateSectionView> for AltStateSectionModel {
     }
 }
 
+impl ddd::Layered for AltStateSectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AltStateSectionModel {
     type View = AltStateSectionView;
 }

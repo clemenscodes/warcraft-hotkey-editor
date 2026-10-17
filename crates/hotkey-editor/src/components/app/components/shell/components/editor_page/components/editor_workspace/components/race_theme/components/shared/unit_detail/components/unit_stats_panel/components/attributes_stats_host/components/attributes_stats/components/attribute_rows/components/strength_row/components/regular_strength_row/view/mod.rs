@@ -7,4 +7,8 @@ pub struct RegularStrengthRowView {
     pub label: String,
 }
 
+impl ddd::Layered for RegularStrengthRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for RegularStrengthRowView {}

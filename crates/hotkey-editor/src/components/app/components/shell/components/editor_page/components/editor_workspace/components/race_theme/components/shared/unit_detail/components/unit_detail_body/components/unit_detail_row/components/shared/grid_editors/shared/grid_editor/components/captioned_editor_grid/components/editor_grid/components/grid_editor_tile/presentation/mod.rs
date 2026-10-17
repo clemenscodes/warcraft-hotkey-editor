@@ -102,6 +102,10 @@ impl From<&GridEditorTileModel> for EditorTileChrome {
     }
 }
 
+impl ddd::Layered for EditorTileChrome {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for EditorTileChrome {
     type Model = GridEditorTileModel;
 }

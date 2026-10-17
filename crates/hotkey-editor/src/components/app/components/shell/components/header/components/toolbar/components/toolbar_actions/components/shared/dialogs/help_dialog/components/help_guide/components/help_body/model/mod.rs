@@ -14,6 +14,10 @@ impl From<&HelpBodyView> for HelpBodyModel {
     }
 }
 
+impl ddd::Layered for HelpBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpBodyModel {
     type View = HelpBodyView;
 }

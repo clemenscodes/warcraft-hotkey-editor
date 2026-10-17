@@ -7,4 +7,8 @@ pub struct UnitCategoryHeadingView {
     pub on_toggle: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for UnitCategoryHeadingView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitCategoryHeadingView {}

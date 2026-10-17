@@ -87,7 +87,7 @@ Read this alongside:
   browser and stepped `page.mouse.move(…, {steps})`, not `dragTo` or JS-synthetic
   events (`setPointerCapture` no-ops for synthetic pointers).
 
-- **Dioxus `ddd::Service::snapshot` must `peek()`, not `read()`.** A `read()` inside a
+- **Dioxus `ddd::SynchronousService::snapshot` must `peek()`, not `read()`.** A `read()` inside a
   snapshot whose commit writes the same signal (in a `use_effect`) is an infinite
   boot render loop (blank page). Compile/unit checks do not catch it.
 

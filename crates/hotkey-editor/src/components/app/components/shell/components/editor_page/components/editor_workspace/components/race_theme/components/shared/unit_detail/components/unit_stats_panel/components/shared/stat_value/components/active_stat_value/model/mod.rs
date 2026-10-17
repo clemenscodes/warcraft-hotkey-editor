@@ -14,6 +14,10 @@ impl From<&ActiveStatValueView> for ActiveStatValueModel {
     }
 }
 
+impl ddd::Layered for ActiveStatValueModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveStatValueModel {
     type View = ActiveStatValueView;
 }

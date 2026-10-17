@@ -5,4 +5,8 @@ pub struct ConflictPanelView {
     pub(crate) model: ConflictCardModel,
 }
 
+impl ddd::Layered for ConflictPanelView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictPanelView {}

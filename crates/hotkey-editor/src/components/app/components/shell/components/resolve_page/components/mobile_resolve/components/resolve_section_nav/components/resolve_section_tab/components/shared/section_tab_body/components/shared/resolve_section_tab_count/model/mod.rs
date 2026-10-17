@@ -13,6 +13,10 @@ impl From<&ResolveSectionTabCountView> for ResolveSectionTabCountModel {
     }
 }
 
+impl ddd::Layered for ResolveSectionTabCountModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolveSectionTabCountModel {
     type View = ResolveSectionTabCountView;
 }

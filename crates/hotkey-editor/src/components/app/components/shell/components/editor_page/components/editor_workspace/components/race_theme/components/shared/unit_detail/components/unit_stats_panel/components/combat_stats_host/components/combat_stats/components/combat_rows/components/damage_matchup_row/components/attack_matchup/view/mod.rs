@@ -6,4 +6,8 @@ pub struct AttackMatchupView {
     pub attack_type: AttackType,
 }
 
+impl ddd::Layered for AttackMatchupView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AttackMatchupView {}

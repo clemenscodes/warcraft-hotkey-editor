@@ -4,4 +4,8 @@ pub struct CarrierCardIconView {
     pub alt: String,
 }
 
+impl ddd::Layered for CarrierCardIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CarrierCardIconView {}

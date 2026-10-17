@@ -14,6 +14,10 @@ impl From<&UnresolvedSectionView> for UnresolvedSectionModel {
     }
 }
 
+impl ddd::Layered for UnresolvedSectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnresolvedSectionModel {
     type View = UnresolvedSectionView;
 }

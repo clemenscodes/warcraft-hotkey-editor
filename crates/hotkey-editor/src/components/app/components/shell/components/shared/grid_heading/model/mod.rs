@@ -13,6 +13,10 @@ impl From<&GridHeadingView> for GridHeadingModel {
     }
 }
 
+impl ddd::Layered for GridHeadingModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GridHeadingModel {
     type View = GridHeadingView;
 }

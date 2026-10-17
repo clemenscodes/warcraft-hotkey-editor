@@ -12,6 +12,10 @@ pub struct HotkeyUpgradePositionPickerBodyView {
     pub picker_slots: Rc<[GridSlotId]>,
 }
 
+impl ddd::Layered for HotkeyUpgradePositionPickerBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyUpgradePositionPickerBodyView {}
 
 impl Render for HotkeyUpgradePositionPickerBodyView {

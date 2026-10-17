@@ -14,6 +14,10 @@ impl From<&PagerCardDetailButtonView> for PagerCardDetailButtonModel {
     }
 }
 
+impl ddd::Layered for PagerCardDetailButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PagerCardDetailButtonModel {
     type View = PagerCardDetailButtonView;
 }

@@ -33,6 +33,10 @@ impl From<&AttributeRowsView> for AttributeRowsModel {
     }
 }
 
+impl ddd::Layered for AttributeRowsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AttributeRowsModel {
     type View = AttributeRowsView;
 }

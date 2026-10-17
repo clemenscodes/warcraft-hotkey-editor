@@ -14,6 +14,10 @@ impl From<&HotkeyAltPositionPickerExplainerView> for HotkeyAltPositionPickerExpl
     }
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerExplainerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyAltPositionPickerExplainerModel {
     type View = HotkeyAltPositionPickerExplainerView;
 }

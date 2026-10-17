@@ -10,6 +10,10 @@ pub(super) fn use_help_guide() -> HelpGuidePresentation {
     HelpGuidePresentation { content }
 }
 
+impl ddd::Layered for HelpGuidePresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for HelpGuidePresentation {
     type Model = HelpGuideModel;
 }

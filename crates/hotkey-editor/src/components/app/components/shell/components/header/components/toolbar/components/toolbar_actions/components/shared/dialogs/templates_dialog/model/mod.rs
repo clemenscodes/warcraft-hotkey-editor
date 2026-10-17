@@ -20,6 +20,10 @@ impl From<&TemplatesDialogView> for TemplatesDialogModel {
     }
 }
 
+impl ddd::Layered for TemplatesDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TemplatesDialogModel {
     type View = TemplatesDialogView;
 }

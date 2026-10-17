@@ -27,6 +27,10 @@ impl From<&ResolveSectionTabView> for ResolveSectionTabModel {
     }
 }
 
+impl ddd::Layered for ResolveSectionTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolveSectionTabModel {
     type View = ResolveSectionTabView;
 }

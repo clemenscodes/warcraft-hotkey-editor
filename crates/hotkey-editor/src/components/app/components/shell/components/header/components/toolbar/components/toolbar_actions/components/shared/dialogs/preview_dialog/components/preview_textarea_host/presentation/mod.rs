@@ -13,6 +13,10 @@ pub(super) fn use_preview_textarea_host() -> PreviewTextareaHostPresentation {
     PreviewTextareaHostPresentation { text }
 }
 
+impl ddd::Layered for PreviewTextareaHostPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for PreviewTextareaHostPresentation {
     type Model = PreviewTextareaHostModel;
 }

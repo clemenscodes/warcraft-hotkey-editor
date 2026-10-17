@@ -40,6 +40,10 @@ impl From<&MobileResolveView> for MobileResolveModel {
     }
 }
 
+impl ddd::Layered for MobileResolveModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MobileResolveModel {
     type View = MobileResolveView;
 }

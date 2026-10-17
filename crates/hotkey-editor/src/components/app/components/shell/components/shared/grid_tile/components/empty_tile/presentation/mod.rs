@@ -24,6 +24,10 @@ impl From<EmptyTileModel> for EmptyTilePresentation {
     }
 }
 
+impl ddd::Layered for EmptyTilePresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for EmptyTilePresentation {
     type Model = EmptyTileModel;
 }

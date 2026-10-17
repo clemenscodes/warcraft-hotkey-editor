@@ -24,6 +24,10 @@ impl From<&ConflictMetaView> for ConflictMetaModel {
     }
 }
 
+impl ddd::Layered for ConflictMetaModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictMetaModel {
     type View = ConflictMetaView;
 }

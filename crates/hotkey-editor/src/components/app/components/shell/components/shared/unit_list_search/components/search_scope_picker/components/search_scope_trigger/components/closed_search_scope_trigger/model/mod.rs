@@ -15,6 +15,10 @@ impl From<&ClosedSearchScopeTriggerView> for ClosedSearchScopeTriggerModel {
     }
 }
 
+impl ddd::Layered for ClosedSearchScopeTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ClosedSearchScopeTriggerModel {
     type View = ClosedSearchScopeTriggerView;
 }

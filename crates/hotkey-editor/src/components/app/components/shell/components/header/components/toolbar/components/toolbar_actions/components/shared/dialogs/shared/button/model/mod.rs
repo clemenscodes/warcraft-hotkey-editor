@@ -25,6 +25,10 @@ impl From<&ButtonView> for ButtonModel {
     }
 }
 
+impl ddd::Layered for ButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ButtonModel {
     type View = ButtonView;
 }

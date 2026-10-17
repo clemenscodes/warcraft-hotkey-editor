@@ -14,6 +14,10 @@ impl From<&CollisionCardLeadingView> for CollisionCardLeadingModel {
     }
 }
 
+impl ddd::Layered for CollisionCardLeadingModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionCardLeadingModel {
     type View = CollisionCardLeadingView;
 }

@@ -6,4 +6,8 @@ pub struct ToastCloseHostView {
     pub on_remove: Callback<usize>,
 }
 
+impl ddd::Layered for ToastCloseHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ToastCloseHostView {}

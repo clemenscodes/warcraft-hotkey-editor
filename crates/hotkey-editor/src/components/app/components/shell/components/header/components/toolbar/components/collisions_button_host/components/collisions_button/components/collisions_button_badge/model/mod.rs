@@ -13,6 +13,10 @@ impl From<&CollisionsButtonBadgeView> for CollisionsButtonBadgeModel {
     }
 }
 
+impl ddd::Layered for CollisionsButtonBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionsButtonBadgeModel {
     type View = CollisionsButtonBadgeView;
 }

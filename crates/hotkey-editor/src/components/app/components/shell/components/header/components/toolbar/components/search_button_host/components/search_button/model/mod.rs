@@ -20,6 +20,10 @@ impl From<&SearchButtonView> for SearchButtonModel {
     }
 }
 
+impl ddd::Layered for SearchButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchButtonModel {
     type View = SearchButtonView;
 }

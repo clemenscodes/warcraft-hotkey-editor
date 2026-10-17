@@ -31,6 +31,10 @@ impl From<&SystemHotkeysCategoryTabView> for SystemHotkeysCategoryTabModel {
     }
 }
 
+impl ddd::Layered for SystemHotkeysCategoryTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysCategoryTabModel {
     type View = SystemHotkeysCategoryTabView;
 }

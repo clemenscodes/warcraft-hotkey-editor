@@ -7,4 +7,8 @@ pub struct CaptionedEditorGridView {
     pub(crate) tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
 }
 
+impl ddd::Layered for CaptionedEditorGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CaptionedEditorGridView {}

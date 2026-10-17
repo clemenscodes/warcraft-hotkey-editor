@@ -14,6 +14,10 @@ impl From<&FilterSwitchView> for FilterSwitchModel {
     }
 }
 
+impl ddd::Layered for FilterSwitchModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FilterSwitchModel {
     type View = FilterSwitchView;
 }

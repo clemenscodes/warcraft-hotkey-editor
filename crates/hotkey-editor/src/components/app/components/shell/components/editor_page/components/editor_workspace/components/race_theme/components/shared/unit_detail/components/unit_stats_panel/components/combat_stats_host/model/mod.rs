@@ -14,6 +14,10 @@ impl From<&CombatStatsHostView> for CombatStatsHostModel {
     }
 }
 
+impl ddd::Layered for CombatStatsHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CombatStatsHostModel {
     type View = CombatStatsHostView;
 }

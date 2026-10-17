@@ -24,6 +24,10 @@ impl From<&RegularStrengthRowView> for RegularStrengthRowModel {
     }
 }
 
+impl ddd::Layered for RegularStrengthRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RegularStrengthRowModel {
     type View = RegularStrengthRowView;
 }

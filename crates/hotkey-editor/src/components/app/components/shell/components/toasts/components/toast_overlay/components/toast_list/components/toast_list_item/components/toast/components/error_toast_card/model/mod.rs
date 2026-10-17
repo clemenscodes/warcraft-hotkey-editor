@@ -15,6 +15,10 @@ impl From<&ErrorToastCardView> for ErrorToastCardModel {
     }
 }
 
+impl ddd::Layered for ErrorToastCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ErrorToastCardModel {
     type View = ErrorToastCardView;
 }

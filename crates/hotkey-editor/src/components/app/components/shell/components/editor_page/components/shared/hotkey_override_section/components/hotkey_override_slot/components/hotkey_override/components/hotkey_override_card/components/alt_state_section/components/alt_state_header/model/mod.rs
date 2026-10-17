@@ -35,6 +35,10 @@ impl From<&AltStateHeaderView> for AltStateHeaderModel {
     }
 }
 
+impl ddd::Layered for AltStateHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AltStateHeaderModel {
     type View = AltStateHeaderView;
 }

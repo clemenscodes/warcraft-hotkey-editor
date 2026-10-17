@@ -13,6 +13,10 @@ impl From<&ConflictAbilityNameView> for ConflictAbilityNameModel {
     }
 }
 
+impl ddd::Layered for ConflictAbilityNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictAbilityNameModel {
     type View = ConflictAbilityNameView;
 }

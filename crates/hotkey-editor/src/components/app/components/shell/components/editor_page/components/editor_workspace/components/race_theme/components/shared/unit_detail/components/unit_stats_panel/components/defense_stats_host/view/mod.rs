@@ -9,4 +9,8 @@ pub struct DefenseStatsHostView {
     pub evasion: Evasion,
 }
 
+impl ddd::Layered for DefenseStatsHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for DefenseStatsHostView {}

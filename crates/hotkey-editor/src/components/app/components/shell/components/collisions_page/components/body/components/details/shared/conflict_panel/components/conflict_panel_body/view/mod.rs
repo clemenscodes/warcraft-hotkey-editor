@@ -9,6 +9,10 @@ pub struct ConflictPanelBodyView {
     pub(crate) models: Vec<ConflictCardModel>,
 }
 
+impl ddd::Layered for ConflictPanelBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictPanelBodyView {}
 
 impl Render for ConflictPanelBodyView {

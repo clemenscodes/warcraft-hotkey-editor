@@ -6,4 +6,8 @@ pub struct DialogHeaderView {
     pub on_close: EventHandler<()>,
 }
 
+impl ddd::Layered for DialogHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for DialogHeaderView {}

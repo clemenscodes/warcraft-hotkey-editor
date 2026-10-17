@@ -10,4 +10,8 @@ pub struct ConflictSlotView {
     pub dragging: bool,
 }
 
+impl ddd::Layered for ConflictSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictSlotView {}

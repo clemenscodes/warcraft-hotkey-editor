@@ -57,6 +57,10 @@ pub(super) fn use_hero_level_option(props: &HeroLevelOptionModel) -> HeroLevelOp
     HeroLevelOptionPresentation::from(inputs)
 }
 
+impl ddd::Layered for HeroLevelOptionPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for HeroLevelOptionPresentation {
     type Model = HeroLevelOptionModel;
 }

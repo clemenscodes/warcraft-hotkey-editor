@@ -5,4 +5,8 @@ pub struct UnitPositionPagerCardView {
     pub unit: UnitPositionUnitView,
 }
 
+impl ddd::Layered for UnitPositionPagerCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitPositionPagerCardView {}

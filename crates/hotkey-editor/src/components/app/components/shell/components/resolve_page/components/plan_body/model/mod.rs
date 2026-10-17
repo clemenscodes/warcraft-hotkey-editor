@@ -23,6 +23,10 @@ impl From<&PlanBodyView> for PlanBodyModel {
     }
 }
 
+impl ddd::Layered for PlanBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlanBodyModel {
     type View = PlanBodyView;
 }

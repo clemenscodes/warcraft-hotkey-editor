@@ -14,6 +14,10 @@ impl From<&IslandConflictCardView> for IslandConflictCardModel {
     }
 }
 
+impl ddd::Layered for IslandConflictCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictCardModel {
     type View = IslandConflictCardView;
 }

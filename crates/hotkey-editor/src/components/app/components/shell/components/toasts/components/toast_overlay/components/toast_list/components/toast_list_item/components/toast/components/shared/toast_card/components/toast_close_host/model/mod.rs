@@ -14,6 +14,10 @@ impl From<&ToastCloseHostView> for ToastCloseHostModel {
     }
 }
 
+impl ddd::Layered for ToastCloseHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ToastCloseHostModel {
     type View = ToastCloseHostView;
 }

@@ -14,6 +14,10 @@ impl From<&DragFollowerGhostView> for DragFollowerGhostModel {
     }
 }
 
+impl ddd::Layered for DragFollowerGhostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DragFollowerGhostModel {
     type View = DragFollowerGhostView;
 }

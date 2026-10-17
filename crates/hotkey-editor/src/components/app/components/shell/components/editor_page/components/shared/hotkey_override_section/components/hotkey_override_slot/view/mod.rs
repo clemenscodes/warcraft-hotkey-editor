@@ -7,4 +7,8 @@ pub struct HotkeyOverrideSlotView {
     pub active_container_slots: Rc<[GridSlotId]>,
 }
 
+impl ddd::Layered for HotkeyOverrideSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyOverrideSlotView {}

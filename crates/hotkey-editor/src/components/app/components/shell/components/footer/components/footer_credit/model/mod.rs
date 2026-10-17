@@ -15,6 +15,10 @@ impl From<&FooterCreditView> for FooterCreditModel {
     }
 }
 
+impl ddd::Layered for FooterCreditModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FooterCreditModel {
     type View = FooterCreditView;
 }

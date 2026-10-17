@@ -25,4 +25,8 @@ pub struct GridEditorTileView {
     pub ondoubleclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for GridEditorTileView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GridEditorTileView {}

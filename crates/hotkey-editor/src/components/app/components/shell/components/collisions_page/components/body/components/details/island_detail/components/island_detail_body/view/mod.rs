@@ -9,6 +9,10 @@ pub struct IslandDetailBodyView {
     pub islands: Vec<IslandView>,
 }
 
+impl ddd::Layered for IslandDetailBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandDetailBodyView {}
 
 impl Render for IslandDetailBodyView {

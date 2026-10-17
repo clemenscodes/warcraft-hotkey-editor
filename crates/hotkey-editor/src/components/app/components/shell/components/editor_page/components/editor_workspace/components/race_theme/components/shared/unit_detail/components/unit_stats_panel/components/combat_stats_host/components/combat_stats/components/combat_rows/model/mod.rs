@@ -31,6 +31,10 @@ impl From<&CombatRowsView> for CombatRowsModel {
     }
 }
 
+impl ddd::Layered for CombatRowsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CombatRowsModel {
     type View = CombatRowsView;
 }

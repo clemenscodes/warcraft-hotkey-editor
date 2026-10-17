@@ -35,6 +35,10 @@ impl From<&AttentionSurfaceView> for AttentionSurfaceModel {
     }
 }
 
+impl ddd::Layered for AttentionSurfaceModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AttentionSurfaceModel {
     type View = AttentionSurfaceView;
 }

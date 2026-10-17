@@ -13,6 +13,10 @@ impl From<&InfoWarningView> for InfoWarningModel {
     }
 }
 
+impl ddd::Layered for InfoWarningModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoWarningModel {
     type View = InfoWarningView;
 }

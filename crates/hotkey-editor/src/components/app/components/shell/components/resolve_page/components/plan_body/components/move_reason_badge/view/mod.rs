@@ -6,4 +6,8 @@ pub struct MoveReasonBadgeView {
     pub label: String,
 }
 
+impl ddd::Layered for MoveReasonBadgeView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MoveReasonBadgeView {}

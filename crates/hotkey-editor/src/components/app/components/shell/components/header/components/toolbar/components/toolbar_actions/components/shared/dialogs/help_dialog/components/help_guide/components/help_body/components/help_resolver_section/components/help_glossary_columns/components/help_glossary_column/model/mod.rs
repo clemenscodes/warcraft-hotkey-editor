@@ -14,6 +14,10 @@ impl From<&HelpGlossaryColumnView> for HelpGlossaryColumnModel {
     }
 }
 
+impl ddd::Layered for HelpGlossaryColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpGlossaryColumnModel {
     type View = HelpGlossaryColumnView;
 }

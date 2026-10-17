@@ -10,6 +10,10 @@ pub(super) struct PagerCardDetailTriggerPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for PagerCardDetailTriggerPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for PagerCardDetailTriggerPresentation {
     type Model = PagerCardDetailTriggerModel;
 }

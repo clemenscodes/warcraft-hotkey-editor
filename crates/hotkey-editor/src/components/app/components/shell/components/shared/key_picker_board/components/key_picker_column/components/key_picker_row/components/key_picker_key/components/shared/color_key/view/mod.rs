@@ -15,4 +15,8 @@ pub struct ColorKeyView {
     pub tooltip_anchor: TooltipAnchor,
 }
 
+impl ddd::Layered for ColorKeyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ColorKeyView {}

@@ -16,6 +16,10 @@ impl From<&UnitPositionConflictCardView> for UnitPositionConflictCardModel {
     }
 }
 
+impl ddd::Layered for UnitPositionConflictCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitPositionConflictCardModel {
     type View = UnitPositionConflictCardView;
 }

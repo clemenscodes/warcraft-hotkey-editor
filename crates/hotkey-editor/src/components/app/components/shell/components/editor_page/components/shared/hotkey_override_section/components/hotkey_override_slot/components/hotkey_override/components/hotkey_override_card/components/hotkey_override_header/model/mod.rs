@@ -54,6 +54,10 @@ impl From<&HotkeyOverrideHeaderView> for HotkeyOverrideHeaderModel {
     }
 }
 
+impl ddd::Layered for HotkeyOverrideHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyOverrideHeaderModel {
     type View = HotkeyOverrideHeaderView;
 }

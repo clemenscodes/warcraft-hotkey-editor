@@ -15,6 +15,10 @@ impl From<&OpenHeroLevelTriggerView> for OpenHeroLevelTriggerModel {
     }
 }
 
+impl ddd::Layered for OpenHeroLevelTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for OpenHeroLevelTriggerModel {
     type View = OpenHeroLevelTriggerView;
 }

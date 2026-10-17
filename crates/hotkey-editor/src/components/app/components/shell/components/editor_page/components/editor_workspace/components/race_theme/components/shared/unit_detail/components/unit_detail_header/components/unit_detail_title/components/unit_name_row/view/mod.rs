@@ -4,4 +4,8 @@ pub struct UnitNameRowView {
     pub has_hero_attributes: bool,
 }
 
+impl ddd::Layered for UnitNameRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitNameRowView {}

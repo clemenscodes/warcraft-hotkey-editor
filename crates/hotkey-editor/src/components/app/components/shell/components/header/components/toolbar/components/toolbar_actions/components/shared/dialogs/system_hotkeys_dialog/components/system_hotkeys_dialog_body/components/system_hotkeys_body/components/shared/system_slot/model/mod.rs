@@ -41,6 +41,10 @@ impl From<&SystemSlotView> for SystemSlotModel {
     }
 }
 
+impl ddd::Layered for SystemSlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemSlotModel {
     type View = SystemSlotView;
 }

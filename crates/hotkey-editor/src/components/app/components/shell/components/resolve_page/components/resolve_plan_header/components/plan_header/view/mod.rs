@@ -8,4 +8,8 @@ pub struct PlanHeaderView {
     pub on_apply: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for PlanHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PlanHeaderView {}

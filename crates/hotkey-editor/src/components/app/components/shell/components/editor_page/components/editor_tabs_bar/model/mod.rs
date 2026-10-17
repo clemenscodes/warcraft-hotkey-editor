@@ -9,6 +9,10 @@ impl From<&EditorTabsBarView> for EditorTabsBarModel {
     }
 }
 
+impl ddd::Layered for EditorTabsBarModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EditorTabsBarModel {
     type View = EditorTabsBarView;
 }

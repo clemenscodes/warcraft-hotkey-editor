@@ -14,6 +14,10 @@ impl From<&CollisionCardPrimaryView> for CollisionCardPrimaryModel {
     }
 }
 
+impl ddd::Layered for CollisionCardPrimaryModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionCardPrimaryModel {
     type View = CollisionCardPrimaryView;
 }

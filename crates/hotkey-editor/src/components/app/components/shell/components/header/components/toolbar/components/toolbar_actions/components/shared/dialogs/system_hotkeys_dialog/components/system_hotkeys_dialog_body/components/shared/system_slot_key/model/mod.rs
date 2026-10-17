@@ -15,6 +15,10 @@ impl From<&SystemSlotKeyView> for SystemSlotKeyModel {
     }
 }
 
+impl ddd::Layered for SystemSlotKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemSlotKeyModel {
     type View = SystemSlotKeyView;
 }

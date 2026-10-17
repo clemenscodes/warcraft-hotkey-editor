@@ -14,6 +14,10 @@ impl From<&CollisionListTrackView> for CollisionListTrackModel {
     }
 }
 
+impl ddd::Layered for CollisionListTrackModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionListTrackModel {
     type View = CollisionListTrackView;
 }

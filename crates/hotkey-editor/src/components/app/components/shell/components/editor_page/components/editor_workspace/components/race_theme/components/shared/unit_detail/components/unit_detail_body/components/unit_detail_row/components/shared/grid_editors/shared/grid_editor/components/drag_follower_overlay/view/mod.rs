@@ -7,4 +7,8 @@ pub struct DragFollowerOverlayView {
     pub visible: bool,
 }
 
+impl ddd::Layered for DragFollowerOverlayView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for DragFollowerOverlayView {}

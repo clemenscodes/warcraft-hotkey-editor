@@ -16,6 +16,10 @@ impl From<&UnitPositionConflictGridView> for UnitPositionConflictGridModel {
     }
 }
 
+impl ddd::Layered for UnitPositionConflictGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitPositionConflictGridModel {
     type View = UnitPositionConflictGridView;
 }

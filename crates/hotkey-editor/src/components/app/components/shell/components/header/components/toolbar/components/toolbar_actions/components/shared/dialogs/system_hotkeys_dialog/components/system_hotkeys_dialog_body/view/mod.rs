@@ -6,6 +6,10 @@ use dioxus::prelude::*;
 #[derive(Clone, PartialEq, Default)]
 pub struct SystemHotkeysDialogBodyView;
 
+impl ddd::Layered for SystemHotkeysDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SystemHotkeysDialogBodyView {}
 
 impl Render for SystemHotkeysDialogBodyView {

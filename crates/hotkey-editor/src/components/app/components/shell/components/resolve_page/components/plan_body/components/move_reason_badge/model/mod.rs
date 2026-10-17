@@ -16,6 +16,10 @@ impl From<&MoveReasonBadgeView> for MoveReasonBadgeModel {
     }
 }
 
+impl ddd::Layered for MoveReasonBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveReasonBadgeModel {
     type View = MoveReasonBadgeView;
 }

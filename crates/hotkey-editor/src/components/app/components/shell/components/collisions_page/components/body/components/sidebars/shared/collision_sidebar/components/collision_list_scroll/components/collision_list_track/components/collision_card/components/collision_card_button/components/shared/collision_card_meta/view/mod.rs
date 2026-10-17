@@ -6,4 +6,8 @@ pub struct CollisionCardMetaView {
     pub count: usize,
 }
 
+impl ddd::Layered for CollisionCardMetaView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionCardMetaView {}

@@ -14,6 +14,10 @@ impl From<&GridLayoutEditorButtonView> for GridLayoutEditorButtonModel {
     }
 }
 
+impl ddd::Layered for GridLayoutEditorButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GridLayoutEditorButtonModel {
     type View = GridLayoutEditorButtonView;
 }

@@ -20,6 +20,10 @@ impl From<&HelpLegendRowModel> for HelpLegendRowPresentation {
     }
 }
 
+impl ddd::Layered for HelpLegendRowPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for HelpLegendRowPresentation {
     type Model = HelpLegendRowModel;
 }

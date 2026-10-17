@@ -20,6 +20,10 @@ impl From<&SystemHotkeysDialogView> for SystemHotkeysDialogModel {
     }
 }
 
+impl ddd::Layered for SystemHotkeysDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysDialogModel {
     type View = SystemHotkeysDialogView;
 }

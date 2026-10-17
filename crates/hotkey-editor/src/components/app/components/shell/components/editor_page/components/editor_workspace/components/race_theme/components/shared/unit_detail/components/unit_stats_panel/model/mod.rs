@@ -25,6 +25,10 @@ impl From<&UnitStatsPanelView> for UnitStatsPanelModel {
     }
 }
 
+impl ddd::Layered for UnitStatsPanelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitStatsPanelModel {
     type View = UnitStatsPanelView;
 }

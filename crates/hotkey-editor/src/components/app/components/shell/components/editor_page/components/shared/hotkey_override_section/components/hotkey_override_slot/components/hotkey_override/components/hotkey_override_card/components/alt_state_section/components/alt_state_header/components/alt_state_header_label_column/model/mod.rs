@@ -13,6 +13,10 @@ impl From<&AltStateHeaderLabelColumnView> for AltStateHeaderLabelColumnModel {
     }
 }
 
+impl ddd::Layered for AltStateHeaderLabelColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AltStateHeaderLabelColumnModel {
     type View = AltStateHeaderLabelColumnView;
 }

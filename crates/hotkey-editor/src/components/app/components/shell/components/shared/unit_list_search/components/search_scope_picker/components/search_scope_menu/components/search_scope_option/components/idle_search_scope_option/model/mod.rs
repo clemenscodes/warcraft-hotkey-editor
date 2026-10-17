@@ -15,6 +15,10 @@ impl From<&IdleSearchScopeOptionView> for IdleSearchScopeOptionModel {
     }
 }
 
+impl ddd::Layered for IdleSearchScopeOptionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleSearchScopeOptionModel {
     type View = IdleSearchScopeOptionView;
 }

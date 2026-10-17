@@ -13,6 +13,10 @@ impl From<&HeroLevelMenuView> for HeroLevelMenuModel {
     }
 }
 
+impl ddd::Layered for HeroLevelMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HeroLevelMenuModel {
     type View = HeroLevelMenuView;
 }

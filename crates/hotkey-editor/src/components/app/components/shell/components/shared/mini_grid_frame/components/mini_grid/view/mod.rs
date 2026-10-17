@@ -6,4 +6,8 @@ pub struct MiniGridView {
     pub tiles: [GridTileView; COMMAND_GRID_TILE_COUNT],
 }
 
+impl ddd::Layered for MiniGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MiniGridView {}

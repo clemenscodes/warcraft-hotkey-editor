@@ -15,6 +15,10 @@ impl From<&IdleHeroLevelOptionView> for IdleHeroLevelOptionModel {
     }
 }
 
+impl ddd::Layered for IdleHeroLevelOptionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleHeroLevelOptionModel {
     type View = IdleHeroLevelOptionView;
 }

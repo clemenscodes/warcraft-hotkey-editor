@@ -5,4 +5,8 @@ pub struct HelpGlossaryColumnView {
     pub entries: &'static [HelpGlossaryItem],
 }
 
+impl ddd::Layered for HelpGlossaryColumnView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpGlossaryColumnView {}

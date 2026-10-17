@@ -9,6 +9,10 @@ impl From<&HelpGuideView> for HelpGuideModel {
     }
 }
 
+impl ddd::Layered for HelpGuideModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpGuideModel {
     type View = HelpGuideView;
 }

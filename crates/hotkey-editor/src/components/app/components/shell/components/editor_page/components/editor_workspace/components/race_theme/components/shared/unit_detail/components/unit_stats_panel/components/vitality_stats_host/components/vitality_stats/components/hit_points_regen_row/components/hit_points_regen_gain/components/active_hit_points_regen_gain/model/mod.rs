@@ -14,6 +14,10 @@ impl From<&ActiveHitPointsRegenGainView> for ActiveHitPointsRegenGainModel {
     }
 }
 
+impl ddd::Layered for ActiveHitPointsRegenGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveHitPointsRegenGainModel {
     type View = ActiveHitPointsRegenGainView;
 }

@@ -31,6 +31,10 @@ impl From<&UnitDetailDialogBodyView> for UnitDetailDialogBodyModel {
     }
 }
 
+impl ddd::Layered for UnitDetailDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitDetailDialogBodyModel {
     type View = UnitDetailDialogBodyView;
 }

@@ -23,6 +23,10 @@ impl From<&FilterTriggerView> for FilterTriggerModel {
     }
 }
 
+impl ddd::Layered for FilterTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FilterTriggerModel {
     type View = FilterTriggerView;
 }

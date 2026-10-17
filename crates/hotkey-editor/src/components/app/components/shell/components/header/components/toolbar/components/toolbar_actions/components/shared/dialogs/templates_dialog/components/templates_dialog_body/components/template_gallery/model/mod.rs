@@ -14,6 +14,10 @@ impl From<&TemplateGalleryView> for TemplateGalleryModel {
     }
 }
 
+impl ddd::Layered for TemplateGalleryModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TemplateGalleryModel {
     type View = TemplateGalleryView;
 }

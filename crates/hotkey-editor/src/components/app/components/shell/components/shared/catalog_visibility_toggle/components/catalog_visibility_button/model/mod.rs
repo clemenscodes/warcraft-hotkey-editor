@@ -26,6 +26,10 @@ impl From<&CatalogVisibilityButtonView> for CatalogVisibilityButtonModel {
     }
 }
 
+impl ddd::Layered for CatalogVisibilityButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CatalogVisibilityButtonModel {
     type View = CatalogVisibilityButtonView;
 }

@@ -6,4 +6,8 @@ pub struct FightNamePlateView {
     pub object_id: WarcraftObjectId,
 }
 
+impl ddd::Layered for FightNamePlateView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FightNamePlateView {}

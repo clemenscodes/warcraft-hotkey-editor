@@ -27,6 +27,10 @@ impl From<&PlanHeaderView> for PlanHeaderModel {
     }
 }
 
+impl ddd::Layered for PlanHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlanHeaderModel {
     type View = PlanHeaderView;
 }

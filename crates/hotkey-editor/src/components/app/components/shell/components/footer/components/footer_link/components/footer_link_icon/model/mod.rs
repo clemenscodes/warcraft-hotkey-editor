@@ -13,6 +13,10 @@ impl From<&FooterLinkIconView> for FooterLinkIconModel {
     }
 }
 
+impl ddd::Layered for FooterLinkIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FooterLinkIconModel {
     type View = FooterLinkIconView;
 }

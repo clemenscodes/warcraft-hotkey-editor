@@ -12,4 +12,8 @@ pub struct HotkeyAltPositionPickerDialogView {
     pub on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyAltPositionPickerDialogView {}

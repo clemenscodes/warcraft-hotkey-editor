@@ -14,6 +14,10 @@ impl From<&TopHotkeyMarkerView> for TopHotkeyMarkerModel {
     }
 }
 
+impl ddd::Layered for TopHotkeyMarkerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TopHotkeyMarkerModel {
     type View = TopHotkeyMarkerView;
 }

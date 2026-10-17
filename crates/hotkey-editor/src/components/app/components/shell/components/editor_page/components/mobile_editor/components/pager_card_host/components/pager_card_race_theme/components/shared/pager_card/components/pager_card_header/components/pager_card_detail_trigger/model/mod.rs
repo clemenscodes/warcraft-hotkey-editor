@@ -15,6 +15,10 @@ impl From<&PagerCardDetailTriggerView> for PagerCardDetailTriggerModel {
     }
 }
 
+impl ddd::Layered for PagerCardDetailTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PagerCardDetailTriggerModel {
     type View = PagerCardDetailTriggerView;
 }

@@ -14,6 +14,10 @@ impl From<&PlainMoveNameView> for PlainMoveNameModel {
     }
 }
 
+impl ddd::Layered for PlainMoveNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlainMoveNameModel {
     type View = PlainMoveNameView;
 }

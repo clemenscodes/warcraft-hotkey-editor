@@ -15,4 +15,8 @@ pub struct MobileResolveView {
     pub unresolved: Vec<UnresolvedView>,
 }
 
+impl ddd::Layered for MobileResolveView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MobileResolveView {}

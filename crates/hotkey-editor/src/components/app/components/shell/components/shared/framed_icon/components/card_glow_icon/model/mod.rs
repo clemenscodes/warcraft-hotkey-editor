@@ -15,6 +15,10 @@ impl From<&CardGlowIconView> for CardGlowIconModel {
     }
 }
 
+impl ddd::Layered for CardGlowIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CardGlowIconModel {
     type View = CardGlowIconView;
 }

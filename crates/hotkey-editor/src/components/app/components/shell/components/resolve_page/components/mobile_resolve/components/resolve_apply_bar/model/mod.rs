@@ -27,6 +27,10 @@ impl From<&ResolveApplyBarView> for ResolveApplyBarModel {
     }
 }
 
+impl ddd::Layered for ResolveApplyBarModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolveApplyBarModel {
     type View = ResolveApplyBarView;
 }

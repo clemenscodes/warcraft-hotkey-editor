@@ -14,6 +14,10 @@ impl From<&SystemHotkeysBreadcrumbsTriggerLabelView> for SystemHotkeysBreadcrumb
     }
 }
 
+impl ddd::Layered for SystemHotkeysBreadcrumbsTriggerLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysBreadcrumbsTriggerLabelModel {
     type View = SystemHotkeysBreadcrumbsTriggerLabelView;
 }

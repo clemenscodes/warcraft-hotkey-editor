@@ -21,6 +21,10 @@ impl From<&HotkeyAltPositionPickerGridAnchorView> for HotkeyAltPositionPickerGri
     }
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerGridAnchorModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyAltPositionPickerGridAnchorModel {
     type View = HotkeyAltPositionPickerGridAnchorView;
 }

@@ -14,6 +14,10 @@ impl From<&HotkeyPagerCardView> for HotkeyPagerCardModel {
     }
 }
 
+impl ddd::Layered for HotkeyPagerCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyPagerCardModel {
     type View = HotkeyPagerCardView;
 }

@@ -11,4 +11,8 @@ pub struct AltStateHeaderView {
     pub on_hotkey_activate: EventHandler<()>,
 }
 
+impl ddd::Layered for AltStateHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AltStateHeaderView {}

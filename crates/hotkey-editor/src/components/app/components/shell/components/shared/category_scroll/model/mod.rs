@@ -14,6 +14,10 @@ impl From<&CategoryScrollView> for CategoryScrollModel {
     }
 }
 
+impl ddd::Layered for CategoryScrollModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CategoryScrollModel {
     type View = CategoryScrollView;
 }

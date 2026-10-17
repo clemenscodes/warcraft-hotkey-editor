@@ -13,6 +13,10 @@ impl From<&CarrierCardNameView> for CarrierCardNameModel {
     }
 }
 
+impl ddd::Layered for CarrierCardNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CarrierCardNameModel {
     type View = CarrierCardNameView;
 }

@@ -13,6 +13,10 @@ impl From<&RaceTabLabelView> for RaceTabLabelModel {
     }
 }
 
+impl ddd::Layered for RaceTabLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceTabLabelModel {
     type View = RaceTabLabelView;
 }

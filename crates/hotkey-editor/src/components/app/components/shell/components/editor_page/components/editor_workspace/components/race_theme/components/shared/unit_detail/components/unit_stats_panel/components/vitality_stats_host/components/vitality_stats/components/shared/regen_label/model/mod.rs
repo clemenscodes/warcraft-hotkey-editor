@@ -14,6 +14,10 @@ impl From<&RegenLabelView> for RegenLabelModel {
     }
 }
 
+impl ddd::Layered for RegenLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RegenLabelModel {
     type View = RegenLabelView;
 }

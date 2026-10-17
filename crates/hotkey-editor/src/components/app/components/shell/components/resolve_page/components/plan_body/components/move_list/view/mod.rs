@@ -5,4 +5,8 @@ pub struct MoveListView {
     pub section: Option<MoveSection>,
 }
 
+impl ddd::Layered for MoveListView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MoveListView {}

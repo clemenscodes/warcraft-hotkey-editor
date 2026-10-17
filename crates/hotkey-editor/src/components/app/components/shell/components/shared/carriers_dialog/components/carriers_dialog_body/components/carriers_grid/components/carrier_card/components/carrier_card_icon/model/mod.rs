@@ -14,6 +14,10 @@ impl From<&CarrierCardIconView> for CarrierCardIconModel {
     }
 }
 
+impl ddd::Layered for CarrierCardIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CarrierCardIconModel {
     type View = CarrierCardIconView;
 }

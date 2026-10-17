@@ -7,4 +7,8 @@ pub struct WeakMatchupView {
     pub title: String,
 }
 
+impl ddd::Layered for WeakMatchupView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for WeakMatchupView {}

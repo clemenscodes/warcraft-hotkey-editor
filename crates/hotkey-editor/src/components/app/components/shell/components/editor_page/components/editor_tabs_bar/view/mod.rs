@@ -6,6 +6,10 @@ use dioxus::prelude::*;
 #[derive(Clone, PartialEq, Default)]
 pub struct EditorTabsBarView;
 
+impl ddd::Layered for EditorTabsBarView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for EditorTabsBarView {}
 
 impl Render for EditorTabsBarView {

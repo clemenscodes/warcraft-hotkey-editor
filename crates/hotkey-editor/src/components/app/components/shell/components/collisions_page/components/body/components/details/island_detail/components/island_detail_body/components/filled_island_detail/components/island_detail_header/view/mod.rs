@@ -6,4 +6,8 @@ pub struct IslandDetailHeaderView {
     pub count: usize,
 }
 
+impl ddd::Layered for IslandDetailHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandDetailHeaderView {}

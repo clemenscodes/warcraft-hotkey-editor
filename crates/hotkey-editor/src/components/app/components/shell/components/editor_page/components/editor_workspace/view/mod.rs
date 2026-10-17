@@ -6,6 +6,10 @@ use dioxus::prelude::*;
 #[derive(Clone, PartialEq, Default)]
 pub struct EditorWorkspaceView;
 
+impl ddd::Layered for EditorWorkspaceView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for EditorWorkspaceView {}
 
 impl Render for EditorWorkspaceView {

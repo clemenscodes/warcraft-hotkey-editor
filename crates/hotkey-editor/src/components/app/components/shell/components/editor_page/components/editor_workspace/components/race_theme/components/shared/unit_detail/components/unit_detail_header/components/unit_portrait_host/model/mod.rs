@@ -14,6 +14,10 @@ impl From<&UnitPortraitHostView> for UnitPortraitHostModel {
     }
 }
 
+impl ddd::Layered for UnitPortraitHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitPortraitHostModel {
     type View = UnitPortraitHostView;
 }

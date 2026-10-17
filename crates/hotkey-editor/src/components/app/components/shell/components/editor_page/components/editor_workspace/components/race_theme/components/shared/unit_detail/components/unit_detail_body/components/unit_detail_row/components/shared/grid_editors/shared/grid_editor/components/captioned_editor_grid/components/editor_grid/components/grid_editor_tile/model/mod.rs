@@ -88,6 +88,10 @@ impl From<&GridEditorTileView> for GridEditorTileModel {
     }
 }
 
+impl ddd::Layered for GridEditorTileModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GridEditorTileModel {
     type View = GridEditorTileView;
 }

@@ -39,6 +39,10 @@ impl From<&ColorKeyView> for ColorKeyModel {
     }
 }
 
+impl ddd::Layered for ColorKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ColorKeyModel {
     type View = ColorKeyView;
 }

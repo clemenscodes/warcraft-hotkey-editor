@@ -9,6 +9,10 @@ impl From<&EditorWorkspaceView> for EditorWorkspaceModel {
     }
 }
 
+impl ddd::Layered for EditorWorkspaceModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EditorWorkspaceModel {
     type View = EditorWorkspaceView;
 }

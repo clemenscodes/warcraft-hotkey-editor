@@ -6,4 +6,8 @@ pub struct PreviewDialogView {
     pub on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for PreviewDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PreviewDialogView {}

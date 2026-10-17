@@ -13,6 +13,10 @@ pub struct UnitDetailDialogBodyView {
     pub evasion: Evasion,
 }
 
+impl ddd::Layered for UnitDetailDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitDetailDialogBodyView {}
 
 impl Render for UnitDetailDialogBodyView {

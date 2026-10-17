@@ -14,6 +14,10 @@ impl From<&IslandSidebarView> for IslandSidebarModel {
     }
 }
 
+impl ddd::Layered for IslandSidebarModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandSidebarModel {
     type View = IslandSidebarView;
 }

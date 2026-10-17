@@ -5,4 +5,8 @@ pub struct CategoryScrollView {
     pub groups: Vec<UnitCatalogGroup>,
 }
 
+impl ddd::Layered for CategoryScrollView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CategoryScrollView {}

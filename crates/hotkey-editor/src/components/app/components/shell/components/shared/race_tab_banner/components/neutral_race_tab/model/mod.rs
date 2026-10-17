@@ -26,6 +26,10 @@ impl From<&RaceTabInputView> for NeutralRaceTabModel {
     }
 }
 
+impl ddd::Layered for NeutralRaceTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NeutralRaceTabModel {
     type View = RaceTabInputView;
 }

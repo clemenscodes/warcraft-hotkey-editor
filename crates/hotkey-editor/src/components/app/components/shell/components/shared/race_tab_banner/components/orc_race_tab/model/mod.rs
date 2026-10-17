@@ -26,6 +26,10 @@ impl From<&RaceTabInputView> for OrcRaceTabModel {
     }
 }
 
+impl ddd::Layered for OrcRaceTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for OrcRaceTabModel {
     type View = RaceTabInputView;
 }

@@ -26,6 +26,10 @@ impl From<&ActiveToggleButtonView> for ActiveToggleButtonModel {
     }
 }
 
+impl ddd::Layered for ActiveToggleButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveToggleButtonModel {
     type View = ActiveToggleButtonView;
 }

@@ -27,6 +27,10 @@ impl From<&FightSectionTabView> for FightSectionTabModel {
     }
 }
 
+impl ddd::Layered for FightSectionTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FightSectionTabModel {
     type View = FightSectionTabView;
 }

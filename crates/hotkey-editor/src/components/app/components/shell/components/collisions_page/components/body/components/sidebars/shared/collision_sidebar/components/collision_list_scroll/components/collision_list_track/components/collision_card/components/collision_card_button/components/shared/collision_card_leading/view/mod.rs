@@ -5,4 +5,8 @@ pub struct CollisionCardLeadingView {
     pub content: CollisionCardContent,
 }
 
+impl ddd::Layered for CollisionCardLeadingView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionCardLeadingView {}

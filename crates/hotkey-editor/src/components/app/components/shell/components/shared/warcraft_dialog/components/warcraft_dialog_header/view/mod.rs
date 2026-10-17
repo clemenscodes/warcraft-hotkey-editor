@@ -9,6 +9,10 @@ pub struct WarcraftDialogHeaderView {
     pub on_close: Callback<()>,
 }
 
+impl ddd::Layered for WarcraftDialogHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for WarcraftDialogHeaderView {}
 
 impl Render for WarcraftDialogHeaderView {

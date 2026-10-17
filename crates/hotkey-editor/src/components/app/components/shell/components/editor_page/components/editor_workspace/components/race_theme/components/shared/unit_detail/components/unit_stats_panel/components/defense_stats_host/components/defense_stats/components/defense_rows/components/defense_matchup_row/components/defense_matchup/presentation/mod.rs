@@ -28,6 +28,10 @@ pub(super) fn use_defense_matchup(props: &DefenseMatchupModel) -> DefenseMatchup
     }
 }
 
+impl ddd::Layered for DefenseMatchupPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for DefenseMatchupPresentation {
     type Model = DefenseMatchupModel;
 }

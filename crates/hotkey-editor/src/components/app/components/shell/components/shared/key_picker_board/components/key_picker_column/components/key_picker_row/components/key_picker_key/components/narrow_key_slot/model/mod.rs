@@ -39,6 +39,10 @@ impl From<&NarrowKeySlotView> for NarrowKeySlotModel {
     }
 }
 
+impl ddd::Layered for NarrowKeySlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NarrowKeySlotModel {
     type View = NarrowKeySlotView;
 }

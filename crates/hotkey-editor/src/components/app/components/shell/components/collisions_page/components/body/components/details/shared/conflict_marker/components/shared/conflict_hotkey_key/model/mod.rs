@@ -13,6 +13,10 @@ impl From<&ConflictHotkeyKeyView> for ConflictHotkeyKeyModel {
     }
 }
 
+impl ddd::Layered for ConflictHotkeyKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictHotkeyKeyModel {
     type View = ConflictHotkeyKeyView;
 }

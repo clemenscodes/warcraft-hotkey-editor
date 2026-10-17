@@ -14,6 +14,10 @@ impl From<&PrimaryAttributeLabelView> for PrimaryAttributeLabelModel {
     }
 }
 
+impl ddd::Layered for PrimaryAttributeLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PrimaryAttributeLabelModel {
     type View = PrimaryAttributeLabelView;
 }

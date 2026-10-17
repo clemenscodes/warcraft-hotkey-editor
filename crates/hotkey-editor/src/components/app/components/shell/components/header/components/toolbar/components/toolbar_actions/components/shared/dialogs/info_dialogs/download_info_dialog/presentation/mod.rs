@@ -45,6 +45,10 @@ pub(super) fn use_download_info_dialog(
     }
 }
 
+impl ddd::Layered for DownloadInfoDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for DownloadInfoDialogPresentation {
     type Model = DownloadInfoDialogModel;
 }

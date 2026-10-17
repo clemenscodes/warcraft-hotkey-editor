@@ -5,4 +5,8 @@ pub struct CollisionPagerCardsView {
     pub content: ContentModel,
 }
 
+impl ddd::Layered for CollisionPagerCardsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionPagerCardsView {}

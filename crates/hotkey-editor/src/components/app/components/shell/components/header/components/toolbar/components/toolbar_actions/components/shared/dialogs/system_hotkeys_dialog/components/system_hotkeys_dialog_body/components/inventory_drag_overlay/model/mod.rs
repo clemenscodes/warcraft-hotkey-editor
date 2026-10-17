@@ -14,6 +14,10 @@ impl From<&InventoryDragOverlayView> for InventoryDragOverlayModel {
     }
 }
 
+impl ddd::Layered for InventoryDragOverlayModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InventoryDragOverlayModel {
     type View = InventoryDragOverlayView;
 }

@@ -13,6 +13,10 @@ impl From<&BreadcrumbLabelView> for BreadcrumbLabelModel {
     }
 }
 
+impl ddd::Layered for BreadcrumbLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BreadcrumbLabelModel {
     type View = BreadcrumbLabelView;
 }

@@ -11,6 +11,10 @@ pub struct BodyView {
     pub content: ContentModel,
 }
 
+impl ddd::Layered for BodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for BodyView {}
 
 impl Render for BodyView {

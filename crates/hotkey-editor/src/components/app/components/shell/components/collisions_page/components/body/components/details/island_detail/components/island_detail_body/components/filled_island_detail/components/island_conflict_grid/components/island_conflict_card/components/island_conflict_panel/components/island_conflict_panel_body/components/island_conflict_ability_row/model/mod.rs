@@ -21,6 +21,10 @@ impl From<&IslandConflictAbilityRowView> for IslandConflictAbilityRowModel {
     }
 }
 
+impl ddd::Layered for IslandConflictAbilityRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictAbilityRowModel {
     type View = IslandConflictAbilityRowView;
 }

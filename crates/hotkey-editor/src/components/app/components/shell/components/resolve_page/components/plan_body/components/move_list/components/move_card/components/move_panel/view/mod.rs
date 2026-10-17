@@ -5,4 +5,8 @@ pub struct MovePanelView {
     pub move_view: MoveView,
 }
 
+impl ddd::Layered for MovePanelView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MovePanelView {}

@@ -14,6 +14,10 @@ impl From<&HitPointsValueView> for HitPointsValueModel {
     }
 }
 
+impl ddd::Layered for HitPointsValueModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HitPointsValueModel {
     type View = HitPointsValueView;
 }

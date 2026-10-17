@@ -14,6 +14,10 @@ impl From<&ConflictPairRowView> for ConflictPairRowModel {
     }
 }
 
+impl ddd::Layered for ConflictPairRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictPairRowModel {
     type View = ConflictPairRowView;
 }

@@ -29,6 +29,10 @@ pub(super) struct SystemHotkeysDialogPresentation {
     pub(super) on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for SystemHotkeysDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for SystemHotkeysDialogPresentation {
     type Model = SystemHotkeysDialogModel;
 }

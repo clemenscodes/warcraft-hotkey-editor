@@ -7,4 +7,8 @@ pub struct ConflictDetailUnitView {
     pub name: String,
 }
 
+impl ddd::Layered for ConflictDetailUnitView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictDetailUnitView {}

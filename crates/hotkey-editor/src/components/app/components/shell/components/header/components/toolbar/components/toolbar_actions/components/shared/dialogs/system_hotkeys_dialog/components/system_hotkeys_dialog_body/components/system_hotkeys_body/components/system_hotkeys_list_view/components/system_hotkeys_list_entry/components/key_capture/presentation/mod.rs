@@ -66,6 +66,10 @@ pub(super) fn use_key_capture(props: &KeyCaptureModel) -> KeyCapturePresentation
     }
 }
 
+impl ddd::Layered for KeyCapturePresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for KeyCapturePresentation {
     type Model = KeyCaptureModel;
 }

@@ -13,6 +13,10 @@ impl From<&BrandTitleView> for BrandTitleModel {
     }
 }
 
+impl ddd::Layered for BrandTitleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BrandTitleModel {
     type View = BrandTitleView;
 }

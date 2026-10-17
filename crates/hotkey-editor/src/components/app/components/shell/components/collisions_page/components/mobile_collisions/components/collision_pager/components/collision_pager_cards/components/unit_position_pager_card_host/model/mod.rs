@@ -14,6 +14,10 @@ impl From<&UnitPositionPagerCardHostView> for UnitPositionPagerCardHostModel {
     }
 }
 
+impl ddd::Layered for UnitPositionPagerCardHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitPositionPagerCardHostModel {
     type View = UnitPositionPagerCardHostView;
 }

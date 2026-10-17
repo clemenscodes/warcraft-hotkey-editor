@@ -47,6 +47,10 @@ impl From<&CurrentHotkeySlotView> for CurrentHotkeySlotModel {
     }
 }
 
+impl ddd::Layered for CurrentHotkeySlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CurrentHotkeySlotModel {
     type View = CurrentHotkeySlotView;
 }

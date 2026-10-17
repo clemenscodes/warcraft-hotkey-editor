@@ -35,6 +35,10 @@ impl From<&ClearSurfaceView> for ClearSurfaceModel {
     }
 }
 
+impl ddd::Layered for ClearSurfaceModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ClearSurfaceModel {
     type View = ClearSurfaceView;
 }

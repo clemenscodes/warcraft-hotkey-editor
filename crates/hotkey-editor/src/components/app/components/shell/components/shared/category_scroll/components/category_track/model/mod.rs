@@ -14,6 +14,10 @@ impl From<&CategoryTrackView> for CategoryTrackModel {
     }
 }
 
+impl ddd::Layered for CategoryTrackModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CategoryTrackModel {
     type View = CategoryTrackView;
 }

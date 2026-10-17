@@ -14,6 +14,10 @@ impl From<&ResolveSectionNavView> for ResolveSectionNavModel {
     }
 }
 
+impl ddd::Layered for ResolveSectionNavModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolveSectionNavModel {
     type View = ResolveSectionNavView;
 }

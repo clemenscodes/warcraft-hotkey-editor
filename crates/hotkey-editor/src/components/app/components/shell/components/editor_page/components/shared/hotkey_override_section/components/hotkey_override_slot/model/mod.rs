@@ -22,6 +22,10 @@ impl From<&HotkeyOverrideSlotView> for HotkeyOverrideSlotModel {
     }
 }
 
+impl ddd::Layered for HotkeyOverrideSlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyOverrideSlotModel {
     type View = HotkeyOverrideSlotView;
 }

@@ -14,6 +14,10 @@ impl From<&TemplatesDialogBodyView> for TemplatesDialogBodyModel {
     }
 }
 
+impl ddd::Layered for TemplatesDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TemplatesDialogBodyModel {
     type View = TemplatesDialogBodyView;
 }

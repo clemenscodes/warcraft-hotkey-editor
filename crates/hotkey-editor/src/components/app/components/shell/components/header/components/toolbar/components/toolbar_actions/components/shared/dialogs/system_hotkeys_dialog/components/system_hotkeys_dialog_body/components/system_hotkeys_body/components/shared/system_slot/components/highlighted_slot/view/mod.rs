@@ -10,4 +10,8 @@ pub struct HighlightedSlotView {
     pub dragging: bool,
 }
 
+impl ddd::Layered for HighlightedSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HighlightedSlotView {}

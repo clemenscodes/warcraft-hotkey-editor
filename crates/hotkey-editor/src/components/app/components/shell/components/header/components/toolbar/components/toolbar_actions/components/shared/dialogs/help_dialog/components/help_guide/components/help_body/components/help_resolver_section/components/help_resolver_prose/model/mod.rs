@@ -13,6 +13,10 @@ impl From<&HelpResolverProseView> for HelpResolverProseModel {
     }
 }
 
+impl ddd::Layered for HelpResolverProseModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpResolverProseModel {
     type View = HelpResolverProseView;
 }

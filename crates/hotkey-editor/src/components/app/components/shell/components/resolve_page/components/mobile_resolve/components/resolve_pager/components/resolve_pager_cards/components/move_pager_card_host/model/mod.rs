@@ -14,6 +14,10 @@ impl From<&MovePagerCardHostView> for MovePagerCardHostModel {
     }
 }
 
+impl ddd::Layered for MovePagerCardHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MovePagerCardHostModel {
     type View = MovePagerCardHostView;
 }

@@ -14,6 +14,10 @@ impl From<&EffectiveHitPointsRowView> for EffectiveHitPointsRowModel {
     }
 }
 
+impl ddd::Layered for EffectiveHitPointsRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EffectiveHitPointsRowModel {
     type View = EffectiveHitPointsRowView;
 }

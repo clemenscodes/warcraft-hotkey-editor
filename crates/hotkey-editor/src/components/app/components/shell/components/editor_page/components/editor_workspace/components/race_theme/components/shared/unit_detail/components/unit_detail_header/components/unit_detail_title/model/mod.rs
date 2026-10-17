@@ -24,6 +24,10 @@ impl From<&UnitDetailTitleView> for UnitDetailTitleModel {
     }
 }
 
+impl ddd::Layered for UnitDetailTitleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitDetailTitleModel {
     type View = UnitDetailTitleView;
 }

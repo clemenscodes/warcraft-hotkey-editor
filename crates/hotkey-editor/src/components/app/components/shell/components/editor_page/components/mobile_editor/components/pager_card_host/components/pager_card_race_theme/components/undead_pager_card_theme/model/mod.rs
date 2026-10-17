@@ -14,6 +14,10 @@ impl From<&UndeadPagerCardThemeView> for UndeadPagerCardThemeModel {
     }
 }
 
+impl ddd::Layered for UndeadPagerCardThemeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UndeadPagerCardThemeModel {
     type View = UndeadPagerCardThemeView;
 }

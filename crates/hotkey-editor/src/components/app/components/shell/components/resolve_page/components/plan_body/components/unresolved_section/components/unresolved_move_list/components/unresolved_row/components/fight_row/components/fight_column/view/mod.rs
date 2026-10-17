@@ -5,4 +5,8 @@ pub struct FightColumnView {
     pub unresolved_view: UnresolvedView,
 }
 
+impl ddd::Layered for FightColumnView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FightColumnView {}

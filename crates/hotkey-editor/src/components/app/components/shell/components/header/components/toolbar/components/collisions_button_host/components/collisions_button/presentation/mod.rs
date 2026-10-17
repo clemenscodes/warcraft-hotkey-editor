@@ -51,6 +51,10 @@ impl From<&CollisionsButtonModel> for CollisionsButtonPresentation {
     }
 }
 
+impl ddd::Layered for CollisionsButtonPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for CollisionsButtonPresentation {
     type Model = CollisionsButtonModel;
 }

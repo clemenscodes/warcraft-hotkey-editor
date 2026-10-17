@@ -7,4 +7,8 @@ pub struct RaceScopeTriggerView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for RaceScopeTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for RaceScopeTriggerView {}

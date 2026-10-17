@@ -12,6 +12,10 @@ pub struct GridLayoutEditorDialogBodyView {
     pub on_apply: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for GridLayoutEditorDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GridLayoutEditorDialogBodyView {}
 
 impl Render for GridLayoutEditorDialogBodyView {

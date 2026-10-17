@@ -41,6 +41,10 @@ impl From<&ActiveMenuItemView> for ActiveMenuItemModel {
     }
 }
 
+impl ddd::Layered for ActiveMenuItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveMenuItemModel {
     type View = ActiveMenuItemView;
 }

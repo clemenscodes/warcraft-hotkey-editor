@@ -14,6 +14,10 @@ impl From<&InventorySlotView> for InventorySlotModel {
     }
 }
 
+impl ddd::Layered for InventorySlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InventorySlotModel {
     type View = InventorySlotView;
 }

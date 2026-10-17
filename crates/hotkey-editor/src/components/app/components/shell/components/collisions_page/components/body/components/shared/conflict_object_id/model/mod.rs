@@ -14,6 +14,10 @@ impl From<&ConflictObjectIdView> for ConflictObjectIdModel {
     }
 }
 
+impl ddd::Layered for ConflictObjectIdModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictObjectIdModel {
     type View = ConflictObjectIdView;
 }

@@ -6,4 +6,8 @@ pub struct InventoryDragOverlayView {
     pub drag_follower: Signal<Option<InventoryDragFollower>>,
 }
 
+impl ddd::Layered for InventoryDragOverlayView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InventoryDragOverlayView {}

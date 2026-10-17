@@ -14,6 +14,10 @@ impl From<&ArmorRowView> for ArmorRowModel {
     }
 }
 
+impl ddd::Layered for ArmorRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ArmorRowModel {
     type View = ArmorRowView;
 }

@@ -12,6 +12,10 @@ pub struct HotkeyAltPositionPickerDialogBodyView {
     pub picker_slots: Rc<[GridSlotId]>,
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyAltPositionPickerDialogBodyView {}
 
 impl Render for HotkeyAltPositionPickerDialogBodyView {

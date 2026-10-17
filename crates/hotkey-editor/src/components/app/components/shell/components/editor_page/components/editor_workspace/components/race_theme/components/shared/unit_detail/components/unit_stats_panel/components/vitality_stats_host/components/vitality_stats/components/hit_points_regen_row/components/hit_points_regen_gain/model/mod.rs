@@ -14,6 +14,10 @@ impl From<&HitPointsRegenGainView> for HitPointsRegenGainModel {
     }
 }
 
+impl ddd::Layered for HitPointsRegenGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HitPointsRegenGainModel {
     type View = HitPointsRegenGainView;
 }

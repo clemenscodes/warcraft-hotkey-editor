@@ -39,6 +39,10 @@ impl From<&WideKeySlotView> for WideKeySlotModel {
     }
 }
 
+impl ddd::Layered for WideKeySlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for WideKeySlotModel {
     type View = WideKeySlotView;
 }

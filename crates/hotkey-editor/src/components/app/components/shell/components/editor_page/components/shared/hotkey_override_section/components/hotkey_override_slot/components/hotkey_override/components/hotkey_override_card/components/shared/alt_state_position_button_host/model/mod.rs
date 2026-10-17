@@ -24,6 +24,10 @@ impl From<&AltStatePositionButtonHostView> for AltStatePositionButtonHostModel {
     }
 }
 
+impl ddd::Layered for AltStatePositionButtonHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AltStatePositionButtonHostModel {
     type View = AltStatePositionButtonHostView;
 }

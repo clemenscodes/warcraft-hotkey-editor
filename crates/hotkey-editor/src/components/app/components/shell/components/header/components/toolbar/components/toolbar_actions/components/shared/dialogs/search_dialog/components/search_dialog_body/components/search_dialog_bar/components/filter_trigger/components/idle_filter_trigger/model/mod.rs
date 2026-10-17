@@ -14,6 +14,10 @@ impl From<&IdleFilterTriggerView> for IdleFilterTriggerModel {
     }
 }
 
+impl ddd::Layered for IdleFilterTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleFilterTriggerModel {
     type View = IdleFilterTriggerView;
 }

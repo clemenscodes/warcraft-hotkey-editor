@@ -9,6 +9,10 @@ pub struct CarriersDialogBodyView {
     pub carriers: Vec<CarrierUnitView>,
 }
 
+impl ddd::Layered for CarriersDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CarriersDialogBodyView {}
 
 impl Render for CarriersDialogBodyView {

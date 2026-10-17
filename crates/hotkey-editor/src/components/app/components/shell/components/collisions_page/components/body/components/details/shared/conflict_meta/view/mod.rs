@@ -7,4 +7,8 @@ pub struct ConflictMetaView {
     pub count: usize,
 }
 
+impl ddd::Layered for ConflictMetaView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictMetaView {}

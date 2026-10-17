@@ -25,6 +25,10 @@ impl From<&PagerCardHeaderView> for PagerCardHeaderModel {
     }
 }
 
+impl ddd::Layered for PagerCardHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PagerCardHeaderModel {
     type View = PagerCardHeaderView;
 }

@@ -61,4 +61,8 @@ impl From<&RenderedTile> for TileFaceView {
     }
 }
 
+impl ddd::Layered for TileFaceView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TileFaceView {}

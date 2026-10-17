@@ -21,6 +21,10 @@ impl From<&EmptyTileView> for EmptyTileModel {
     }
 }
 
+impl ddd::Layered for EmptyTileModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EmptyTileModel {
     type View = EmptyTileView;
 }

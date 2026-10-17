@@ -14,6 +14,10 @@ impl From<&InlineHotkeyMarkerView> for InlineHotkeyMarkerModel {
     }
 }
 
+impl ddd::Layered for InlineHotkeyMarkerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InlineHotkeyMarkerModel {
     type View = InlineHotkeyMarkerView;
 }

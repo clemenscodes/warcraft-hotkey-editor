@@ -14,6 +14,10 @@ impl From<&BodyView> for BodyModel {
     }
 }
 
+impl ddd::Layered for BodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BodyModel {
     type View = BodyView;
 }

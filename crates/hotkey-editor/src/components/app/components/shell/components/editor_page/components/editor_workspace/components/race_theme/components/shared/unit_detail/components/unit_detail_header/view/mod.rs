@@ -8,4 +8,8 @@ pub struct UnitDetailHeaderView {
     pub has_hero_attributes: bool,
 }
 
+impl ddd::Layered for UnitDetailHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitDetailHeaderView {}

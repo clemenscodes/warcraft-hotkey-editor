@@ -22,6 +22,10 @@ impl From<&UnitDetailRowView> for UnitDetailRowModel {
     }
 }
 
+impl ddd::Layered for UnitDetailRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitDetailRowModel {
     type View = UnitDetailRowView;
 }

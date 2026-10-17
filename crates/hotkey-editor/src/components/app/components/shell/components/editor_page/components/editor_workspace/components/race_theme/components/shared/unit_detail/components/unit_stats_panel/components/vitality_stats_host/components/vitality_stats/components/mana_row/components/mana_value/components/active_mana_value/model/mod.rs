@@ -14,6 +14,10 @@ impl From<&ActiveManaValueView> for ActiveManaValueModel {
     }
 }
 
+impl ddd::Layered for ActiveManaValueModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveManaValueModel {
     type View = ActiveManaValueView;
 }

@@ -8,4 +8,8 @@ pub struct FightSectionTabView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for FightSectionTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FightSectionTabView {}

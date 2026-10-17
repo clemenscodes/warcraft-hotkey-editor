@@ -10,4 +10,8 @@ pub struct AbilityIconView {
     pub inspected: InspectedAbility,
 }
 
+impl ddd::Layered for AbilityIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AbilityIconView {}

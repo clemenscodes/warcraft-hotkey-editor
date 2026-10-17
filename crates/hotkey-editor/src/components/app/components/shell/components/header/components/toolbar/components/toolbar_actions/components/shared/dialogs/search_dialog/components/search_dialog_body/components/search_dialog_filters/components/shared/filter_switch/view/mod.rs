@@ -6,4 +6,8 @@ pub struct FilterSwitchView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for FilterSwitchView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FilterSwitchView {}

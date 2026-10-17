@@ -1016,16 +1016,19 @@ foo/
 **The pipeline is three roles, each a ddd trait: `View → Model → Presentation`.**
 
 - `ddd::View` (`view/`) — the Published Language, the public read-oriented contract
-  (`pub trait View: Clone + PartialEq {}`).
+  (`pub trait View: Clone + PartialEq + Layered<Layer = PresentationLayer> {}`).
 - `ddd::Model` (`model/`) — the private internal model, the props the component
-  **receives**: `pub trait Model: for<'view> From<&'view Self::View> + Clone + PartialEq`.
+  **receives**: `pub trait Model: for<'view> From<&'view Self::View> + Clone + PartialEq + Layered<Layer = PresentationLayer>`.
   A component's `#[component] fn` takes exactly one such struct; it never takes the
   bare `View` and never inline fields.
 - `ddd::Presentation` (`presentation/`) — the signal-free, render-ready struct the body
-  places: `pub trait Presentation { type Model: Model; }`. Built purely (`From<&Model>`,
+  places: `pub trait Presentation: Layered<Layer = PresentationLayer> { type Model: Model; }`. Built purely (`From<&Model>`,
   a shaping leaf) or effectfully (a connected component, whose builder owns the local
   signals and context reads). **No `Signal<T>` ever lives in a View, Model, or
   Presentation type** — signals live only in the effectful presentation builder.
+- Each of the three carries its layer explicitly, right above its role impl:
+  `impl ddd::Layered for FooView { type Layer = ddd::PresentationLayer; }` (same for
+  `FooModel` and `FooPresentation`, with the type's own generics and bounds).
 
 A component with children nests them under `components/`. A leaf omits `components/`.
 A component whose Model is already render-ready (no shaping, no effects) omits

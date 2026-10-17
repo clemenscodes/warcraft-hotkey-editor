@@ -6,4 +6,8 @@ pub struct UnitCardIconView {
     pub display_name: String,
 }
 
+impl ddd::Layered for UnitCardIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitCardIconView {}

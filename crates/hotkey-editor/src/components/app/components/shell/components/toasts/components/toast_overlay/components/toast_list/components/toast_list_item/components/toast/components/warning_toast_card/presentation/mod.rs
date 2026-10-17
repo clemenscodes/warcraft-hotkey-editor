@@ -19,6 +19,10 @@ impl From<&WarningToastCardModel> for WarningToastCardPresentation {
     }
 }
 
+impl ddd::Layered for WarningToastCardPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for WarningToastCardPresentation {
     type Model = WarningToastCardModel;
 }

@@ -14,6 +14,10 @@ impl From<&PagerCardRaceThemeView> for PagerCardRaceThemeModel {
     }
 }
 
+impl ddd::Layered for PagerCardRaceThemeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PagerCardRaceThemeModel {
     type View = PagerCardRaceThemeView;
 }

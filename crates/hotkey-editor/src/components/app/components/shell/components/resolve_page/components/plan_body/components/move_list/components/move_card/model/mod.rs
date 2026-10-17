@@ -14,6 +14,10 @@ impl From<&MoveCardView> for MoveCardModel {
     }
 }
 
+impl ddd::Layered for MoveCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveCardModel {
     type View = MoveCardView;
 }

@@ -13,6 +13,10 @@ impl From<&ConflictUnitNameView> for ConflictUnitNameModel {
     }
 }
 
+impl ddd::Layered for ConflictUnitNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictUnitNameModel {
     type View = ConflictUnitNameView;
 }

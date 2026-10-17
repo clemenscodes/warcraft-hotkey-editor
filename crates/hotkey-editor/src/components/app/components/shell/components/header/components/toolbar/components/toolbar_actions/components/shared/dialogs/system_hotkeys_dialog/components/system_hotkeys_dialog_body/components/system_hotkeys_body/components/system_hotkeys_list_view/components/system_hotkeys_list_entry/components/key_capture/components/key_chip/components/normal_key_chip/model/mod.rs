@@ -27,6 +27,10 @@ impl From<&NormalKeyChipView> for NormalKeyChipModel {
     }
 }
 
+impl ddd::Layered for NormalKeyChipModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NormalKeyChipModel {
     type View = NormalKeyChipView;
 }

@@ -26,6 +26,10 @@ impl From<&RaceTabInputView> for UndeadRaceTabModel {
     }
 }
 
+impl ddd::Layered for UndeadRaceTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UndeadRaceTabModel {
     type View = RaceTabInputView;
 }

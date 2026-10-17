@@ -6,4 +6,8 @@ pub struct ClosedHeroLevelTriggerView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ClosedHeroLevelTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ClosedHeroLevelTriggerView {}

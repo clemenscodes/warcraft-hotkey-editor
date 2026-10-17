@@ -14,6 +14,10 @@ impl From<&LinkMoveNameView> for LinkMoveNameModel {
     }
 }
 
+impl ddd::Layered for LinkMoveNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for LinkMoveNameModel {
     type View = LinkMoveNameView;
 }

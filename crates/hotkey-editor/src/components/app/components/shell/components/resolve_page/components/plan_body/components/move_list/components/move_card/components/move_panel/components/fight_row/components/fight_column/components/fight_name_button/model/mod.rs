@@ -28,6 +28,10 @@ impl From<&FightNameButtonView> for FightNameButtonModel {
     }
 }
 
+impl ddd::Layered for FightNameButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FightNameButtonModel {
     type View = FightNameButtonView;
 }

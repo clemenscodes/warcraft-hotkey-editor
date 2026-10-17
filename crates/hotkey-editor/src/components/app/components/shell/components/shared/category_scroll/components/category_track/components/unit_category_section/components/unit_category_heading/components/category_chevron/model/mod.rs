@@ -13,6 +13,10 @@ impl From<&CategoryChevronView> for CategoryChevronModel {
     }
 }
 
+impl ddd::Layered for CategoryChevronModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CategoryChevronModel {
     type View = CategoryChevronView;
 }

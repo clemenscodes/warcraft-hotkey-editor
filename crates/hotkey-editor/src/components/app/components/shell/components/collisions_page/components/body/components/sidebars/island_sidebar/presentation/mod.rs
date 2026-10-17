@@ -8,6 +8,10 @@ pub(super) struct IslandSidebarPresentation {
     pub(super) cards: Vec<CollisionCardData>,
 }
 
+impl ddd::Layered for IslandSidebarPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for IslandSidebarPresentation {
     type Model = IslandSidebarModel;
 }

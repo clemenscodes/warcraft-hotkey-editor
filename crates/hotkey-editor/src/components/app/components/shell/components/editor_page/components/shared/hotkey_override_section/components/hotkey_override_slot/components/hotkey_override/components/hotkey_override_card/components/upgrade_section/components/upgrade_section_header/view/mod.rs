@@ -9,4 +9,8 @@ pub struct UpgradeSectionHeaderView {
     pub on_hotkey_activate: EventHandler<()>,
 }
 
+impl ddd::Layered for UpgradeSectionHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UpgradeSectionHeaderView {}

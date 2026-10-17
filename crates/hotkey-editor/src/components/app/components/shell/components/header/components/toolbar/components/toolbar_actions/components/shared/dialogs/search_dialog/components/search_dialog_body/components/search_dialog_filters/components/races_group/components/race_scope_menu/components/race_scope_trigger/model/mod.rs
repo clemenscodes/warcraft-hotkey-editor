@@ -24,6 +24,10 @@ impl From<&RaceScopeTriggerView> for RaceScopeTriggerModel {
     }
 }
 
+impl ddd::Layered for RaceScopeTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopeTriggerModel {
     type View = RaceScopeTriggerView;
 }

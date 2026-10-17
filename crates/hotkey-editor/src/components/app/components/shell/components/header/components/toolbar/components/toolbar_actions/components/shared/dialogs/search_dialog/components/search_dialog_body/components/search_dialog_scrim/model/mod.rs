@@ -13,6 +13,10 @@ impl From<&SearchDialogScrimView> for SearchDialogScrimModel {
     }
 }
 
+impl ddd::Layered for SearchDialogScrimModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchDialogScrimModel {
     type View = SearchDialogScrimView;
 }

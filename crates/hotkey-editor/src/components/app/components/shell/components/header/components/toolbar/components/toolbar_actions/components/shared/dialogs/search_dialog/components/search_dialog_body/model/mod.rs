@@ -11,6 +11,10 @@ impl From<&SearchDialogBodyView> for SearchDialogBodyModel {
     }
 }
 
+impl ddd::Layered for SearchDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchDialogBodyModel {
     type View = SearchDialogBodyView;
 }

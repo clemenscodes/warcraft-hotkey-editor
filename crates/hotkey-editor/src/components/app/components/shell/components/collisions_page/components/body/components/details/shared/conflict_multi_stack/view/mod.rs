@@ -7,4 +7,8 @@ pub struct ConflictMultiStackView {
     pub marker: ConflictMarker,
 }
 
+impl ddd::Layered for ConflictMultiStackView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictMultiStackView {}

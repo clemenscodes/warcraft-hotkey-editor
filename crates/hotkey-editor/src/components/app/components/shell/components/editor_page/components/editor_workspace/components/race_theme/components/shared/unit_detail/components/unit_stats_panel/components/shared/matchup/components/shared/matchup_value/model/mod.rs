@@ -13,6 +13,10 @@ impl From<&MatchupValueView> for MatchupValueModel {
     }
 }
 
+impl ddd::Layered for MatchupValueModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MatchupValueModel {
     type View = MatchupValueView;
 }

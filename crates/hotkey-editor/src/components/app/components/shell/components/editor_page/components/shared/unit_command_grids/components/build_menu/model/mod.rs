@@ -14,6 +14,10 @@ impl From<&BuildMenuView> for BuildMenuModel {
     }
 }
 
+impl ddd::Layered for BuildMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BuildMenuModel {
     type View = BuildMenuView;
 }

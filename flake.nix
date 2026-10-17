@@ -44,38 +44,38 @@
             # pre-generated version manifests, so this stays IFD-free — no
             # toolchain hash to pin or churn.
             (import rust-overlay)
-            # `dioxus-cli` 0.7.9 strictly checks the wasm-bindgen-cli
-            # version against the wasm-bindgen library (pinned to 0.2.126
+            # `dioxus-cli` 0.7.10 strictly checks the wasm-bindgen-cli
+            # version against the wasm-bindgen library (pinned to 0.2.129
             # by the workspace, see `crates/hotkey-editor/Cargo.toml`).
-            # nixpkgs ships an older cli, so we pin our own at 0.2.126
+            # nixpkgs ships an older cli, so we pin our own at 0.2.129
             # via the in-tree builder.
             (final: prev: {
               wasm-bindgen-cli = final.buildWasmBindgenCli rec {
                 src = final.fetchCrate {
                   pname = "wasm-bindgen-cli";
-                  version = "0.2.126";
-                  hash = "sha256-H6Is3fiZVxZCfOMWK5dWMSrtn50VGv0sfdnsT+cTtyk=";
+                  version = "0.2.129";
+                  hash = "sha256-pcecKQd7E8Opw6bkFoE569epUi7gh5qpQF1e5PJY6V8=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-VucqkXbCi4qtQzY/HrXiDnbSURsagPsdNVMn1Tw3UiY=";
+                  hash = "sha256-vmUrWVU7kPJJxO5qIVeAkwQyWDELO1Z4Z5gitz2kco8=";
                 };
               };
-              # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.9 to match
+              # nixpkgs ships dioxus-cli 0.7.5 — bump to 0.7.10 to match
               # the workspace pin. Same `no-downloads` + `disable-telemetry`
               # build features that nixpkgs already configures.
               dioxus-cli = prev.dioxus-cli.overrideAttrs (old: rec {
-                version = "0.7.9";
+                version = "0.7.10";
                 src = final.fetchCrate {
                   pname = "dioxus-cli";
                   inherit version;
-                  hash = "sha256-tLMtUlohSJt3okdJh+ARweQNGmzj/vYiNl8iZhDbSAc=";
+                  hash = "sha256-kPzo5zRSVs46SjiDRKpKxca8kPcWUgqc/LMKQsk0sC8=";
                 };
                 cargoDeps = final.rustPlatform.fetchCargoVendor {
                   inherit src;
                   inherit (src) pname version;
-                  hash = "sha256-h5wkxHP8ehZLHqcUsro08/dpqSPnPuBbZuUGG8i4nBc=";
+                  hash = "sha256-cvBVIkIqBjXFifYNpL2DqZpQcBaX/59Xw0ZJKUvUcIs=";
                 };
               });
             })

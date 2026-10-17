@@ -14,6 +14,10 @@ impl From<&CollisionSidebarView> for CollisionSidebarModel {
     }
 }
 
+impl ddd::Layered for CollisionSidebarModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionSidebarModel {
     type View = CollisionSidebarView;
 }

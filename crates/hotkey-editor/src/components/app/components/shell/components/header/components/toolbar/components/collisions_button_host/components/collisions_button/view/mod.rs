@@ -7,4 +7,8 @@ pub struct CollisionsButtonView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for CollisionsButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionsButtonView {}

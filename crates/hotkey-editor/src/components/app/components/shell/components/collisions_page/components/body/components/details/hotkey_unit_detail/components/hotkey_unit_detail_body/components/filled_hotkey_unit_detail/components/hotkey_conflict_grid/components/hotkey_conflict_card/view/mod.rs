@@ -7,4 +7,8 @@ pub struct HotkeyConflictCardView {
     pub unit_id: WarcraftObjectId,
 }
 
+impl ddd::Layered for HotkeyConflictCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyConflictCardView {}

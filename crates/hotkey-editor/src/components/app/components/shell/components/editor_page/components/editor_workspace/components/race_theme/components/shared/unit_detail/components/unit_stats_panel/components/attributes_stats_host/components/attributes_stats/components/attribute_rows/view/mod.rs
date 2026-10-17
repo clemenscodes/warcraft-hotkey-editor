@@ -10,4 +10,8 @@ pub struct AttributeRowsView {
     pub intelligence_is_primary: bool,
 }
 
+impl ddd::Layered for AttributeRowsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AttributeRowsView {}

@@ -14,6 +14,10 @@ impl From<&HelpFooterView> for HelpFooterModel {
     }
 }
 
+impl ddd::Layered for HelpFooterModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpFooterModel {
     type View = HelpFooterView;
 }

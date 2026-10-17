@@ -24,6 +24,10 @@ impl From<&UnitCategoryHeadingView> for UnitCategoryHeadingModel {
     }
 }
 
+impl ddd::Layered for UnitCategoryHeadingModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCategoryHeadingModel {
     type View = UnitCategoryHeadingView;
 }

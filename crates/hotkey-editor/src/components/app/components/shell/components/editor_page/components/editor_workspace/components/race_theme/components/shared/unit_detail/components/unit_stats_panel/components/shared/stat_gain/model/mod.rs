@@ -14,6 +14,10 @@ impl<Figure: StatFigure + Clone> From<&StatGainView<Figure>> for StatGainModel<F
     }
 }
 
+impl<Figure: StatFigure + Clone> ddd::Layered for StatGainModel<Figure> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Figure: StatFigure + Clone> ddd::Model for StatGainModel<Figure> {
     type View = StatGainView<Figure>;
 }

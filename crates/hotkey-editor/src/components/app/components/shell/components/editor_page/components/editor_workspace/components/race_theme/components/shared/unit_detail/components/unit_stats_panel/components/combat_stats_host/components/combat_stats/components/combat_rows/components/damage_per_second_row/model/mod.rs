@@ -14,6 +14,10 @@ impl From<&DamagePerSecondRowView> for DamagePerSecondRowModel {
     }
 }
 
+impl ddd::Layered for DamagePerSecondRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DamagePerSecondRowModel {
     type View = DamagePerSecondRowView;
 }

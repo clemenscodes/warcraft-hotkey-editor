@@ -15,6 +15,10 @@ impl From<&MiniGridFrameView> for MiniGridFrameModel {
     }
 }
 
+impl ddd::Layered for MiniGridFrameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MiniGridFrameModel {
     type View = MiniGridFrameView;
 }

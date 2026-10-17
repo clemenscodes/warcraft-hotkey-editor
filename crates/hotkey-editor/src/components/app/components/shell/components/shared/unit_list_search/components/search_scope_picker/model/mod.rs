@@ -9,6 +9,10 @@ impl From<&SearchScopePickerView> for SearchScopePickerModel {
     }
 }
 
+impl ddd::Layered for SearchScopePickerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchScopePickerModel {
     type View = SearchScopePickerView;
 }

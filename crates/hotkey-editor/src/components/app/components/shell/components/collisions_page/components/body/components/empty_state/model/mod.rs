@@ -14,6 +14,10 @@ impl From<&EmptyStateView> for EmptyStateModel {
     }
 }
 
+impl ddd::Layered for EmptyStateModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EmptyStateModel {
     type View = EmptyStateView;
 }

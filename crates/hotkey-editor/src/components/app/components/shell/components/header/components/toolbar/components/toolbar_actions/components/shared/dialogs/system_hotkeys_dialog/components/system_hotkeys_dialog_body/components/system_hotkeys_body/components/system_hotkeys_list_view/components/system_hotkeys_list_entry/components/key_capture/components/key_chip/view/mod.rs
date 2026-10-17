@@ -10,4 +10,8 @@ pub struct KeyChipView {
     pub tooltip_placement: TooltipPlacement,
 }
 
+impl ddd::Layered for KeyChipView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for KeyChipView {}

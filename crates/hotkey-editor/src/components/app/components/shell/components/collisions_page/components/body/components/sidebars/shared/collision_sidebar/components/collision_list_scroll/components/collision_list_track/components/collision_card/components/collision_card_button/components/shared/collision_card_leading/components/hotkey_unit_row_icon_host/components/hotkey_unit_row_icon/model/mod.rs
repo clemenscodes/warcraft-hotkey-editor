@@ -14,6 +14,10 @@ impl From<&HotkeyUnitRowIconView> for HotkeyUnitRowIconModel {
     }
 }
 
+impl ddd::Layered for HotkeyUnitRowIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyUnitRowIconModel {
     type View = HotkeyUnitRowIconView;
 }

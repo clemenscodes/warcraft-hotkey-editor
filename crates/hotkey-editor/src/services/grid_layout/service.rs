@@ -1,7 +1,7 @@
 use ddd::ApplicationLayer;
 use ddd::ApplicationService;
 use ddd::Layered;
-use ddd::Service;
+use ddd::SynchronousService;
 use dioxus::prelude::*;
 use warcraft_keybinds::GridLayout;
 
@@ -22,7 +22,7 @@ impl GridLayoutService {
     }
 
     pub fn select(&self, layout: GridLayout) {
-        self.commit(|current| {
+        let Ok(()) = self.commit(|current| {
             *current = layout;
         });
     }
@@ -34,7 +34,7 @@ impl Layered for GridLayoutService {
 
 impl ApplicationService for GridLayoutService {}
 
-impl Service<GridLayout> for GridLayoutService {
+impl SynchronousService<GridLayout> for GridLayoutService {
     type Repository = GridLayoutRepository;
 
     fn repository(&self) -> Self::Repository {

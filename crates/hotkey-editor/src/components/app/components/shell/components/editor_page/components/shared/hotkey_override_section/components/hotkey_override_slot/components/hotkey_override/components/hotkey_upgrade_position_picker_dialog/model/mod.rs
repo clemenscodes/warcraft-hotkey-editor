@@ -32,6 +32,10 @@ impl From<&HotkeyUpgradePositionPickerDialogView> for HotkeyUpgradePositionPicke
     }
 }
 
+impl ddd::Layered for HotkeyUpgradePositionPickerDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyUpgradePositionPickerDialogModel {
     type View = HotkeyUpgradePositionPickerDialogView;
 }

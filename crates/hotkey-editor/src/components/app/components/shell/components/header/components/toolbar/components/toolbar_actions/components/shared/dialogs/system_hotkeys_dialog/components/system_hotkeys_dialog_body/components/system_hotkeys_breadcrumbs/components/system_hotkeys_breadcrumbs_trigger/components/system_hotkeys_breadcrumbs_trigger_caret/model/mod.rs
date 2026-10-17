@@ -13,6 +13,10 @@ impl From<&SystemHotkeysBreadcrumbsTriggerCaretView> for SystemHotkeysBreadcrumb
     }
 }
 
+impl ddd::Layered for SystemHotkeysBreadcrumbsTriggerCaretModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysBreadcrumbsTriggerCaretModel {
     type View = SystemHotkeysBreadcrumbsTriggerCaretView;
 }

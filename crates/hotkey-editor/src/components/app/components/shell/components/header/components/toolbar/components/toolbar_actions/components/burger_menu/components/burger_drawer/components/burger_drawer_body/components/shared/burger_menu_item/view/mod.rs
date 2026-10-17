@@ -15,4 +15,8 @@ pub struct BurgerMenuItemView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for BurgerMenuItemView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for BurgerMenuItemView {}

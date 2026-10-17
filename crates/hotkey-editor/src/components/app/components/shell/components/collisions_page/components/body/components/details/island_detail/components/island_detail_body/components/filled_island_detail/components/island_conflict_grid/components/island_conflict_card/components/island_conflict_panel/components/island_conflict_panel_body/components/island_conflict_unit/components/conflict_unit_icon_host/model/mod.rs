@@ -14,6 +14,10 @@ impl From<&ConflictUnitIconHostView> for ConflictUnitIconHostModel {
     }
 }
 
+impl ddd::Layered for ConflictUnitIconHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictUnitIconHostModel {
     type View = ConflictUnitIconHostView;
 }

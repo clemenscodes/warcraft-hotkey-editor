@@ -5,4 +5,8 @@ pub struct HotkeyAltPositionPickerGridAnchorView {
     pub grid_config: GridEditorView,
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerGridAnchorView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyAltPositionPickerGridAnchorView {}

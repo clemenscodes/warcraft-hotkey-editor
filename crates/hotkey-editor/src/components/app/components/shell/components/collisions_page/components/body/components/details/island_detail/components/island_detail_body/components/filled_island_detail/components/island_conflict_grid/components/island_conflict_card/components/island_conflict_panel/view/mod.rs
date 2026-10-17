@@ -7,4 +7,8 @@ pub struct IslandConflictPanelView {
     pub(crate) shared_ability: IslandAbilityData,
 }
 
+impl ddd::Layered for IslandConflictPanelView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandConflictPanelView {}

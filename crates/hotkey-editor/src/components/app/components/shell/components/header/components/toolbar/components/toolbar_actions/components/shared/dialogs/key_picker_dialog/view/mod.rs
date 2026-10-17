@@ -12,4 +12,8 @@ pub struct KeyPickerDialogView {
     pub on_close: EventHandler<()>,
 }
 
+impl ddd::Layered for KeyPickerDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for KeyPickerDialogView {}

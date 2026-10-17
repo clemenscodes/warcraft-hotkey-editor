@@ -24,6 +24,10 @@ impl From<&SystemHotkeysBreadcrumbsTriggerView> for SystemHotkeysBreadcrumbsTrig
     }
 }
 
+impl ddd::Layered for SystemHotkeysBreadcrumbsTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysBreadcrumbsTriggerModel {
     type View = SystemHotkeysBreadcrumbsTriggerView;
 }

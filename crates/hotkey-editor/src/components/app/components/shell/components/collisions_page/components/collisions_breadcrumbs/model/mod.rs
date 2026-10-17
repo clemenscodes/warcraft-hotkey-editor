@@ -14,6 +14,10 @@ impl From<&CollisionsBreadcrumbsView> for CollisionsBreadcrumbsModel {
     }
 }
 
+impl ddd::Layered for CollisionsBreadcrumbsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionsBreadcrumbsModel {
     type View = CollisionsBreadcrumbsView;
 }

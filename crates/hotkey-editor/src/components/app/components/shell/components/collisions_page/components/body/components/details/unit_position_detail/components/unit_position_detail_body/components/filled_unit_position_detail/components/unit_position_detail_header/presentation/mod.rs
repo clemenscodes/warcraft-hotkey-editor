@@ -27,6 +27,10 @@ impl From<&UnitPositionDetailHeaderModel> for UnitPositionDetailHeaderPresentati
     }
 }
 
+impl ddd::Layered for UnitPositionDetailHeaderPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for UnitPositionDetailHeaderPresentation {
     type Model = UnitPositionDetailHeaderModel;
 }

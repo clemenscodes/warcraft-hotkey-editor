@@ -13,6 +13,10 @@ impl From<&HelpLegendIconView> for HelpLegendIconModel {
     }
 }
 
+impl ddd::Layered for HelpLegendIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpLegendIconModel {
     type View = HelpLegendIconView;
 }

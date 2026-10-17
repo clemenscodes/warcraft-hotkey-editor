@@ -13,6 +13,10 @@ impl From<&RaceScopePanelView> for RaceScopePanelModel {
     }
 }
 
+impl ddd::Layered for RaceScopePanelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopePanelModel {
     type View = RaceScopePanelView;
 }

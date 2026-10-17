@@ -6,6 +6,10 @@ use dioxus::prelude::*;
 #[derive(Clone, PartialEq, Default)]
 pub struct HelpGuideView;
 
+impl ddd::Layered for HelpGuideView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpGuideView {}
 
 impl Render for HelpGuideView {

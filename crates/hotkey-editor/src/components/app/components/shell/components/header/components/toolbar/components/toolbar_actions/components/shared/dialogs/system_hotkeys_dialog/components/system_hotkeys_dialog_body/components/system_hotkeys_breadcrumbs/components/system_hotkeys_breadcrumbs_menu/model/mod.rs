@@ -24,6 +24,10 @@ impl From<&SystemHotkeysBreadcrumbsMenuView> for SystemHotkeysBreadcrumbsMenuMod
     }
 }
 
+impl ddd::Layered for SystemHotkeysBreadcrumbsMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysBreadcrumbsMenuModel {
     type View = SystemHotkeysBreadcrumbsMenuView;
 }

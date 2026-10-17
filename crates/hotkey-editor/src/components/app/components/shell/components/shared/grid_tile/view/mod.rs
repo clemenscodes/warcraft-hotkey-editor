@@ -18,4 +18,8 @@ pub struct GridTileView {
     pub is_drag_over: bool,
 }
 
+impl ddd::Layered for GridTileView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GridTileView {}

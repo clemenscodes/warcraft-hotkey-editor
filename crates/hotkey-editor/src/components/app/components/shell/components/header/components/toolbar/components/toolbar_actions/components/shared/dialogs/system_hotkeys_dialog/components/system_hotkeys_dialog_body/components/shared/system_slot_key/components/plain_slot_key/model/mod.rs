@@ -14,6 +14,10 @@ impl From<&PlainSlotKeyView> for PlainSlotKeyModel {
     }
 }
 
+impl ddd::Layered for PlainSlotKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlainSlotKeyModel {
     type View = PlainSlotKeyView;
 }

@@ -33,6 +33,10 @@ pub(super) fn use_burger_redo_item(props: &BurgerRedoItemModel) -> BurgerRedoIte
     }
 }
 
+impl ddd::Layered for BurgerRedoItemPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for BurgerRedoItemPresentation {
     type Model = BurgerRedoItemModel;
 }

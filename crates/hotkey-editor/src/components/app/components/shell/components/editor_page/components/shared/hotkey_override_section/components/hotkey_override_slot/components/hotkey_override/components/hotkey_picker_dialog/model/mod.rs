@@ -32,6 +32,10 @@ impl From<&HotkeyPickerDialogDialogView> for HotkeyPickerDialogDialogModel {
     }
 }
 
+impl ddd::Layered for HotkeyPickerDialogDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyPickerDialogDialogModel {
     type View = HotkeyPickerDialogDialogView;
 }

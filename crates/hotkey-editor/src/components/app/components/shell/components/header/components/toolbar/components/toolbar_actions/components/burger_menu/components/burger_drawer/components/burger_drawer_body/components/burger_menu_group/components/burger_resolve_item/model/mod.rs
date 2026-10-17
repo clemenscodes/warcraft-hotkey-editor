@@ -13,6 +13,10 @@ impl From<&BurgerResolveItemView> for BurgerResolveItemModel {
     }
 }
 
+impl ddd::Layered for BurgerResolveItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerResolveItemModel {
     type View = BurgerResolveItemView;
 }

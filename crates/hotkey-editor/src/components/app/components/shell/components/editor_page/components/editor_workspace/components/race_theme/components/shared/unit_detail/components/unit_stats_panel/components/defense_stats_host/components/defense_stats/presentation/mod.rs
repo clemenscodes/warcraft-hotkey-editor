@@ -34,6 +34,10 @@ impl From<&DefenseStatsModel> for DefenseFigures {
     }
 }
 
+impl ddd::Layered for DefenseFigures {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for DefenseFigures {
     type Model = DefenseStatsModel;
 }

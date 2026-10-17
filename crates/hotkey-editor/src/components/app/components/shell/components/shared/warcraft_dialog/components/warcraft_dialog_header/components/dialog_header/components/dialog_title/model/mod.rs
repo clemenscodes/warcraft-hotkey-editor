@@ -14,6 +14,10 @@ impl From<&DialogTitleView> for DialogTitleModel {
     }
 }
 
+impl ddd::Layered for DialogTitleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DialogTitleModel {
     type View = DialogTitleView;
 }

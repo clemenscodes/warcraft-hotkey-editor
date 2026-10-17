@@ -39,6 +39,10 @@ impl From<&ToolbarButtonView> for ToolbarButtonModel {
     }
 }
 
+impl ddd::Layered for ToolbarButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ToolbarButtonModel {
     type View = ToolbarButtonView;
 }

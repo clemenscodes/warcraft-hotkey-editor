@@ -13,6 +13,10 @@ impl From<&BurgerCloseView> for BurgerCloseModel {
     }
 }
 
+impl ddd::Layered for BurgerCloseModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerCloseModel {
     type View = BurgerCloseView;
 }

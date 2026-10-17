@@ -13,6 +13,10 @@ impl From<&DropTargetOverlayView> for DropTargetOverlayModel {
     }
 }
 
+impl ddd::Layered for DropTargetOverlayModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DropTargetOverlayModel {
     type View = DropTargetOverlayView;
 }

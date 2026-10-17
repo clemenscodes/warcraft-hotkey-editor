@@ -14,6 +14,10 @@ impl From<&HelpWorkflowSectionView> for HelpWorkflowSectionModel {
     }
 }
 
+impl ddd::Layered for HelpWorkflowSectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpWorkflowSectionModel {
     type View = HelpWorkflowSectionView;
 }

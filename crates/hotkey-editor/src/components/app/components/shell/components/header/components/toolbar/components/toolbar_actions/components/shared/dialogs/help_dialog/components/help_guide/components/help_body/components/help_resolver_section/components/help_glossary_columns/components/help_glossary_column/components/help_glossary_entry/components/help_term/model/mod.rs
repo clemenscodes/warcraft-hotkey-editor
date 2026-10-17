@@ -14,6 +14,10 @@ impl From<&HelpTermView> for HelpTermModel {
     }
 }
 
+impl ddd::Layered for HelpTermModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpTermModel {
     type View = HelpTermView;
 }

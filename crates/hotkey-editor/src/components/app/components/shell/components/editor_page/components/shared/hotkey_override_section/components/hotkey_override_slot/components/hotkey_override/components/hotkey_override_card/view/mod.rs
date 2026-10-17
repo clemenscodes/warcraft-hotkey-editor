@@ -31,4 +31,8 @@ pub struct HotkeyOverrideCardView {
     pub on_upgrade_hotkey_activate: EventHandler<()>,
 }
 
+impl ddd::Layered for HotkeyOverrideCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyOverrideCardView {}

@@ -6,4 +6,8 @@ pub struct UnitPositionDetailHeaderView {
     pub count: usize,
 }
 
+impl ddd::Layered for UnitPositionDetailHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitPositionDetailHeaderView {}

@@ -14,6 +14,10 @@ impl From<&MoveHotkeyCheckboxView> for MoveHotkeyCheckboxModel {
     }
 }
 
+impl ddd::Layered for MoveHotkeyCheckboxModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveHotkeyCheckboxModel {
     type View = MoveHotkeyCheckboxView;
 }

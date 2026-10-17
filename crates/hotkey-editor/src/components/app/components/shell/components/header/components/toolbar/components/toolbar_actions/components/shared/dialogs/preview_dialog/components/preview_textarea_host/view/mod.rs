@@ -6,6 +6,10 @@ use dioxus::prelude::*;
 #[derive(Clone, PartialEq, Default)]
 pub struct PreviewTextareaHostView;
 
+impl ddd::Layered for PreviewTextareaHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PreviewTextareaHostView {}
 
 impl Render for PreviewTextareaHostView {

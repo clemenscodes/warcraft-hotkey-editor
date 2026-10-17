@@ -14,6 +14,10 @@ impl From<&MutedManaRegenGainView> for MutedManaRegenGainModel {
     }
 }
 
+impl ddd::Layered for MutedManaRegenGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MutedManaRegenGainModel {
     type View = MutedManaRegenGainView;
 }

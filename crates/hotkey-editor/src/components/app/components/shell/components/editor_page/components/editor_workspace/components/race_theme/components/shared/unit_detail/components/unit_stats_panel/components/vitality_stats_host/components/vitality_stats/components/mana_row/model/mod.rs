@@ -14,6 +14,10 @@ impl From<&ManaRowView> for ManaRowModel {
     }
 }
 
+impl ddd::Layered for ManaRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ManaRowModel {
     type View = ManaRowView;
 }

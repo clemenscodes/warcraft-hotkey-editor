@@ -23,6 +23,10 @@ impl From<&ResolvePagerView> for ResolvePagerModel {
     }
 }
 
+impl ddd::Layered for ResolvePagerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolvePagerModel {
     type View = ResolvePagerView;
 }

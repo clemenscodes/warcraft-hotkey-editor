@@ -14,6 +14,10 @@ impl From<&HelpSectionTitleView> for HelpSectionTitleModel {
     }
 }
 
+impl ddd::Layered for HelpSectionTitleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpSectionTitleModel {
     type View = HelpSectionTitleView;
 }

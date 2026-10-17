@@ -33,6 +33,10 @@ impl From<&UnitDetailRowModel> for UnitDetailRowPresentation {
     }
 }
 
+impl ddd::Layered for UnitDetailRowPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for UnitDetailRowPresentation {
     type Model = UnitDetailRowModel;
 }

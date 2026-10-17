@@ -13,6 +13,10 @@ impl From<&FilterTriggerBadgeView> for FilterTriggerBadgeModel {
     }
 }
 
+impl ddd::Layered for FilterTriggerBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FilterTriggerBadgeModel {
     type View = FilterTriggerBadgeView;
 }

@@ -7,4 +7,8 @@ pub struct UnitPositionConflictCardView {
     pub unit_id: WarcraftObjectId,
 }
 
+impl ddd::Layered for UnitPositionConflictCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitPositionConflictCardView {}

@@ -36,6 +36,10 @@ impl From<&KeyPickerDialogView> for KeyPickerDialogModel {
     }
 }
 
+impl ddd::Layered for KeyPickerDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for KeyPickerDialogModel {
     type View = KeyPickerDialogView;
 }

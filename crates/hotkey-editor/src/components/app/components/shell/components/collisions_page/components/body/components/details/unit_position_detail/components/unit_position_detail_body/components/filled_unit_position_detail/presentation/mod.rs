@@ -26,6 +26,10 @@ impl From<&FilledUnitPositionDetailModel> for FilledUnitPositionDetailPresentati
     }
 }
 
+impl ddd::Layered for FilledUnitPositionDetailPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for FilledUnitPositionDetailPresentation {
     type Model = FilledUnitPositionDetailModel;
 }

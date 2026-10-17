@@ -8,4 +8,8 @@ pub struct GapPullSectionTabView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for GapPullSectionTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GapPullSectionTabView {}

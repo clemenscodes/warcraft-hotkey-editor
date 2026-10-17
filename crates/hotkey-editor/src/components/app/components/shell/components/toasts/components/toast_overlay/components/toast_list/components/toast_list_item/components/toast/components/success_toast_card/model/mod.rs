@@ -15,6 +15,10 @@ impl From<&SuccessToastCardView> for SuccessToastCardModel {
     }
 }
 
+impl ddd::Layered for SuccessToastCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SuccessToastCardModel {
     type View = SuccessToastCardView;
 }

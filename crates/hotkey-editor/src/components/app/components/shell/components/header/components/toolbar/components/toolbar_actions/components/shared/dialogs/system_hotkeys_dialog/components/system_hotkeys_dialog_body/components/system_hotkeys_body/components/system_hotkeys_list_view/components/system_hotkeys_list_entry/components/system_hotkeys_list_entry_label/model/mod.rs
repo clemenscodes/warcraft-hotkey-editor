@@ -14,6 +14,10 @@ impl From<&SystemHotkeysListEntryLabelView> for SystemHotkeysListEntryLabelModel
     }
 }
 
+impl ddd::Layered for SystemHotkeysListEntryLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysListEntryLabelModel {
     type View = SystemHotkeysListEntryLabelView;
 }

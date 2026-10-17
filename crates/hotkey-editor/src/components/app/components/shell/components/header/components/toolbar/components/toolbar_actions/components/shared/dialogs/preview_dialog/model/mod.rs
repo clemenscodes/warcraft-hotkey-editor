@@ -20,6 +20,10 @@ impl From<&PreviewDialogView> for PreviewDialogModel {
     }
 }
 
+impl ddd::Layered for PreviewDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PreviewDialogModel {
     type View = PreviewDialogView;
 }

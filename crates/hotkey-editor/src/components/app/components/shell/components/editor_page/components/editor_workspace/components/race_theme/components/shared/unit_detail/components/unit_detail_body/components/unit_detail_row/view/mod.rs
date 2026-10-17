@@ -7,4 +7,8 @@ pub struct UnitDetailRowView {
     pub(crate) override_target: UnitOverrideTargetView,
 }
 
+impl ddd::Layered for UnitDetailRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitDetailRowView {}

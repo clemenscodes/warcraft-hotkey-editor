@@ -29,6 +29,10 @@ impl From<&InfoDialogBodyView> for InfoDialogBodyModel {
     }
 }
 
+impl ddd::Layered for InfoDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoDialogBodyModel {
     type View = InfoDialogBodyView;
 }

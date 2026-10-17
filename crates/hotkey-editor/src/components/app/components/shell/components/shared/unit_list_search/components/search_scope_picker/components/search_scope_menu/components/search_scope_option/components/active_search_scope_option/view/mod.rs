@@ -6,4 +6,8 @@ pub struct ActiveSearchScopeOptionView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ActiveSearchScopeOptionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ActiveSearchScopeOptionView {}

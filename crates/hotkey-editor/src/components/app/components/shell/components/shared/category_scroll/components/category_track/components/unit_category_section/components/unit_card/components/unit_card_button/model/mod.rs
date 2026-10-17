@@ -35,6 +35,10 @@ impl From<&UnitCardButtonView> for UnitCardButtonModel {
     }
 }
 
+impl ddd::Layered for UnitCardButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCardButtonModel {
     type View = UnitCardButtonView;
 }

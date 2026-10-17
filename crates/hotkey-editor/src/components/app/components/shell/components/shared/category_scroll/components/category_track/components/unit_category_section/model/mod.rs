@@ -14,6 +14,10 @@ impl From<&UnitCategorySectionView> for UnitCategorySectionModel {
     }
 }
 
+impl ddd::Layered for UnitCategorySectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCategorySectionModel {
     type View = UnitCategorySectionView;
 }

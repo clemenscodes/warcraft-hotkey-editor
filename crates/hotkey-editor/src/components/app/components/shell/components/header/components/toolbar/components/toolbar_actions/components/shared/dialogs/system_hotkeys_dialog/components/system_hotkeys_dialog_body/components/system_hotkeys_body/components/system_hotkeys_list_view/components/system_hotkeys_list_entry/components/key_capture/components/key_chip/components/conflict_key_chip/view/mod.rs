@@ -9,4 +9,8 @@ pub struct ConflictKeyChipView {
     pub tooltip_placement: TooltipPlacement,
 }
 
+impl ddd::Layered for ConflictKeyChipView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictKeyChipView {}

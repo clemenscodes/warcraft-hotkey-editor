@@ -2,9 +2,10 @@ use ddd::ApplicationLayer;
 use ddd::ApplicationService;
 use ddd::Layered;
 use ddd::QueryHandler;
-use ddd::Repository;
-use ddd::Service;
+use ddd::SynchronousRepository;
+use ddd::SynchronousService;
 use dioxus::prelude::*;
+use std::convert::Infallible;
 use warcraft_keybinds::CustomKeys;
 use warcraft_keybinds::GridLayout;
 use warcraft_keybinds::HotkeyTarget;
@@ -49,33 +50,35 @@ impl CustomKeysService {
 
     pub fn apply_grid_layout(&self, layout: GridLayout) -> usize {
         let command = ApplyGridLayoutCommand::new(layout);
-        self.dispatch(command)
+        let Ok(applied_count) = self.dispatch(command);
+        applied_count
     }
 
     pub fn override_hotkey(&self, target: HotkeyTarget, token: Option<HotkeyToken>) {
         let command = SetHotkeyCommand::new(target, token);
-        self.dispatch(command);
+        let Ok(()) = self.dispatch(command);
     }
 
     pub fn move_slot(&self, request: &MoveRequest<'_>) {
         let owned_request = *request;
         let command = MoveSlotCommand::new(owned_request);
-        self.dispatch(command);
+        let Ok(()) = self.dispatch(command);
     }
 
     pub fn set_system_hotkey(&self, section_id: WarcraftObjectId, code: KeyCode) {
         let command = SetSystemHotkeyCommand::new(section_id, code);
-        self.dispatch(command);
+        let Ok(()) = self.dispatch(command);
     }
 
     pub fn swap_system_bindings(&self, source_id: WarcraftObjectId, target_id: WarcraftObjectId) {
         let command = SwapSystemBindingsCommand::new(source_id, target_id);
-        self.dispatch(command);
+        let Ok(()) = self.dispatch(command);
     }
 
     pub fn resolve_conflicts(&self) -> CascadePlan {
         let command = ResolveConflictsCommand;
-        self.dispatch(command)
+        let Ok(cascade_plan) = self.dispatch(command);
+        cascade_plan
     }
 
     pub fn slot_binding(&self, section_id: WarcraftObjectId) -> SlotBindingView {
@@ -114,7 +117,7 @@ impl CustomKeysService {
         let imported_outcome = outcome.clone();
         let imported_keys = imported_outcome.into_keys();
         let repository = self.repository();
-        repository.save(&imported_keys);
+        let Ok(()) = repository.save(&imported_keys);
         self.replace(imported_keys);
         outcome
     }
@@ -166,7 +169,7 @@ impl QueryHandler<CollisionSummaryQuery> for CustomKeysService {
     }
 }
 
-impl Service<CustomKeys> for CustomKeysService {
+impl SynchronousService<CustomKeys> for CustomKeysService {
     type Repository = CustomKeysRepository;
 
     fn repository(&self) -> Self::Repository {
@@ -183,12 +186,15 @@ impl Service<CustomKeys> for CustomKeysService {
         keys_signal.set(Some(aggregate));
     }
 
-    fn commit<Outcome>(&self, change: impl FnOnce(&mut CustomKeys) -> Outcome) -> Outcome {
+    fn commit<Outcome>(
+        &self,
+        change: impl FnOnce(&mut CustomKeys) -> Outcome,
+    ) -> Result<Outcome, Infallible> {
         let mut aggregate = self.snapshot();
         let outcome = change(&mut aggregate);
         let repository = self.repository();
-        repository.save(&aggregate);
+        repository.save(&aggregate)?;
         self.replace(aggregate);
-        outcome
+        Ok(outcome)
     }
 }

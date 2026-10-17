@@ -7,4 +7,8 @@ pub struct ConflictAbilityTriggerView {
     pub icon_alt: String,
 }
 
+impl ddd::Layered for ConflictAbilityTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictAbilityTriggerView {}

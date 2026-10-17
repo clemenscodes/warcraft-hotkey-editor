@@ -13,6 +13,10 @@ impl From<&PreviewTextareaView> for PreviewTextareaModel {
     }
 }
 
+impl ddd::Layered for PreviewTextareaModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PreviewTextareaModel {
     type View = PreviewTextareaView;
 }

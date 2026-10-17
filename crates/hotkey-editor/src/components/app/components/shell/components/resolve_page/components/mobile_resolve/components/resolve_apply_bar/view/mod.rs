@@ -8,4 +8,8 @@ pub struct ResolveApplyBarView {
     pub on_apply: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ResolveApplyBarView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ResolveApplyBarView {}

@@ -13,6 +13,10 @@ impl From<&EmptyMessageView> for EmptyMessageModel {
     }
 }
 
+impl ddd::Layered for EmptyMessageModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EmptyMessageModel {
     type View = EmptyMessageView;
 }

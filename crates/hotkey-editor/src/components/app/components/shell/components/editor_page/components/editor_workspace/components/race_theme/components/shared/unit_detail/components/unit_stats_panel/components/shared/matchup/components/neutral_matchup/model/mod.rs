@@ -25,6 +25,10 @@ impl From<&NeutralMatchupView> for NeutralMatchupModel {
     }
 }
 
+impl ddd::Layered for NeutralMatchupModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NeutralMatchupModel {
     type View = NeutralMatchupView;
 }

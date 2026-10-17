@@ -26,6 +26,10 @@ impl From<&TooltipView> for TooltipModel {
     }
 }
 
+impl ddd::Layered for TooltipModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TooltipModel {
     type View = TooltipView;
 }

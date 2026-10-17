@@ -15,6 +15,10 @@ impl From<&PreviewHeadedGridView> for PreviewHeadedGridModel {
     }
 }
 
+impl ddd::Layered for PreviewHeadedGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PreviewHeadedGridModel {
     type View = PreviewHeadedGridView;
 }

@@ -5,4 +5,8 @@ pub struct AbilityFollowerGhostView {
     pub presentation: FollowerPresentation,
 }
 
+impl ddd::Layered for AbilityFollowerGhostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AbilityFollowerGhostView {}

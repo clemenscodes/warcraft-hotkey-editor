@@ -16,6 +16,10 @@ impl From<&FramedIconImageView> for FramedIconImageModel {
     }
 }
 
+impl ddd::Layered for FramedIconImageModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FramedIconImageModel {
     type View = FramedIconImageView;
 }

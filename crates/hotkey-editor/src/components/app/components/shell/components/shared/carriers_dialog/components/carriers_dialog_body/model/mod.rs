@@ -14,6 +14,10 @@ impl From<&CarriersDialogBodyView> for CarriersDialogBodyModel {
     }
 }
 
+impl ddd::Layered for CarriersDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CarriersDialogBodyModel {
     type View = CarriersDialogBodyView;
 }

@@ -8,4 +8,8 @@ pub struct ActiveToggleButtonView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for ActiveToggleButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ActiveToggleButtonView {}

@@ -9,6 +9,10 @@ pub struct UnitPositionDetailBodyView {
     pub units: Vec<UnitPositionUnitView>,
 }
 
+impl ddd::Layered for UnitPositionDetailBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitPositionDetailBodyView {}
 
 impl Render for UnitPositionDetailBodyView {

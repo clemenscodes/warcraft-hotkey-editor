@@ -14,6 +14,10 @@ impl From<&FightIconView> for FightIconModel {
     }
 }
 
+impl ddd::Layered for FightIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FightIconModel {
     type View = FightIconView;
 }

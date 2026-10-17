@@ -26,6 +26,10 @@ impl From<&IdleToggleButtonView> for IdleToggleButtonModel {
     }
 }
 
+impl ddd::Layered for IdleToggleButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleToggleButtonModel {
     type View = IdleToggleButtonView;
 }

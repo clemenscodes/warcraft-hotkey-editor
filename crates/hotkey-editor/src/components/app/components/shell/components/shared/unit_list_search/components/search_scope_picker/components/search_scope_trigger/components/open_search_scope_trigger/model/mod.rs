@@ -15,6 +15,10 @@ impl From<&OpenSearchScopeTriggerView> for OpenSearchScopeTriggerModel {
     }
 }
 
+impl ddd::Layered for OpenSearchScopeTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for OpenSearchScopeTriggerModel {
     type View = OpenSearchScopeTriggerView;
 }

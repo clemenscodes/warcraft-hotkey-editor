@@ -28,6 +28,10 @@ impl From<&DefenseStatsHostView> for DefenseStatsHostModel {
     }
 }
 
+impl ddd::Layered for DefenseStatsHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DefenseStatsHostModel {
     type View = DefenseStatsHostView;
 }

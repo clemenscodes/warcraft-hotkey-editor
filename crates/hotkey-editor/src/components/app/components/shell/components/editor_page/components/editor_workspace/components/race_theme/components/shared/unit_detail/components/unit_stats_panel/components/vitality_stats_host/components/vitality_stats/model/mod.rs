@@ -27,6 +27,10 @@ impl From<&VitalityStatsView> for VitalityStatsModel {
     }
 }
 
+impl ddd::Layered for VitalityStatsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for VitalityStatsModel {
     type View = VitalityStatsView;
 }

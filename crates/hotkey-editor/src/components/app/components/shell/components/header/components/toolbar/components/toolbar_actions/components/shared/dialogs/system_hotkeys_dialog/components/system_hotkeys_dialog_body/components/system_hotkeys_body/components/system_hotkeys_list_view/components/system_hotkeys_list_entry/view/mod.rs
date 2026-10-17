@@ -6,4 +6,8 @@ pub struct SystemHotkeysListEntryView {
     pub comment: String,
 }
 
+impl ddd::Layered for SystemHotkeysListEntryView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SystemHotkeysListEntryView {}

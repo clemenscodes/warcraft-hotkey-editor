@@ -6,4 +6,8 @@ pub struct DetailCardView<Body: Render<Output = Element>> {
     pub body: Body,
 }
 
+impl<Body: Render<Output = Element>> ddd::Layered for DetailCardView<Body> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Body: Render<Output = Element>> ddd::View for DetailCardView<Body> {}

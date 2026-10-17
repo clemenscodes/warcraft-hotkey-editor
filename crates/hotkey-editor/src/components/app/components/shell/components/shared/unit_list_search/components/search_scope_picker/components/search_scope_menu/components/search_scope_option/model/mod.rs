@@ -24,6 +24,10 @@ impl From<&SearchScopeOptionView> for SearchScopeOptionModel {
     }
 }
 
+impl ddd::Layered for SearchScopeOptionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchScopeOptionModel {
     type View = SearchScopeOptionView;
 }

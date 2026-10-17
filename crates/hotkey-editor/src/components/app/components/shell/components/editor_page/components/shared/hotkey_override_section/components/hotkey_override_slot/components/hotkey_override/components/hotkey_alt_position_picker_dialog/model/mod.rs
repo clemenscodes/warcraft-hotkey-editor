@@ -32,6 +32,10 @@ impl From<&HotkeyAltPositionPickerDialogView> for HotkeyAltPositionPickerDialogM
     }
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyAltPositionPickerDialogModel {
     type View = HotkeyAltPositionPickerDialogView;
 }

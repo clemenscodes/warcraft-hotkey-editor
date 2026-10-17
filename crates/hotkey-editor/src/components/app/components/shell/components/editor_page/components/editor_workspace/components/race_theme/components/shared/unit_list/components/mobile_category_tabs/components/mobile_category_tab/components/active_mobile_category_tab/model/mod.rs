@@ -14,6 +14,10 @@ impl From<&ActiveMobileCategoryTabView> for ActiveMobileCategoryTabModel {
     }
 }
 
+impl ddd::Layered for ActiveMobileCategoryTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveMobileCategoryTabModel {
     type View = ActiveMobileCategoryTabView;
 }

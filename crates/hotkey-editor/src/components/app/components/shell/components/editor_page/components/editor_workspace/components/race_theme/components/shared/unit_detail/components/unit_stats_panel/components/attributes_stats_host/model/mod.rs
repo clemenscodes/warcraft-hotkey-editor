@@ -14,6 +14,10 @@ impl From<&AttributesStatsHostView> for AttributesStatsHostModel {
     }
 }
 
+impl ddd::Layered for AttributesStatsHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AttributesStatsHostModel {
     type View = AttributesStatsHostView;
 }

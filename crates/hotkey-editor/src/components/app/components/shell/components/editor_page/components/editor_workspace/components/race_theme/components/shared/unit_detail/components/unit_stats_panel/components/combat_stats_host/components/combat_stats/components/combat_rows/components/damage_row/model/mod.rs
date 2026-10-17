@@ -14,6 +14,10 @@ impl From<&DamageRowView> for DamageRowModel {
     }
 }
 
+impl ddd::Layered for DamageRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DamageRowModel {
     type View = DamageRowView;
 }

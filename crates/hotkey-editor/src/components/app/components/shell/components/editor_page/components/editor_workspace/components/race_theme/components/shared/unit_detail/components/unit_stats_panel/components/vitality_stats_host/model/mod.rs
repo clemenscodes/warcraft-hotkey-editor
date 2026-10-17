@@ -27,6 +27,10 @@ impl From<&VitalityStatsHostView> for VitalityStatsHostModel {
     }
 }
 
+impl ddd::Layered for VitalityStatsHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for VitalityStatsHostModel {
     type View = VitalityStatsHostView;
 }

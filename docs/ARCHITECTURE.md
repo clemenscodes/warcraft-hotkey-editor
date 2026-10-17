@@ -114,15 +114,18 @@ graph are the guardrail. Only the crate boundary in §3 is truly enforced.
 
 - `services/` — application + presentation. Application services
   (`CustomKeysService`, `GridLayoutService`, `UndoHistory`) implement
-  `ddd::Service<Aggregate>` and are the only sanctioned way for the renderer
+  `ddd::SynchronousService<Aggregate>` and are the only sanctioned way for the renderer
   to mutate state; every command funnels through `commit` (write-through:
   mutate the snapshot → persist via the repository → replace the live
   signal). UI-only signal bags (dialog-open flags, selection, drag,
   navigation) also live here as presentation state and carry no repository.
-- `repository/` — infrastructure. One `ddd::Repository<Aggregate> + Adapter`
+- `repository/` — infrastructure. One `ddd::SynchronousRepository<Aggregate> + Adapter`
   per persisted aggregate (`CustomKeysRepository`, `GridLayoutRepository`,
-  `EditorHistoryRepository`); loads and saves whole aggregates as canonical
-  text.
+  `EditorHistoryRepository`); finds, saves and deletes whole aggregates as
+  canonical text, keyed by the aggregate's singleton identity. It is the
+  synchronous variant on purpose: localStorage answers within the call, so the
+  write is done before control returns to the event loop (R1). Its `Failure` is
+  `Infallible`, so callers bind the result with `let Ok(…) = …`.
 - `persistence/` — infrastructure. Typed wrappers over the individual
   localStorage keys plus the `LocalStorage` primitive. Compression (the undo
   blob's deflate/base64) lives here, never in the domain crate (R8).
@@ -234,7 +237,7 @@ One deliberate reinterpretation: **editor revision history is domain
 state.** The undo/redo timeline is modelled as an `EditorHistory` aggregate
 in `warcraft-keybinds` (persisted under its own localStorage key via
 `EditorHistoryRepository`), not as loose UI signals — so it can use the same
-`Service`/`Repository`/`commit` pattern as `CustomKeys`. Everything else in
+`SynchronousService`/`SynchronousRepository`/`commit` pattern as `CustomKeys`. Everything else in
 the R10 list stays UI state; this is the only place a "history of edits" is
 treated as a domain concept rather than presentation scratch.
 
@@ -339,8 +342,8 @@ All asset URLs the bundler generates include that prefix.
 ### Docker
 
 All Docker paths use `ubuntu:24.04` as the base and pin the same tool
-versions as the Nix dev shell: Rust 1.96.1, dioxus-cli 0.7.9,
-wasm-bindgen-cli 0.2.126, Node.js 24.15.0, pnpm 11.0.9, moon 2.0.3,
+versions as the Nix dev shell: Rust 1.96.1, dioxus-cli 0.7.10,
+wasm-bindgen-cli 0.2.129, Node.js 24.15.0, pnpm 11.0.9, moon 2.0.3,
 tailwindcss 4.3.0. `git` is installed in the image because moon requires
 it to detect the workspace root and changed files.
 

@@ -14,6 +14,10 @@ impl From<&HelpGlossaryEntryView> for HelpGlossaryEntryModel {
     }
 }
 
+impl ddd::Layered for HelpGlossaryEntryModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpGlossaryEntryModel {
     type View = HelpGlossaryEntryView;
 }

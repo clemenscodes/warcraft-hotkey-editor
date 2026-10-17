@@ -14,6 +14,10 @@ impl From<&ResearchMenuView> for ResearchMenuModel {
     }
 }
 
+impl ddd::Layered for ResearchMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResearchMenuModel {
     type View = ResearchMenuView;
 }

@@ -15,6 +15,10 @@ impl From<&InfoToastCardView> for InfoToastCardModel {
     }
 }
 
+impl ddd::Layered for InfoToastCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoToastCardModel {
     type View = InfoToastCardView;
 }

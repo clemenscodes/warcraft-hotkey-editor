@@ -24,6 +24,10 @@ impl From<&InactiveResolveSectionTabView> for InactiveResolveSectionTabModel {
     }
 }
 
+impl ddd::Layered for InactiveResolveSectionTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InactiveResolveSectionTabModel {
     type View = InactiveResolveSectionTabView;
 }

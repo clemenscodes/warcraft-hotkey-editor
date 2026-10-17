@@ -16,6 +16,10 @@ impl From<&CaptionedEditorGridView> for CaptionedEditorGridModel {
     }
 }
 
+impl ddd::Layered for CaptionedEditorGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CaptionedEditorGridModel {
     type View = CaptionedEditorGridView;
 }

@@ -13,6 +13,10 @@ impl From<&WinnerCarrierBadgeView> for WinnerCarrierBadgeModel {
     }
 }
 
+impl ddd::Layered for WinnerCarrierBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for WinnerCarrierBadgeModel {
     type View = WinnerCarrierBadgeView;
 }

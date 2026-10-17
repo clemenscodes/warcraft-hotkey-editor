@@ -13,6 +13,10 @@ impl From<&PagerSpacerView> for PagerSpacerModel {
     }
 }
 
+impl ddd::Layered for PagerSpacerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PagerSpacerModel {
     type View = PagerSpacerView;
 }

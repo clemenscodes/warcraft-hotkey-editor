@@ -10,4 +10,8 @@ pub struct AltStateControlsView {
     pub on_hotkey_activate: EventHandler<()>,
 }
 
+impl ddd::Layered for AltStateControlsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AltStateControlsView {}

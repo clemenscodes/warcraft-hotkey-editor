@@ -22,6 +22,10 @@ impl From<&MobileCollisionsView> for MobileCollisionsModel {
     }
 }
 
+impl ddd::Layered for MobileCollisionsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MobileCollisionsModel {
     type View = MobileCollisionsView;
 }

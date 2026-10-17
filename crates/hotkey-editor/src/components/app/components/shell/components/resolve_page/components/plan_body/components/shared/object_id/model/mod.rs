@@ -13,6 +13,10 @@ impl From<&ObjectIdView> for ObjectIdModel {
     }
 }
 
+impl ddd::Layered for ObjectIdModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ObjectIdModel {
     type View = ObjectIdView;
 }

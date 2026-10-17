@@ -6,4 +6,8 @@ pub struct EditorGridView {
     pub(crate) tiles: [EditorTile; COMMAND_GRID_TILE_COUNT],
 }
 
+impl ddd::Layered for EditorGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for EditorGridView {}

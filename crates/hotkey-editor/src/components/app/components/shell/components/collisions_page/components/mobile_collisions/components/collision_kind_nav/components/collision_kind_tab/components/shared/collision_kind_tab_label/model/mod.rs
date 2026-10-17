@@ -14,6 +14,10 @@ impl From<&CollisionKindTabLabelView> for CollisionKindTabLabelModel {
     }
 }
 
+impl ddd::Layered for CollisionKindTabLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionKindTabLabelModel {
     type View = CollisionKindTabLabelView;
 }

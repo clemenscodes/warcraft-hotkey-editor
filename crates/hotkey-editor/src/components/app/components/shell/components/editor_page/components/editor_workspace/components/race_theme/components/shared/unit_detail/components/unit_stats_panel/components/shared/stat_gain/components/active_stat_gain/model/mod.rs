@@ -14,6 +14,10 @@ impl From<&ActiveStatGainView> for ActiveStatGainModel {
     }
 }
 
+impl ddd::Layered for ActiveStatGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveStatGainModel {
     type View = ActiveStatGainView;
 }

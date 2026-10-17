@@ -23,6 +23,10 @@ impl From<&InfoActionsView> for InfoActionsModel {
     }
 }
 
+impl ddd::Layered for InfoActionsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoActionsModel {
     type View = InfoActionsView;
 }

@@ -13,6 +13,10 @@ impl From<&ConflictMoreView> for ConflictMoreModel {
     }
 }
 
+impl ddd::Layered for ConflictMoreModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictMoreModel {
     type View = ConflictMoreView;
 }

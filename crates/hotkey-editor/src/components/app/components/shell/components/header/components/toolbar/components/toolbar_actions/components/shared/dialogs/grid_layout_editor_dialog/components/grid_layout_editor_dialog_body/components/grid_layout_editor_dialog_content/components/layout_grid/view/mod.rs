@@ -5,4 +5,8 @@ pub struct LayoutGridView {
     pub cells: Vec<LayoutTileView>,
 }
 
+impl ddd::Layered for LayoutGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for LayoutGridView {}

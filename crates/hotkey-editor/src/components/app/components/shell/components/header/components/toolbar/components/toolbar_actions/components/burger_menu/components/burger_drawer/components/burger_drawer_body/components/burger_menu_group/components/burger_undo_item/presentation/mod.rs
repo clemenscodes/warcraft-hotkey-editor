@@ -33,6 +33,10 @@ pub(super) fn use_burger_undo_item(props: &BurgerUndoItemModel) -> BurgerUndoIte
     }
 }
 
+impl ddd::Layered for BurgerUndoItemPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for BurgerUndoItemPresentation {
     type Model = BurgerUndoItemModel;
 }

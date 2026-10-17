@@ -21,6 +21,10 @@ impl From<&BreadcrumbsView> for BreadcrumbsModel {
     }
 }
 
+impl ddd::Layered for BreadcrumbsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BreadcrumbsModel {
     type View = BreadcrumbsView;
 }

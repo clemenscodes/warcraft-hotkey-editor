@@ -13,6 +13,10 @@ impl From<&UpgradeSectionHeaderLabelColumnView> for UpgradeSectionHeaderLabelCol
     }
 }
 
+impl ddd::Layered for UpgradeSectionHeaderLabelColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UpgradeSectionHeaderLabelColumnModel {
     type View = UpgradeSectionHeaderLabelColumnView;
 }

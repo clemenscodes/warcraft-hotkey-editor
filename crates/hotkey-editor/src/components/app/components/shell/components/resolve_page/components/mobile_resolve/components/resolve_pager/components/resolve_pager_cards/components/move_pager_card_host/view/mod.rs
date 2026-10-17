@@ -5,4 +5,8 @@ pub struct MovePagerCardHostView {
     pub move_view: MoveView,
 }
 
+impl ddd::Layered for MovePagerCardHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MovePagerCardHostView {}

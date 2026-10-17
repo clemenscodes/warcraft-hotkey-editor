@@ -14,6 +14,10 @@ impl<Body: Render<Output = Element>> From<&DetailCardView<Body>> for DetailCardM
     }
 }
 
+impl<Body: Render<Output = Element>> ddd::Layered for DetailCardModel<Body> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Body: Render<Output = Element>> ddd::Model for DetailCardModel<Body> {
     type View = DetailCardView<Body>;
 }

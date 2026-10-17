@@ -15,6 +15,10 @@ impl From<&FightNamePlateView> for FightNamePlateModel {
     }
 }
 
+impl ddd::Layered for FightNamePlateModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FightNamePlateModel {
     type View = FightNamePlateView;
 }

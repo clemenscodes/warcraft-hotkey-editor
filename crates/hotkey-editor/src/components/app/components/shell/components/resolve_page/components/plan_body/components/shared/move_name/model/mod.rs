@@ -14,6 +14,10 @@ impl From<&MoveNameView> for MoveNameModel {
     }
 }
 
+impl ddd::Layered for MoveNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveNameModel {
     type View = MoveNameView;
 }

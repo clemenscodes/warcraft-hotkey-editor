@@ -11,4 +11,8 @@ pub struct AltStateSectionView {
     pub on_hotkey_activate: EventHandler<()>,
 }
 
+impl ddd::Layered for AltStateSectionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AltStateSectionView {}

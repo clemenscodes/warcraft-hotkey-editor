@@ -16,6 +16,10 @@ impl From<&TileBadgeView> for TileBadgeModel {
     }
 }
 
+impl ddd::Layered for TileBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TileBadgeModel {
     type View = TileBadgeView;
 }

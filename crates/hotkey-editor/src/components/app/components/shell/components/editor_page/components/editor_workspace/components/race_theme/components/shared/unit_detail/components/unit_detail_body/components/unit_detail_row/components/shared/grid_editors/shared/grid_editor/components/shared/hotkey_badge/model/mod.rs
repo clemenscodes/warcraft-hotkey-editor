@@ -17,6 +17,10 @@ impl From<&HotkeyBadgeView> for HotkeyBadgeModel {
     }
 }
 
+impl ddd::Layered for HotkeyBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyBadgeModel {
     type View = HotkeyBadgeView;
 }

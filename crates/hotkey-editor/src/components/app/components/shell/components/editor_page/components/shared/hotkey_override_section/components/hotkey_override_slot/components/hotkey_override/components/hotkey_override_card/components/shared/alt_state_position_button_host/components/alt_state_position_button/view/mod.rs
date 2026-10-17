@@ -7,4 +7,8 @@ pub struct AltStatePositionButtonView {
     pub on_click: EventHandler<()>,
 }
 
+impl ddd::Layered for AltStatePositionButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AltStatePositionButtonView {}

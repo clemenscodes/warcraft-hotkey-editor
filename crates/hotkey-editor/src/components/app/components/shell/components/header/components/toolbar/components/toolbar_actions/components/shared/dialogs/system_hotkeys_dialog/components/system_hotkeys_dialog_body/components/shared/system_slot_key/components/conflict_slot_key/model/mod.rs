@@ -14,6 +14,10 @@ impl From<&ConflictSlotKeyView> for ConflictSlotKeyModel {
     }
 }
 
+impl ddd::Layered for ConflictSlotKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictSlotKeyModel {
     type View = ConflictSlotKeyView;
 }

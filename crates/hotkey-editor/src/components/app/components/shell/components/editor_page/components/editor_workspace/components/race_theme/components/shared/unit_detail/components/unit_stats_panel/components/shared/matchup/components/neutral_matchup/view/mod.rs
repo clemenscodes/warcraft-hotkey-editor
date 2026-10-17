@@ -7,4 +7,8 @@ pub struct NeutralMatchupView {
     pub title: String,
 }
 
+impl ddd::Layered for NeutralMatchupView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for NeutralMatchupView {}

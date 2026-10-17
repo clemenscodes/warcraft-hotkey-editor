@@ -11,4 +11,8 @@ pub struct InteractiveSurfaceView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for InteractiveSurfaceView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InteractiveSurfaceView {}

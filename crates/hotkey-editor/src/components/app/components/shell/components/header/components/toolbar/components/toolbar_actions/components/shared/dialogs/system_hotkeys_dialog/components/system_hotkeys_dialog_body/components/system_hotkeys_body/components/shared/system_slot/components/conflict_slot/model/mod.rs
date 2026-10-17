@@ -33,6 +33,10 @@ impl From<&ConflictSlotView> for ConflictSlotModel {
     }
 }
 
+impl ddd::Layered for ConflictSlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictSlotModel {
     type View = ConflictSlotView;
 }

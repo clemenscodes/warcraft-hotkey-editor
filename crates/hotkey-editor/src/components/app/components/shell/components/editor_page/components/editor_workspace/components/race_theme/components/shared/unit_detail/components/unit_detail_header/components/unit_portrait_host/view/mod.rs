@@ -4,4 +4,8 @@ pub struct UnitPortraitHostView {
     pub alt: &'static str,
 }
 
+impl ddd::Layered for UnitPortraitHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitPortraitHostView {}

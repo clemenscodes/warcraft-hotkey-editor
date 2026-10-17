@@ -6,4 +6,8 @@ pub struct OpenSearchScopeTriggerView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for OpenSearchScopeTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for OpenSearchScopeTriggerView {}

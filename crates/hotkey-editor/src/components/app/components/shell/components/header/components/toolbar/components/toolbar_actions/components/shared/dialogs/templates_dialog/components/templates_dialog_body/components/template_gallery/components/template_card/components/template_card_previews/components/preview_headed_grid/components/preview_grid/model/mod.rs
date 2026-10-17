@@ -14,6 +14,10 @@ impl From<&PreviewGridView> for PreviewGridModel {
     }
 }
 
+impl ddd::Layered for PreviewGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PreviewGridModel {
     type View = PreviewGridView;
 }

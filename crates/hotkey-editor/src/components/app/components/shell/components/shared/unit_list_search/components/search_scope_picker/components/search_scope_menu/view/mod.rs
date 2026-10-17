@@ -10,4 +10,8 @@ pub struct SearchScopeMenuView {
     pub select_ability: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for SearchScopeMenuView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SearchScopeMenuView {}

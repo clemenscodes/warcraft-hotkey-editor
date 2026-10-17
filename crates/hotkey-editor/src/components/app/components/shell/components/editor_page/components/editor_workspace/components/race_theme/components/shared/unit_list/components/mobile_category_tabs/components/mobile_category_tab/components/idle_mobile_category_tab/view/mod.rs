@@ -6,4 +6,8 @@ pub struct IdleMobileCategoryTabView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for IdleMobileCategoryTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleMobileCategoryTabView {}

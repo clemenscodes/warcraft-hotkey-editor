@@ -13,6 +13,10 @@ impl From<&BurgerUndoItemView> for BurgerUndoItemModel {
     }
 }
 
+impl ddd::Layered for BurgerUndoItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerUndoItemModel {
     type View = BurgerUndoItemView;
 }

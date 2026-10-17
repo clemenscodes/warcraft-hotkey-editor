@@ -6,4 +6,8 @@ pub struct DownloadInfoDialogView {
     pub on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for DownloadInfoDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for DownloadInfoDialogView {}

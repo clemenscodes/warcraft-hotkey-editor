@@ -8,4 +8,8 @@ pub struct UnitListSearchView {
     pub on_keydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for UnitListSearchView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitListSearchView {}

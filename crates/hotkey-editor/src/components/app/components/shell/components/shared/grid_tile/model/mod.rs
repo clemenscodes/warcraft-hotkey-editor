@@ -38,6 +38,10 @@ impl From<&GridTileView> for GridTileModel {
     }
 }
 
+impl ddd::Layered for GridTileModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for GridTileModel {
     type View = GridTileView;
 }

@@ -15,6 +15,10 @@ impl From<&StatIconFrameHostView> for StatIconFrameHostModel {
     }
 }
 
+impl ddd::Layered for StatIconFrameHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for StatIconFrameHostModel {
     type View = StatIconFrameHostView;
 }

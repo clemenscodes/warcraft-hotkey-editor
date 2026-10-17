@@ -13,6 +13,10 @@ impl From<&BurgerDrawerHeaderView> for BurgerDrawerHeaderModel {
     }
 }
 
+impl ddd::Layered for BurgerDrawerHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerDrawerHeaderModel {
     type View = BurgerDrawerHeaderView;
 }

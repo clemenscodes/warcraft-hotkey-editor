@@ -14,6 +14,10 @@ impl From<&IslandConflictGridView> for IslandConflictGridModel {
     }
 }
 
+impl ddd::Layered for IslandConflictGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictGridModel {
     type View = IslandConflictGridView;
 }

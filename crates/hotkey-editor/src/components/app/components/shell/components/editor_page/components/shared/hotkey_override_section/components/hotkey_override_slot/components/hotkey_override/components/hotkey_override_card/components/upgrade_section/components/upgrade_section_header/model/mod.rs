@@ -29,6 +29,10 @@ impl From<&UpgradeSectionHeaderView> for UpgradeSectionHeaderModel {
     }
 }
 
+impl ddd::Layered for UpgradeSectionHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UpgradeSectionHeaderModel {
     type View = UpgradeSectionHeaderView;
 }

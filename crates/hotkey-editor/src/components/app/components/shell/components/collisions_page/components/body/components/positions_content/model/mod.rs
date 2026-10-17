@@ -14,6 +14,10 @@ impl From<&PositionsContentView> for PositionsContentModel {
     }
 }
 
+impl ddd::Layered for PositionsContentModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PositionsContentModel {
     type View = PositionsContentView;
 }

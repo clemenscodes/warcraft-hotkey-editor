@@ -14,6 +14,10 @@ impl From<&SystemHotkeysListViewView> for SystemHotkeysListViewModel {
     }
 }
 
+impl ddd::Layered for SystemHotkeysListViewModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysListViewModel {
     type View = SystemHotkeysListViewView;
 }

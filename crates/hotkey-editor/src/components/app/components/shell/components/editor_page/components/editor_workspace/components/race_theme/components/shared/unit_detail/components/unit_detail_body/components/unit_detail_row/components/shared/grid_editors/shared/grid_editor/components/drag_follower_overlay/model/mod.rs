@@ -22,6 +22,10 @@ impl From<&DragFollowerOverlayView> for DragFollowerOverlayModel {
     }
 }
 
+impl ddd::Layered for DragFollowerOverlayModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DragFollowerOverlayModel {
     type View = DragFollowerOverlayView;
 }

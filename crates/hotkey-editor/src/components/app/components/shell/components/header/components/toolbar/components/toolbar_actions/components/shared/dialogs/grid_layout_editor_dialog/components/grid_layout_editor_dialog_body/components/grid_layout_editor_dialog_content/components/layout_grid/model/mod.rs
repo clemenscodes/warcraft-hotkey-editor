@@ -14,6 +14,10 @@ impl From<&LayoutGridView> for LayoutGridModel {
     }
 }
 
+impl ddd::Layered for LayoutGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for LayoutGridModel {
     type View = LayoutGridView;
 }

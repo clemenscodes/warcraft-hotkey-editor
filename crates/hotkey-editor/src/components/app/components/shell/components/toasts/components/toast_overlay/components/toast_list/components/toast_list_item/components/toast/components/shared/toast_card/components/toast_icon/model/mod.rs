@@ -13,6 +13,10 @@ impl From<&ToastIconView> for ToastIconModel {
     }
 }
 
+impl ddd::Layered for ToastIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ToastIconModel {
     type View = ToastIconView;
 }

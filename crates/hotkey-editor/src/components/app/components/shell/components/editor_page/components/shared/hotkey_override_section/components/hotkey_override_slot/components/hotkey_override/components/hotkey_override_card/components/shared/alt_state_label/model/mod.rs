@@ -13,6 +13,10 @@ impl From<&AltStateLabelView> for AltStateLabelModel {
     }
 }
 
+impl ddd::Layered for AltStateLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AltStateLabelModel {
     type View = AltStateLabelView;
 }

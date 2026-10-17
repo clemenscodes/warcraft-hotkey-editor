@@ -14,6 +14,10 @@ impl From<&NightelfPagerCardThemeView> for NightelfPagerCardThemeModel {
     }
 }
 
+impl ddd::Layered for NightelfPagerCardThemeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NightelfPagerCardThemeModel {
     type View = NightelfPagerCardThemeView;
 }

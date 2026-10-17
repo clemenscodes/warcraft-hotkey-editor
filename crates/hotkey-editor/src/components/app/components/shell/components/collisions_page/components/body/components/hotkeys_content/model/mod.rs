@@ -14,6 +14,10 @@ impl From<&HotkeysContentView> for HotkeysContentModel {
     }
 }
 
+impl ddd::Layered for HotkeysContentModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeysContentModel {
     type View = HotkeysContentView;
 }

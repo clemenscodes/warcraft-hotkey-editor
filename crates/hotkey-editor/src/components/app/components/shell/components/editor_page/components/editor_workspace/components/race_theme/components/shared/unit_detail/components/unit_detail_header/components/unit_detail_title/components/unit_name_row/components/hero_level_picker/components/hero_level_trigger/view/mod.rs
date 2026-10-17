@@ -7,4 +7,8 @@ pub struct HeroLevelTriggerView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for HeroLevelTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HeroLevelTriggerView {}

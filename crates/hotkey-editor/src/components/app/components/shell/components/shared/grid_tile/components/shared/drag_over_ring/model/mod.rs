@@ -13,6 +13,10 @@ impl From<&DragOverRingView> for DragOverRingModel {
     }
 }
 
+impl ddd::Layered for DragOverRingModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DragOverRingModel {
     type View = DragOverRingView;
 }

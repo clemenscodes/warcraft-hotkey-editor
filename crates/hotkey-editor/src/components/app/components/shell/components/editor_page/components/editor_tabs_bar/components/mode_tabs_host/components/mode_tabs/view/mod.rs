@@ -8,4 +8,8 @@ pub struct ModeTabsView {
     pub on_select: EventHandler<UnitMode>,
 }
 
+impl ddd::Layered for ModeTabsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ModeTabsView {}

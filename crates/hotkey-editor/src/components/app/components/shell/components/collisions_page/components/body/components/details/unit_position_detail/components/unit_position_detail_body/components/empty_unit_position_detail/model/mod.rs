@@ -14,6 +14,10 @@ impl From<&EmptyUnitPositionDetailView> for EmptyUnitPositionDetailModel {
     }
 }
 
+impl ddd::Layered for EmptyUnitPositionDetailModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EmptyUnitPositionDetailModel {
     type View = EmptyUnitPositionDetailView;
 }

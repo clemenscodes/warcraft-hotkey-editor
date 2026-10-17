@@ -14,6 +14,10 @@ impl From<&MoveListView> for MoveListModel {
     }
 }
 
+impl ddd::Layered for MoveListModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveListModel {
     type View = MoveListView;
 }

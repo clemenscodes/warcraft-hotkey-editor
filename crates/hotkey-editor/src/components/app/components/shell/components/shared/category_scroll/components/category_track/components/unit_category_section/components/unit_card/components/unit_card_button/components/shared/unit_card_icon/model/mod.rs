@@ -22,6 +22,10 @@ impl From<&UnitCardIconView> for UnitCardIconModel {
     }
 }
 
+impl ddd::Layered for UnitCardIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCardIconModel {
     type View = UnitCardIconView;
 }

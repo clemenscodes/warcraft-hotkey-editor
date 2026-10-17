@@ -30,6 +30,10 @@ impl From<&MatchupView> for MatchupModel {
     }
 }
 
+impl ddd::Layered for MatchupModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MatchupModel {
     type View = MatchupView;
 }

@@ -13,6 +13,10 @@ impl From<&BurgerRedoItemView> for BurgerRedoItemModel {
     }
 }
 
+impl ddd::Layered for BurgerRedoItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerRedoItemModel {
     type View = BurgerRedoItemView;
 }

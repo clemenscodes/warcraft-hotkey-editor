@@ -13,4 +13,8 @@ pub struct SegmentedControlView {
     pub options: Vec<SegmentChoice>,
 }
 
+impl ddd::Layered for SegmentedControlView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SegmentedControlView {}

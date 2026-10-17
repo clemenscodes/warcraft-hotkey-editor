@@ -14,4 +14,8 @@ pub struct LayoutTileView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for LayoutTileView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for LayoutTileView {}

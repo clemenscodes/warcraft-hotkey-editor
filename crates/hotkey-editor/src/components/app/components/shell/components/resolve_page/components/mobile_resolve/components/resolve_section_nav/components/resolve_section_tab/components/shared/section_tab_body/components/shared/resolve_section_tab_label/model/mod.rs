@@ -14,6 +14,10 @@ impl From<&ResolveSectionTabLabelView> for ResolveSectionTabLabelModel {
     }
 }
 
+impl ddd::Layered for ResolveSectionTabLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolveSectionTabLabelModel {
     type View = ResolveSectionTabLabelView;
 }

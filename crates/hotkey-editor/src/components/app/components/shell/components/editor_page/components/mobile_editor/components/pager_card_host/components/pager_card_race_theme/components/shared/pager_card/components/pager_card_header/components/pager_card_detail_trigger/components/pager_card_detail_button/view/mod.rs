@@ -6,4 +6,8 @@ pub struct PagerCardDetailButtonView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for PagerCardDetailButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PagerCardDetailButtonView {}

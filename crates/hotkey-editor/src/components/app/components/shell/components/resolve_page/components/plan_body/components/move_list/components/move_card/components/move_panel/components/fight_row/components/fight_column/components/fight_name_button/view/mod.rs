@@ -9,4 +9,8 @@ pub struct FightNameButtonView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for FightNameButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FightNameButtonView {}

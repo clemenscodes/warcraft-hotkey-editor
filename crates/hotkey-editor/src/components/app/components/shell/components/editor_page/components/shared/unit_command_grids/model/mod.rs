@@ -35,6 +35,10 @@ impl From<&UnitCommandGridsView> for UnitCommandGridsModel {
     }
 }
 
+impl ddd::Layered for UnitCommandGridsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCommandGridsModel {
     type View = UnitCommandGridsView;
 }

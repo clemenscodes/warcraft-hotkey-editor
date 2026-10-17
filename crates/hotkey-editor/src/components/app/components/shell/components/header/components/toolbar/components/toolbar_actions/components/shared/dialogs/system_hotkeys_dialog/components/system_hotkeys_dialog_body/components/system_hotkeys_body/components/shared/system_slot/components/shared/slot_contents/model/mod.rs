@@ -33,6 +33,10 @@ impl From<&SlotContentsView> for SlotContentsModel {
     }
 }
 
+impl ddd::Layered for SlotContentsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SlotContentsModel {
     type View = SlotContentsView;
 }

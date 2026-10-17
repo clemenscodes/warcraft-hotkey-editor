@@ -12,3 +12,7 @@ pub(crate) fn save_grid_layout(layout: GridLayout) {
     let contents = layout.to_storage_string();
     GRID_LAYOUT_STORAGE.set(&contents);
 }
+
+pub(crate) fn remove_grid_layout() {
+    GRID_LAYOUT_STORAGE.remove();
+}

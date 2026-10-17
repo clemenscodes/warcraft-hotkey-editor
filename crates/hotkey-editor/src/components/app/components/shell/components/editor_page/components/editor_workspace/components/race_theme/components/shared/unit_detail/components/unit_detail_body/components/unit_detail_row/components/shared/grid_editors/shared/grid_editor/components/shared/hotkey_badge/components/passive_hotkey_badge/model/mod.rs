@@ -14,6 +14,10 @@ impl From<&PassiveHotkeyBadgeView> for PassiveHotkeyBadgeModel {
     }
 }
 
+impl ddd::Layered for PassiveHotkeyBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PassiveHotkeyBadgeModel {
     type View = PassiveHotkeyBadgeView;
 }

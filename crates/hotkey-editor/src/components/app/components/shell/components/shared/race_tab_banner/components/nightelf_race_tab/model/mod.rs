@@ -26,6 +26,10 @@ impl From<&RaceTabInputView> for NightelfRaceTabModel {
     }
 }
 
+impl ddd::Layered for NightelfRaceTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NightelfRaceTabModel {
     type View = RaceTabInputView;
 }

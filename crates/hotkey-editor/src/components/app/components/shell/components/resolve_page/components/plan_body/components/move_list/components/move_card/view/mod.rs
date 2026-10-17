@@ -5,4 +5,8 @@ pub struct MoveCardView {
     pub move_view: MoveView,
 }
 
+impl ddd::Layered for MoveCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MoveCardView {}

@@ -14,6 +14,10 @@ impl From<&OpenBreadcrumbsMenuView> for OpenBreadcrumbsMenuModel {
     }
 }
 
+impl ddd::Layered for OpenBreadcrumbsMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for OpenBreadcrumbsMenuModel {
     type View = OpenBreadcrumbsMenuView;
 }

@@ -13,6 +13,10 @@ impl From<&SegmentedControlView> for SegmentedControlModel {
     }
 }
 
+impl ddd::Layered for SegmentedControlModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SegmentedControlModel {
     type View = SegmentedControlView;
 }

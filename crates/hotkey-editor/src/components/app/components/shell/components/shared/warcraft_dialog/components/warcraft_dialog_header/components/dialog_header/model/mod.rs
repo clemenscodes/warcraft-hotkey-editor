@@ -15,6 +15,10 @@ impl From<&DialogHeaderView> for DialogHeaderModel {
     }
 }
 
+impl ddd::Layered for DialogHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DialogHeaderModel {
     type View = DialogHeaderView;
 }

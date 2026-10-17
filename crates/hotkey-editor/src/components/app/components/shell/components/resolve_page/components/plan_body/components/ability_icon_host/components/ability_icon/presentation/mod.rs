@@ -40,6 +40,10 @@ pub(super) fn use_ability_icon(props: &AbilityIconModel) -> AbilityIconPresentat
     }
 }
 
+impl ddd::Layered for AbilityIconPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for AbilityIconPresentation {
     type Model = AbilityIconModel;
 }

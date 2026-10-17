@@ -28,6 +28,10 @@ impl From<&UnitCardView> for UnitCardModel {
     }
 }
 
+impl ddd::Layered for UnitCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCardModel {
     type View = UnitCardView;
 }

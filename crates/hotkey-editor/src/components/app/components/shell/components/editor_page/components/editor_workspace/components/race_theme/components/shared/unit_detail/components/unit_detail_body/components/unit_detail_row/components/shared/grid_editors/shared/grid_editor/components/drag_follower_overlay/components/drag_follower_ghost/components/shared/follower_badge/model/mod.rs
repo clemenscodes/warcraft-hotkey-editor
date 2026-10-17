@@ -17,6 +17,10 @@ impl From<&FollowerBadgeView> for FollowerBadgeModel {
     }
 }
 
+impl ddd::Layered for FollowerBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FollowerBadgeModel {
     type View = FollowerBadgeView;
 }

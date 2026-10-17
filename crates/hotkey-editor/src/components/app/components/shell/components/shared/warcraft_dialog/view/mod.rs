@@ -10,6 +10,12 @@ pub struct WarcraftDialogView<Body: Render<Output = Element>, Footer: Render<Out
     pub on_open_change: Callback<bool>,
 }
 
+impl<Body: Render<Output = Element>, Footer: Render<Output = Element>> ddd::Layered
+    for WarcraftDialogView<Body, Footer>
+{
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Body: Render<Output = Element>, Footer: Render<Output = Element>> ddd::View
     for WarcraftDialogView<Body, Footer>
 {

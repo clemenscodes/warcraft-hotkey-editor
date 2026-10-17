@@ -15,6 +15,10 @@ impl From<&ControlPlainIconView> for ControlPlainIconModel {
     }
 }
 
+impl ddd::Layered for ControlPlainIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ControlPlainIconModel {
     type View = ControlPlainIconView;
 }

@@ -35,6 +35,10 @@ impl From<&AvailableKeyView> for AvailableKeyModel {
     }
 }
 
+impl ddd::Layered for AvailableKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AvailableKeyModel {
     type View = AvailableKeyView;
 }

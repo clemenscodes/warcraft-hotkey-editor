@@ -14,6 +14,10 @@ impl From<&CollisionPagerCardsView> for CollisionPagerCardsModel {
     }
 }
 
+impl ddd::Layered for CollisionPagerCardsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionPagerCardsModel {
     type View = CollisionPagerCardsView;
 }

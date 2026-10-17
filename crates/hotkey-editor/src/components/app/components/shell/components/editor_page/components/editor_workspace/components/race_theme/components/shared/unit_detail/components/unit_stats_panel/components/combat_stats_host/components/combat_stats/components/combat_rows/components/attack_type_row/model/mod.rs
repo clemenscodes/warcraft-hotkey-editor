@@ -14,6 +14,10 @@ impl From<&AttackTypeRowView> for AttackTypeRowModel {
     }
 }
 
+impl ddd::Layered for AttackTypeRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AttackTypeRowModel {
     type View = AttackTypeRowView;
 }

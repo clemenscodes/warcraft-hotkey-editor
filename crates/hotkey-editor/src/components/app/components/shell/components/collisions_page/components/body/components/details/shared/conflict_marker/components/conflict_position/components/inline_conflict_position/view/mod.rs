@@ -5,4 +5,8 @@ pub struct InlineConflictPositionView {
     pub coordinate: GridCoordinate,
 }
 
+impl ddd::Layered for InlineConflictPositionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InlineConflictPositionView {}

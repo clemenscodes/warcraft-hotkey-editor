@@ -14,6 +14,10 @@ impl From<&CommandFollowerGhostView> for CommandFollowerGhostModel {
     }
 }
 
+impl ddd::Layered for CommandFollowerGhostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CommandFollowerGhostModel {
     type View = CommandFollowerGhostView;
 }

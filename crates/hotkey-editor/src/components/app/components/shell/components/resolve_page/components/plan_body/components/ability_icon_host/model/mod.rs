@@ -34,6 +34,10 @@ impl From<&AbilityIconHostView> for AbilityIconHostModel {
     }
 }
 
+impl ddd::Layered for AbilityIconHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AbilityIconHostModel {
     type View = AbilityIconHostView;
 }

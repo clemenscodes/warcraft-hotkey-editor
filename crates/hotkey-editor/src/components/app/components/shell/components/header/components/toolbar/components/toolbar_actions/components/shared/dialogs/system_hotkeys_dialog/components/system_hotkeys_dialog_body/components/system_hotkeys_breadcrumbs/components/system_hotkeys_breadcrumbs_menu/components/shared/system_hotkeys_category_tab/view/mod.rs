@@ -10,4 +10,8 @@ pub struct SystemHotkeysCategoryTabView {
     pub picker_open: Signal<bool>,
 }
 
+impl ddd::Layered for SystemHotkeysCategoryTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SystemHotkeysCategoryTabView {}

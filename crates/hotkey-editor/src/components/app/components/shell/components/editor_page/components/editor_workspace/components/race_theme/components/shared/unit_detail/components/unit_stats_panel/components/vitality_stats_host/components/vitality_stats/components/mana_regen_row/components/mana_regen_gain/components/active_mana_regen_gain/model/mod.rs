@@ -14,6 +14,10 @@ impl From<&ActiveManaRegenGainView> for ActiveManaRegenGainModel {
     }
 }
 
+impl ddd::Layered for ActiveManaRegenGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveManaRegenGainModel {
     type View = ActiveManaRegenGainView;
 }

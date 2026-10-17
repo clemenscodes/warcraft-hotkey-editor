@@ -24,6 +24,10 @@ impl From<&PrimaryIntelligenceRowView> for PrimaryIntelligenceRowModel {
     }
 }
 
+impl ddd::Layered for PrimaryIntelligenceRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PrimaryIntelligenceRowModel {
     type View = PrimaryIntelligenceRowView;
 }

@@ -14,6 +14,10 @@ impl From<&SwapReasonBadgeView> for SwapReasonBadgeModel {
     }
 }
 
+impl ddd::Layered for SwapReasonBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SwapReasonBadgeModel {
     type View = SwapReasonBadgeView;
 }

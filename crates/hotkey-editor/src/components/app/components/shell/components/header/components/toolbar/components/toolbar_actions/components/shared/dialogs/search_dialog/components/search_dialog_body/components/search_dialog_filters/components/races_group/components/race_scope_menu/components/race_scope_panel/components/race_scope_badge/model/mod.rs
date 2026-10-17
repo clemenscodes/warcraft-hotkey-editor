@@ -30,6 +30,10 @@ impl From<&RaceScopeBadgeView> for RaceScopeBadgeModel {
     }
 }
 
+impl ddd::Layered for RaceScopeBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopeBadgeModel {
     type View = RaceScopeBadgeView;
 }

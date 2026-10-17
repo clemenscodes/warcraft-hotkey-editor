@@ -14,6 +14,10 @@ impl From<&UnresolvedPagerCardHostView> for UnresolvedPagerCardHostModel {
     }
 }
 
+impl ddd::Layered for UnresolvedPagerCardHostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnresolvedPagerCardHostModel {
     type View = UnresolvedPagerCardHostView;
 }

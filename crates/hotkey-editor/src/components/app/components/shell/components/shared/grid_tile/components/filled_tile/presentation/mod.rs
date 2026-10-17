@@ -38,6 +38,10 @@ impl From<FilledTileModel> for FilledTilePresentation {
     }
 }
 
+impl ddd::Layered for FilledTilePresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for FilledTilePresentation {
     type Model = FilledTileModel;
 }

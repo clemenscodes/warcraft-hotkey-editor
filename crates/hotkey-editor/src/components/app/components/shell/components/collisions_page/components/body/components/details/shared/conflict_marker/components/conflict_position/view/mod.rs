@@ -6,4 +6,8 @@ pub struct ConflictPositionView {
     pub is_top: bool,
 }
 
+impl ddd::Layered for ConflictPositionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictPositionView {}

@@ -13,6 +13,10 @@ impl From<&HighlightOverlayView> for HighlightOverlayModel {
     }
 }
 
+impl ddd::Layered for HighlightOverlayModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HighlightOverlayModel {
     type View = HighlightOverlayView;
 }

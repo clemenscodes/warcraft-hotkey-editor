@@ -5,4 +5,8 @@ pub struct UnitCardsSidebarView<Conflict: Clone + PartialEq + 'static> {
     pub units: Vec<CollisionUnitView<Conflict>>,
 }
 
+impl<Conflict: Clone + PartialEq + 'static> ddd::Layered for UnitCardsSidebarView<Conflict> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Conflict: Clone + PartialEq + 'static> ddd::View for UnitCardsSidebarView<Conflict> {}

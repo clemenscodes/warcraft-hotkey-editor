@@ -32,6 +32,10 @@ impl From<&IslandConflictAbilityView> for IslandConflictAbilityModel {
     }
 }
 
+impl ddd::Layered for IslandConflictAbilityModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictAbilityModel {
     type View = IslandConflictAbilityView;
 }

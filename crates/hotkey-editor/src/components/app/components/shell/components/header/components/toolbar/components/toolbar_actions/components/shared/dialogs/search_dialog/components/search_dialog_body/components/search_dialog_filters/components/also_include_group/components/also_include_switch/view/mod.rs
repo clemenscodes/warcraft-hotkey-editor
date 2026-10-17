@@ -8,4 +8,8 @@ pub struct AlsoIncludeSwitchView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for AlsoIncludeSwitchView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AlsoIncludeSwitchView {}

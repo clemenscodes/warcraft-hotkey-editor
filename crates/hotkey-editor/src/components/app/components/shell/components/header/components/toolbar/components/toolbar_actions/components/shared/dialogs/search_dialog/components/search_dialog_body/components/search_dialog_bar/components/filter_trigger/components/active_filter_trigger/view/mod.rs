@@ -6,4 +6,8 @@ pub struct ActiveFilterTriggerView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ActiveFilterTriggerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ActiveFilterTriggerView {}

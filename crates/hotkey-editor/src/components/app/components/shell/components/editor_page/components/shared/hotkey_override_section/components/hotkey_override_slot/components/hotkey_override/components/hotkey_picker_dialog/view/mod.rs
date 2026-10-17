@@ -11,4 +11,8 @@ pub struct HotkeyPickerDialogDialogView {
     pub on_close: EventHandler<()>,
 }
 
+impl ddd::Layered for HotkeyPickerDialogDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyPickerDialogDialogView {}

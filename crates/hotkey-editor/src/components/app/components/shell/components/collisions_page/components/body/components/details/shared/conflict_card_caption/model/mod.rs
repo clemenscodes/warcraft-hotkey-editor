@@ -13,6 +13,10 @@ impl From<&ConflictCardCaptionView> for ConflictCardCaptionModel {
     }
 }
 
+impl ddd::Layered for ConflictCardCaptionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictCardCaptionModel {
     type View = ConflictCardCaptionView;
 }

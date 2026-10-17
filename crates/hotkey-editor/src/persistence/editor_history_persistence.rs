@@ -12,3 +12,7 @@ pub(crate) fn save_text(text: &str) {
     let compressed = CompressedText::encode(text);
     UNDO_STORAGE.set(&compressed);
 }
+
+pub(crate) fn remove_text() {
+    UNDO_STORAGE.remove();
+}

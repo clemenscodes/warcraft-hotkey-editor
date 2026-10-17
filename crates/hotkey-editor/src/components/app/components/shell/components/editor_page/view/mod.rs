@@ -6,4 +6,8 @@ pub struct EditorPageView {
     pub search_query: Option<String>,
 }
 
+impl ddd::Layered for EditorPageView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for EditorPageView {}

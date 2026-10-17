@@ -4,4 +4,8 @@ pub struct MoveNameView {
     pub is_link: bool,
 }
 
+impl ddd::Layered for MoveNameView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MoveNameView {}

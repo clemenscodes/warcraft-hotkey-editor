@@ -24,6 +24,10 @@ impl From<&IdleBreadcrumbView> for IdleBreadcrumbModel {
     }
 }
 
+impl ddd::Layered for IdleBreadcrumbModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleBreadcrumbModel {
     type View = IdleBreadcrumbView;
 }

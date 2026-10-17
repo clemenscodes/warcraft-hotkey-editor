@@ -14,6 +14,10 @@ impl From<&PopoverInactiveCategoryTabView> for PopoverInactiveCategoryTabModel {
     }
 }
 
+impl ddd::Layered for PopoverInactiveCategoryTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PopoverInactiveCategoryTabModel {
     type View = PopoverInactiveCategoryTabView;
 }

@@ -17,6 +17,10 @@ impl<B: GridBehavior> From<&GridEditorView> for GridEditorModel<B> {
     }
 }
 
+impl<B: GridBehavior> ddd::Layered for GridEditorModel<B> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<B: GridBehavior> ddd::Model for GridEditorModel<B> {
     type View = GridEditorView;
 }

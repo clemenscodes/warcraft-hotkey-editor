@@ -26,6 +26,10 @@ impl From<&EditorPageView> for EditorPageModel {
     }
 }
 
+impl ddd::Layered for EditorPageModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EditorPageModel {
     type View = EditorPageView;
 }

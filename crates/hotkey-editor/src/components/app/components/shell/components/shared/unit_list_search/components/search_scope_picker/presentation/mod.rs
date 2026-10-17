@@ -52,6 +52,10 @@ pub(super) fn use_search_scope_picker() -> SearchScopePickerPresentation {
     }
 }
 
+impl ddd::Layered for SearchScopePickerPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for SearchScopePickerPresentation {
     type Model = SearchScopePickerModel;
 }

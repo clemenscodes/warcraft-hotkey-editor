@@ -13,6 +13,10 @@ impl From<&LosingCarrierBadgeView> for LosingCarrierBadgeModel {
     }
 }
 
+impl ddd::Layered for LosingCarrierBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for LosingCarrierBadgeModel {
     type View = LosingCarrierBadgeView;
 }

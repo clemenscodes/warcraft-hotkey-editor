@@ -23,6 +23,10 @@ impl From<&HotkeyUpgradePositionPickerBodyView> for HotkeyUpgradePositionPickerB
     }
 }
 
+impl ddd::Layered for HotkeyUpgradePositionPickerBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyUpgradePositionPickerBodyModel {
     type View = HotkeyUpgradePositionPickerBodyView;
 }

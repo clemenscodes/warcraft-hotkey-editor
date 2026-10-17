@@ -16,6 +16,10 @@ impl From<&HotkeyConflictGridView> for HotkeyConflictGridModel {
     }
 }
 
+impl ddd::Layered for HotkeyConflictGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyConflictGridModel {
     type View = HotkeyConflictGridView;
 }

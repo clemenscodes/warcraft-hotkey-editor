@@ -13,6 +13,10 @@ impl From<&InfoPopoverBackdropView> for InfoPopoverBackdropModel {
     }
 }
 
+impl ddd::Layered for InfoPopoverBackdropModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoPopoverBackdropModel {
     type View = InfoPopoverBackdropView;
 }

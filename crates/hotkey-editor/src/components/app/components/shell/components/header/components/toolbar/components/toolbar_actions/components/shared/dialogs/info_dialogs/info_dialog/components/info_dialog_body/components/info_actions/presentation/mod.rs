@@ -24,6 +24,10 @@ impl From<&InfoActionsModel> for InfoActionsPresentation {
     }
 }
 
+impl ddd::Layered for InfoActionsPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for InfoActionsPresentation {
     type Model = InfoActionsModel;
 }

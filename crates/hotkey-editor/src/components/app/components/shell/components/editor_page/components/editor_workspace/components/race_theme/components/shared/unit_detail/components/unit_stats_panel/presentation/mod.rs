@@ -61,6 +61,10 @@ pub(super) fn use_unit_stats_panel(props: &UnitStatsPanelModel) -> UnitStatsPane
     }
 }
 
+impl ddd::Layered for UnitStatsPanelPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for UnitStatsPanelPresentation {
     type Model = UnitStatsPanelModel;
 }

@@ -35,6 +35,10 @@ impl From<&ConflictKeyView> for ConflictKeyModel {
     }
 }
 
+impl ddd::Layered for ConflictKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictKeyModel {
     type View = ConflictKeyView;
 }

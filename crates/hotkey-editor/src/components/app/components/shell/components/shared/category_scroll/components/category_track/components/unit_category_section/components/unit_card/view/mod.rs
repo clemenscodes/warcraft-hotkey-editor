@@ -9,4 +9,8 @@ pub struct UnitCardView {
     pub unit_kind: UnitKind,
 }
 
+impl ddd::Layered for UnitCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitCardView {}

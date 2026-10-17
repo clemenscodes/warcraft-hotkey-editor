@@ -14,6 +14,10 @@ impl From<&NeutralPagerCardThemeView> for NeutralPagerCardThemeModel {
     }
 }
 
+impl ddd::Layered for NeutralPagerCardThemeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NeutralPagerCardThemeModel {
     type View = NeutralPagerCardThemeView;
 }

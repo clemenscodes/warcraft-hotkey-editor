@@ -9,4 +9,8 @@ pub struct FilledTileView {
     pub is_drag_over: bool,
 }
 
+impl ddd::Layered for FilledTileView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FilledTileView {}

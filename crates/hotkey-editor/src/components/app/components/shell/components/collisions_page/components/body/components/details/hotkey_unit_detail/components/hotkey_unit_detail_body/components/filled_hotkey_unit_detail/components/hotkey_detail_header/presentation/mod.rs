@@ -27,6 +27,10 @@ impl From<&HotkeyDetailHeaderModel> for HotkeyDetailHeaderPresentation {
     }
 }
 
+impl ddd::Layered for HotkeyDetailHeaderPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for HotkeyDetailHeaderPresentation {
     type Model = HotkeyDetailHeaderModel;
 }

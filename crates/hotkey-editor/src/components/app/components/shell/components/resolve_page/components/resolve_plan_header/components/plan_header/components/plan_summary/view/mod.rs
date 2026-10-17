@@ -4,4 +4,8 @@ pub struct PlanSummaryView {
     pub unresolved_count: usize,
 }
 
+impl ddd::Layered for PlanSummaryView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PlanSummaryView {}

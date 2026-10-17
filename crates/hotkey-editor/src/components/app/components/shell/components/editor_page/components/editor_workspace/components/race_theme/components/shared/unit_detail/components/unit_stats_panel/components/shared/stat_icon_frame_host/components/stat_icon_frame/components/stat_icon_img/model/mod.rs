@@ -15,6 +15,10 @@ impl From<&StatIconImgView> for StatIconImgModel {
     }
 }
 
+impl ddd::Layered for StatIconImgModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for StatIconImgModel {
     type View = StatIconImgView;
 }

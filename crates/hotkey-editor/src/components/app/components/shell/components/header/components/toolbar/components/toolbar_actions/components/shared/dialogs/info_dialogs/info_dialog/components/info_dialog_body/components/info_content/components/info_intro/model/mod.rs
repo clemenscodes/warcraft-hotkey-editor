@@ -13,6 +13,10 @@ impl From<&InfoIntroView> for InfoIntroModel {
     }
 }
 
+impl ddd::Layered for InfoIntroModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoIntroModel {
     type View = InfoIntroView;
 }

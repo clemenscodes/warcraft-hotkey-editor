@@ -14,6 +14,10 @@ impl From<&MutedHitPointsRegenGainView> for MutedHitPointsRegenGainModel {
     }
 }
 
+impl ddd::Layered for MutedHitPointsRegenGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MutedHitPointsRegenGainModel {
     type View = MutedHitPointsRegenGainView;
 }

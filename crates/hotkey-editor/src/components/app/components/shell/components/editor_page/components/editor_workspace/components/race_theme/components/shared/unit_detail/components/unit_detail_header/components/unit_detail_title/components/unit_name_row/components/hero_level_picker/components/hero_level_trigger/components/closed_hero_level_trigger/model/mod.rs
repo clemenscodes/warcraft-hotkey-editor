@@ -15,6 +15,10 @@ impl From<&ClosedHeroLevelTriggerView> for ClosedHeroLevelTriggerModel {
     }
 }
 
+impl ddd::Layered for ClosedHeroLevelTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ClosedHeroLevelTriggerModel {
     type View = ClosedHeroLevelTriggerView;
 }

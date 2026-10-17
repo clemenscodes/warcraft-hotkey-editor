@@ -5,4 +5,8 @@ pub struct FooterCreditView {
     pub heart: &'static str,
 }
 
+impl ddd::Layered for FooterCreditView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FooterCreditView {}

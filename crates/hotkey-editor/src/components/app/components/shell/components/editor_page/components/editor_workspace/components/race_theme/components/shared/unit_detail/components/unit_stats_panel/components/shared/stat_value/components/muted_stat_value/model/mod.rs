@@ -14,6 +14,10 @@ impl From<&MutedStatValueView> for MutedStatValueModel {
     }
 }
 
+impl ddd::Layered for MutedStatValueModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MutedStatValueModel {
     type View = MutedStatValueView;
 }

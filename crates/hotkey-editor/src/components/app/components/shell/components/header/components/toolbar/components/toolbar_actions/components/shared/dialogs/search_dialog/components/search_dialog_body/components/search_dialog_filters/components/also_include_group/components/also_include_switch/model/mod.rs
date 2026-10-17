@@ -26,6 +26,10 @@ impl From<&AlsoIncludeSwitchView> for AlsoIncludeSwitchModel {
     }
 }
 
+impl ddd::Layered for AlsoIncludeSwitchModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AlsoIncludeSwitchModel {
     type View = AlsoIncludeSwitchView;
 }

@@ -13,4 +13,8 @@ pub struct ToolbarButtonSurfaceView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ToolbarButtonSurfaceView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ToolbarButtonSurfaceView {}

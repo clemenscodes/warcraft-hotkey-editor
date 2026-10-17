@@ -14,6 +14,10 @@ impl From<&FightColumnView> for FightColumnModel {
     }
 }
 
+impl ddd::Layered for FightColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FightColumnModel {
     type View = FightColumnView;
 }

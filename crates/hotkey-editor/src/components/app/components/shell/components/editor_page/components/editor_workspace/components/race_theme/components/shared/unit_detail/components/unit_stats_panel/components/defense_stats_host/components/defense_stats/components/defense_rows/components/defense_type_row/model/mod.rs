@@ -14,6 +14,10 @@ impl From<&DefenseTypeRowView> for DefenseTypeRowModel {
     }
 }
 
+impl ddd::Layered for DefenseTypeRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DefenseTypeRowModel {
     type View = DefenseTypeRowView;
 }

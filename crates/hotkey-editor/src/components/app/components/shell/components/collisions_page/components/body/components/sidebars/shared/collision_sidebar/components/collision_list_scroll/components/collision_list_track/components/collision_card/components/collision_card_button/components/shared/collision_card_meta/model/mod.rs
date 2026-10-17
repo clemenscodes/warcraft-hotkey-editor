@@ -15,6 +15,10 @@ impl From<&CollisionCardMetaView> for CollisionCardMetaModel {
     }
 }
 
+impl ddd::Layered for CollisionCardMetaModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionCardMetaModel {
     type View = CollisionCardMetaView;
 }

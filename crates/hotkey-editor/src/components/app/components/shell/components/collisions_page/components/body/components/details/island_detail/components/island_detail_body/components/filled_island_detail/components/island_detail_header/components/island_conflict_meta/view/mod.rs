@@ -6,4 +6,8 @@ pub struct IslandConflictMetaView {
     pub count: usize,
 }
 
+impl ddd::Layered for IslandConflictMetaView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandConflictMetaView {}

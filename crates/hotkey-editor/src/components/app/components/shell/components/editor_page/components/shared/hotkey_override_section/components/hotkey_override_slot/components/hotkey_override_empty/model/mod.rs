@@ -14,6 +14,10 @@ impl From<&HotkeyOverrideEmptyView> for HotkeyOverrideEmptyModel {
     }
 }
 
+impl ddd::Layered for HotkeyOverrideEmptyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyOverrideEmptyModel {
     type View = HotkeyOverrideEmptyView;
 }

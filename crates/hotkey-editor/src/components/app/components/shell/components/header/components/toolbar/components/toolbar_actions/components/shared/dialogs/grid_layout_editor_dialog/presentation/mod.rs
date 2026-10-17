@@ -188,6 +188,10 @@ pub(super) struct GridLayoutEditorDialogPresentation {
     pub(super) on_picker_close: EventHandler<()>,
 }
 
+impl ddd::Layered for GridLayoutEditorDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for GridLayoutEditorDialogPresentation {
     type Model = GridLayoutEditorDialogModel;
 }

@@ -14,6 +14,10 @@ impl From<&NormalHotkeyBadgeView> for NormalHotkeyBadgeModel {
     }
 }
 
+impl ddd::Layered for NormalHotkeyBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NormalHotkeyBadgeModel {
     type View = NormalHotkeyBadgeView;
 }

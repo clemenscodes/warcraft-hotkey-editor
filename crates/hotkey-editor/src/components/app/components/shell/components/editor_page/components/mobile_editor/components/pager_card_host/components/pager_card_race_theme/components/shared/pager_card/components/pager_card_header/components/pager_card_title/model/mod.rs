@@ -16,6 +16,10 @@ impl From<&PagerCardTitleView> for PagerCardTitleModel {
     }
 }
 
+impl ddd::Layered for PagerCardTitleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PagerCardTitleModel {
     type View = PagerCardTitleView;
 }

@@ -15,4 +15,8 @@ pub struct NarrowKeySlotView {
     pub tooltip_anchor: TooltipAnchor,
 }
 
+impl ddd::Layered for NarrowKeySlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for NarrowKeySlotView {}

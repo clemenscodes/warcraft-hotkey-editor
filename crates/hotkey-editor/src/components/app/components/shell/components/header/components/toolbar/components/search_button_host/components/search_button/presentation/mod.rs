@@ -26,6 +26,10 @@ impl From<&SearchButtonModel> for SearchButtonPresentation {
     }
 }
 
+impl ddd::Layered for SearchButtonPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for SearchButtonPresentation {
     type Model = SearchButtonModel;
 }

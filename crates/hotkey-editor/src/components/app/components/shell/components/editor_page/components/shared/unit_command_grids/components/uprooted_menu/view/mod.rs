@@ -5,4 +5,8 @@ pub struct UprootedMenuView {
     pub config: Option<GridEditorView>,
 }
 
+impl ddd::Layered for UprootedMenuView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UprootedMenuView {}

@@ -7,4 +7,8 @@ pub struct CarriersDialogView {
     pub on_close: Callback<()>,
 }
 
+impl ddd::Layered for CarriersDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CarriersDialogView {}

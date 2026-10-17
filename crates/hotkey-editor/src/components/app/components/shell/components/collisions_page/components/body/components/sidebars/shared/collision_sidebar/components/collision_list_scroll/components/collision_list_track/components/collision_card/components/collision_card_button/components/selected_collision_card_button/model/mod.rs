@@ -24,6 +24,10 @@ impl From<&SelectedCollisionCardButtonView> for SelectedCollisionCardButtonModel
     }
 }
 
+impl ddd::Layered for SelectedCollisionCardButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SelectedCollisionCardButtonModel {
     type View = SelectedCollisionCardButtonView;
 }

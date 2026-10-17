@@ -13,6 +13,10 @@ impl From<&DialogCloseView> for DialogCloseModel {
     }
 }
 
+impl ddd::Layered for DialogCloseModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DialogCloseModel {
     type View = DialogCloseView;
 }

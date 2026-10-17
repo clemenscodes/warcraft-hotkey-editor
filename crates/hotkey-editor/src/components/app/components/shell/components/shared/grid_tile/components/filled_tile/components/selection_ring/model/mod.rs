@@ -13,6 +13,10 @@ impl From<&SelectionRingView> for SelectionRingModel {
     }
 }
 
+impl ddd::Layered for SelectionRingModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SelectionRingModel {
     type View = SelectionRingView;
 }

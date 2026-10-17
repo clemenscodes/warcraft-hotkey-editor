@@ -14,6 +14,10 @@ impl From<&MoveTransitionView> for MoveTransitionModel {
     }
 }
 
+impl ddd::Layered for MoveTransitionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveTransitionModel {
     type View = MoveTransitionView;
 }

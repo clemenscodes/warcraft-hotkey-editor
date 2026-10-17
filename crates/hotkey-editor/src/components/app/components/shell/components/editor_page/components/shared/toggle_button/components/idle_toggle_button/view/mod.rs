@@ -8,4 +8,8 @@ pub struct IdleToggleButtonView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for IdleToggleButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleToggleButtonView {}

@@ -25,7 +25,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     --component clippy,rustfmt \
     --no-modify-path
 
-# dioxus-cli 0.7.9 — GitHub release binary, no crates.io involved
+# dioxus-cli 0.7.10 — GitHub release binary, no crates.io involved
 RUN set -eux; \
     arch=$(uname -m); \
     case "$arch" in \
@@ -34,10 +34,10 @@ RUN set -eux; \
       *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
     esac; \
     curl --retry 5 --retry-delay 2 -fsSL \
-      "https://github.com/DioxusLabs/dioxus/releases/download/v0.7.9/dx-${triple}.tar.gz" \
+      "https://github.com/DioxusLabs/dioxus/releases/download/v0.7.10/dx-${triple}.tar.gz" \
       | tar -xz -C /usr/local/bin
 
-# wasm-bindgen-cli 0.2.126 — GitHub release binary, no crates.io involved
+# wasm-bindgen-cli 0.2.129 — GitHub release binary, no crates.io involved
 # Also install to $DX_HOME/bin/ so dx finds it without downloading at runtime
 RUN set -eux; \
     arch=$(uname -m); \
@@ -47,9 +47,9 @@ RUN set -eux; \
       *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
     esac; \
     curl --retry 5 --retry-delay 2 -fsSL \
-      "https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.126/wasm-bindgen-0.2.126-${triple}.tar.gz" \
+      "https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.129/wasm-bindgen-0.2.129-${triple}.tar.gz" \
       | tar -xz --strip-components=1 -C /usr/local/bin \
-          "wasm-bindgen-0.2.126-${triple}/wasm-bindgen"; \
+          "wasm-bindgen-0.2.129-${triple}/wasm-bindgen"; \
     mkdir -p "${DX_HOME}/bin"; \
     cp /usr/local/bin/wasm-bindgen "${DX_HOME}/bin/wasm-bindgen"
 

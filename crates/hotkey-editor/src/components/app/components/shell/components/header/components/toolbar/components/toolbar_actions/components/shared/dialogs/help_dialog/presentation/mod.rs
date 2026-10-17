@@ -24,6 +24,10 @@ impl From<&HelpDialogModel> for HelpDialogPresentation {
     }
 }
 
+impl ddd::Layered for HelpDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for HelpDialogPresentation {
     type Model = HelpDialogModel;
 }

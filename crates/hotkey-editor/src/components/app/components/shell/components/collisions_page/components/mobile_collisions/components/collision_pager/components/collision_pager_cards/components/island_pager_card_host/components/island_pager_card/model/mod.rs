@@ -14,6 +14,10 @@ impl From<&IslandPagerCardView> for IslandPagerCardModel {
     }
 }
 
+impl ddd::Layered for IslandPagerCardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandPagerCardModel {
     type View = IslandPagerCardView;
 }

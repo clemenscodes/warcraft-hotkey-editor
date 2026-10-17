@@ -13,4 +13,8 @@ pub struct InventoryFilledSlotView {
     pub drag_follower: Signal<Option<InventoryDragFollower>>,
 }
 
+impl ddd::Layered for InventoryFilledSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InventoryFilledSlotView {}

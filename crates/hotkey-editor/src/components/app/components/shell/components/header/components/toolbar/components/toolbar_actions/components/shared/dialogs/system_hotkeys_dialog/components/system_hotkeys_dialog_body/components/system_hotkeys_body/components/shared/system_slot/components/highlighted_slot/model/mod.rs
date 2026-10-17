@@ -33,6 +33,10 @@ impl From<&HighlightedSlotView> for HighlightedSlotModel {
     }
 }
 
+impl ddd::Layered for HighlightedSlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HighlightedSlotModel {
     type View = HighlightedSlotView;
 }

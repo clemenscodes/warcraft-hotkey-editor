@@ -6,4 +6,8 @@ pub struct GridLayoutEditorButtonView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for GridLayoutEditorButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GridLayoutEditorButtonView {}

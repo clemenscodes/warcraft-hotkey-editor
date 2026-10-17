@@ -14,6 +14,10 @@ impl From<&MovePanelView> for MovePanelModel {
     }
 }
 
+impl ddd::Layered for MovePanelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MovePanelModel {
     type View = MovePanelView;
 }

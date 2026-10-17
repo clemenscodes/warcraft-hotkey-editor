@@ -21,6 +21,10 @@ impl From<&SlotButtonView> for SlotButtonModel {
     }
 }
 
+impl ddd::Layered for SlotButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SlotButtonModel {
     type View = SlotButtonView;
 }

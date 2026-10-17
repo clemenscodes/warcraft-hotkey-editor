@@ -15,6 +15,10 @@ impl From<&CollisionsButtonView> for CollisionsButtonModel {
     }
 }
 
+impl ddd::Layered for CollisionsButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionsButtonModel {
     type View = CollisionsButtonView;
 }

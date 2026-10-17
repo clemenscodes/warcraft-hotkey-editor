@@ -5,4 +5,8 @@ pub struct HotkeyOverrideSectionView {
     pub(crate) override_target: UnitOverrideTargetView,
 }
 
+impl ddd::Layered for HotkeyOverrideSectionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyOverrideSectionView {}

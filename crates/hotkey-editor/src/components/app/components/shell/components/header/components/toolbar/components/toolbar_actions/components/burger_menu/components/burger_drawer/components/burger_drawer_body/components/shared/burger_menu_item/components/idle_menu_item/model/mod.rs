@@ -41,6 +41,10 @@ impl From<&IdleMenuItemView> for IdleMenuItemModel {
     }
 }
 
+impl ddd::Layered for IdleMenuItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleMenuItemModel {
     type View = IdleMenuItemView;
 }

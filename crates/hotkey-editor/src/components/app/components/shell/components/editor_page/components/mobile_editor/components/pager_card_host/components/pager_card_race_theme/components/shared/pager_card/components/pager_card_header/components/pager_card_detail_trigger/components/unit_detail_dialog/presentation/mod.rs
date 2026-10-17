@@ -53,6 +53,10 @@ pub(super) struct UnitDetailDialogPresentation {
     pub(super) resolved: Option<ResolvedDialogUnit>,
 }
 
+impl ddd::Layered for UnitDetailDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for UnitDetailDialogPresentation {
     type Model = UnitDetailDialogModel;
 }

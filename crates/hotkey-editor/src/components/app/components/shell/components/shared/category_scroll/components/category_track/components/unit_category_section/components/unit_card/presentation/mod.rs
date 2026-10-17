@@ -63,6 +63,10 @@ pub(super) fn use_unit_card(props: &UnitCardModel) -> UnitCardPresentation {
     }
 }
 
+impl ddd::Layered for UnitCardPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for UnitCardPresentation {
     type Model = UnitCardModel;
 }

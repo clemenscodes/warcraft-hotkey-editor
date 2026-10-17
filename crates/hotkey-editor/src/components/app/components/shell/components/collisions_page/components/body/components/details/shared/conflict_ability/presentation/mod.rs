@@ -28,6 +28,10 @@ pub(super) fn use_conflict_ability(props: &ConflictAbilityModel) -> ConflictAbil
     }
 }
 
+impl ddd::Layered for ConflictAbilityPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for ConflictAbilityPresentation {
     type Model = ConflictAbilityModel;
 }

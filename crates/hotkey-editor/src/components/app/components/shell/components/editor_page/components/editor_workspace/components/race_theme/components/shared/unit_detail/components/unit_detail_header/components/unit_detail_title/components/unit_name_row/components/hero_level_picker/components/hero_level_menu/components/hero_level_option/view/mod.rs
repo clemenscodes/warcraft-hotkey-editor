@@ -6,4 +6,8 @@ pub struct HeroLevelOptionView {
     pub level_picker_open: Signal<bool>,
 }
 
+impl ddd::Layered for HeroLevelOptionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HeroLevelOptionView {}

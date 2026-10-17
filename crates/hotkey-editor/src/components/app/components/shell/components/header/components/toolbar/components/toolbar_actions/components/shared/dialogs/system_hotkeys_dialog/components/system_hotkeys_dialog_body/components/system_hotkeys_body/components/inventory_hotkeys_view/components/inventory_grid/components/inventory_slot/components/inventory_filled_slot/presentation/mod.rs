@@ -372,6 +372,10 @@ pub(super) fn use_inventory_filled_slot(
     }
 }
 
+impl ddd::Layered for InventoryDrag {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for InventoryDrag {
     type Model = InventoryFilledSlotModel;
 }

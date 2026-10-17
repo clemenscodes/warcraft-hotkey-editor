@@ -13,4 +13,8 @@ pub struct CurrentKeyView {
     pub tooltip_anchor: TooltipAnchor,
 }
 
+impl ddd::Layered for CurrentKeyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CurrentKeyView {}

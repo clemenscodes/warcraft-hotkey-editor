@@ -14,6 +14,10 @@ impl From<&HelpTopRowView> for HelpTopRowModel {
     }
 }
 
+impl ddd::Layered for HelpTopRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpTopRowModel {
     type View = HelpTopRowView;
 }

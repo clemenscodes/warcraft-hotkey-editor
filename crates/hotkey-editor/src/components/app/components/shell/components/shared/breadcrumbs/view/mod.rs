@@ -6,4 +6,8 @@ pub struct BreadcrumbsView {
     pub aria_label: &'static str,
 }
 
+impl ddd::Layered for BreadcrumbsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for BreadcrumbsView {}

@@ -14,6 +14,10 @@ impl From<&TopConflictPositionView> for TopConflictPositionModel {
     }
 }
 
+impl ddd::Layered for TopConflictPositionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TopConflictPositionModel {
     type View = TopConflictPositionView;
 }

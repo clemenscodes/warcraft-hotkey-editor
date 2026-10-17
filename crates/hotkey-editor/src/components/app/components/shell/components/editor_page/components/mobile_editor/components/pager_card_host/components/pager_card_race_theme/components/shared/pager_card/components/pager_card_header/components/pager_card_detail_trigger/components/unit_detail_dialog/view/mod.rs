@@ -8,4 +8,8 @@ pub struct UnitDetailDialogView {
     pub on_open_change: Callback<bool>,
 }
 
+impl ddd::Layered for UnitDetailDialogView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitDetailDialogView {}

@@ -13,6 +13,10 @@ impl From<&CarouselDotView> for CarouselDotModel {
     }
 }
 
+impl ddd::Layered for CarouselDotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CarouselDotModel {
     type View = CarouselDotView;
 }

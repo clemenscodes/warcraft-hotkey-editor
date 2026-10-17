@@ -7,4 +7,8 @@ pub struct HotkeyConflictGridView {
     pub unit_id: WarcraftObjectId,
 }
 
+impl ddd::Layered for HotkeyConflictGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyConflictGridView {}

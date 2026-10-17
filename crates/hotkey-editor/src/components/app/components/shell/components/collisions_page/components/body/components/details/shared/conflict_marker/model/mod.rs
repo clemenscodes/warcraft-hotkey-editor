@@ -16,6 +16,10 @@ impl From<&ConflictMarkerView> for ConflictMarkerModel {
     }
 }
 
+impl ddd::Layered for ConflictMarkerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictMarkerModel {
     type View = ConflictMarkerView;
 }

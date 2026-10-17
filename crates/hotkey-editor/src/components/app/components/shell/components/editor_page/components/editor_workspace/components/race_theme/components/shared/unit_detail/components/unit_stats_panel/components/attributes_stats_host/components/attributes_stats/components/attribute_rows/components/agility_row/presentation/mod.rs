@@ -20,6 +20,10 @@ pub(super) fn use_agility_row(props: &AgilityRowModel) -> AgilityRowPresentation
     }
 }
 
+impl ddd::Layered for AgilityRowPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for AgilityRowPresentation {
     type Model = AgilityRowModel;
 }

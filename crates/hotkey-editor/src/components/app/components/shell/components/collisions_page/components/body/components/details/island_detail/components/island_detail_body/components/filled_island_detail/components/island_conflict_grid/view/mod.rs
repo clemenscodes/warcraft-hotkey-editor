@@ -5,4 +5,8 @@ pub struct IslandConflictGridView {
     pub conflicts: Vec<ConflictView>,
 }
 
+impl ddd::Layered for IslandConflictGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandConflictGridView {}

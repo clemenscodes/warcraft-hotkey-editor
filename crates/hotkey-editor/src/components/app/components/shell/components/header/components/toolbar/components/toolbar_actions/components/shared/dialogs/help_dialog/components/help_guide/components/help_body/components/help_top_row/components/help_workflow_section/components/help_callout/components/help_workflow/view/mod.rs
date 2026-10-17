@@ -5,4 +5,8 @@ pub struct HelpWorkflowView {
     pub steps: &'static [&'static [HelpSegment]],
 }
 
+impl ddd::Layered for HelpWorkflowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpWorkflowView {}

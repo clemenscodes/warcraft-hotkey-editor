@@ -32,6 +32,10 @@ impl From<&SelectedUnitCardButtonView> for SelectedUnitCardButtonModel {
     }
 }
 
+impl ddd::Layered for SelectedUnitCardButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SelectedUnitCardButtonModel {
     type View = SelectedUnitCardButtonView;
 }

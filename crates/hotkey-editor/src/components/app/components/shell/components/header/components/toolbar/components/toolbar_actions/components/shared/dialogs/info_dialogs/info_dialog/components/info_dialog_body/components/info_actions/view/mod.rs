@@ -7,4 +7,8 @@ pub struct InfoActionsView {
     pub on_cancel: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for InfoActionsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InfoActionsView {}

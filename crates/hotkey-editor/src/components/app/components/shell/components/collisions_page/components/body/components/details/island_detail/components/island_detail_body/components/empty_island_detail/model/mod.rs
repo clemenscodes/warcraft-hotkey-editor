@@ -14,6 +14,10 @@ impl From<&EmptyIslandDetailView> for EmptyIslandDetailModel {
     }
 }
 
+impl ddd::Layered for EmptyIslandDetailModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EmptyIslandDetailModel {
     type View = EmptyIslandDetailView;
 }

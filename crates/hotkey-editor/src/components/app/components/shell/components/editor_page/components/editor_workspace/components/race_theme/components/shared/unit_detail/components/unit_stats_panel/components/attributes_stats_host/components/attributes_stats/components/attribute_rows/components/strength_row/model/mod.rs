@@ -21,6 +21,10 @@ impl From<&StrengthRowView> for StrengthRowModel {
     }
 }
 
+impl ddd::Layered for StrengthRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for StrengthRowModel {
     type View = StrengthRowView;
 }

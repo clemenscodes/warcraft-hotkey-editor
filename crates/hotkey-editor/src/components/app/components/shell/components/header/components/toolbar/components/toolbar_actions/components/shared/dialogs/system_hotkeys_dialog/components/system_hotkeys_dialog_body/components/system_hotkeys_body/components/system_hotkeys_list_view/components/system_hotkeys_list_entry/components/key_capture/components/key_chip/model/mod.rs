@@ -30,6 +30,10 @@ impl From<&KeyChipView> for KeyChipModel {
     }
 }
 
+impl ddd::Layered for KeyChipModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for KeyChipModel {
     type View = KeyChipView;
 }

@@ -18,4 +18,8 @@ pub struct HotkeyOverrideHeaderView {
     pub is_info_only: bool,
 }
 
+impl ddd::Layered for HotkeyOverrideHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyOverrideHeaderView {}

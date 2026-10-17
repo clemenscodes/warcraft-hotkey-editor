@@ -15,6 +15,10 @@ impl From<&EditorGridView> for EditorGridModel {
     }
 }
 
+impl ddd::Layered for EditorGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EditorGridModel {
     type View = EditorGridView;
 }

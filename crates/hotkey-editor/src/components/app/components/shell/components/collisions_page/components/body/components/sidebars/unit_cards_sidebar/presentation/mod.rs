@@ -30,6 +30,12 @@ pub(super) struct UnitCardsSidebarPresentation<Conflict: Clone + PartialEq + 'st
     conflict: PhantomData<Conflict>,
 }
 
+impl<Conflict: Clone + PartialEq + 'static> ddd::Layered
+    for UnitCardsSidebarPresentation<Conflict>
+{
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Conflict: Clone + PartialEq + 'static> ddd::Presentation
     for UnitCardsSidebarPresentation<Conflict>
 {

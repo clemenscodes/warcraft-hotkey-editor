@@ -14,6 +14,10 @@ impl From<&ReasonBadgeView> for ReasonBadgeModel {
     }
 }
 
+impl ddd::Layered for ReasonBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ReasonBadgeModel {
     type View = ReasonBadgeView;
 }

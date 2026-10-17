@@ -27,6 +27,10 @@ pub(super) fn use_attack_matchup(props: &AttackMatchupModel) -> AttackMatchupPre
     }
 }
 
+impl ddd::Layered for AttackMatchupPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for AttackMatchupPresentation {
     type Model = AttackMatchupModel;
 }

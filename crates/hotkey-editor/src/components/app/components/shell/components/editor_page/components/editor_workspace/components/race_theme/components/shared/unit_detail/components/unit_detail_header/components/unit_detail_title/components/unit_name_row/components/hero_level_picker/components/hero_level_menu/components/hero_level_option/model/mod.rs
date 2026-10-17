@@ -20,6 +20,10 @@ impl From<&HeroLevelOptionView> for HeroLevelOptionModel {
     }
 }
 
+impl ddd::Layered for HeroLevelOptionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HeroLevelOptionModel {
     type View = HeroLevelOptionView;
 }

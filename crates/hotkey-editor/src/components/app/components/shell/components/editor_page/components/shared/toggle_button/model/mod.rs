@@ -31,6 +31,10 @@ impl From<&ToggleButtonView> for ToggleButtonModel {
     }
 }
 
+impl ddd::Layered for ToggleButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ToggleButtonModel {
     type View = ToggleButtonView;
 }

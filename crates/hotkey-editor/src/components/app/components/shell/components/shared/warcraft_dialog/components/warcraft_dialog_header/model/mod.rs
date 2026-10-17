@@ -15,6 +15,10 @@ impl From<&WarcraftDialogHeaderView> for WarcraftDialogHeaderModel {
     }
 }
 
+impl ddd::Layered for WarcraftDialogHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for WarcraftDialogHeaderModel {
     type View = WarcraftDialogHeaderView;
 }

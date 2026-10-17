@@ -14,6 +14,10 @@ impl From<&TransitionColumnView> for TransitionColumnModel {
     }
 }
 
+impl ddd::Layered for TransitionColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TransitionColumnModel {
     type View = TransitionColumnView;
 }

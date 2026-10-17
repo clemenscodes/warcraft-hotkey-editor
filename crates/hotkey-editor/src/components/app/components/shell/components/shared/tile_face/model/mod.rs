@@ -46,6 +46,10 @@ impl From<&TileFaceView> for TileFaceModel {
     }
 }
 
+impl ddd::Layered for TileFaceModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TileFaceModel {
     type View = TileFaceView;
 }

@@ -11,4 +11,8 @@ pub struct ClearSurfaceView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ClearSurfaceView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ClearSurfaceView {}

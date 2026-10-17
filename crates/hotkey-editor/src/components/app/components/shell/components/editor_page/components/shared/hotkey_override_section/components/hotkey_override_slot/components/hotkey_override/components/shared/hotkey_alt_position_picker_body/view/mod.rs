@@ -6,4 +6,8 @@ pub struct HotkeyAltPositionPickerBodyView {
     pub grid_config: GridEditorView,
 }
 
+impl ddd::Layered for HotkeyAltPositionPickerBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeyAltPositionPickerBodyView {}

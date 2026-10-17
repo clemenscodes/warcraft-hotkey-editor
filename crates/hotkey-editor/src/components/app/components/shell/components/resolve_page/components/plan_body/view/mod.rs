@@ -12,6 +12,10 @@ pub struct PlanBodyView {
     pub unresolved: Vec<UnresolvedView>,
 }
 
+impl ddd::Layered for PlanBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PlanBodyView {}
 
 impl Render for PlanBodyView {

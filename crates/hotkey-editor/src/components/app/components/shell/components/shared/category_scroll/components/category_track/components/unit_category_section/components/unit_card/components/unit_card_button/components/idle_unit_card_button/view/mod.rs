@@ -11,4 +11,8 @@ pub struct IdleUnitCardButtonView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for IdleUnitCardButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleUnitCardButtonView {}

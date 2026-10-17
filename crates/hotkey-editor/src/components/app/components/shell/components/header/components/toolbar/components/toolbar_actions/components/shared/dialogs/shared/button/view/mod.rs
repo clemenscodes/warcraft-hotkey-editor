@@ -8,4 +8,8 @@ pub struct ButtonView {
     pub label: String,
 }
 
+impl ddd::Layered for ButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ButtonView {}

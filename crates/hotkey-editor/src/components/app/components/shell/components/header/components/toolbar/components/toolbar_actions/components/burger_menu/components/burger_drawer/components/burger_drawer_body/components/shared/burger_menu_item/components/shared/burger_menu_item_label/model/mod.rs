@@ -13,6 +13,10 @@ impl From<&BurgerMenuItemLabelView> for BurgerMenuItemLabelModel {
     }
 }
 
+impl ddd::Layered for BurgerMenuItemLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BurgerMenuItemLabelModel {
     type View = BurgerMenuItemLabelView;
 }

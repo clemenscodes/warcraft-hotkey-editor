@@ -16,6 +16,10 @@ impl From<&KeyPickerColumnView> for KeyPickerColumnModel {
     }
 }
 
+impl ddd::Layered for KeyPickerColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for KeyPickerColumnModel {
     type View = KeyPickerColumnView;
 }

@@ -15,6 +15,10 @@ impl From<&MiniGridView> for MiniGridModel {
     }
 }
 
+impl ddd::Layered for MiniGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MiniGridModel {
     type View = MiniGridView;
 }

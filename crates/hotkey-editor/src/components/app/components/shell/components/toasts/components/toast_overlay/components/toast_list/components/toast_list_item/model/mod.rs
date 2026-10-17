@@ -15,6 +15,10 @@ impl From<&ToastListItemView> for ToastListItemModel {
     }
 }
 
+impl ddd::Layered for ToastListItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ToastListItemModel {
     type View = ToastListItemView;
 }

@@ -13,6 +13,10 @@ impl From<&BelowRightTooltipView> for BelowRightTooltipModel {
     }
 }
 
+impl ddd::Layered for BelowRightTooltipModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BelowRightTooltipModel {
     type View = BelowRightTooltipView;
 }

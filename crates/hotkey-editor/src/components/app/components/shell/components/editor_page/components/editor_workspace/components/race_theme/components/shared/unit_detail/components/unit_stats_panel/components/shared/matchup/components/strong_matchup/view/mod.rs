@@ -7,4 +7,8 @@ pub struct StrongMatchupView {
     pub title: String,
 }
 
+impl ddd::Layered for StrongMatchupView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for StrongMatchupView {}

@@ -24,6 +24,10 @@ impl From<&SearchScopeTriggerView> for SearchScopeTriggerModel {
     }
 }
 
+impl ddd::Layered for SearchScopeTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchScopeTriggerModel {
     type View = SearchScopeTriggerView;
 }

@@ -13,6 +13,10 @@ impl From<&DraggableMarkerView> for DraggableMarkerModel {
     }
 }
 
+impl ddd::Layered for DraggableMarkerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DraggableMarkerModel {
     type View = DraggableMarkerView;
 }

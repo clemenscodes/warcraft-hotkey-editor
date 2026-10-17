@@ -15,6 +15,10 @@ impl From<&HelpResolverSectionView> for HelpResolverSectionModel {
     }
 }
 
+impl ddd::Layered for HelpResolverSectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpResolverSectionModel {
     type View = HelpResolverSectionView;
 }

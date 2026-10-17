@@ -4,4 +4,8 @@ pub struct ControlPlainIconView {
     pub alt: String,
 }
 
+impl ddd::Layered for ControlPlainIconView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ControlPlainIconView {}

@@ -9,6 +9,10 @@ pub struct TemplatesDialogBodyView {
     pub cards: Vec<TemplateCardView>,
 }
 
+impl ddd::Layered for TemplatesDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for TemplatesDialogBodyView {}
 
 impl Render for TemplatesDialogBodyView {

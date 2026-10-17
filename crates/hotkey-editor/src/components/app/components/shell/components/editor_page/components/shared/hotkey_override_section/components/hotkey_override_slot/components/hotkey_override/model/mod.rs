@@ -170,6 +170,10 @@ impl From<&HotkeyOverrideView> for HotkeyOverrideModel {
     }
 }
 
+impl ddd::Layered for HotkeyOverrideModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyOverrideModel {
     type View = HotkeyOverrideView;
 }

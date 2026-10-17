@@ -40,6 +40,10 @@ impl From<&LayoutTileView> for LayoutTileModel {
     }
 }
 
+impl ddd::Layered for LayoutTileModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for LayoutTileModel {
     type View = LayoutTileView;
 }

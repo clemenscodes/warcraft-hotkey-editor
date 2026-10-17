@@ -14,6 +14,10 @@ impl From<&MoveHotkeyToggleView> for MoveHotkeyToggleModel {
     }
 }
 
+impl ddd::Layered for MoveHotkeyToggleModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MoveHotkeyToggleModel {
     type View = MoveHotkeyToggleView;
 }

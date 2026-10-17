@@ -14,6 +14,10 @@ impl From<&RegenQualifierView> for RegenQualifierModel {
     }
 }
 
+impl ddd::Layered for RegenQualifierModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RegenQualifierModel {
     type View = RegenQualifierView;
 }

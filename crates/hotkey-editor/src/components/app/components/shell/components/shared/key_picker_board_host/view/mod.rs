@@ -9,4 +9,8 @@ pub struct KeyPickerBoardHostView {
     pub on_close: EventHandler<()>,
 }
 
+impl ddd::Layered for KeyPickerBoardHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for KeyPickerBoardHostView {}

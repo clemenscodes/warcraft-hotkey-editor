@@ -14,6 +14,10 @@ impl From<&InfoContentView> for InfoContentModel {
     }
 }
 
+impl ddd::Layered for InfoContentModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InfoContentModel {
     type View = InfoContentView;
 }

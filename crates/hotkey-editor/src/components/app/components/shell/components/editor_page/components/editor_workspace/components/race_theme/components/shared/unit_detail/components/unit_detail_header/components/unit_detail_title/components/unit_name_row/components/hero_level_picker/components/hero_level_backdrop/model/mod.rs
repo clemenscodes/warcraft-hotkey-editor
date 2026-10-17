@@ -13,6 +13,10 @@ impl From<&HeroLevelBackdropView> for HeroLevelBackdropModel {
     }
 }
 
+impl ddd::Layered for HeroLevelBackdropModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HeroLevelBackdropModel {
     type View = HeroLevelBackdropView;
 }

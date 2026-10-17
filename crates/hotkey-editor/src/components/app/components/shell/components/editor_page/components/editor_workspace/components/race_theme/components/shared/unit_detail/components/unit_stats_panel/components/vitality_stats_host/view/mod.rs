@@ -8,4 +8,8 @@ pub struct VitalityStatsHostView {
     pub mana_regen: ManaRegen,
 }
 
+impl ddd::Layered for VitalityStatsHostView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for VitalityStatsHostView {}

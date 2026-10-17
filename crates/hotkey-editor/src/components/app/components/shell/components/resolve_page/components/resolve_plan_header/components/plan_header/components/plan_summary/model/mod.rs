@@ -21,6 +21,10 @@ impl From<&PlanSummaryView> for PlanSummaryModel {
     }
 }
 
+impl ddd::Layered for PlanSummaryModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlanSummaryModel {
     type View = PlanSummaryView;
 }

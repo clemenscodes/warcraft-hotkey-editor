@@ -14,6 +14,10 @@ impl From<&AbilityNameView> for AbilityNameModel {
     }
 }
 
+impl ddd::Layered for AbilityNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AbilityNameModel {
     type View = AbilityNameView;
 }

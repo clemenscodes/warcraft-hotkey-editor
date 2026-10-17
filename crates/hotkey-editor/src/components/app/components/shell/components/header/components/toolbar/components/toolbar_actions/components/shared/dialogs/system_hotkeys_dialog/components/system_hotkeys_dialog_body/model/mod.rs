@@ -9,6 +9,10 @@ impl From<&SystemHotkeysDialogBodyView> for SystemHotkeysDialogBodyModel {
     }
 }
 
+impl ddd::Layered for SystemHotkeysDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysDialogBodyModel {
     type View = SystemHotkeysDialogBodyView;
 }

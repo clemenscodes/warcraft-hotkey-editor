@@ -5,4 +5,8 @@ pub struct FightRowView {
     pub move_view: MoveView,
 }
 
+impl ddd::Layered for FightRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FightRowView {}

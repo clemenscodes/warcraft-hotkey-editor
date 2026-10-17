@@ -8,6 +8,10 @@ pub struct HelpFooterView {
     pub on_dismiss: Callback<MouseEvent>,
 }
 
+impl ddd::Layered for HelpFooterView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpFooterView {}
 
 impl Render for HelpFooterView {

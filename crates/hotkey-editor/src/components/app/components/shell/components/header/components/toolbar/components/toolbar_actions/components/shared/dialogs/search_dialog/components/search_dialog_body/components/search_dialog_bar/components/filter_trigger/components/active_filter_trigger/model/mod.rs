@@ -14,6 +14,10 @@ impl From<&ActiveFilterTriggerView> for ActiveFilterTriggerModel {
     }
 }
 
+impl ddd::Layered for ActiveFilterTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveFilterTriggerModel {
     type View = ActiveFilterTriggerView;
 }

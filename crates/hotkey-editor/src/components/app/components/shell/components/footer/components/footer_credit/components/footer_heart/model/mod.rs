@@ -13,6 +13,10 @@ impl From<&FooterHeartView> for FooterHeartModel {
     }
 }
 
+impl ddd::Layered for FooterHeartModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FooterHeartModel {
     type View = FooterHeartView;
 }

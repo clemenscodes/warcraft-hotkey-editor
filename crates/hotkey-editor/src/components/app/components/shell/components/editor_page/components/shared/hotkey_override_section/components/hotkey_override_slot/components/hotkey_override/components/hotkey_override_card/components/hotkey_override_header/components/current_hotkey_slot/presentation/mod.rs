@@ -59,6 +59,10 @@ impl From<&CurrentHotkeySlotModel> for CurrentHotkeySlotDispatch {
     }
 }
 
+impl ddd::Layered for CurrentHotkeySlotDispatch {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for CurrentHotkeySlotDispatch {
     type Model = CurrentHotkeySlotModel;
 }

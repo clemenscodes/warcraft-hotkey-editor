@@ -8,4 +8,8 @@ pub struct SystemHotkeysBreadcrumbsMenuView {
     pub is_open: bool,
 }
 
+impl ddd::Layered for SystemHotkeysBreadcrumbsMenuView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SystemHotkeysBreadcrumbsMenuView {}

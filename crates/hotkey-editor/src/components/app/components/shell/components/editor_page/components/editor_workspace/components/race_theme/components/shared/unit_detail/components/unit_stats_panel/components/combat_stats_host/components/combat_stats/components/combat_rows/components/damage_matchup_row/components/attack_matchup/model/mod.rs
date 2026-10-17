@@ -21,6 +21,10 @@ impl From<&AttackMatchupView> for AttackMatchupModel {
     }
 }
 
+impl ddd::Layered for AttackMatchupModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AttackMatchupModel {
     type View = AttackMatchupView;
 }

@@ -34,6 +34,12 @@ impl<Body: Render<Output = Element>, Footer: Render<Output = Element>>
     }
 }
 
+impl<Body: Render<Output = Element>, Footer: Render<Output = Element>> ddd::Layered
+    for WarcraftDialogModel<Body, Footer>
+{
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Body: Render<Output = Element>, Footer: Render<Output = Element>> ddd::Model
     for WarcraftDialogModel<Body, Footer>
 {

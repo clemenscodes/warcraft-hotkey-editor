@@ -12,6 +12,10 @@ pub struct InfoDialogBodyView {
     pub on_cancel: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for InfoDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for InfoDialogBodyView {}
 
 impl Render for InfoDialogBodyView {

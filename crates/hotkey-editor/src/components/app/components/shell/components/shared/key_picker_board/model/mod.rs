@@ -25,6 +25,10 @@ impl From<&KeyPickerBoardView> for KeyPickerBoardModel {
     }
 }
 
+impl ddd::Layered for KeyPickerBoardModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for KeyPickerBoardModel {
     type View = KeyPickerBoardView;
 }

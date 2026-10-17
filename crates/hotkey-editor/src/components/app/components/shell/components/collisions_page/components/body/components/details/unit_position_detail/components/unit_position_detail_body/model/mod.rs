@@ -14,6 +14,10 @@ impl From<&UnitPositionDetailBodyView> for UnitPositionDetailBodyModel {
     }
 }
 
+impl ddd::Layered for UnitPositionDetailBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitPositionDetailBodyModel {
     type View = UnitPositionDetailBodyView;
 }

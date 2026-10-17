@@ -14,6 +14,10 @@ impl From<&HotkeyOverrideSectionView> for HotkeyOverrideSectionModel {
     }
 }
 
+impl ddd::Layered for HotkeyOverrideSectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HotkeyOverrideSectionModel {
     type View = HotkeyOverrideSectionView;
 }

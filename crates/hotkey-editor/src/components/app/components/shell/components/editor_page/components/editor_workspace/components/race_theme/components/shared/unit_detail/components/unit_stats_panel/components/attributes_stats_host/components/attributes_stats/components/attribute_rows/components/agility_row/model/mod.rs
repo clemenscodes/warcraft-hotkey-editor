@@ -21,6 +21,10 @@ impl From<&AgilityRowView> for AgilityRowModel {
     }
 }
 
+impl ddd::Layered for AgilityRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AgilityRowModel {
     type View = AgilityRowView;
 }

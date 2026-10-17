@@ -14,6 +14,10 @@ impl From<&HelpLegendSectionView> for HelpLegendSectionModel {
     }
 }
 
+impl ddd::Layered for HelpLegendSectionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpLegendSectionModel {
     type View = HelpLegendSectionView;
 }

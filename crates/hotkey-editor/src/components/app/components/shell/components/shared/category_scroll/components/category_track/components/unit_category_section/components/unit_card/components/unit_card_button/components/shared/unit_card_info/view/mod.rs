@@ -7,4 +7,8 @@ pub struct UnitCardInfoView {
     pub is_selected: bool,
 }
 
+impl ddd::Layered for UnitCardInfoView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for UnitCardInfoView {}

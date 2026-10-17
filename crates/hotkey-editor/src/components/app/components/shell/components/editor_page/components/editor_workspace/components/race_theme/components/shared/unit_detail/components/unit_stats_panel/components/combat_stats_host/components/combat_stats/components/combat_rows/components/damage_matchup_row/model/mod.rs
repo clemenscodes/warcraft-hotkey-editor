@@ -14,6 +14,10 @@ impl From<&DamageMatchupRowView> for DamageMatchupRowModel {
     }
 }
 
+impl ddd::Layered for DamageMatchupRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DamageMatchupRowModel {
     type View = DamageMatchupRowView;
 }

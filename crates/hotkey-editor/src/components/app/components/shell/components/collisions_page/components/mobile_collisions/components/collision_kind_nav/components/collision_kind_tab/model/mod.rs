@@ -27,6 +27,10 @@ impl From<&CollisionKindTabView> for CollisionKindTabModel {
     }
 }
 
+impl ddd::Layered for CollisionKindTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionKindTabModel {
     type View = CollisionKindTabView;
 }

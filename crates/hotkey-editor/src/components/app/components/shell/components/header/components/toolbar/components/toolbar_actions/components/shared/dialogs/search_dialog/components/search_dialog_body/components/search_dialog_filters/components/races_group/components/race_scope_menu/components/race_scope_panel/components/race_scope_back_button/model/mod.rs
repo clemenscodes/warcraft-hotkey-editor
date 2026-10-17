@@ -13,6 +13,10 @@ impl From<&RaceScopeBackButtonView> for RaceScopeBackButtonModel {
     }
 }
 
+impl ddd::Layered for RaceScopeBackButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceScopeBackButtonModel {
     type View = RaceScopeBackButtonView;
 }

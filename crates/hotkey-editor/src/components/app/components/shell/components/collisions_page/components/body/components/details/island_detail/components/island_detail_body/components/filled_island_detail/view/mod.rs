@@ -5,4 +5,8 @@ pub struct FilledIslandDetailView {
     pub island: IslandView,
 }
 
+impl ddd::Layered for FilledIslandDetailView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FilledIslandDetailView {}

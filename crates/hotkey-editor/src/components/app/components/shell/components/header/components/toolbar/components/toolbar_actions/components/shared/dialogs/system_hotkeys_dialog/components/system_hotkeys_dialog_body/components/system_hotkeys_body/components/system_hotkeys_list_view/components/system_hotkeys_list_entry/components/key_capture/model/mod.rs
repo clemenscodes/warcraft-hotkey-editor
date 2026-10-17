@@ -14,6 +14,10 @@ impl From<&KeyCaptureView> for KeyCaptureModel {
     }
 }
 
+impl ddd::Layered for KeyCaptureModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for KeyCaptureModel {
     type View = KeyCaptureView;
 }

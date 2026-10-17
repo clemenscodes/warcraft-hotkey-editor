@@ -35,6 +35,10 @@ impl From<&CurrentKeyView> for CurrentKeyModel {
     }
 }
 
+impl ddd::Layered for CurrentKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CurrentKeyModel {
     type View = CurrentKeyView;
 }

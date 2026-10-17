@@ -8,6 +8,10 @@ pub struct IslandConflictPanelBodyView {
     pub(crate) cards: Vec<IslandConflictCardData>,
 }
 
+impl ddd::Layered for IslandConflictPanelBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandConflictPanelBodyView {}
 
 impl Render for IslandConflictPanelBodyView {

@@ -635,6 +635,10 @@ pub(super) fn use_collisions_page(props: &CollisionsPageModel) -> CollisionsPage
     }
 }
 
+impl ddd::Layered for CollisionsPagePresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for CollisionsPagePresentation {
     type Model = CollisionsPageModel;
 }

@@ -14,6 +14,10 @@ impl From<&RangeRowView> for RangeRowModel {
     }
 }
 
+impl ddd::Layered for RangeRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RangeRowModel {
     type View = RangeRowView;
 }

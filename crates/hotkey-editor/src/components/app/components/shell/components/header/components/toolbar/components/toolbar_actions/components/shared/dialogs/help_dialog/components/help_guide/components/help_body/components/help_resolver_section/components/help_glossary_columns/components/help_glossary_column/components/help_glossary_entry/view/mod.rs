@@ -5,4 +5,8 @@ pub struct HelpGlossaryEntryView {
     pub item: HelpGlossaryItem,
 }
 
+impl ddd::Layered for HelpGlossaryEntryView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpGlossaryEntryView {}

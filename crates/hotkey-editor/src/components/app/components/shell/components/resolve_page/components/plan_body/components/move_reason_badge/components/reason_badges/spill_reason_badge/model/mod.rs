@@ -14,6 +14,10 @@ impl From<&SpillReasonBadgeView> for SpillReasonBadgeModel {
     }
 }
 
+impl ddd::Layered for SpillReasonBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SpillReasonBadgeModel {
     type View = SpillReasonBadgeView;
 }

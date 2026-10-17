@@ -6,4 +6,8 @@ pub struct HelpResolverSectionView {
     pub glossary: &'static [&'static [HelpGlossaryItem]],
 }
 
+impl ddd::Layered for HelpResolverSectionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HelpResolverSectionView {}

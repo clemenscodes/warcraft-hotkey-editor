@@ -14,6 +14,10 @@ impl From<&FollowerIconView> for FollowerIconModel {
     }
 }
 
+impl ddd::Layered for FollowerIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for FollowerIconModel {
     type View = FollowerIconView;
 }

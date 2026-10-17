@@ -7,4 +7,8 @@ pub struct ActiveRaceTabView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for ActiveRaceTabView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ActiveRaceTabView {}

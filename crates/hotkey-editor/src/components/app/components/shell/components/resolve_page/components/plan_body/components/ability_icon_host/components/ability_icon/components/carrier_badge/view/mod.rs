@@ -4,4 +4,8 @@ pub struct CarrierBadgeView {
     pub is_winner: bool,
 }
 
+impl ddd::Layered for CarrierBadgeView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CarrierBadgeView {}

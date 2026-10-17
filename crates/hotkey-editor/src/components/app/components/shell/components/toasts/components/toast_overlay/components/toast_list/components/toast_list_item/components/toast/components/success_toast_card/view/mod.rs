@@ -7,4 +7,8 @@ pub struct SuccessToastCardView {
     pub on_remove: Callback<usize>,
 }
 
+impl ddd::Layered for SuccessToastCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SuccessToastCardView {}

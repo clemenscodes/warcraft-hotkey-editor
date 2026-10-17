@@ -33,6 +33,10 @@ impl From<&InventoryFilledSlotView> for InventoryFilledSlotModel {
     }
 }
 
+impl ddd::Layered for InventoryFilledSlotModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InventoryFilledSlotModel {
     type View = InventoryFilledSlotView;
 }

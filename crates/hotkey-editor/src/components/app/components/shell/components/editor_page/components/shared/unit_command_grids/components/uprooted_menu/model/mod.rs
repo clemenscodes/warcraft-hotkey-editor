@@ -14,6 +14,10 @@ impl From<&UprootedMenuView> for UprootedMenuModel {
     }
 }
 
+impl ddd::Layered for UprootedMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UprootedMenuModel {
     type View = UprootedMenuView;
 }

@@ -13,6 +13,10 @@ impl From<&IslandConflictUnitNameView> for IslandConflictUnitNameModel {
     }
 }
 
+impl ddd::Layered for IslandConflictUnitNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandConflictUnitNameModel {
     type View = IslandConflictUnitNameView;
 }

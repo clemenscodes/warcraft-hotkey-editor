@@ -70,6 +70,10 @@ impl From<&KeyPickerKeyModel> for KeyPickerKeyPresentation {
     }
 }
 
+impl ddd::Layered for KeyPickerKeyPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for KeyPickerKeyPresentation {
     type Model = KeyPickerKeyModel;
 }

@@ -14,6 +14,10 @@ impl From<&HelpCalloutView> for HelpCalloutModel {
     }
 }
 
+impl ddd::Layered for HelpCalloutModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HelpCalloutModel {
     type View = HelpCalloutView;
 }

@@ -26,6 +26,10 @@ impl From<&UnitListSearchView> for UnitListSearchModel {
     }
 }
 
+impl ddd::Layered for UnitListSearchModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitListSearchModel {
     type View = UnitListSearchView;
 }

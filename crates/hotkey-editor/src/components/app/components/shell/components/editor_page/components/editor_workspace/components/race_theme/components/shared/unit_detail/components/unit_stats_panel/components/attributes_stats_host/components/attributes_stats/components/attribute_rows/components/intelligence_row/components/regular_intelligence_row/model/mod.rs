@@ -24,6 +24,10 @@ impl From<&RegularIntelligenceRowView> for RegularIntelligenceRowModel {
     }
 }
 
+impl ddd::Layered for RegularIntelligenceRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RegularIntelligenceRowModel {
     type View = RegularIntelligenceRowView;
 }

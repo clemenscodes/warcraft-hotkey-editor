@@ -45,6 +45,10 @@ impl From<&TemplateCardPreviewsView> for TemplateCardPreviewsModel {
     }
 }
 
+impl ddd::Layered for TemplateCardPreviewsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TemplateCardPreviewsModel {
     type View = TemplateCardPreviewsView;
 }

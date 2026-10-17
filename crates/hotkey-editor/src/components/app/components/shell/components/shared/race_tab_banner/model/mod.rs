@@ -30,6 +30,10 @@ impl From<&RaceTabBannerView> for RaceTabBannerModel {
     }
 }
 
+impl ddd::Layered for RaceTabBannerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceTabBannerModel {
     type View = RaceTabBannerView;
 }

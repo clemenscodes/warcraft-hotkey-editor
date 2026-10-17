@@ -5,4 +5,8 @@ pub struct PositionsContentView {
     pub islands: Vec<IslandView>,
 }
 
+impl ddd::Layered for PositionsContentView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for PositionsContentView {}

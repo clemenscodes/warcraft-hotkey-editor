@@ -5,4 +5,8 @@ pub struct HotkeysContentView {
     pub units: Vec<HotkeyUnitView>,
 }
 
+impl ddd::Layered for HotkeysContentView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for HotkeysContentView {}

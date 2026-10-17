@@ -8,4 +8,8 @@ pub struct IdleCollisionCardButtonView {
     pub content: CollisionCardContent,
 }
 
+impl ddd::Layered for IdleCollisionCardButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleCollisionCardButtonView {}

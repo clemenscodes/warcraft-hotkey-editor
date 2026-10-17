@@ -14,6 +14,10 @@ impl From<&ConflictAbilityIconView> for ConflictAbilityIconModel {
     }
 }
 
+impl ddd::Layered for ConflictAbilityIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictAbilityIconModel {
     type View = ConflictAbilityIconView;
 }

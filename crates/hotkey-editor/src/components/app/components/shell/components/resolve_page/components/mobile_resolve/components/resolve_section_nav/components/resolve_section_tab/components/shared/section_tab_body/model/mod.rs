@@ -27,6 +27,10 @@ impl From<&SectionTabBodyView> for SectionTabBodyModel {
     }
 }
 
+impl ddd::Layered for SectionTabBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SectionTabBodyModel {
     type View = SectionTabBodyView;
 }

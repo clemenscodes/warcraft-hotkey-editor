@@ -31,6 +31,10 @@ impl From<&ResolvePlanHeaderView> for ResolvePlanHeaderModel {
     }
 }
 
+impl ddd::Layered for ResolvePlanHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ResolvePlanHeaderModel {
     type View = ResolvePlanHeaderView;
 }

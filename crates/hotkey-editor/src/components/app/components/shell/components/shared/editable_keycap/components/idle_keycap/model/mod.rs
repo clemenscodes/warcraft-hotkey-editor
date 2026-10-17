@@ -14,6 +14,10 @@ impl From<&IdleKeycapView> for IdleKeycapModel {
     }
 }
 
+impl ddd::Layered for IdleKeycapModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleKeycapModel {
     type View = IdleKeycapView;
 }

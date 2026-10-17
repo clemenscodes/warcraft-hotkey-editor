@@ -14,6 +14,10 @@ impl From<&HeroLevelTriggerNumberView> for HeroLevelTriggerNumberModel {
     }
 }
 
+impl ddd::Layered for HeroLevelTriggerNumberModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for HeroLevelTriggerNumberModel {
     type View = HeroLevelTriggerNumberView;
 }

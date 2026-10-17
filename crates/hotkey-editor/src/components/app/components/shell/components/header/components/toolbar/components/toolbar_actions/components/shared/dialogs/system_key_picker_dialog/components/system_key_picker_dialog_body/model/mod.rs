@@ -25,6 +25,10 @@ impl From<&SystemKeyPickerDialogBodyView> for SystemKeyPickerDialogBodyModel {
     }
 }
 
+impl ddd::Layered for SystemKeyPickerDialogBodyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemKeyPickerDialogBodyModel {
     type View = SystemKeyPickerDialogBodyView;
 }

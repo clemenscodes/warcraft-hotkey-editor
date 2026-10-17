@@ -14,6 +14,10 @@ impl From<&AbilityFollowerGhostView> for AbilityFollowerGhostModel {
     }
 }
 
+impl ddd::Layered for AbilityFollowerGhostModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for AbilityFollowerGhostModel {
     type View = AbilityFollowerGhostView;
 }

@@ -12,6 +12,10 @@ impl From<&BreadcrumbCountView> for BreadcrumbCountModel {
     }
 }
 
+impl ddd::Layered for BreadcrumbCountModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for BreadcrumbCountModel {
     type View = BreadcrumbCountView;
 }

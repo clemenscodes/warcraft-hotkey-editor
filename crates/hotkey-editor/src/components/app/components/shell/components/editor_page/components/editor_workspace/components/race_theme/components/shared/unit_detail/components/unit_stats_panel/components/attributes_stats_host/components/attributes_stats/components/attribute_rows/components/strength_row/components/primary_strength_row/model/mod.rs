@@ -24,6 +24,10 @@ impl From<&PrimaryStrengthRowView> for PrimaryStrengthRowModel {
     }
 }
 
+impl ddd::Layered for PrimaryStrengthRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PrimaryStrengthRowModel {
     type View = PrimaryStrengthRowView;
 }

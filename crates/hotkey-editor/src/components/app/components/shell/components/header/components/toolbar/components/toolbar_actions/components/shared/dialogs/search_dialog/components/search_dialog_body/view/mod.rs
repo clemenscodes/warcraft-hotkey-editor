@@ -6,6 +6,10 @@ use dioxus::prelude::*;
 #[derive(Clone, PartialEq, Default)]
 pub struct SearchDialogBodyView {}
 
+impl ddd::Layered for SearchDialogBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SearchDialogBodyView {}
 
 impl Render for SearchDialogBodyView {

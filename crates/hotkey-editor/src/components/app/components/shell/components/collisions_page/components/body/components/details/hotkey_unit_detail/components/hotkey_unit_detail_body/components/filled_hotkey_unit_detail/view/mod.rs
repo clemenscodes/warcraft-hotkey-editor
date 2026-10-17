@@ -5,4 +5,8 @@ pub struct FilledHotkeyUnitDetailView {
     pub unit_view: HotkeyUnitView,
 }
 
+impl ddd::Layered for FilledHotkeyUnitDetailView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for FilledHotkeyUnitDetailView {}

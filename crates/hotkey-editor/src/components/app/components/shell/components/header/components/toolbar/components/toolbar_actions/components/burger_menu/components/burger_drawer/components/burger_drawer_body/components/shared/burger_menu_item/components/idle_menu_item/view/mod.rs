@@ -13,4 +13,8 @@ pub struct IdleMenuItemView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for IdleMenuItemView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleMenuItemView {}

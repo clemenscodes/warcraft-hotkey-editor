@@ -35,6 +35,10 @@ impl From<&InteractiveSurfaceView> for InteractiveSurfaceModel {
     }
 }
 
+impl ddd::Layered for InteractiveSurfaceModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InteractiveSurfaceModel {
     type View = InteractiveSurfaceView;
 }

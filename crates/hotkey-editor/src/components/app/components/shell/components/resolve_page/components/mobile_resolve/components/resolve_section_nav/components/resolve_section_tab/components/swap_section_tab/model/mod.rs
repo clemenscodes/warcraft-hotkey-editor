@@ -27,6 +27,10 @@ impl From<&SwapSectionTabView> for SwapSectionTabModel {
     }
 }
 
+impl ddd::Layered for SwapSectionTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SwapSectionTabModel {
     type View = SwapSectionTabView;
 }

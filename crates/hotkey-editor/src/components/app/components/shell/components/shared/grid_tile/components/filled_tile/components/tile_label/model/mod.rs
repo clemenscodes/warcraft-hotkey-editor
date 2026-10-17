@@ -13,6 +13,10 @@ impl From<&TileLabelView> for TileLabelModel {
     }
 }
 
+impl ddd::Layered for TileLabelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TileLabelModel {
     type View = TileLabelView;
 }

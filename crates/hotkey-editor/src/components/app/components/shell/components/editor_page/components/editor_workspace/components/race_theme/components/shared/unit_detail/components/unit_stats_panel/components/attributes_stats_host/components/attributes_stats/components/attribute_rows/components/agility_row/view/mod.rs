@@ -6,4 +6,8 @@ pub struct AgilityRowView {
     pub is_primary: bool,
 }
 
+impl ddd::Layered for AgilityRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for AgilityRowView {}

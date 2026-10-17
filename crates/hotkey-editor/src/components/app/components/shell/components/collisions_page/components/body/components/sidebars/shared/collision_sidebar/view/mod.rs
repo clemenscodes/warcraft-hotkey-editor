@@ -5,4 +5,8 @@ pub struct CollisionSidebarView {
     pub cards: Vec<CollisionCardData>,
 }
 
+impl ddd::Layered for CollisionSidebarView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for CollisionSidebarView {}

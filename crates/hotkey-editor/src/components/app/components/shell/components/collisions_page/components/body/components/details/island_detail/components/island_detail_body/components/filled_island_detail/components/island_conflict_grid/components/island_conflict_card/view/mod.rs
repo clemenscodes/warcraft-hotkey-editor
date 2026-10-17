@@ -5,4 +5,8 @@ pub struct IslandConflictCardView {
     pub conflict: ConflictView,
 }
 
+impl ddd::Layered for IslandConflictCardView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IslandConflictCardView {}

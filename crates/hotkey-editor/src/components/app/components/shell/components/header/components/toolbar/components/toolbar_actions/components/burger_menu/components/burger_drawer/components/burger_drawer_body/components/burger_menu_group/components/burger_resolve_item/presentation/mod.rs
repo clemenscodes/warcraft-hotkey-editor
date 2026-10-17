@@ -40,6 +40,10 @@ pub(super) fn use_burger_resolve_item(
     }
 }
 
+impl ddd::Layered for BurgerResolveItemPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for BurgerResolveItemPresentation {
     type Model = BurgerResolveItemModel;
 }

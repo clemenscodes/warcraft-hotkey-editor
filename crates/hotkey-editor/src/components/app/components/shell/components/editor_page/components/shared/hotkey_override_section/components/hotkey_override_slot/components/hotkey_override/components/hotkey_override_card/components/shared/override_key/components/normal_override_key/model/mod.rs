@@ -29,6 +29,10 @@ impl From<&NormalOverrideKeyView> for NormalOverrideKeyModel {
     }
 }
 
+impl ddd::Layered for NormalOverrideKeyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for NormalOverrideKeyModel {
     type View = NormalOverrideKeyView;
 }

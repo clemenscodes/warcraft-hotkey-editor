@@ -9,4 +9,8 @@ pub struct GridLayoutEditorDialogContentView {
     pub on_apply: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for GridLayoutEditorDialogContentView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for GridLayoutEditorDialogContentView {}

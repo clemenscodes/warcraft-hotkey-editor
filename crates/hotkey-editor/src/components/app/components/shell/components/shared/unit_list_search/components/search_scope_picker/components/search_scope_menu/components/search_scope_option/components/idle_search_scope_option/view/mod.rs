@@ -6,4 +6,8 @@ pub struct IdleSearchScopeOptionView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for IdleSearchScopeOptionView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for IdleSearchScopeOptionView {}

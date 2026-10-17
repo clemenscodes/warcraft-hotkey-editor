@@ -34,6 +34,10 @@ impl From<&SearchScopeMenuView> for SearchScopeMenuModel {
     }
 }
 
+impl ddd::Layered for SearchScopeMenuModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchScopeMenuModel {
     type View = SearchScopeMenuView;
 }

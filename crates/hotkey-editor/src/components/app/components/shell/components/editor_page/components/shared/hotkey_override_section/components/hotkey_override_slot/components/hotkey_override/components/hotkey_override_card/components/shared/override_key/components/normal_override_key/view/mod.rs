@@ -9,4 +9,8 @@ pub struct NormalOverrideKeyView {
     pub on_activate: EventHandler<()>,
 }
 
+impl ddd::Layered for NormalOverrideKeyView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for NormalOverrideKeyView {}

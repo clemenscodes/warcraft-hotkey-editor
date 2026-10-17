@@ -13,6 +13,10 @@ impl From<&CollisionKindTabCountView> for CollisionKindTabCountModel {
     }
 }
 
+impl ddd::Layered for CollisionKindTabCountModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CollisionKindTabCountModel {
     type View = CollisionKindTabCountView;
 }

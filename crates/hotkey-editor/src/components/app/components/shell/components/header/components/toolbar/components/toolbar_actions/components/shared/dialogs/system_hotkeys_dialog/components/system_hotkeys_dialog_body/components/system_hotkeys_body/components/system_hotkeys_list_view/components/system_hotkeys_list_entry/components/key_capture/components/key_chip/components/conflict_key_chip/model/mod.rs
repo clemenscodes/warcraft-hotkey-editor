@@ -27,6 +27,10 @@ impl From<&ConflictKeyChipView> for ConflictKeyChipModel {
     }
 }
 
+impl ddd::Layered for ConflictKeyChipModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictKeyChipModel {
     type View = ConflictKeyChipView;
 }

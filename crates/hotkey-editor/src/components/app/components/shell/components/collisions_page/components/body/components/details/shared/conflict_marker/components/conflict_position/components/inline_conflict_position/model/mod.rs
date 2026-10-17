@@ -14,6 +14,10 @@ impl From<&InlineConflictPositionView> for InlineConflictPositionModel {
     }
 }
 
+impl ddd::Layered for InlineConflictPositionModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for InlineConflictPositionModel {
     type View = InlineConflictPositionView;
 }

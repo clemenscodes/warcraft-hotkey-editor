@@ -7,4 +7,8 @@ pub struct MobileCollisionsView {
     pub content: ContentModel,
 }
 
+impl ddd::Layered for MobileCollisionsView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MobileCollisionsView {}

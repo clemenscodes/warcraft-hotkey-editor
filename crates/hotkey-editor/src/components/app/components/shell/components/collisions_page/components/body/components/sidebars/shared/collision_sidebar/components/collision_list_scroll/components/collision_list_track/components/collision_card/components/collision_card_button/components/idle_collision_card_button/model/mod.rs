@@ -24,6 +24,10 @@ impl From<&IdleCollisionCardButtonView> for IdleCollisionCardButtonModel {
     }
 }
 
+impl ddd::Layered for IdleCollisionCardButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IdleCollisionCardButtonModel {
     type View = IdleCollisionCardButtonView;
 }

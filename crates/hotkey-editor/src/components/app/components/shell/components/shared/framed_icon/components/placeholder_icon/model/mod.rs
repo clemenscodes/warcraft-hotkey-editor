@@ -15,6 +15,10 @@ impl From<&PlaceholderIconView> for PlaceholderIconModel {
     }
 }
 
+impl ddd::Layered for PlaceholderIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PlaceholderIconModel {
     type View = PlaceholderIconView;
 }

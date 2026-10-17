@@ -27,8 +27,8 @@ conformance assertions across the crate):
 
 | `ddd` role | Layer | Types |
 |---|---|---|
-| **AggregateRoot** | Domain | `CustomKeys`, `GridLayout`, `EditorHistory` |
-| **Identifier** | Domain | `AbilityId`, `GridSlotId` |
+| **AggregateRoot** (and so **Entity**) | Domain | `CustomKeys`, `GridLayout`, `EditorHistory`, each identified by its singleton identity |
+| **Identifier** | Domain | `AbilityId`, `GridSlotId`; the fieldless singleton identities `CustomKeysIdentity`, `GridLayoutIdentity`, `EditorHistoryIdentity` |
 | **ValueObject** | Domain | `Hotkey`, `AbilityModifier`, `HotkeyToken`, `HotkeyTarget`, `CommandCard`; the keycode enums (`Letter`, `Digit`, `FunctionKey`, `NumpadKey`, `Punctuation`, `MouseButton`, `KeyCode`); the cascade value objects (`PositionAssignmentGroup`, `GroupKind`, `AssignmentScope`, `PlannedMove`, `UnresolvedMover`, `MoveReason`, `CascadePlan`, `ConflictNode`, `CollidingPair`, `ConflictGraph`) |
 | **DomainService** | Domain | `AssignmentQueue` (the cascade solver) |
 | **Specification** | Domain | the `unit/ability_rules` predicates: `HiddenAbility`, `RootedOnlyAbility`, `RevertsToHost`, `FormUpgradeSwap` (composable via `.and()/.or()/.not()`) |
@@ -56,7 +56,8 @@ reason — consistent with the `ddd` crate's "adopt a role when the concept
 genuinely appears" philosophy and the repo's "resist premature
 framework-ization" principle:
 
-- **Entity** (bindings `AbilityBinding`/`CommandBinding`/`SystemBinding`): a
+- **Entity** for the *bindings* (`AbilityBinding`/`CommandBinding`/`SystemBinding`;
+  the three aggregate roots are Entities, since `ddd::AggregateRoot` requires it): a
   binding does **not** store its own identity — the `WarcraftObjectId` is the
   aggregate's `BTreeMap` key, external to the binding. `ddd::Entity` requires
   `fn identity(&self) -> &Self::Identity` returning a stored reference. Marking

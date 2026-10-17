@@ -5,4 +5,8 @@ pub struct DefenseTypeRowView {
     pub value: DefenseType,
 }
 
+impl ddd::Layered for DefenseTypeRowView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for DefenseTypeRowView {}

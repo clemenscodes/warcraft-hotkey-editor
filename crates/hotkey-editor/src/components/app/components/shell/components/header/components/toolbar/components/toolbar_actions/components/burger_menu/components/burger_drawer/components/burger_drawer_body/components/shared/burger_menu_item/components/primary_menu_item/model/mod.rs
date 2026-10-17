@@ -41,6 +41,10 @@ impl From<&PrimaryMenuItemView> for PrimaryMenuItemModel {
     }
 }
 
+impl ddd::Layered for PrimaryMenuItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for PrimaryMenuItemModel {
     type View = PrimaryMenuItemView;
 }

@@ -6,4 +6,8 @@ pub struct SearchButtonView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for SearchButtonView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SearchButtonView {}

@@ -14,6 +14,10 @@ impl<Body: Render<Output = Element>> From<&PanelCardView<Body>> for PanelCardMod
     }
 }
 
+impl<Body: Render<Output = Element>> ddd::Layered for PanelCardModel<Body> {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl<Body: Render<Output = Element>> ddd::Model for PanelCardModel<Body> {
     type View = PanelCardView<Body>;
 }

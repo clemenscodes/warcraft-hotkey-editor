@@ -23,6 +23,10 @@ impl From<&RaceTabView> for RaceTabModel {
     }
 }
 
+impl ddd::Layered for RaceTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for RaceTabModel {
     type View = RaceTabView;
 }

@@ -13,6 +13,10 @@ impl From<&CommandFillView> for CommandFillModel {
     }
 }
 
+impl ddd::Layered for CommandFillModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for CommandFillModel {
     type View = CommandFillView;
 }

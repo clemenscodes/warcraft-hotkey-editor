@@ -14,6 +14,10 @@ impl From<&UnitCardNameView> for UnitCardNameModel {
     }
 }
 
+impl ddd::Layered for UnitCardNameModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnitCardNameModel {
     type View = UnitCardNameView;
 }

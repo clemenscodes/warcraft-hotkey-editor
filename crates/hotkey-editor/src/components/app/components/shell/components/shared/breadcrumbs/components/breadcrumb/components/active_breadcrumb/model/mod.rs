@@ -24,6 +24,10 @@ impl From<&ActiveBreadcrumbView> for ActiveBreadcrumbModel {
     }
 }
 
+impl ddd::Layered for ActiveBreadcrumbModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ActiveBreadcrumbModel {
     type View = ActiveBreadcrumbView;
 }

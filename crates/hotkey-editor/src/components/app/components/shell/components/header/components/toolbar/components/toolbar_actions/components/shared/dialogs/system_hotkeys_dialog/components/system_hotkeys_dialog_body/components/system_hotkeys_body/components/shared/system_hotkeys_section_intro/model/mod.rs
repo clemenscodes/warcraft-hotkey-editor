@@ -14,6 +14,10 @@ impl From<&SystemHotkeysSectionIntroView> for SystemHotkeysSectionIntroModel {
     }
 }
 
+impl ddd::Layered for SystemHotkeysSectionIntroModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SystemHotkeysSectionIntroModel {
     type View = SystemHotkeysSectionIntroView;
 }

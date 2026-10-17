@@ -6,4 +6,8 @@ pub struct StatIconImgView {
     pub alt: String,
 }
 
+impl ddd::Layered for StatIconImgView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for StatIconImgView {}

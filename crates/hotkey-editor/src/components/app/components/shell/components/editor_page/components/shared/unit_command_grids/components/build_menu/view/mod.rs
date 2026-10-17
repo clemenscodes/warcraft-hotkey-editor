@@ -5,4 +5,8 @@ pub struct BuildMenuView {
     pub config: Option<GridEditorView>,
 }
 
+impl ddd::Layered for BuildMenuView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for BuildMenuView {}

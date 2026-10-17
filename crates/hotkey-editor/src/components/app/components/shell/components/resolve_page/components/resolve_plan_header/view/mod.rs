@@ -13,6 +13,10 @@ pub struct ResolvePlanHeaderView {
     pub breadcrumbs: Vec<BreadcrumbView>,
 }
 
+impl ddd::Layered for ResolvePlanHeaderView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ResolvePlanHeaderView {}
 
 impl Render for ResolvePlanHeaderView {

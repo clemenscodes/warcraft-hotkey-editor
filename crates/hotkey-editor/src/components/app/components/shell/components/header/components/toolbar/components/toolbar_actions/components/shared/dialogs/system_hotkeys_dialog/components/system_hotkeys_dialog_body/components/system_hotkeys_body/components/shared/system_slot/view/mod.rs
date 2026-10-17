@@ -12,4 +12,8 @@ pub struct SystemSlotView {
     pub dragging: bool,
 }
 
+impl ddd::Layered for SystemSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for SystemSlotView {}

@@ -48,6 +48,10 @@ pub(super) fn use_carrier_card(props: &CarrierCardModel) -> CarrierCardPresentat
     CarrierCardPresentation::from(inputs)
 }
 
+impl ddd::Layered for CarrierCardPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Presentation for CarrierCardPresentation {
     type Model = CarrierCardModel;
 }

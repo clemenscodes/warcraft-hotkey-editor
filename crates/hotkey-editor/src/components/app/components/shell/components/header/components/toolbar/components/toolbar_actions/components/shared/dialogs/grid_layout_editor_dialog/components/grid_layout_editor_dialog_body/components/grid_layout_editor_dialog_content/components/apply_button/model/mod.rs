@@ -13,6 +13,10 @@ impl From<&ApplyButtonView> for ApplyButtonModel {
     }
 }
 
+impl ddd::Layered for ApplyButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ApplyButtonModel {
     type View = ApplyButtonView;
 }

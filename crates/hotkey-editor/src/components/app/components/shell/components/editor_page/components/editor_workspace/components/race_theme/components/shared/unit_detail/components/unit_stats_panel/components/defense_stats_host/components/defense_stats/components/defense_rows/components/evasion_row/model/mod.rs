@@ -14,6 +14,10 @@ impl From<&EvasionRowView> for EvasionRowModel {
     }
 }
 
+impl ddd::Layered for EvasionRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for EvasionRowModel {
     type View = EvasionRowView;
 }

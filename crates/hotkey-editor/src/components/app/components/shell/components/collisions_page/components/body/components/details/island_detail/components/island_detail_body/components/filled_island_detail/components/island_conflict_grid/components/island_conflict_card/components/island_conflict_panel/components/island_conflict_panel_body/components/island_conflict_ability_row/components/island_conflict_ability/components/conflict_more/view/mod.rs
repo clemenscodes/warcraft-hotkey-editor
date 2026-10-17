@@ -6,4 +6,8 @@ pub struct ConflictMoreView {
     pub onclick: EventHandler<MouseEvent>,
 }
 
+impl ddd::Layered for ConflictMoreView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for ConflictMoreView {}

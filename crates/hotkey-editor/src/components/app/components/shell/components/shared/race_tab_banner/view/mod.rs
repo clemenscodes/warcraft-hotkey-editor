@@ -10,4 +10,8 @@ pub struct RaceTabBannerView {
     pub onkeydown: EventHandler<KeyboardEvent>,
 }
 
+impl ddd::Layered for RaceTabBannerView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for RaceTabBannerView {}

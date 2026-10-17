@@ -15,6 +15,10 @@ impl From<&TilePlainIconView> for TilePlainIconModel {
     }
 }
 
+impl ddd::Layered for TilePlainIconModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for TilePlainIconModel {
     type View = TilePlainIconView;
 }

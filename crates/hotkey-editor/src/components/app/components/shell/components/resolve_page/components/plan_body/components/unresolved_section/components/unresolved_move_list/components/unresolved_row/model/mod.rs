@@ -14,6 +14,10 @@ impl From<&UnresolvedRowView> for UnresolvedRowModel {
     }
 }
 
+impl ddd::Layered for UnresolvedRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for UnresolvedRowModel {
     type View = UnresolvedRowView;
 }

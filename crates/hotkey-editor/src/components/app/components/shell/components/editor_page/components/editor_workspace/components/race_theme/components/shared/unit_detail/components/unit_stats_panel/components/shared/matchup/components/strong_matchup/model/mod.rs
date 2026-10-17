@@ -25,6 +25,10 @@ impl From<&StrongMatchupView> for StrongMatchupModel {
     }
 }
 
+impl ddd::Layered for StrongMatchupModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for StrongMatchupModel {
     type View = StrongMatchupView;
 }

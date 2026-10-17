@@ -14,6 +14,10 @@ impl From<&MutedManaValueView> for MutedManaValueModel {
     }
 }
 
+impl ddd::Layered for MutedManaValueModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for MutedManaValueModel {
     type View = MutedManaValueView;
 }

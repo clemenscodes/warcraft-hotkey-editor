@@ -20,6 +20,10 @@ impl From<&DownloadInfoDialogView> for DownloadInfoDialogModel {
     }
 }
 
+impl ddd::Layered for DownloadInfoDialogModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for DownloadInfoDialogModel {
     type View = DownloadInfoDialogView;
 }

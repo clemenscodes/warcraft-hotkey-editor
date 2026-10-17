@@ -23,6 +23,10 @@ impl From<&SearchFieldButtonView> for SearchFieldButtonModel {
     }
 }
 
+impl ddd::Layered for SearchFieldButtonModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for SearchFieldButtonModel {
     type View = SearchFieldButtonView;
 }

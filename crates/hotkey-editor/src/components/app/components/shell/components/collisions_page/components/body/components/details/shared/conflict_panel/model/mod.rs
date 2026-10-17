@@ -14,6 +14,10 @@ impl From<&ConflictPanelView> for ConflictPanelModel {
     }
 }
 
+impl ddd::Layered for ConflictPanelModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ConflictPanelModel {
     type View = ConflictPanelView;
 }

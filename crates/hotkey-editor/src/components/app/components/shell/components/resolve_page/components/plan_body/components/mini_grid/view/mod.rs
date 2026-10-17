@@ -5,4 +5,8 @@ pub struct MiniGridView {
     pub placements: Vec<MiniGridPlacement>,
 }
 
+impl ddd::Layered for MiniGridView {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::View for MiniGridView {}

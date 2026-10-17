@@ -26,6 +26,10 @@ impl From<&ModeTabView> for ModeTabModel {
     }
 }
 
+impl ddd::Layered for ModeTabModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for ModeTabModel {
     type View = ModeTabView;
 }

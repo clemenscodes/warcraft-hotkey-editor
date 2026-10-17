@@ -21,6 +21,10 @@ impl From<&IntelligenceRowView> for IntelligenceRowModel {
     }
 }
 
+impl ddd::Layered for IntelligenceRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IntelligenceRowModel {
     type View = IntelligenceRowView;
 }

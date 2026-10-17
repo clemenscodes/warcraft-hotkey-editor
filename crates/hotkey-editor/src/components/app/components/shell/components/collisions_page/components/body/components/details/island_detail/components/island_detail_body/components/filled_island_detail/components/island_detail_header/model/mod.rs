@@ -15,6 +15,10 @@ impl From<&IslandDetailHeaderView> for IslandDetailHeaderModel {
     }
 }
 
+impl ddd::Layered for IslandDetailHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
 impl ddd::Model for IslandDetailHeaderModel {
     type View = IslandDetailHeaderView;
 }
