@@ -1,96 +1,59 @@
+mod anchor_keeper;
+mod card_resize_watch;
+mod last_card_watch;
+mod pager_dom;
+mod passive_input_listeners;
+
+use super::state::{PagerAnchor, PagerWindow, RosterSlot};
 use crate::services::editor_state::context::use_editor_state;
 use crate::services::navigation::context::use_view_navigation;
 use crate::services::unit_catalog::context::use_unit_catalog;
+use anchor_keeper::AnchorKeeper;
+use card_resize_watch::CardResizeWatch;
 use dioxus::prelude::*;
 use dioxus::web::WebEventExt;
+use last_card_watch::LastCardWatch;
+use pager_dom::PagerDom;
+use passive_input_listeners::PassiveInputListeners;
 use std::cell::Cell;
 use std::cell::RefCell;
 use std::rc::Rc;
 use warcraft_api::WarcraftObjectId;
-use wasm_bindgen::JsCast;
 
-// Cards are content-height now, so the pager renders a small window and pads the
-// rest with two spacer divs whose heights come from the cards' MEASURED heights.
-// The buffer renders a few cards past the viewport on each side, so a card
-// entering from below is mounted — and therefore measured — while it is still off
-// screen; its height then only grows the bottom spacer and never shifts what is
-// on screen.
-const CARD_WINDOW_BUFFER: usize = 3;
-// First guess for a card whose real height is not measured yet. Only the
-// off-screen spacer totals lean on it; the cards you have actually passed are
-// measured, and those are what the window and the scroll position are computed
-// from, so an imperfect estimate never misplaces the current card.
-const CARD_HEIGHT_ESTIMATE: i32 = 700;
-// The roster repeats this many times in the scroll content, so scrolling past the
-// last unit slides the first one in with no jump — an endless loop both ways. Odd,
-// so there is a clean middle copy; the pager opens there so it can loop backward
-// as well as forward. Each slot renders unit `virtual_index % roster_len`.
-const LOOP_CYCLES: usize = 9;
+// Cards mounted on each side of the card on screen once a swipe settles. A swipe
+// moves one card at a time (the hosts snap with `snap-always`). Quick swipes
+// interrupt each other's snap, so the pager may not settle between them: going
+// forward the window grows below on the fly (see `LastCardWatch`), going back it has
+// this many cards above to swipe through before the next settle re-centres it.
+const CARD_WINDOW_BUFFER: usize = 5;
+// Cards appended below each time the last mounted card comes near. One at a
+// time keeps each mount its own short task: the near-watch re-reports after every
+// append, so the window keeps growing card by card while the last one is still in
+// reach, instead of mounting a batch in one long frame mid-swipe.
+const FORWARD_APPEND_STEP: usize = 1;
+// The fewest cards that must stay mounted on either side of the card a swipe
+// settles on. Re-centring drops cards above, which shifts the content and needs a
+// layout-forcing scroll correction, so the window is left alone on most swipes
+// and re-centred only when the card nears an edge or too many cards are mounted.
+const EDGE_MARGIN: usize = 2;
+// The most cards mounted at once before a settle trims the window back.
+const MAX_MOUNTED_CARDS: usize = 17;
+// How long after a finger lifts the pager waits for a scroll before it settles
+// on its own. A swipe that keeps moving (snap or momentum) ends in `scrollend`
+// instead; this only catches a finger lifted from a pager already at rest.
+const TOUCH_RELEASE_SETTLE_MS: u32 = 150;
+// How long the pager must go without a scroll frame before it counts as at rest.
+// `scrollend` normally says so first, but not every engine fires it (older
+// Safari), so a quiet spell after the last frame settles the pager there too.
+const SCROLL_REST_SETTLE_MS: u32 = 150;
 
 pub(super) struct MobileEditorPresentation {
     pub(super) onmounted: EventHandler<MountedEvent>,
     pub(super) onscroll: EventHandler<ScrollEvent>,
     pub(super) onscrollend: EventHandler<ScrollEvent>,
-    pub(super) top_spacer_px: i32,
-    pub(super) bottom_spacer_px: i32,
+    pub(super) onpointerdown: EventHandler<PointerEvent>,
+    pub(super) onkeydown: EventHandler<KeyboardEvent>,
     pub(super) window_unit_ids: Vec<WarcraftObjectId>,
-}
-
-fn card_height(heights: &[i32], index: usize) -> i32 {
-    match heights.get(index) {
-        Some(height) if *height > 0 => *height,
-        _ => CARD_HEIGHT_ESTIMATE,
-    }
-}
-
-fn sum_heights(heights: &[i32], start: usize, end: usize) -> i32 {
-    (start..end).map(|index| card_height(heights, index)).sum()
-}
-
-// The height of one whole copy of the roster (at least 1, so it can divide).
-fn copy_height(heights: &[i32], unit_count: usize) -> i32 {
-    sum_heights(heights, 0, unit_count).max(1)
-}
-
-// Height above a virtual slot. Slot `virtual_index` renders unit
-// `virtual_index % unit_count`; its offset is that many whole copies plus the
-// units before it within its own copy.
-fn virtual_offset(heights: &[i32], unit_count: usize, virtual_index: usize) -> i32 {
-    if unit_count == 0 {
-        return 0;
-    }
-    let copies = i32::try_from(virtual_index / unit_count).unwrap_or(0);
-    let remainder = virtual_index % unit_count;
-    copies * copy_height(heights, unit_count) + sum_heights(heights, 0, remainder)
-}
-
-// The virtual slot straddling the vertical middle of the viewport at this scroll
-// position, from the heights measured so far.
-fn centered_virtual(
-    heights: &[i32],
-    unit_count: usize,
-    virtual_count: usize,
-    scroll_top: i32,
-    viewport: i32,
-) -> usize {
-    if unit_count == 0 {
-        return 0;
-    }
-    let total = copy_height(heights, unit_count);
-    let target = scroll_top + viewport / 2;
-    let copy = (target / total).max(0);
-    let within = target - copy * total;
-    let mut accumulated = 0;
-    let mut unit = unit_count - 1;
-    for index in 0..unit_count {
-        accumulated += card_height(heights, index);
-        if accumulated > within {
-            unit = index;
-            break;
-        }
-    }
-    let copy_usize = usize::try_from(copy).unwrap_or(0);
-    (copy_usize * unit_count + unit).min(virtual_count.saturating_sub(1))
 }
 
 pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
@@ -109,386 +72,425 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
         ids
     });
 
-    let viewport_px = use_signal::<i32>(|| 0);
-    // The unit the pager has committed to (drives navigation). Advances only when
-    // a swipe settles, in `onscrollend`.
-    let active_index = use_signal::<usize>(|| 0);
-    // Which cards are mounted, kept in step with the live scroll position so the
-    // card swiping in from below is already rendered before it arrives.
-    let window_center = use_signal::<usize>(|| 0);
-    // Set once the opening card has been centred, so the first layout scrolls
-    // there exactly once.
-    let positioned = use_signal::<bool>(|| false);
-    // Set while the pager scrolls itself to follow a navigation, so that scroll is
-    // not mistaken for a swipe. See `onscrollend`.
-    let following_navigation = use_signal::<bool>(|| false);
-    // Measured card heights, indexed by unit; 0 means not measured yet.
-    let measured_heights = use_signal::<Vec<i32>>(Vec::new);
+    let editor = use_editor_state();
+    let selected_slot = editor.selected_slot();
+    let selected_from_research = editor.selected_from_research();
+    let selected_from_uprooted = editor.selected_from_uprooted();
+    let navigation = use_view_navigation();
+    let selected_unit_id = navigation.selected_unit_id();
+
+    // The window opens straight on the selected unit, so the very first render
+    // already mounts the cards around it and nothing else.
+    let opening_unit_ids = unit_ids_memo.peek().clone();
+    let opening_unit_id = *selected_unit_id.peek();
+    let opening_slot = opening_unit_id
+        .and_then(|unit_id| opening_unit_ids.iter().position(|id| *id == unit_id))
+        .and_then(|unit_index| isize::try_from(unit_index).ok())
+        .unwrap_or(0);
+    let opening_roster_len = opening_unit_ids.len();
+    let window = use_signal(|| {
+        PagerWindow::centered_on(opening_slot, CARD_WINDOW_BUFFER, opening_roster_len)
+    });
+    // Where a card must sit once the next render is committed. Set by a jump
+    // (align the target) and by a re-centre (keep the card on screen still);
+    // the effect below applies it against the real layout and clears it.
+    let pending_anchor = use_signal(|| Some(PagerAnchor::aligned(opening_slot)));
+    // Set once the pager element exists; the anchor effect waits for it, because
+    // nothing can be aligned before the pager is in the DOM.
+    let pager_mounted = use_signal(|| false);
     let element_ref = use_hook(|| Rc::new(RefCell::new(None::<web_sys::Element>)));
-    // Written during render, read by the measuring effect — a plain cell so it
-    // does not itself trigger a re-render.
-    let window_start_cell = use_hook(|| Rc::new(Cell::<usize>::new(0)));
     // Last scroll position, so `onscroll` can tell which way the finger is going
     // and hide or reveal the footer accordingly.
     let previous_scroll_cell = use_hook(|| Rc::new(Cell::<i32>::new(0)));
     // Movement accumulated since the last direction change, so a brief snap-back
     // bounce during a downward swipe cannot be mistaken for an upward swipe.
     let scroll_intent_cell = use_hook(|| Rc::new(Cell::<i32>::new(0)));
-
-    let unit_ids = unit_ids_memo();
-    let unit_count = unit_ids.len();
-    let virtual_count = unit_count.saturating_mul(LOOP_CYCLES);
-
-    let mounted_element_ref = element_ref.clone();
-    let mut mounted_viewport_px = viewport_px;
-    let onmounted = EventHandler::new(move |event: MountedEvent| {
-        let Some(element) = event.data().try_as_web_event() else {
-            return;
-        };
-        let measured_height = element.client_height();
-        *mounted_element_ref.borrow_mut() = Some(element);
-        if *mounted_viewport_px.peek() != measured_height {
-            mounted_viewport_px.set(measured_height);
-        }
-    });
-
-    let editor = use_editor_state();
-    let mut selected_slot = editor.selected_slot();
-    let mut selected_from_research = editor.selected_from_research();
-    let mut selected_from_uprooted = editor.selected_from_uprooted();
-    let navigation = use_view_navigation();
-    let selected_unit_id = navigation.selected_unit_id();
-    let scroll_selected_unit_id = selected_unit_id;
+    let hook_element_ref = element_ref.clone();
+    let anchor_keeper = use_hook(move || AnchorKeeper::new(hook_element_ref, window));
+    // Created on mount, once the pager element exists; dropping it disconnects.
+    let resize_watch = use_hook(|| Rc::new(RefCell::new(None::<CardResizeWatch>)));
+    // Whether a finger is on the pager. While it is, nothing re-centres or
+    // navigates: re-centring adds and drops cards and corrects the scroll, and
+    // doing that under a finger that has started the next swipe breaks it.
+    let touch_active = use_hook(|| Rc::new(Cell::new(false)));
+    // Bumped on every scroll frame, so a finger lifting can tell whether the
+    // pager is still moving (a `scrollend` will follow) or already at rest.
+    let scroll_generation = use_hook(|| Rc::new(Cell::<u32>::new(0)));
+    // The slot the pager last settled on or jumped to, so a navigation that only
+    // echoes the pager's own settle is not mistaken for a jump.
+    let settled_slot_cell = use_hook(|| Rc::new(Cell::new(Some(opening_slot))));
 
     let scroll_search_dialog_open = editor.search_dialog_open();
-    let scroll_unit_ids = unit_ids.clone();
+    let scroll_unit_ids_memo = unit_ids_memo;
     let scroll_element_ref = element_ref.clone();
-    let scroll_measured_heights = measured_heights;
-    let mut scroll_viewport_px = viewport_px;
-    let mut scroll_active_index = active_index;
-    let mut scroll_following_navigation = following_navigation;
-    let onscrollend = EventHandler::new(move |_event: ScrollEvent| {
+    let scroll_window = window;
+    let scroll_pending_anchor = pending_anchor;
+    let scroll_settled_slot = settled_slot_cell.clone();
+    // Settles the pager on the card it has come to rest on: re-centres the window
+    // around it and commits it as navigation. Runs when a scroll ends, and when a
+    // finger lifts from a pager that is no longer moving.
+    let settle: Rc<dyn Fn()> = Rc::new(move || {
         let borrowed = scroll_element_ref.borrow();
         let Some(element) = borrowed.as_ref() else {
             return;
         };
-        let measured_height = element.client_height();
-        if measured_height <= 0 {
+        let pager_dom = PagerDom::new(element);
+        let Some(aligned_card) = pager_dom.aligned_card() else {
             return;
-        }
-        let scroll_top = element.scroll_top();
-        // The centred slot is a virtual index across the repeated copies; the unit
-        // it commits to is that index folded back into the single roster.
-        let index = {
-            let heights = scroll_measured_heights.peek();
-            let virtual_index = centered_virtual(
-                &heights,
-                unit_count,
-                virtual_count,
-                scroll_top,
-                measured_height,
-            );
-            if unit_count == 0 {
-                0
-            } else {
-                virtual_index % unit_count
-            }
         };
-        if *scroll_viewport_px.peek() != measured_height {
-            scroll_viewport_px.set(measured_height);
+        let current_window = *scroll_window.peek();
+        let settled_slot = current_window.slot_at(aligned_card.offset());
+        let unit_ids = scroll_unit_ids_memo.peek().clone();
+        let roster_len = unit_ids.len();
+        scroll_settled_slot.set(Some(settled_slot));
+        // Re-centre the window on the card the swipe settled on when it has come
+        // near an edge of the window, or the window has grown too large, so the
+        // next swipe either way lands on a card that is already mounted. The card
+        // on screen keeps exactly the offset it has now; the anchor effect
+        // corrects the scroll for the cards added and dropped around it.
+        let mounted_above = aligned_card.offset();
+        let mounted_below = current_window
+            .slot_count()
+            .saturating_sub(mounted_above)
+            .saturating_sub(1);
+        let near_an_edge = mounted_above < EDGE_MARGIN || mounted_below < EDGE_MARGIN;
+        let too_many_mounted = current_window.slot_count() > MAX_MOUNTED_CARDS;
+        if near_an_edge || too_many_mounted {
+            let recentered = PagerWindow::centered_on(settled_slot, CARD_WINDOW_BUFFER, roster_len);
+            let keep_in_place = PagerAnchor::new(settled_slot, aligned_card.offset_from_top());
+            let mut window_signal = scroll_window;
+            let mut pending_anchor_signal = scroll_pending_anchor;
+            window_signal.set(recentered);
+            pending_anchor_signal.set(Some(keep_in_place));
         }
-        // The pager scrolls itself when a unit is chosen elsewhere — the search
-        // dialog, back/forward. That programmatic scroll can settle several times
-        // before it lands, because each card that mounts and is measured re
-        // anchors the scroll and fires its own scrollend. Swallow every settle
-        // until the centred card is the target the pager is heading for, so an
-        // intermediate card is never mistaken for a swipe and committed, which
-        // would fight the very navigation being followed. Cards are taller than
-        // half the viewport, so the aligned target is always the centred card and
-        // this latch clears the moment the pager arrives.
-        if *scroll_following_navigation.peek() {
-            if index == *scroll_active_index.peek() {
-                scroll_following_navigation.set(false);
-            }
-            return;
-        }
-        // The search dialog owns the navigation while it is open. The pager
-        // underneath still measures and re anchors its cards, and each of those
-        // scroll corrections settles here. Committing the centred card would
-        // re publish its unit and re add its mode, overwriting the unit and mode
-        // the dialog navigated to, so the pager stays silent until the dialog
-        // closes.
+        // The search dialog owns the navigation while it is open, so a settle of
+        // the pager underneath must not overwrite the unit it navigated to.
         if *scroll_search_dialog_open.peek() {
             return;
         }
-        if *scroll_active_index.peek() != index {
-            scroll_active_index.set(index);
-            // A slot id is the ability itself, not the ability on this unit, so a
-            // surviving selection would light up on every card that shares it.
-            selected_slot.set(None);
-            selected_from_research.set(false);
-            selected_from_uprooted.set(false);
-            // `open_unit` derives the race and the unit mode from the unit and
-            // pushes a navigation snapshot, so swiping keeps the race theme, the
-            // `unit` query parameter and the history entry in step with the card.
-            // The guard keeps back and forward alive: navigating scrolls the
-            // pager, firing this handler, and re-pushing the unit we were told to
-            // show would bury the entry we came from.
-            if let Some(unit_id) = scroll_unit_ids.get(index).copied() {
-                let already_current = *scroll_selected_unit_id.peek() == Some(unit_id);
-                if !already_current {
-                    navigation.open_unit(unit_id);
-                }
-            }
+        let Some(settled_unit_id) = RosterSlot::unit_index(settled_slot, roster_len)
+            .and_then(|unit_index| unit_ids.get(unit_index).copied())
+        else {
+            return;
+        };
+        // Only a swipe onto a different unit is navigation. A jump the pager was
+        // told to make settles on the unit it was told to show, which is already
+        // current, so back and forward never get a duplicate history entry.
+        if *selected_unit_id.peek() == Some(settled_unit_id) {
+            return;
         }
+        // A slot id is the ability itself, not the ability on this unit, so a
+        // surviving selection would light up on every card that shares it. Each
+        // is written only when it actually changes: every grid of every mounted
+        // card recomputes its tiles on a write, even one that leaves it equal.
+        let mut selected_slot_signal = selected_slot;
+        let mut selected_from_research_signal = selected_from_research;
+        let mut selected_from_uprooted_signal = selected_from_uprooted;
+        if selected_slot_signal.peek().is_some() {
+            selected_slot_signal.set(None);
+        }
+        if *selected_from_research_signal.peek() {
+            selected_from_research_signal.set(false);
+        }
+        if *selected_from_uprooted_signal.peek() {
+            selected_from_uprooted_signal.set(false);
+        }
+        // `open_unit` derives the race and the unit mode from the unit and
+        // pushes a navigation snapshot, so swiping keeps the race theme, the
+        // `unit` query parameter and the history entry in step with the card.
+        navigation.open_unit(settled_unit_id);
+    });
+    let scrollend_settle = settle.clone();
+    let scrollend_touch_active = touch_active.clone();
+    let onscrollend = EventHandler::new(move |_event: ScrollEvent| {
+        // A scroll interrupted by a finger starting the next swipe also ends;
+        // that settle waits until the finger lifts.
+        if scrollend_touch_active.get() {
+            return;
+        }
+        scrollend_settle();
     });
 
-    // Runs on every scroll frame, including mid-snap, so the mounted window tracks
-    // where the scroll is heading rather than where it last settled — the card
-    // below is already in the DOM before it slides into view. It only moves the
-    // render window and never commits navigation.
-    let window_scroll_element_ref = element_ref.clone();
-    let window_scroll_measured_heights = measured_heights;
-    let mut window_scroll_center = window_center;
-    let window_scroll_previous = previous_scroll_cell.clone();
-    let window_scroll_intent = scroll_intent_cell.clone();
-    let mut window_scroll_footer_hidden = editor.footer_hidden();
+    // Runs on every scroll frame, including mid-snap, so it stays cheap: it only
+    // drives the footer and arms the rest settle, and never reads the layout.
+    let footer_scroll_element_ref = element_ref.clone();
+    let footer_scroll_previous = previous_scroll_cell.clone();
+    let footer_scroll_intent = scroll_intent_cell.clone();
+    let mut footer_hidden = editor.footer_hidden();
+    let footer_scroll_generation = scroll_generation.clone();
+    let rest_settle = settle.clone();
+    let rest_touch_active = touch_active.clone();
+    let rest_timer_pending = use_hook(|| Rc::new(Cell::new(false)));
     let onscroll = EventHandler::new(move |_event: ScrollEvent| {
-        let borrowed = window_scroll_element_ref.borrow();
+        let next_generation = footer_scroll_generation.get().wrapping_add(1);
+        footer_scroll_generation.set(next_generation);
+        // Settle once the scroll has been quiet for a moment, for the engines
+        // that never fire `scrollend`. One timer serves a whole scroll: it keeps
+        // waiting while frames keep arriving and settles after the first quiet
+        // spell, so a swipe arms one timer instead of one per frame. A finger on
+        // the pager defers the settle to the release.
+        if !rest_timer_pending.get() {
+            rest_timer_pending.set(true);
+            let delayed_settle = rest_settle.clone();
+            let delayed_generation = footer_scroll_generation.clone();
+            let delayed_touch_active = rest_touch_active.clone();
+            let delayed_pending = rest_timer_pending.clone();
+            spawn(async move {
+                loop {
+                    let generation_before_wait = delayed_generation.get();
+                    gloo_timers::future::TimeoutFuture::new(SCROLL_REST_SETTLE_MS).await;
+                    if delayed_generation.get() == generation_before_wait {
+                        break;
+                    }
+                }
+                delayed_pending.set(false);
+                if delayed_touch_active.get() {
+                    return;
+                }
+                delayed_settle();
+            });
+        }
+        let borrowed = footer_scroll_element_ref.borrow();
         let Some(element) = borrowed.as_ref() else {
             return;
         };
-        let measured_height = element.client_height();
-        if measured_height <= 0 {
-            return;
-        }
         let scroll_top = element.scroll_top();
-        let virtual_index = {
-            let heights = window_scroll_measured_heights.peek();
-            centered_virtual(
-                &heights,
-                unit_count,
-                virtual_count,
-                scroll_top,
-                measured_height,
-            )
-        };
-        if *window_scroll_center.peek() != virtual_index {
-            window_scroll_center.set(virtual_index);
-        }
         // Scrolling the cards down hides the footer, up reveals it. Movement is
         // accumulated since the last direction change so a brief snap-back bounce
         // during a downward swipe never reaches the reveal threshold, while a
         // sustained upward swipe does. Hiding reacts quickly, revealing needs a
-        // clear intent; near the very top the footer always shows so it is never
-        // stuck away when there is nothing below.
-        let previous = window_scroll_previous.get();
-        window_scroll_previous.set(scroll_top);
+        // clear intent.
+        let previous = footer_scroll_previous.get();
+        footer_scroll_previous.set(scroll_top);
         let scroll_delta = scroll_top - previous;
-        let mut scroll_intent = window_scroll_intent.get();
+        let mut scroll_intent = footer_scroll_intent.get();
         if (scroll_delta > 0 && scroll_intent < 0) || (scroll_delta < 0 && scroll_intent > 0) {
             scroll_intent = 0;
         }
         scroll_intent += scroll_delta;
-        let want_hidden = if scroll_top <= measured_height / 2 {
-            scroll_intent = 0;
-            false
-        } else if scroll_intent > 8 {
+        let want_hidden = if scroll_intent > 8 {
             scroll_intent = 0;
             true
         } else if scroll_intent < -64 {
             scroll_intent = 0;
             false
         } else {
-            *window_scroll_footer_hidden.peek()
+            *footer_hidden.peek()
         };
-        window_scroll_intent.set(scroll_intent);
-        if *window_scroll_footer_hidden.peek() != want_hidden {
-            window_scroll_footer_hidden.set(want_hidden);
+        footer_scroll_intent.set(scroll_intent);
+        if *footer_hidden.peek() != want_hidden {
+            footer_hidden.set(want_hidden);
         }
     });
 
-    // Measure the cards currently mounted and record their real heights, so the
-    // spacers and the scroll-to-unit maths reflect the true layout rather than the
-    // estimate. Runs after each render the window shifts, reads the DOM, and only
-    // writes back a height that actually changed, so it settles in one pass. A
-    // card is measured while it is still below the fold (the look-ahead buffer),
-    // so recording it only grows the bottom spacer and never shifts the view.
-    let measure_element_ref = element_ref.clone();
-    let measure_window_start = window_start_cell.clone();
-    let mut measure_heights = measured_heights;
-    let measure_window_center = window_center;
-    let measure_viewport_px = viewport_px;
-    let measure_previous_scroll = previous_scroll_cell.clone();
+    // A unit chosen anywhere but a swipe — a race tab, the search dialog, back
+    // and forward — re-centres the window straight on it and aligns its card.
+    // Only that one window is ever mounted, so the pager never renders its way
+    // through the units in between.
+    let jump_unit_ids_memo = unit_ids_memo;
+    let mut jump_window = window;
+    let mut jump_pending_anchor = pending_anchor;
+    let jump_settled_slot = settled_slot_cell.clone();
     use_effect(move || {
-        // Re-run whenever the mounted window shifts, and once the viewport is
-        // first measured (mount) or changes (resize) — a resize changes every
-        // card's height, so they must be measured again.
-        let _ = measure_window_center.read();
-        let _ = measure_viewport_px.read();
-        let borrowed = measure_element_ref.borrow();
-        let Some(container) = borrowed.as_ref() else {
+        let unit_ids = jump_unit_ids_memo();
+        let roster_len = unit_ids.len();
+        let Some(target_unit_id) = *selected_unit_id.read() else {
             return;
         };
-        let Ok(nodes) = container.query_selector_all(".pager-card-host") else {
+        let Some(target_index) = unit_ids
+            .iter()
+            .position(|unit_id| *unit_id == target_unit_id)
+        else {
             return;
         };
-        let start = measure_window_start.get();
-        let old_heights = measure_heights.peek().clone();
-        let mut heights = old_heights.clone();
-        if heights.len() < unit_count {
-            heights.resize(unit_count, 0);
+        let current_window = *jump_window.peek();
+        let target_slot = current_window.nearest_slot_of(target_index, roster_len);
+        // A swipe commits the unit it settled on, which is already on screen.
+        if jump_settled_slot.get() == Some(target_slot) {
+            return;
         }
-        let mut changed = false;
-        if unit_count > 0 {
-            for offset in 0..nodes.length() {
-                let Some(node) = nodes.item(offset) else {
-                    continue;
-                };
-                let Some(card) = node.dyn_ref::<web_sys::Element>() else {
-                    continue;
-                };
-                let height = card.client_height();
-                // Node `offset` renders virtual slot `start + offset`, which is
-                // unit `(start + offset) % unit_count`.
-                let index = (start + offset as usize) % unit_count;
-                if index < heights.len() && height > 0 && heights[index] != height {
-                    heights[index] = height;
-                    changed = true;
-                }
-            }
-        }
-        if changed {
-            // Measuring a card changes the whole-copy height, and because the
-            // window sits several roster copies below the top that swing is
-            // multiplied by the copy count — so the top spacer moves by many times
-            // the one card that changed. Left alone the view would leap 10-20
-            // cards. Shift the scroll by the same swing so the card under the
-            // user's eyes stays exactly where it is, and record the corrected
-            // position so the footer logic does not read the correction as a swipe.
-            let old_top = virtual_offset(&old_heights, unit_count, start);
-            let new_top = virtual_offset(&heights, unit_count, start);
-            let anchor_adjust = new_top - old_top;
-            measure_heights.set(heights);
-            if anchor_adjust != 0 {
-                let corrected = container.scroll_top() + anchor_adjust;
-                container.set_scroll_top(corrected);
-                measure_previous_scroll.set(corrected);
-            }
-        }
+        jump_settled_slot.set(Some(target_slot));
+        let jumped = PagerWindow::centered_on(target_slot, CARD_WINDOW_BUFFER, roster_len);
+        jump_window.set(jumped);
+        jump_pending_anchor.set(Some(PagerAnchor::aligned(target_slot)));
     });
 
-    // The other direction: a unit chosen anywhere but the pager itself — most of
-    // all back and forward — brings its card on screen. Positions on first layout
-    // too, so the opening card is centred.
-    let effect_unit_ids_memo = unit_ids_memo;
-    let effect_element_ref = element_ref.clone();
-    let effect_window_start = window_start_cell.clone();
-    let mut effect_active_index = active_index;
-    let mut effect_window_center = window_center;
-    let mut effect_positioned = positioned;
-    let mut effect_following_navigation = following_navigation;
+    // Applies the pending anchor once the window it belongs to is in the DOM, and
+    // keeps holding it: the keeper re-applies it whenever a card changes size
+    // until the user takes the scroll over, so the card lands exactly at its
+    // anchor offset however the cards around it settle.
+    let anchor_element_ref = element_ref.clone();
+    let anchor_window = window;
+    let mut anchor_pending = pending_anchor;
+    let effect_keeper = anchor_keeper.clone();
+    let effect_resize_watch = resize_watch.clone();
     use_effect(move || {
-        let target_unit_ids = effect_unit_ids_memo();
-        if target_unit_ids.is_empty() {
+        let _ = pager_mounted.read();
+        let _ = anchor_window.read();
+        let Some(anchor) = *anchor_pending.read() else {
             return;
-        }
-        let selected = *selected_unit_id.read();
-        let matched_index = selected.and_then(|target_unit_id| {
-            target_unit_ids
-                .iter()
-                .position(|unit_id| *unit_id == target_unit_id)
-        });
-        let target_index = matched_index.unwrap_or(0);
-        let already_here = *effect_positioned.peek() && *effect_active_index.peek() == target_index;
-        if already_here {
-            return;
-        }
-        let borrowed = effect_element_ref.borrow();
+        };
+        let borrowed = anchor_element_ref.borrow();
         let Some(element) = borrowed.as_ref() else {
             return;
         };
-        let measured_height = element.client_height();
-        if measured_height <= 0 {
-            return;
+        if let Some(watch) = effect_resize_watch.borrow().as_ref() {
+            watch.observe_cards(element);
         }
-        // Place the pager in the middle copy at the selected unit, so it can loop
-        // both backward and forward from the opening card.
-        let middle_virtual = unit_count * (LOOP_CYCLES / 2) + target_index;
-        effect_active_index.set(target_index);
-        effect_window_center.set(middle_virtual);
-        effect_positioned.set(true);
-        effect_following_navigation.set(true);
-        // Scrolling waits a tick for the window this index change re-renders, then
-        // aligns to the target card's REAL position rather than an estimated
-        // offset — the spacers around it are still estimates for the cards nobody
-        // has scrolled past yet, so any sum of estimates would overshoot. Reading
-        // the card's own rect sidesteps that entirely.
-        let scroll_element = element.clone();
-        let spawn_window_start = effect_window_start.clone();
-        spawn(async move {
-            gloo_timers::future::TimeoutFuture::new(0).await;
-            let container_top = scroll_element.get_bounding_client_rect().top();
-            let Ok(nodes) = scroll_element.query_selector_all(".pager-card-host") else {
-                return;
-            };
-            let start = spawn_window_start.get();
-            let offset_in_window = middle_virtual.saturating_sub(start);
-            let Ok(node_index) = u32::try_from(offset_in_window) else {
-                return;
-            };
-            let Some(node) = nodes.item(node_index) else {
-                return;
-            };
-            let Some(card) = node.dyn_ref::<web_sys::Element>() else {
-                return;
-            };
-            let card_top = card.get_bounding_client_rect().top();
-            let delta = (card_top - container_top).round();
-            let Ok(delta_px) = i32::try_from(delta as i64) else {
-                return;
-            };
-            let target_scroll_top = scroll_element.scroll_top() + delta_px;
-            scroll_element.set_scroll_top(target_scroll_top);
-        });
+        drop(borrowed);
+        if effect_keeper.hold(anchor) {
+            anchor_pending.set(None);
+        }
     });
 
-    let current_viewport_px = *viewport_px.read();
-    let virtual_last = virtual_count.saturating_sub(1);
-    // The window is a slice of the VIRTUAL, looping index space; each slot renders
-    // `unit_ids[virtual_index % unit_count]`, so the roster repeats and scrolling
-    // past the last unit slides the first one in with no jump.
-    let current_window_center = (*window_center.read()).min(virtual_last);
-    let heights_read = measured_heights.read();
+    // The user taking the scroll over releases the held anchor, so a correction
+    // never fights a finger, a wheel or a drag. The next settle holds a new one.
+    let touch_keeper = anchor_keeper.clone();
+    let touch_start_active = touch_active.clone();
+    let start_touch: Rc<dyn Fn()> = Rc::new(move || {
+        touch_keeper.release();
+        touch_start_active.set(true);
+    });
+    // Lifting the finger hands the settle back. A pager still moving settles in
+    // its `scrollend`; one already at rest gets no further scroll, so it settles
+    // once a short wait shows no scroll followed. The native listener runs outside
+    // the Dioxus runtime, so it only records the release (the way
+    // `UndoHistory::install_keyboard_shortcuts` records a key) and the effect
+    // below starts the wait inside the runtime.
+    let touch_release_active = touch_active.clone();
+    let touch_release_generation = scroll_generation.clone();
+    let touch_release_request = use_signal(|| None::<u32>);
+    let release_touch: Rc<dyn Fn()> = Rc::new(move || {
+        touch_release_active.set(false);
+        let released_generation = touch_release_generation.get();
+        let mut release_request = touch_release_request;
+        release_request.set(Some(released_generation));
+    });
+    let effect_release_settle = settle.clone();
+    let effect_release_active = touch_active.clone();
+    let effect_release_generation = scroll_generation.clone();
+    use_effect(move || {
+        let Some(released_generation) = *touch_release_request.read() else {
+            return;
+        };
+        let delayed_settle = effect_release_settle.clone();
+        let delayed_generation = effect_release_generation.clone();
+        let delayed_active = effect_release_active.clone();
+        spawn(async move {
+            gloo_timers::future::TimeoutFuture::new(TOUCH_RELEASE_SETTLE_MS).await;
+            let pager_moved = delayed_generation.get() != released_generation;
+            if pager_moved || delayed_active.get() {
+                return;
+            }
+            delayed_settle();
+        });
+    });
+    // Grows the window below when the last mounted card comes near, so the next
+    // swipe forward always has a card to snap to, even when quick swipes never
+    // let the pager settle in between. It asks only whether the last card is in
+    // reach, never which card is on screen: the near-watch fires mid-swipe, while
+    // the card on screen is still the previous one. Appending below never moves
+    // what is on screen, so it is safe under a moving finger; the next settle
+    // trims the window back once it holds too many cards.
+    let lookahead_element_ref = element_ref.clone();
+    let lookahead_unit_ids_memo = unit_ids_memo;
+    let lookahead_window = window;
+    let extend_forward: Rc<dyn Fn()> = Rc::new(move || {
+        let borrowed = lookahead_element_ref.borrow();
+        let Some(element) = borrowed.as_ref() else {
+            return;
+        };
+        let pager_dom = PagerDom::new(element);
+        if !pager_dom.last_card_is_near() {
+            return;
+        }
+        let current_window = *lookahead_window.peek();
+        let roster_len = lookahead_unit_ids_memo.peek().len();
+        let extended = current_window.extended_forward(FORWARD_APPEND_STEP, roster_len);
+        if extended != current_window {
+            let mut window_signal = lookahead_window;
+            window_signal.set(extended);
+        }
+    });
+    // Created on mount, once the pager element exists; dropping them removes the
+    // listeners and disconnects the observer.
+    let input_listeners = use_hook(|| Rc::new(RefCell::new(None::<PassiveInputListeners>)));
+    let last_card_watch = use_hook(|| Rc::new(RefCell::new(None::<LastCardWatch>)));
+    let mounted_element_ref = element_ref.clone();
+    let mut mounted_pager = pager_mounted;
+    let mounted_keeper = anchor_keeper.clone();
+    let mounted_resize_watch = resize_watch.clone();
+    let mounted_input_listeners = input_listeners.clone();
+    let mounted_last_card_watch = last_card_watch.clone();
+    let mounted_start_touch = start_touch.clone();
+    let mounted_release_touch = release_touch.clone();
+    let mounted_extend_forward = extend_forward.clone();
+    let onmounted = EventHandler::new(move |event: MountedEvent| {
+        let Some(element) = event.data().try_as_web_event() else {
+            return;
+        };
+        let resized_keeper = mounted_keeper.clone();
+        let created_watch = CardResizeWatch::new(move || {
+            resized_keeper.reapply();
+        });
+        if let Some(watch) = created_watch.as_ref() {
+            watch.observe_cards(&element);
+        }
+        *mounted_resize_watch.borrow_mut() = created_watch;
+        let mut listeners = PassiveInputListeners::new(&element);
+        let touch_start_handler = mounted_start_touch.clone();
+        listeners.listen("touchstart", move || touch_start_handler());
+        let touch_end_handler = mounted_release_touch.clone();
+        listeners.listen("touchend", move || touch_end_handler());
+        let touch_cancel_handler = mounted_release_touch.clone();
+        listeners.listen("touchcancel", move || touch_cancel_handler());
+        let wheel_keeper = mounted_keeper.clone();
+        listeners.listen("wheel", move || wheel_keeper.release());
+        *mounted_input_listeners.borrow_mut() = Some(listeners);
+        let near_handler = mounted_extend_forward.clone();
+        let created_last_card_watch = LastCardWatch::new(&element, move || near_handler());
+        if let Some(watch) = created_last_card_watch.as_ref() {
+            watch.watch_last_card(&element);
+        }
+        *mounted_last_card_watch.borrow_mut() = created_last_card_watch;
+        *mounted_element_ref.borrow_mut() = Some(element);
+        mounted_pager.set(true);
+    });
 
-    let window_start;
-    let window_end;
-    if current_viewport_px <= 0 {
-        window_start = 0;
-        window_end = virtual_count.min(2 * CARD_WINDOW_BUFFER + 1);
-    } else {
-        window_start = current_window_center.saturating_sub(CARD_WINDOW_BUFFER);
-        window_end = (current_window_center + CARD_WINDOW_BUFFER + 1).min(virtual_count);
-    }
-    window_start_cell.set(window_start);
+    // Every window change can mount a new last card, so the near-watch moves to it.
+    let watch_element_ref = element_ref.clone();
+    let watch_window = window;
+    let effect_last_card_watch = last_card_watch.clone();
+    use_effect(move || {
+        let _ = pager_mounted.read();
+        let _ = watch_window.read();
+        let borrowed = watch_element_ref.borrow();
+        let Some(element) = borrowed.as_ref() else {
+            return;
+        };
+        if let Some(watch) = effect_last_card_watch.borrow().as_ref() {
+            watch.watch_last_card(element);
+        }
+    });
 
-    let window_unit_ids: Vec<WarcraftObjectId> = if unit_count == 0 {
-        Vec::new()
-    } else {
-        (window_start..window_end)
-            .map(|virtual_index| unit_ids[virtual_index % unit_count])
-            .collect()
-    };
-    let top_spacer_px = virtual_offset(&heights_read, unit_count, window_start);
-    let bottom_spacer_px = virtual_offset(&heights_read, unit_count, virtual_count)
-        - virtual_offset(&heights_read, unit_count, window_end);
+    let pointer_keeper = anchor_keeper.clone();
+    let onpointerdown = EventHandler::new(move |_event: PointerEvent| {
+        pointer_keeper.release();
+    });
+    let keyboard_keeper = anchor_keeper.clone();
+    let onkeydown = EventHandler::new(move |_event: KeyboardEvent| {
+        keyboard_keeper.release();
+    });
+
+    let unit_ids = unit_ids_memo();
+    let window_unit_ids = window.read().unit_ids(&unit_ids);
 
     MobileEditorPresentation {
         onmounted,
         onscroll,
         onscrollend,
-        top_spacer_px,
-        bottom_spacer_px,
+        onpointerdown,
+        onkeydown,
         window_unit_ids,
     }
 }

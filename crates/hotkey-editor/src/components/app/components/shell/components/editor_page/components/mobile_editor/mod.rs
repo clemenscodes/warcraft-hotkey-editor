@@ -1,9 +1,9 @@
 pub mod components;
 mod presentation;
+mod state;
 mod style;
 
 use components::pager_card_host::PagerCardHost;
-use components::pager_spacer::PagerSpacer;
 use dioxus::prelude::*;
 use presentation::{MobileEditorPresentation, use_mobile_editor};
 use style::CLASS;
@@ -16,8 +16,8 @@ pub fn MobileEditor() -> Element {
         onmounted,
         onscroll,
         onscrollend,
-        top_spacer_px,
-        bottom_spacer_px,
+        onpointerdown,
+        onkeydown,
         window_unit_ids,
     } = presentation;
     rsx! {
@@ -27,17 +27,13 @@ pub fn MobileEditor() -> Element {
             onmounted: move |event| onmounted.call(event),
             onscroll: move |event| onscroll.call(event),
             onscrollend: move |event| onscrollend.call(event),
-            PagerSpacer {
-                height_px: top_spacer_px,
-            }
+            onpointerdown: move |event| onpointerdown.call(event),
+            onkeydown: move |event| onkeydown.call(event),
             for unit_id in window_unit_ids {
                 PagerCardHost {
                     key: "{unit_id}",
                     unit_id,
                 }
-            }
-            PagerSpacer {
-                height_px: bottom_spacer_px,
             }
         }
     }
