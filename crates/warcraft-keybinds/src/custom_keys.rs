@@ -2151,6 +2151,25 @@ mod tests {
     }
 
     #[test]
+    fn baseline_gives_passive_abilities_no_hotkey() {
+        let baseline = include_str!("../templates/CustomKeys.txt");
+        let file = CustomKeys::from(baseline);
+        let hotkeyed_passive_ids: Vec<&'static str> = file
+            .bindings_in_order()
+            .filter(|entry| {
+                let ability_id = entry.ability_id().value();
+                warcraft_database::ObjectLookup::is_passive_ability(ability_id)
+                    && entry.binding().hotkey().is_some()
+            })
+            .map(|entry| entry.ability_id().value())
+            .collect();
+        assert!(
+            hotkeyed_passive_ids.is_empty(),
+            "passive abilities carry an invented Hotkey: {hotkeyed_passive_ids:?}",
+        );
+    }
+
+    #[test]
     fn round_trip_of_baseline_preserves_known_sections() {
         let baseline = include_str!("../templates/CustomKeys.txt");
         let file = CustomKeys::from(baseline);
@@ -3886,17 +3905,22 @@ mod template_generation_tests {
                 continue;
             }
             let shipped = shipped_hotkeys(id);
+            let is_passive = warcraft_object.is_passive_ability();
 
             let section_header = format!("[{id}]\n");
             out.push_str(&section_header);
 
             if let Some(button_position) = default_button_position {
-                let shipped_hotkey = shipped.and_then(|entry| entry.hotkey());
-                let grid_letter = layout.letter_at(button_position.column(), button_position.row());
-                let hotkey = shipped_or_grid(shipped_hotkey, grid_letter);
-                if let Some(hotkey_string) = hotkey {
-                    let hotkey_line = format!("Hotkey={hotkey_string}\n");
-                    out.push_str(&hotkey_line);
+                // A passive is never pressed, so it gets no hotkey at all.
+                if !is_passive {
+                    let shipped_hotkey = shipped.and_then(|entry| entry.hotkey());
+                    let grid_letter =
+                        layout.letter_at(button_position.column(), button_position.row());
+                    let hotkey = shipped_or_grid(shipped_hotkey, grid_letter);
+                    if let Some(hotkey_string) = hotkey {
+                        let hotkey_line = format!("Hotkey={hotkey_string}\n");
+                        out.push_str(&hotkey_line);
+                    }
                 }
                 let btn_column = u8::from(button_position.column());
                 let btn_row = u8::from(button_position.row());

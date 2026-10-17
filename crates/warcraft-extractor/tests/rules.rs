@@ -1260,6 +1260,64 @@ mod rule_5_same_slot_dedup {
         );
     }
 
+    /// `APai` is Blizzard's generic passive-icon base: every upgrade icon
+    /// (`Aeib` Improved Bows, `Aemk` Marksmanship on the Archer) is an alias of
+    /// it, so a shared `APai` code is not a balance variant. Rule 4 must keep
+    /// every such icon instead of only the last one.
+    #[test]
+    fn passive_icons_sharing_the_apai_code_are_all_kept() {
+        let unit_slk_text = unit_slk("htst");
+        let abilities_slk_text = unit_abilities_slk("htst", "IconA,IconB");
+        let meta_slk_text = "ID;P\n\
+             C;X1;Y1;K\"alias\"\n\
+             C;X2;Y1;K\"code\"\n\
+             C;X1;Y2;K\"IconA\"\n\
+             C;X2;Y2;K\"APai\"\n\
+             C;X1;Y3;K\"IconB\"\n\
+             C;X2;Y3;K\"APai\"\n\
+             E\n"
+        .to_string();
+        let defaults_txt = ability_defaults_txt("IconA", "IconB", 0, 2);
+        let unit_strings_text = unit_strings_txt("htst");
+        let ability_strings_text =
+            "[IconA]\nName=Improved Bows\n[IconB]\nName=Marksmanship\n".to_string();
+
+        let unit_result = UNITS_EXTRACTION_RULE
+            .process(UNIT_PATH, unit_slk_text.as_bytes())
+            .unwrap();
+        let abilities_result = UNIT_ABILITIES_EXTRACTION_RULE
+            .process(UNIT_ABILITIES_PATH, abilities_slk_text.as_bytes())
+            .unwrap();
+        let meta_result = ABILITY_METADATA_EXTRACTION_RULE
+            .process(ABILITY_METADATA_PATH, meta_slk_text.as_bytes())
+            .unwrap();
+        let defaults_result = ABILITY_DEFAULTS_EXTRACTION_RULE
+            .process(ABILITY_DEFAULTS_PATH, defaults_txt.as_bytes())
+            .unwrap();
+        let unit_strings_result = HUMAN_UNIT_STRINGS_EXTRACTION_RULE
+            .process(UNIT_STRINGS_PATH, unit_strings_text.as_bytes())
+            .unwrap();
+        let ability_strings_result = HUMAN_ABILITY_STRINGS_EXTRACTION_RULE
+            .process(ABILITY_STRINGS_PATH, ability_strings_text.as_bytes())
+            .unwrap();
+
+        let database = build_database(vec![
+            unit_result,
+            abilities_result,
+            meta_result,
+            defaults_result,
+            unit_strings_result,
+            ability_strings_result,
+        ]);
+        let abilities = unit_ability_ids(&database, "htst");
+        let has_first_icon = abilities.iter().any(|id| id.eq_ignore_ascii_case("IconA"));
+        let has_second_icon = abilities.iter().any(|id| id.eq_ignore_ascii_case("IconB"));
+        assert!(
+            has_first_icon && has_second_icon,
+            "both APai passive icons must survive Rule 4 (abilities: {abilities:?})",
+        );
+    }
+
     /// Abilities don't need to be self-referential (code == alias) for Rule 5
     /// to apply.  The Archer/Hippogryph case: `OldSelf` is self-referential
     /// (`code=OldSelf`) and `NewAlias` is an alias of a different base mechanic

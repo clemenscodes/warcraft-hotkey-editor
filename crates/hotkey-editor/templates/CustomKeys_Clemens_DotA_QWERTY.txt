@@ -1,5 +1,4 @@
 [ACac]
-Hotkey=W
 Buttonpos=1,0
 Tip=Command Aura
 
@@ -9,7 +8,6 @@ Buttonpos=2,0
 Tip=Animate Dead
 
 [ACah]
-Hotkey=W
 Buttonpos=1,0
 Tip=Thorns Aura
 
@@ -19,17 +17,14 @@ Buttonpos=1,0
 Tip=Anti-magic Shell
 
 [ACat]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Trueshot Aura
 
 [ACav]
-Hotkey=R
 Buttonpos=3,0
 Tip=Devotion Aura
 
 [ACba]
-Hotkey=E
 Buttonpos=2,0
 Tip=Brilliance Aura
 
@@ -52,7 +47,6 @@ Buttonpos=0,0
 Tip=Breath of Frost
 
 [ACbh]
-Hotkey=E
 Buttonpos=2,0
 Tip=Bash
 
@@ -102,7 +96,6 @@ Buttonpos=3,0
 Tip=Frost Bolt
 
 [ACce]
-Hotkey=W
 Buttonpos=1,0
 Tip=Cleaving Attack
 
@@ -135,7 +128,6 @@ Tip=Curse
 UnTip=|cffc3dbffRight-click to activate auto-casting.
 
 [ACct]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Critical Strike
 
@@ -209,7 +201,6 @@ Buttonpos=0,0
 Tip=Ensnare
 
 [ACev]
-Hotkey=E
 Buttonpos=2,0
 Tip=Evasion
 
@@ -308,7 +299,6 @@ Buttonpos=2,0
 Tip=Lightning Shield
 
 [ACm2]
-Hotkey=W
 Buttonpos=1,0
 Tip=Spell Immunity,Spell Immunity
 
@@ -321,7 +311,6 @@ Tip=Mana Shield
 UnTip=Deactivate Mana Shield
 
 [ACmi]
-Hotkey=E
 Buttonpos=2,0
 Tip=Spell Immunity
 
@@ -351,7 +340,6 @@ Buttonpos=0,0
 Tip=Purge
 
 [ACpv]
-Hotkey=R
 Buttonpos=3,0
 Tip=Pulverize
 
@@ -384,12 +372,10 @@ Buttonpos=0,0
 Tip=Rejuvenation
 
 [ACrk]
-Hotkey=W
 Buttonpos=1,0
 Tip=Resistant Skin
 
 [ACrn]
-Hotkey=R
 Buttonpos=3,0
 Tip=Reincarnation
 
@@ -431,7 +417,6 @@ Researchbuttonpos=0,0
 Tip=Silence
 
 [ACsk]
-Hotkey=F
 Buttonpos=3,1
 Tip=Resistant Skin
 
@@ -476,7 +461,6 @@ Buttonpos=0,0
 Tip=Spawn Tentacle
 
 [ACua]
-Hotkey=R
 Buttonpos=3,0
 Tip=Unholy Aura
 
@@ -486,12 +470,10 @@ Buttonpos=2,0
 Tip=Unholy Frenzy
 
 [ACvp]
-Hotkey=E
 Buttonpos=2,0
 Tip=Vampiric Aura
 
 [ACvs]
-Hotkey=W
 Buttonpos=1,0
 Tip=Envenomed Weapons
 
@@ -518,14 +500,12 @@ Researchbuttonpos=3,0
 Tip=Metamorphosis
 
 [AEah]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Thorns Aura - [Level 1],Thorns Aura - [Level 2],Thorns Aura - [Level 3]
 
 [AEar]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -552,7 +532,6 @@ Researchbuttonpos=0,0
 Tip=Entangling Roots - [Level 1],Entangling Roots - [Level 2],Entangling Roots - [Level 3]
 
 [AEev]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -664,14 +643,12 @@ Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AHab]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Brilliance Aura - [Level 1],Brilliance Aura - [Level 2],Brilliance Aura - [Level 3]
 
 [AHad]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -684,7 +661,6 @@ Researchhotkey=W
 Researchbuttonpos=1,0
 
 [AHas]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -724,7 +700,6 @@ Researchhotkey=W
 Researchbuttonpos=1,0
 
 [AHbh]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -881,7 +856,6 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AHgr]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -924,8 +898,8 @@ Researchhotkey=Q
 Researchbuttonpos=0,0
 
 [AHhs]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=Q
+Buttonpos=0,0
 Researchhotkey=Q
 Researchbuttonpos=0,0
 
@@ -948,8 +922,8 @@ Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AHic]
-Hotkey=Q
-Buttonpos=0,0
+Hotkey=E
+Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 
@@ -1003,7 +977,6 @@ Researchbuttonpos=3,0
 Tip=Mass Teleport
 
 [AHpa]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1211,7 +1184,6 @@ Tip=Activate Avatar
 UnTip=Deactivate Avatar
 
 [ANb2]
-Hotkey=E
 Buttonpos=2,0
 Tip=Maul
 
@@ -1233,7 +1205,6 @@ Researchbuttonpos=0,0
 Tip=Breath of Fire - [Level 1],Breath of Fire - [Level 2],Breath of Fire - [Level 3],Breath of Fire - [Level 1],Breath of Fire - [Level 2],Breath of Fire - [Level 3]
 
 [ANbh]
-Hotkey=E
 Buttonpos=2,0
 Tip=Bash
 
@@ -1264,7 +1235,6 @@ Researchbuttonpos=1,0
 Tip=Cluster Rockets - [Level 1],Cluster Rockets - [Level 2],Cluster Rockets - [Level 3]
 
 [ANca]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1310,22 +1280,18 @@ Researchbuttonpos=1,0
 Tip=Cluster Rockets - [Level 1],Cluster Rockets - [Level 2],Cluster Rockets - [Level 3]
 
 [ANd1]
-Hotkey=S
 Buttonpos=1,1
 Tip=Demolish - Upgrade Level 1
 
 [ANd2]
-Hotkey=S
 Buttonpos=1,1
 Tip=Demolish - Upgrade Level 2
 
 [ANd3]
-Hotkey=S
 Buttonpos=1,1
 Tip=Demolish - Upgrade Level 3
 
 [ANdb]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1339,8 +1305,7 @@ Researchbuttonpos=2,0
 Tip=Dark Conversion
 
 [ANde]
-Hotkey=D
-Buttonpos=2,1
+Buttonpos=1,1
 Tip=Demolish
 
 [ANdh]
@@ -1403,7 +1368,6 @@ UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 [ANfb]
 Hotkey=Q
 Buttonpos=0,0
-Researchhotkey=B
 Tip=Firebolt
 
 [ANfd]
@@ -1491,12 +1455,10 @@ Hotkey=E
 Unhotkey=E
 Buttonpos=2,0
 Unbuttonpos=2,0
-Researchhotkey=C
 Tip=Incinerate - [Level 1],Incinerate - [Level 2],Incinerate - [Level 3]
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 
 [ANic]
-Hotkey=C
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Incinerate - [Level 1],Incinerate - [Level 2],Incinerate - [Level 3]
@@ -1534,12 +1496,10 @@ Tip=Parasite
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 
 [ANpi]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Permanent Immolation
 
 [ANr2]
-Hotkey=W
 Buttonpos=1,0
 Researchhotkey=R
 Researchbuttonpos=3,0
@@ -1577,8 +1537,6 @@ Tip=Robo-Goblin
 UnTip=Revert to Tinker Form
 
 [ANrn]
-Hotkey=E
-Unhotkey=R
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1676,7 +1634,6 @@ Researchbuttonpos=0,0
 Tip=Pocket Factory - [Level 1],Pocket Factory - [Level 2],Pocket Factory - [Level 3]
 
 [ANt2]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=W
 Researchbuttonpos=1,0
@@ -1688,7 +1645,6 @@ Buttonpos=0,0
 Tip=Taunt
 
 [ANth]
-Hotkey=Q
 Unhotkey=Q
 Buttonpos=0,0
 Unbuttonpos=0,0
@@ -1711,7 +1667,6 @@ Researchbuttonpos=3,0
 Tip=Tornado
 
 [ANtr]
-Hotkey=Q
 Buttonpos=0,0
 Tip=True Sight
 
@@ -1730,7 +1685,6 @@ Researchbuttonpos=0,0
 Tip=Wind Walk
 
 [AOae]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1750,7 +1704,6 @@ Researchbuttonpos=0,0
 Tip=Chain Lightning - [Level 1],Chain Lightning - [Level 2],Chain Lightning - [Level 3]
 
 [AOcr]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1799,21 +1752,18 @@ Researchbuttonpos=1,0
 Tip=Mirror Image - [Level 1],Mirror Image - [Level 2],Mirror Image - [Level 3]
 
 [AOr2]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Endurance Aura - [Level 1],Endurance Aura - [Level 2],Endurance Aura - [Level 3],Endurance Aura - [Level 4]
 
 [AOr3]
-Hotkey=R
 Buttonpos=3,0
 Researchhotkey=R
 Researchbuttonpos=3,0
 Tip=Reincarnation - [Level 1],Reincarnation - [Level 1]
 
 [AOre]
-Hotkey=R
 Buttonpos=3,0
 Researchhotkey=R
 Researchbuttonpos=3,0
@@ -1901,14 +1851,12 @@ Researchbuttonpos=3,0
 Tip=Animate Dead
 
 [AUau]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 Tip=Unholy Aura - [Level 1],Unholy Aura - [Level 2],Unholy Aura - [Level 3]
 
 [AUav]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -1927,14 +1875,14 @@ Researchhotkey=W
 Researchbuttonpos=1,0
 
 [AUbd]
-Hotkey=D
-Buttonpos=2,1
+Hotkey=W
+Buttonpos=1,0
 Researchhotkey=W
 Researchbuttonpos=1,0
 
 [AUbr]
-Hotkey=R
-Buttonpos=3,0
+Hotkey=E
+Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 
@@ -1980,8 +1928,7 @@ Researchhotkey=E
 Researchbuttonpos=2,0
 
 [AUdb]
-Hotkey=D
-Buttonpos=2,1
+Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
 
@@ -2094,10 +2041,10 @@ Researchhotkey=W
 Researchbuttonpos=1,0
 
 [AUla]
-Hotkey=R
-Unhotkey=R
-Buttonpos=3,0
-Unbuttonpos=3,0
+Hotkey=W
+Unhotkey=W
+Buttonpos=1,0
+Unbuttonpos=1,0
 Researchhotkey=W
 Researchbuttonpos=1,0
 
@@ -2152,13 +2099,12 @@ Researchbuttonpos=1,0
 Tip=Sleep - [Level 1],Sleep - [Level 2],Sleep - [Level 3]
 
 [AUsw]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=Q
+Buttonpos=0,0
 Researchhotkey=Q
 Researchbuttonpos=0,0
 
 [AUts]
-Hotkey=W
 Unhotkey=W
 Buttonpos=1,0
 Unbuttonpos=1,0
@@ -2185,8 +2131,8 @@ Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AUvg]
-Hotkey=W
-Buttonpos=1,0
+Hotkey=R
+Buttonpos=3,0
 Researchhotkey=R
 Researchbuttonpos=3,0
 
@@ -2206,15 +2152,16 @@ Buttonpos=1,0
 Researchhotkey=Q
 
 [AUwc]
-Hotkey=E
-Buttonpos=2,0
+Hotkey=R
+Buttonpos=3,0
 Researchhotkey=R
 Researchbuttonpos=3,0
 
 [AUwf]
-Hotkey=W
-Buttonpos=1,0
+Hotkey=Q
+Buttonpos=0,0
 Researchhotkey=Q
+Researchbuttonpos=0,0
 
 [Aabs]
 Hotkey=Q
@@ -2238,7 +2185,6 @@ Tip=Gather
 UnTip=Return Resources
 
 [Aakb]
-Hotkey=W
 Buttonpos=1,0
 Tip=War Drums
 
@@ -2248,14 +2194,12 @@ Buttonpos=1,0
 Tip=Anti-magic Shell
 
 [Aamk]
-Hotkey=D
 Buttonpos=2,1
 Researchhotkey=F
 Researchbuttonpos=3,1
 Tip=Attribute Bonus - [Level 1],Attribute Bonus - [Level 2],Attribute Bonus - [Level 3],Attribute Bonus - [Level 4]
 
 [Aaml]
-Hotkey=S
 Buttonpos=1,1
 Researchhotkey=F
 Researchbuttonpos=3,1
@@ -2266,17 +2210,14 @@ Buttonpos=1,2
 Tip=Anti-magic Shell
 
 [Aap1]
-Hotkey=W
 Buttonpos=1,0
 Tip=Disease Cloud
 
 [Aap2]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Disease Cloud
 
 [Aap3]
-Hotkey=W
 Buttonpos=1,0
 Tip=Disease Cloud
 
@@ -2306,7 +2247,6 @@ Tip=Bloodlust
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 
 [Abof]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Burning Oil
 
@@ -2366,7 +2306,6 @@ Buttonpos=0,0
 Tip=Cannibalize
 
 [Acdb]
-Hotkey=E
 Buttonpos=2,0
 Researchhotkey=E
 Researchbuttonpos=2,0
@@ -2437,7 +2376,6 @@ Buttonpos=0,2
 Tip=Pick up Archer
 
 [Acor]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Corrosive Breath
 
@@ -2511,7 +2449,6 @@ Buttonpos=3,0
 Tip=Dispel Magic
 
 [Adtg]
-Hotkey=Q
 Buttonpos=0,0
 Tip=True Sight
 
@@ -2521,7 +2458,6 @@ Buttonpos=2,0
 Tip=Detonate
 
 [Adts]
-Hotkey=R
 Buttonpos=3,0
 Tip=Magic Sentry
 
@@ -2536,17 +2472,14 @@ Buttonpos=0,0
 Tip=Eat Tree
 
 [Aegr]
-Hotkey=R
 Buttonpos=3,0
 Tip=Elune's Grace
 
 [Aeib]
-Hotkey=C
-Buttonpos=2,2
+Buttonpos=2,0
 Tip=Improved Bows
 
 [Aemk]
-Hotkey=W
 Buttonpos=1,0
 Tip=Marksmanship
 
@@ -2589,12 +2522,10 @@ Buttonpos=0,0
 Tip=Sentinel
 
 [Aews]
-Hotkey=W
 Buttonpos=1,0
 Tip=Well Spring
 
 [Aexh]
-Hotkey=E
 Buttonpos=2,0
 Tip=Exhume Corpses
 
@@ -2632,17 +2563,14 @@ Tip=Orb of Annihilation
 UnTip=|cffc3dbff|cffc3dbffRight-click to activate auto-casting.|r|r
 
 [Afbb]
-Hotkey=W
 Buttonpos=1,0
 Tip=Feedback
 
 [Afbk]
-Hotkey=E
 Buttonpos=2,0
 Tip=Feedback
 
 [Afbt]
-Hotkey=E
 Buttonpos=2,0
 Tip=Feedback
 
@@ -2656,32 +2584,26 @@ Buttonpos=0,0
 Tip=Flare
 
 [Aflk]
-Hotkey=E
 Buttonpos=2,0
 Tip=Flak Cannons
 
 [Afr2]
-Hotkey=E
 Buttonpos=2,0
 Tip=Frost Attack
 
 [Afra]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Frost Attack
 
 [Afrc]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Frost Attack
 
 [Afrz]
-Hotkey=W
 Buttonpos=1,0
 Tip=Freezing Breath
 
 [Afsh]
-Hotkey=W
 Buttonpos=1,0
 Tip=Fragmentation Shards
 
@@ -2703,17 +2625,14 @@ Buttonpos=1,0
 Tip=War Club
 
 [Agyb]
-Hotkey=W
 Buttonpos=1,0
 Tip=Flying Machine Bombs
 
 [Agyv]
-Hotkey=Q
 Buttonpos=0,0
 Tip=True Sight
 
 [Ahan]
-Hotkey=E
 Buttonpos=2,0
 Tip=Animal War Training
 
@@ -2739,7 +2658,6 @@ Buttonpos=2,1
 Tip=Hide
 
 [Ahlh]
-Hotkey=D
 Buttonpos=2,1
 Tip=Improved Lumber Harvesting,Improved Lumber Harvesting,Advanced Lumber Harvesting
 
@@ -2749,7 +2667,6 @@ Buttonpos=3,0
 Tip=Summoning Ritual
 
 [Ahpe]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Phoenix
 
@@ -2762,7 +2679,6 @@ Tip=Gather
 UnTip=Return Resources
 
 [Ahri]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Long Rifles
 
@@ -2783,7 +2699,6 @@ Tip=Repair
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 
 [Ahsb]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Sundering Blades
 
@@ -2811,7 +2726,6 @@ Buttonpos=2,0
 Tip=Sacrifice
 
 [Aliq]
-Hotkey=E
 Buttonpos=2,0
 Tip=Liquid Fire
 
@@ -2873,12 +2787,10 @@ Tip=Mana Flare
 UnTip=Stop Mana Flare
 
 [Amgl]
-Hotkey=W
 Buttonpos=1,0
 Tip=Moon Glaive
 
 [Amgr]
-Hotkey=W
 Buttonpos=1,0
 Tip=Moon Glaive
 
@@ -2899,7 +2811,6 @@ Tip=Call to Arms
 UnTip=Back to Work
 
 [Amim]
-Hotkey=R
 Buttonpos=3,0
 Tip=Spell Immunity
 
@@ -2953,17 +2864,14 @@ Tip=Heal
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 
 [Ansk]
-Hotkey=R
 Buttonpos=3,0
 Tip=Hardened Skin
 
 [Aobk]
-Hotkey=X
-Buttonpos=1,2
+Buttonpos=2,0
 Tip=Berserker Upgrade
 
 [Aobs]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Brute Strength
 
@@ -2974,22 +2882,18 @@ Buttonpos=0,2
 Unbuttonpos=0,2
 
 [Aorb]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Reinforced Defenses
 
 [Aosp]
-Hotkey=R
 Buttonpos=3,0
 Tip=Spiked Barricades,Spiked Barricades,Improved Spiked Barricades
 
 [Aotr]
-Hotkey=R
 Buttonpos=3,0
 Tip=Troll Regeneration
 
 [Apbw]
-Hotkey=D
 Buttonpos=2,1
 
 [Apg2]
@@ -2998,7 +2902,6 @@ Buttonpos=2,0
 Tip=Purge
 
 [Apig]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Permanent Immolation
 
@@ -3031,7 +2934,6 @@ Tip=Phase Shift
 UnTip=|cffc3dbff|cffc3dbffRight-click to activate auto-casting.|r|r
 
 [Apts]
-Hotkey=R
 Buttonpos=3,0
 Tip=Disease Cloud
 
@@ -3104,7 +3006,6 @@ Buttonpos=0,0
 Tip=Roar
 
 [Aroc]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Barrage
 
@@ -3132,7 +3033,6 @@ Researchbuttonpos=0,0
 Tip=Summon Misha - [Level 1],Summon Misha - [Level 2],Summon Misha - [Level 3],Summon Misha - [Level 4]
 
 [Arsk]
-Hotkey=E
 Buttonpos=2,0
 Tip=Resistant Skin
 
@@ -3171,7 +3071,6 @@ Buttonpos=0,0
 Tip=Sacrifice
 
 [Asal]
-Hotkey=E
 Buttonpos=2,0
 Tip=Pillage
 
@@ -3281,7 +3180,6 @@ Unbuttonpos=0,0
 Tip=Spirit Link
 
 [Aspo]
-Hotkey=E
 Buttonpos=2,0
 Tip=Slow Poison
 
@@ -3298,7 +3196,6 @@ Hotkey=Z
 Buttonpos=0,2
 
 [Assk]
-Hotkey=R
 Buttonpos=3,0
 Tip=Hardened Skin
 
@@ -3313,7 +3210,6 @@ Buttonpos=3,0
 Tip=Stand Down
 
 [Asth]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Storm Hammers
 
@@ -3331,7 +3227,6 @@ Buttonpos=0,0
 Tip=Taunt
 
 [Atru]
-Hotkey=W
 Buttonpos=1,0
 Tip=True Sight
 
@@ -3344,12 +3239,10 @@ Tip=Unstable Concoction
 UnTip=|cffc3dbffRight-click to activate auto-casting.|r
 
 [Augf]
-Hotkey=W
 Buttonpos=1,0
 Tip=Ghoul Frenzy
 
 [Augh]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Shade
 
@@ -3372,12 +3265,10 @@ Buttonpos=1,0
 Tip=Unsummon Building
 
 [Ausm]
-Hotkey=R
 Buttonpos=3,0
 Tip=Skeletal Mastery
 
 [Aven]
-Hotkey=Q
 Buttonpos=0,0
 Tip=Envenomed Spears
 
@@ -3392,7 +3283,6 @@ Tip=Spirit of Vengeance
 UnTip=|cffc3dbffRight-click to activate auto-casting.
 
 [Awar]
-Hotkey=W
 Buttonpos=1,0
 Tip=Pulverize,Enhanced Pulverize
 
@@ -4351,7 +4241,6 @@ Buttonpos=2,2
 Tip=Upgrade War Drums
 
 [SCae]
-Hotkey=W
 Buttonpos=1,0
 Tip=Endurance Aura
 
