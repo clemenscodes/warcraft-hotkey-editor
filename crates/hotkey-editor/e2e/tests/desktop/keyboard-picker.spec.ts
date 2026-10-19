@@ -8,6 +8,7 @@ async function openBlizzardPicker(page: Page) {
   await page.goto(APP);
   await page.locator(".unit-card").first().waitFor();
   await page.locator('input[type="search"]').fill("Hamg");
+  await expect(page).toHaveURL(/search_query=Hamg/);
   const archmage = page.locator(".unit-card").filter({ hasText: "Hamg" });
   await archmage.waitFor();
   await archmage.click();

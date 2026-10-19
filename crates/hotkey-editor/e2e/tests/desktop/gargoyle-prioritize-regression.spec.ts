@@ -30,6 +30,7 @@ test.describe("Gargoyle regression: Prioritize renders at (1,1) after cascade", 
   }) => {
     await page.locator('.race-tabs [class*="undead-race-tab"]').click();
     await page.locator('input[type="search"]').fill("ugar");
+    await expect(page).toHaveURL(/search_query=ugar/);
     const gargoyle = page.locator(".unit-card").filter({ hasText: "ugar" });
     await gargoyle.waitFor();
     await gargoyle.click();

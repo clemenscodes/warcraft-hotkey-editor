@@ -7,6 +7,7 @@ test.describe("Phoenix hides Phoenix Fire", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('input[type="search"]').fill("hphx");
+    await expect(page).toHaveURL(/search_query=hphx/);
     const phoenix = page.locator(".unit-card").filter({ hasText: "hphx" });
     await phoenix.waitFor();
     await phoenix.click();

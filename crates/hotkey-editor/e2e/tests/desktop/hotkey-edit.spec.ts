@@ -42,6 +42,7 @@ test.describe("Hotkey editing", () => {
     await page.goto(APP);
     await page.locator(".unit-card").first().waitFor();
     await page.locator('input[type="search"]').fill("Archmage");
+    await expect(page).toHaveURL(/search_query=Archmage/);
     await page.locator(".unit-card").filter({ hasText: "Archmage" }).first().click();
 
     const researchTile = page
