@@ -1,0 +1,56 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "flex",
+        "flex-row",
+        "items-start",
+        "gap-13",
+    ],
+    mobile: tw![
+        "mobile:grid",
+        "mobile:gap-x-[2em]",
+        "mobile:items-start",
+        "mobile:grid-cols-1",
+        "mobile:gap-y-[1em]",
+    ],
+    tablet: tw![
+        "tablet:grid",
+        "tablet:grid-cols-2",
+        "tablet:gap-x-[2em]",
+        "tablet:items-start",
+        "tablet:portrait:grid-cols-1",
+        "tablet:portrait:gap-y-[1em]",
+    ],
+    laptop: tw![
+        "laptop:grid",
+        "laptop:grid-cols-2",
+        "laptop:gap-x-[2em]",
+        "laptop:items-start",
+        "laptop:portrait:grid-cols-1",
+        "laptop:portrait:gap-y-[1em]",
+    ],
+    desktop: tw![
+        "desktop:grid",
+        "desktop:grid-cols-2",
+        "desktop:gap-x-[2em]",
+        "desktop:items-start",
+        "desktop:portrait:grid-cols-1",
+        "desktop:portrait:gap-y-[1em]",
+    ],
+    qhd: tw![
+        "qhd:grid",
+        "qhd:grid-cols-2",
+        "qhd:gap-x-[2em]",
+        "qhd:items-start",
+        "qhd:portrait:grid-cols-1",
+        "qhd:portrait:gap-y-[1em]",
+    ],
+    uhd: tw![
+        "uhd:grid",
+        "uhd:grid-cols-2",
+        "uhd:gap-x-[2em]",
+        "uhd:items-start",
+        "uhd:portrait:grid-cols-1",
+        "uhd:portrait:gap-y-[1em]",
+    ],
+}

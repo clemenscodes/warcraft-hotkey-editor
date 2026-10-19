@@ -1,0 +1,23 @@
+use super::view::UnitDetailEmptyView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct UnitDetailEmptyModel {
+    #[props(into)]
+    pub message: String,
+}
+
+impl From<&UnitDetailEmptyView> for UnitDetailEmptyModel {
+    fn from(view: &UnitDetailEmptyView) -> Self {
+        let UnitDetailEmptyView { message } = view.clone();
+        Self { message }
+    }
+}
+
+impl ddd::Layered for UnitDetailEmptyModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for UnitDetailEmptyModel {
+    type View = UnitDetailEmptyView;
+}

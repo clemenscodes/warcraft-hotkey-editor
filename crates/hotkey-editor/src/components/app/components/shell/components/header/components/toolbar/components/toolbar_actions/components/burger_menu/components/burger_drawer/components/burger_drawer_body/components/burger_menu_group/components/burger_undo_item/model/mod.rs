@@ -1,0 +1,22 @@
+use super::view::BurgerUndoItemView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct BurgerUndoItemModel {
+    pub on_close: EventHandler<()>,
+}
+
+impl From<&BurgerUndoItemView> for BurgerUndoItemModel {
+    fn from(view: &BurgerUndoItemView) -> Self {
+        let BurgerUndoItemView { on_close } = view.clone();
+        Self { on_close }
+    }
+}
+
+impl ddd::Layered for BurgerUndoItemModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for BurgerUndoItemModel {
+    type View = BurgerUndoItemView;
+}

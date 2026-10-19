@@ -1,0 +1,51 @@
+pub mod components;
+mod data;
+mod model;
+mod presentation;
+mod view;
+
+pub use view::UnitCommandGridsView;
+mod style;
+
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::command_grid_editor::CommandGridEditor;
+use components::build_menu::BuildMenu;
+use components::research_menu::ResearchMenu;
+use components::uprooted_menu::UprootedMenu;
+use dioxus::prelude::*;
+use model::UnitCommandGridsModel;
+use presentation::use_unit_command_grids;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn UnitCommandGrids(props: UnitCommandGridsModel) -> Element {
+    let model = use_unit_command_grids(&props);
+    let build_menu = model.build_menu;
+    let uprooted = model.uprooted;
+    let research = model.research;
+    let onscroll_handler = props.onscroll;
+    rsx! {
+        div {
+            class: CLASS,
+            onscroll: move |event| {
+                if let Some(handler) = onscroll_handler {
+                    handler.call(event);
+                }
+            },
+            CommandGridEditor {
+                ..model.command_card,
+            }
+            BuildMenu {
+                config: build_menu,
+            }
+            UprootedMenu {
+                config: uprooted,
+            }
+            ResearchMenu {
+                config: research,
+            }
+        }
+    }
+}
+
+assert_component!(UnitCommandGrids);

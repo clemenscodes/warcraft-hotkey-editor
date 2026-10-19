@@ -1,0 +1,57 @@
+import { expect, test } from "@playwright/test";
+
+const APP = "/warcraft-hotkey-editor/";
+
+async function applyTemplateAndCascade(page: import("@playwright/test").Page) {
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
+
+  await page.locator('[aria-label="Browse layout templates"]').click();
+  await page.locator(".template-card", { hasText: "Default" }).click();
+  await page.locator('[role="alertdialog"]').first().waitFor();
+
+  await page.locator('[aria-label="Resolve conflicts"]').click();
+  await page.locator(".apply-button", { hasText: /apply/i }).click();
+  await page
+    .locator('[role="alertdialog"]')
+    .filter({ hasText: "Cascade applied" })
+    .waitFor();
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
+}
+
+test.describe("Destroyer regression: abilList order respected after cascade", () => {
+  test.beforeEach(async ({ page }) => {
+    await applyTemplateAndCascade(page);
+  });
+
+  test("Destroyer command card row 2 follows abilList priority after cascade", async ({
+    page,
+  }) => {
+    await page.locator('.race-tabs [class*="undead-race-tab"]').click();
+    await page.locator('input[type="search"]').fill("ubsp");
+    await page.locator(".unit-card").filter({ hasText: "Destroyer" }).waitFor();
+    // Click until the card is the selected one: Firefox can swallow a click
+    // while the filtered list is still re-rendering after the search input.
+    const card = page.locator(".unit-card").filter({ hasText: "Destroyer" });
+    const selected = card.locator(".selected-unit-card-button");
+    await expect(async () => {
+      await card.click();
+      await expect(selected).toBeVisible({ timeout: 1000 });
+    }).toPass();
+    await page.locator(".filled-tile").first().waitFor();
+
+    const cell = (col: number, row: number) =>
+      page
+        .locator(".grid-editor", {
+          has: page.locator(".grid-heading", { hasText: "Command card" }),
+        })
+        .locator(".grid-editor-tile")
+        .nth(row * 4 + col);
+
+    await expect(cell(0, 2).locator("img")).toHaveAttribute("alt", "Devour Magic");
+    await expect(cell(1, 2).locator("img")).toHaveAttribute("alt", "Orb of Annihilation");
+    await expect(cell(2, 2).locator("img")).toHaveAttribute("alt", "Spell Immunity");
+    await expect(cell(3, 2).locator("img")).toHaveAttribute("alt", "Absorb Mana");
+  });
+});

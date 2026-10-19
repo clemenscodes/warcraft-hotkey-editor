@@ -1,0 +1,33 @@
+use super::view::ConflictAbilityTriggerView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct ConflictAbilityTriggerModel {
+    pub onclick: EventHandler<MouseEvent>,
+    pub icon_src: Option<String>,
+    #[props(into)]
+    pub icon_alt: String,
+}
+
+impl From<&ConflictAbilityTriggerView> for ConflictAbilityTriggerModel {
+    fn from(view: &ConflictAbilityTriggerView) -> Self {
+        let ConflictAbilityTriggerView {
+            onclick,
+            icon_src,
+            icon_alt,
+        } = view.clone();
+        Self {
+            onclick,
+            icon_src,
+            icon_alt,
+        }
+    }
+}
+
+impl ddd::Layered for ConflictAbilityTriggerModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for ConflictAbilityTriggerModel {
+    type View = ConflictAbilityTriggerView;
+}

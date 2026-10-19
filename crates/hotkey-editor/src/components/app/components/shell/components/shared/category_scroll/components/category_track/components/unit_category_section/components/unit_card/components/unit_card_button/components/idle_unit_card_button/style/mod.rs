@@ -1,0 +1,43 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "flex",
+        "items-center",
+        "gap-4",
+        "p-4",
+        "w-full",
+        "min-w-0",
+        "text-left",
+        "text-lg",
+        "tracking-snug",
+        "border",
+        "rounded-tile",
+        "transition-all",
+        "duration-fast",
+        "bg-warcraft-bg-mid/55",
+        "text-warcraft-text-primary",
+        "kb-focus:border-white",
+        "kb-focus:text-white",
+        "kb-focus:bg-warcraft-blue/85",
+        "kb-focus:shadow-focus",
+        "border-warcraft-blue-deep",
+        "hover:bg-warcraft-blue-deep/70",
+        "hover:text-white",
+        "hover:border-(--race-color)",
+    ],
+    mobile: tw![
+        "mobile:gap-3",
+        "mobile:p-2",
+        "mobile:text-sm",
+    ],
+    tablet: tw![
+        "tablet:gap-3",
+        "tablet:p-2",
+        "tablet:text-base",
+    ],
+    laptop: tw![
+        "laptop:gap-3",
+        "laptop:p-2",
+        "laptop:text-md",
+    ],
+}

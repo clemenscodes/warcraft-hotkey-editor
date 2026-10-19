@@ -1,0 +1,61 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "group",
+        "flex",
+        "flex-col",
+        "gap-2",
+        "overflow-hidden",
+        "min-w-0",
+        "min-h-0",
+    ],
+    mobile: tw![
+        "mobile:static",
+        "mobile:w-full",
+        "mobile:max-h-none",
+        "mobile:overflow-visible",
+        "mobile:gap-4",
+        "mobile:p-0",
+        "mobile:bg-transparent",
+        "mobile:border-0",
+        "mobile:contain-[layout]",
+    ],
+    tablet: tw![
+        "tablet:static",
+        "tablet:w-full",
+        "tablet:max-h-none",
+        "tablet:overflow-visible",
+        "tablet:gap-4",
+        "tablet:p-0",
+        "tablet:bg-transparent",
+        "tablet:border-0",
+        "tablet:contain-[layout]",
+    ],
+    laptop: tw![
+        "laptop:static",
+        "laptop:w-full",
+        "laptop:max-h-none",
+        "laptop:overflow-visible",
+        "laptop:gap-4",
+        "laptop:p-0",
+        "laptop:bg-transparent",
+        "laptop:border-0",
+        "laptop:contain-[layout]",
+    ],
+    desktop: tw![
+        "desktop:col-start-1",
+        "desktop:row-start-1",
+        "desktop:row-span-2",
+    ],
+    qhd: tw![
+        "qhd:col-start-1",
+        "qhd:row-start-1",
+        "qhd:row-span-2",
+    ],
+    uhd: tw![
+        "uhd:col-start-1",
+        "uhd:row-start-1",
+        "uhd:row-span-2",
+    ],
+}

@@ -1,0 +1,53 @@
+[workspace]
+resolver = "2"
+members = ["crates/hotkey-editor"]
+
+[workspace.package]
+authors = ["clemenscodes"]
+edition = "2024"
+license = "AGPL-3.0-only"
+version = "0.1.0"
+
+# This is a virtual workspace (no root `[package]`), so crane cannot derive a
+# crate name for the shared deps/artifacts derivations and falls back to a
+# noisy placeholder. Naming the workspace here silences that warning.
+[workspace.metadata.crane]
+name = "warcraft-hotkey-editor"
+
+[workspace.dependencies]
+dioxus = { version = "=0.7.10" }
+browser-kit = { git = "https://github.com/clemenscodes/browser-kit", tag = "v0.3.1" }
+ddd = { git = "https://github.com/clemenscodes/ddd", tag = "v0.4.0" }
+dioxus-kit = { git = "https://github.com/clemenscodes/dioxus-kit", tag = "v0.5.1" }
+tw-macro = { git = "https://github.com/clemenscodes/tw-macro", tag = "v0.3.0" }
+dioxus-primitives = { git = "https://github.com/DioxusLabs/components", default-features = false }
+warcraft-api = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.11.1" }
+warcraft-keybinds = { git = "https://github.com/clemenscodes/warcraft-data", tag = "v0.11.1" }
+
+# The dev build stays debuggable but is not left at opt-level 0: unoptimised
+# Rust in WASM runs many times slower, and the dependencies (dioxus, wasm-bindgen
+# and the whole warcraft-data domain: parser, normalisation, collision scans) carry
+# the heavy work. They are optimised fully and built once into the cache; this
+# crate gets a light pass so edits still rebuild quickly. `dx serve` builds with
+# its `wasm-dev` profile, which inherits from `dev`.
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Tuned for a shipped WASM SPA: size is the Lighthouse lever, and the app is
+# DOM-bound (per-frame Rust work is light), so trading compile time and raw
+# opt-level for a smaller binary is the right call. `opt-level = "z"` is the one
+# knob to revisit if interaction latency ever regresses — bump it to "s".
+# `panic = "abort"` drops the unwinding machinery and its JS glue; cargo forces
+# unwind back on for `cargo test`, so the native keybinds tests are unaffected.
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = "fat"
+panic = "abort"
+# Only debug info, never symbols: since LLVM 23 stripping symbols from a wasm
+# module drops every custom section, including the `__wasm_bindgen_unstable`
+# section wasm-bindgen reads.
+strip = "debuginfo"

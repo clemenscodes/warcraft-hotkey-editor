@@ -1,0 +1,20 @@
+use dioxus::prelude::*;
+
+#[derive(Clone, PartialEq)]
+pub struct IdleMenuItemView {
+    pub icon: &'static str,
+    pub label: String,
+    pub disabled: bool,
+    pub role: Option<&'static str>,
+    pub aria_haspopup: Option<&'static str>,
+    pub aria_expanded: Option<&'static str>,
+    pub aria_pressed: Option<&'static str>,
+    pub aria_label: Option<&'static str>,
+    pub onclick: EventHandler<MouseEvent>,
+}
+
+impl ddd::Layered for IdleMenuItemView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for IdleMenuItemView {}

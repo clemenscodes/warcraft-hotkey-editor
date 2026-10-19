@@ -1,0 +1,31 @@
+mod model;
+mod presentation;
+mod view;
+
+pub use view::DefenseMatchupView;
+
+use crate::components::app::components::shell::components::editor_page::components::shared::unit_detail_trigger::components::unit_detail_dialog::components::unit_detail_dialog_body::components::unit_stats_panel::components::shared::matchup::Matchup;
+use dioxus::prelude::*;
+use model::DefenseMatchupModel;
+use presentation::{DefenseMatchupPresentation, use_defense_matchup};
+use tw_macro::assert_component;
+
+#[component]
+pub fn DefenseMatchup(props: DefenseMatchupModel) -> Element {
+    let DefenseMatchupPresentation {
+        subject,
+        multiplier,
+        title,
+        strength,
+    } = use_defense_matchup(&props);
+    rsx! {
+        Matchup {
+            subject,
+            multiplier,
+            title,
+            strength,
+        }
+    }
+}
+
+assert_component!(DefenseMatchup);

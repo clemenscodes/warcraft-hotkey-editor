@@ -1,0 +1,33 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "size-full",
+        "flex",
+        "items-center",
+        "justify-center",
+        "p-0",
+        "border-2",
+        "border-(--race-color,var(--color-warcraft-gold))",
+        "bg-warcraft-gold-dark/75",
+        "text-(--race-color,var(--color-warcraft-gold))",
+        "text-shadow-outline",
+        "uppercase",
+        "leading-none",
+        "text-center",
+        "transition-[box-shadow,border-color,background,color]",
+        "duration-base",
+        "rounded-(--keycap-radius,var(--radius-panel))",
+        "hover:border-(--race-color,var(--color-warcraft-gold))",
+        "hover:bg-(--race-color,var(--color-warcraft-gold))/30",
+        "hover:brightness-125",
+        "hover:shadow-glow-soft",
+        "group-focus-visible/editable-keycap:border-white",
+        "group-focus-visible/editable-keycap:text-white",
+        "group-focus-visible/editable-keycap:shadow-focus",
+        "[@media(hover:none)]:group-focus-visible/editable-keycap:border-(--race-color,var(--color-warcraft-gold))",
+        "[@media(hover:none)]:group-focus-visible/editable-keycap:bg-warcraft-gold-dark/75",
+        "[@media(hover:none)]:group-focus-visible/editable-keycap:text-(--race-color,var(--color-warcraft-gold))",
+        "[@media(hover:none)]:group-focus-visible/editable-keycap:shadow-none",
+    ],
+}

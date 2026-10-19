@@ -1,0 +1,48 @@
+mod model;
+mod presentation;
+mod view;
+
+pub use view::FightColumnView;
+mod style;
+
+use crate::components::app::components::shell::components::resolve_page::components::mobile_resolve::components::resolve_pager::components::resolve_pager_cards::components::shared::ability_icon_host::AbilityIconHost;
+use crate::components::app::components::shell::components::resolve_page::components::mobile_resolve::components::resolve_pager::components::resolve_pager_cards::components::shared::fight_name_plate::FightNamePlate;
+use dioxus::prelude::*;
+use presentation::FightColumnPresentation;
+use model::FightColumnModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn FightColumn(props: FightColumnModel) -> Element {
+    let unresolved_view = props.unresolved_view;
+    let model = FightColumnPresentation::from(&unresolved_view);
+    let FightColumnPresentation {
+        name,
+        object_id,
+        icon_url,
+        carrier_count,
+        disabled,
+        inspected,
+    } = model;
+    let plate_name = name.clone();
+    rsx! {
+        div {
+            class: CLASS,
+            FightNamePlate {
+                name: plate_name,
+                object_id,
+            }
+            AbilityIconHost {
+                name,
+                icon_url,
+                carrier_count,
+                is_winner: false,
+                disabled,
+                inspected,
+            }
+        }
+    }
+}
+
+assert_component!(FightColumn);

@@ -1,0 +1,99 @@
+$schema: ./cache/schemas/tasks.json
+
+fileGroups:
+  configs:
+    - "*.toml"
+    - "*.lock"
+  sources:
+    - "src/**/*"
+  static-assets:
+    - "assets/webui/**/*"
+    - "assets/favicon.svg"
+    - "public/**/*"
+  artifacts:
+    - target
+
+implicitInputs:
+  - /moon.yml
+  - /Cargo.toml
+  - /Cargo.lock
+  - /flake.nix
+
+tasks:
+  rust/build:
+    toolchain: rust
+    command: cargo build
+    deps:
+      - ^:rust/build
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/fmt:
+    toolchain: rust
+    command: cargo fmt --all -- --check
+    options:
+      outputStyle: stream
+    inputs:
+      - "src/**/*.rs"
+
+  rust/fmt/fix:
+    toolchain: rust
+    command: cargo fmt --all
+    options:
+      outputStyle: stream
+    inputs:
+      - "src/**/*.rs"
+
+  rust/lint:
+    toolchain: rust
+    command: cargo clippy --all-targets -- -D warnings
+    deps:
+      - ^:rust/build
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/check:
+    toolchain: rust
+    command: cargo check --all-targets
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/test:
+    toolchain: rust
+    command: cargo test
+    deps:
+      - ^:rust/build
+    options:
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  # Fast "does it compile" gate for agents — `cargo check` only, no fmt,
+  # lint, test, or wasm build. NOT a substitute for `moon run :ci`.
+  check:
+    options:
+      outputStyle: stream
+    deps:
+      - ^:check
+      - rust/check
+
+  ci:
+    options:
+      outputStyle: stream
+      runInCI: true
+    deps:
+      - ^:ci
+      - rust/fmt
+      - rust/lint
+      - rust/test
+      - rust/build

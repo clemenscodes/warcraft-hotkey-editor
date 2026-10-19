@@ -1,0 +1,52 @@
+import { expect, test } from "@playwright/test";
+
+const APP = "/warcraft-hotkey-editor/";
+
+const RALLY_ONLY_BUILDINGS = ["ndmg", "ndke", "ndkw", "ndrb", "ndh3", "ndh4", "nheb"];
+
+function unitCardById(page: any, unitId: string) {
+  return page.locator(".unit-card").filter({
+    has: page.locator("code", { hasText: new RegExp(`^${unitId}$`) }),
+  });
+}
+
+async function browseNeutralCampaign(page: any) {
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
+  await page.locator('.race-tabs [class*="neutral-race-tab"]').click();
+  await page.locator('.race-tabs .neutral-race-tab .active-accent:not([aria-hidden=true])').waitFor();
+  await page.locator('.unit-list [aria-label="Filter"]').click();
+  const campaign = page.locator(".mode-group button", { hasText: "Campaign" });
+  await campaign.click();
+  await expect(campaign).toHaveAttribute("aria-pressed", "true");
+  await page.locator(".unit-card").first().waitFor();
+}
+
+test.describe("Rally-only buildings are hidden by default", () => {
+  test("Demon Gate and its kin do not list in curated Neutral/Campaign browse", async ({
+    page,
+  }) => {
+    await browseNeutralCampaign(page);
+    for (const unitId of RALLY_ONLY_BUILDINGS) {
+      await expect(
+        unitCardById(page, unitId),
+        `${unitId} (rally-only building) must be hidden by default`,
+      ).toHaveCount(0);
+    }
+  });
+
+  test("the 'No abilities' toggle reveals the rally-only buildings", async ({ page }) => {
+    await browseNeutralCampaign(page);
+    const noAbilities = page
+      .locator(".also-include-switch", { hasText: "no special abilities" })
+      .locator(".filter-switch");
+    await noAbilities.click();
+    await expect(noAbilities).toHaveAttribute("aria-pressed", "true");
+    for (const unitId of RALLY_ONLY_BUILDINGS) {
+      await expect(
+        unitCardById(page, unitId),
+        `${unitId} (rally-only building) must surface once ability-less units are shown`,
+      ).toHaveCount(1);
+    }
+  });
+});

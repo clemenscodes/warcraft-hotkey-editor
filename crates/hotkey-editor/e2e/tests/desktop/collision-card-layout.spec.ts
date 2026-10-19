@@ -1,0 +1,95 @@
+import { expect, test, type Page } from "@playwright/test";
+
+const APP = "/warcraft-hotkey-editor/";
+
+async function openPositionCollisions(page: Page): Promise<void> {
+  await page.goto(APP);
+  await page.locator(".unit-card").first().waitFor();
+
+  await page.locator('[aria-label="Browse layout templates"]').click();
+  await page
+    .locator(".template-card", { hasText: "Default" })
+    .click();
+  await page.locator('[role="alertdialog"]').first().waitFor();
+
+  await page.locator('.collisions-button').click();
+  await page.locator(".positions-content").waitFor();
+  await page
+    .locator(".island-conflict-card, .hotkey-conflict-card, .unit-position-conflict-card")
+    .first()
+    .waitFor();
+}
+
+async function dialogCarrierNames(page: Page): Promise<string[]> {
+  return page.locator(".warcraft-dialog .carrier-card-name").allTextContents();
+}
+
+async function closeCarriersDialog(page: Page): Promise<void> {
+  await page.locator('.warcraft-dialog [aria-label="Close"]').click();
+  await page.locator(".warcraft-dialog").waitFor({ state: "detached" });
+}
+
+test.describe("Collision card layout", () => {
+  test.beforeEach(async ({ page }) => {
+    await openPositionCollisions(page);
+  });
+
+  test("every conflict card has exactly one unit, two abilities and one separator", async ({
+    page,
+  }) => {
+    const shapes = await page
+      .locator(".island-conflict-card, .hotkey-conflict-card, .unit-position-conflict-card")
+      .evaluateAll((cards: Element[]) =>
+      cards.map((card) => ({
+        units: card.querySelectorAll(".island-conflict-unit").length,
+        abilities: card.querySelectorAll(".island-conflict-ability").length,
+        separators: card.querySelectorAll(".conflict-separator").length,
+      })),
+    );
+
+    expect(shapes.length).toBeGreaterThan(0);
+    for (const shape of shapes) {
+      expect(shape.units).toBe(1);
+      expect(shape.abilities).toBe(2);
+      expect(shape.separators).toBe(1);
+    }
+  });
+
+  test("clicking an ability icon opens the carriers dialog", async ({ page }) => {
+    await page.locator(".conflict-ability-trigger").first().click();
+
+    const dialog = page.locator(".warcraft-dialog");
+    await dialog.waitFor();
+    await expect(dialog.locator(".carrier-card").first()).toBeVisible();
+
+    await closeCarriersDialog(page);
+  });
+
+  test('"+N more" opens the same carriers dialog as its ability icon', async ({
+    page,
+  }) => {
+    const abilityWithMore = page
+      .locator(".island-conflict-ability", { has: page.locator(".conflict-more") })
+      .first();
+    await expect(
+      abilityWithMore,
+      "expected at least one ability with a '+N more' link on the first island",
+    ).toBeVisible();
+
+    await abilityWithMore.locator(".conflict-ability-trigger").click();
+    await page.locator(".warcraft-dialog").waitFor();
+    const titleFromIcon = await page.locator(".warcraft-dialog h2").textContent();
+    const namesFromIcon = await dialogCarrierNames(page);
+    await closeCarriersDialog(page);
+
+    await abilityWithMore.locator(".conflict-more").click();
+    await page.locator(".warcraft-dialog").waitFor();
+    const titleFromMore = await page.locator(".warcraft-dialog h2").textContent();
+    const namesFromMore = await dialogCarrierNames(page);
+    await closeCarriersDialog(page);
+
+    expect(namesFromIcon.length).toBeGreaterThan(0);
+    expect(titleFromMore).toBe(titleFromIcon);
+    expect(namesFromMore).toEqual(namesFromIcon);
+  });
+});

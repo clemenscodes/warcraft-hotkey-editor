@@ -1,0 +1,14 @@
+use warcraft_keybinds::HotkeyToken;
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::components::shared::hotkey_badge::HotkeyBadgeState;
+
+#[derive(Clone, PartialEq)]
+pub struct FollowerBadgeView {
+    pub letter: HotkeyToken,
+    pub state: HotkeyBadgeState,
+}
+
+impl ddd::Layered for FollowerBadgeView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for FollowerBadgeView {}

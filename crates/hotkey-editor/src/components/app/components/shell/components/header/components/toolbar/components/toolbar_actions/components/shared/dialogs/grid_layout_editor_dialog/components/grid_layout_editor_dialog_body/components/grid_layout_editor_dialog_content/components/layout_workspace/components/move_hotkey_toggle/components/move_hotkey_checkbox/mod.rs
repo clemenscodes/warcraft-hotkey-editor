@@ -1,0 +1,27 @@
+mod model;
+mod view;
+
+pub use view::MoveHotkeyCheckboxView;
+mod style;
+
+use dioxus::prelude::*;
+use model::MoveHotkeyCheckboxModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn MoveHotkeyCheckbox(props: MoveHotkeyCheckboxModel) -> Element {
+    let checked = props.checked;
+    let onchange = props.on_toggle;
+    rsx! {
+        input {
+            class: CLASS,
+            r#type: "checkbox",
+            "aria-label": "Update hotkeys when moving abilities",
+            checked,
+            onchange,
+        }
+    }
+}
+
+assert_component!(MoveHotkeyCheckbox);

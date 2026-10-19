@@ -1,0 +1,12 @@
+{
+  "name": "warcraft-hotkey-editor",
+  "private": true,
+  "packageManager": "pnpm@12.9.0",
+  "engines": {
+    "node": "24.21.0",
+    "pnpm": "12.9.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "4.3.3"
+  }
+}

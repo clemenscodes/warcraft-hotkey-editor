@@ -1,0 +1,69 @@
+use crate::components::app::components::shell::components::shared::icons::ResolvedIcon;
+use warcraft_api::WarcraftObjectId;
+
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub struct InspectedAbility {
+    ability_name: String,
+    carrier_unit_ids: Vec<WarcraftObjectId>,
+}
+
+impl InspectedAbility {
+    pub(crate) fn new(ability_name: String, carrier_unit_ids: Vec<WarcraftObjectId>) -> Self {
+        Self {
+            ability_name,
+            carrier_unit_ids,
+        }
+    }
+
+    pub(crate) fn ability_name(&self) -> &str {
+        &self.ability_name
+    }
+
+    pub(crate) fn carrier_unit_ids(&self) -> &[WarcraftObjectId] {
+        &self.carrier_unit_ids
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub struct CarrierUnitView {
+    unit_id: WarcraftObjectId,
+    name: String,
+    icon_url: Option<String>,
+}
+
+impl From<WarcraftObjectId> for CarrierUnitView {
+    fn from(unit_id: WarcraftObjectId) -> Self {
+        let resolved = ResolvedIcon::lookup(unit_id);
+        let icon_url = resolved.icon_url().map(str::to_owned);
+        let name = resolved.name_or(unit_id);
+        Self {
+            unit_id,
+            name,
+            icon_url,
+        }
+    }
+}
+
+impl CarrierUnitView {
+    pub(crate) fn unit_id(&self) -> WarcraftObjectId {
+        self.unit_id
+    }
+
+    pub(crate) fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub(crate) fn icon_url(&self) -> Option<&str> {
+        self.icon_url.as_deref()
+    }
+}
+
+pub(crate) fn for_unit_ids(carrier_unit_ids: &[WarcraftObjectId]) -> Vec<CarrierUnitView> {
+    let mut views: Vec<CarrierUnitView> = Vec::with_capacity(carrier_unit_ids.len());
+    for carrier_unit_id in carrier_unit_ids {
+        let carrier_unit_id = *carrier_unit_id;
+        let view = CarrierUnitView::from(carrier_unit_id);
+        views.push(view);
+    }
+    views
+}

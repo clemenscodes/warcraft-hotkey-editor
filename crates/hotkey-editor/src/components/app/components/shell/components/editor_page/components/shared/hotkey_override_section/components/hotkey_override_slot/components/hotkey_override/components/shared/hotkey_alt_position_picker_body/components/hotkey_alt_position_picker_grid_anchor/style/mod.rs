@@ -1,0 +1,52 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "flex",
+        "justify-center",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.filled-tile]:cursor-default",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.filled-tile]:opacity-[0.32]",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.filled-tile]:filter-[saturate(0.35)_brightness(0.85)]",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.filled-tile]:border-warcraft-blue-deep",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.filled-tile]:shadow-bevel",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.filled-tile]:transform-none",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.empty-tile:not(:has(.drop-target-overlay))]:[border:2px_dashed_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker))_.empty-tile:not(:has(.drop-target-overlay))]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_4%,transparent)]",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker)):hover_.empty-tile:not(:has(.drop-target-overlay))]:border-warcraft-gold/75",
+        "[&_.grid-editor-tile:not(:has(.draggable-marker)):hover_.empty-tile:not(:has(.drop-target-overlay))]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_10%,transparent)]",
+        "[&_.empty-tile:has(.drop-target-overlay)]:[border:2px_dashed_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+        "[&_.empty-tile:has(.drop-target-overlay)]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_4%,transparent)]",
+        "[&_.empty-tile:has(.drop-target-overlay)]:cursor-pointer",
+        "[&_.empty-tile:has(.drop-target-overlay)]:shadow-glow-soft",
+        "[&_.empty-tile:has(.drop-target-overlay):has(.drag-over-ring)]:[border:2px_solid_var(--color-warcraft-gold)]",
+        "[&_.empty-tile:has(.drop-target-overlay):has(.drag-over-ring)]:bg-panel-gold",
+        "[&_.empty-tile:has(.drop-target-overlay):has(.drag-over-ring)]:shadow-ring",
+        "[&_.grid-editor-tile:has(.draggable-marker)_.filled-tile]:cursor-grab",
+        "[&_.grid-editor-tile:has(.draggable-marker)_.filled-tile]:border-warcraft-gold",
+        "[&_.grid-editor-tile:has(.draggable-marker)_.filled-tile]:transition-none",
+        "[&_.grid-editor-tile:has(.draggable-marker):active_.filled-tile]:cursor-grabbing",
+        "[&_.filled-tile:has(.dragging-source-ghost)]:[border:2px_dashed_color-mix(in_oklab,var(--color-warcraft-gold)_45%,transparent)]",
+        "[&_.filled-tile:has(.dragging-source-ghost)]:[background:color-mix(in_oklab,var(--color-warcraft-gold)_4%,transparent)]",
+        "[&_.filled-tile:has(.dragging-source-ghost)]:shadow-none",
+        "[&_.filled-tile:has(.dragging-source-ghost):has(.drag-over-ring)]:[border:2px_solid_var(--color-warcraft-gold)]",
+        "[&_.filled-tile:has(.dragging-source-ghost):has(.drag-over-ring)]:bg-panel-gold",
+        "[&_.filled-tile:has(.dragging-source-ghost):has(.drag-over-ring)]:shadow-ring",
+    ],
+    mobile: tw![
+        "mobile:w-full",
+    ],
+    tablet: tw![
+        "tablet:w-[40dvh]",
+    ],
+    laptop: tw![
+        "laptop:w-[40dvh]",
+    ],
+    desktop: tw![
+        "desktop:w-[40dvh]",
+    ],
+    qhd: tw![
+        "qhd:w-[40dvh]",
+    ],
+    uhd: tw![
+        "uhd:w-[40dvh]",
+    ],
+}

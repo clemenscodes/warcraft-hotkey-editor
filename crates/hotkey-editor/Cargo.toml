@@ -1,0 +1,59 @@
+[package]
+name = "hotkey-editor"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+description = "Web-based Warcraft III CustomKeys.txt editor."
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "hotkey-editor"
+path = "src/main.rs"
+
+[dependencies]
+browser-kit = { workspace = true }
+dioxus = { workspace = true, features = ["web", "router", "launch", "macro"] }
+dioxus-primitives = { workspace = true }
+dioxus-cli-config = { version = "0.7.10", features = ["web"] }
+wasm-bindgen = "0.2.129"
+web-sys = { version = "0.3", features = [
+  "AddEventListenerOptions",
+  "Event",
+  "HtmlInputElement",
+  "HtmlElement",
+  "Element",
+  "Node",
+  "NodeList",
+  "KeyboardEvent",
+  "MediaQueryList",
+  "MediaQueryListEvent",
+  "PointerEvent",
+  "WheelEvent",
+  "ResizeObserver",
+  "MouseEvent",
+  "DomRect",
+  "Document",
+  "EventTarget",
+  "DomTokenList",
+  "CssStyleDeclaration",
+  "ScrollBehavior",
+  "ScrollIntoViewOptions",
+  "ScrollLogicalPosition",
+  "ScrollToOptions",
+  "Performance",
+  "Window",
+  "Storage",
+  "History",
+  "Location",
+  "UrlSearchParams",
+] }
+gloo-timers = { version = "0.4.0", features = ["futures"] }
+console_error_panic_hook = "0.1.7"
+warcraft-api = { workspace = true }
+ddd = { workspace = true }
+dioxus-kit = { workspace = true }
+tw-macro = { workspace = true, features = ["dioxus"] }
+warcraft-keybinds = { workspace = true }

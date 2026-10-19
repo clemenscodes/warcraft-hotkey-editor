@@ -1,0 +1,23 @@
+use super::view::ArmorRowView;
+use dioxus::prelude::*;
+use warcraft_api::ArmorFigure as Armor;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct ArmorRowModel {
+    pub value: Armor,
+}
+
+impl From<&ArmorRowView> for ArmorRowModel {
+    fn from(view: &ArmorRowView) -> Self {
+        let ArmorRowView { value } = view.clone();
+        Self { value }
+    }
+}
+
+impl ddd::Layered for ArmorRowModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for ArmorRowModel {
+    type View = ArmorRowView;
+}

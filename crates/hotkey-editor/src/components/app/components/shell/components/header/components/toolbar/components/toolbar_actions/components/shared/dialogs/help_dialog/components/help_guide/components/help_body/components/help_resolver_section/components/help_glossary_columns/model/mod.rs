@@ -1,0 +1,23 @@
+use super::view::HelpGlossaryColumnsView;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_guide::data::HelpGlossaryItem;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct HelpGlossaryColumnsModel {
+    pub columns: &'static [&'static [HelpGlossaryItem]],
+}
+
+impl From<&HelpGlossaryColumnsView> for HelpGlossaryColumnsModel {
+    fn from(view: &HelpGlossaryColumnsView) -> Self {
+        let HelpGlossaryColumnsView { columns } = view.clone();
+        Self { columns }
+    }
+}
+
+impl ddd::Layered for HelpGlossaryColumnsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for HelpGlossaryColumnsModel {
+    type View = HelpGlossaryColumnsView;
+}

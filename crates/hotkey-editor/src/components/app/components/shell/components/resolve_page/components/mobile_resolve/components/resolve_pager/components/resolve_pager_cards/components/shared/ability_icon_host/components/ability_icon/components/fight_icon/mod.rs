@@ -1,0 +1,35 @@
+mod model;
+mod view;
+
+pub use view::FightIconView;
+mod style;
+use crate::components::app::components::shell::components::shared::framed_icon::{
+    FramedIcon, IconRadius,
+};
+use dioxus::prelude::*;
+use model::FightIconModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn FightIcon(props: FightIconModel) -> Element {
+    let Some(source) = props.src else {
+        return rsx! {};
+    };
+    let src = Some(source);
+    let alt = props.alt;
+    rsx! {
+        div {
+            class: CLASS,
+            FramedIcon {
+                src,
+                alt,
+                radius: IconRadius::Card,
+                hover_glow: true,
+                placeholder: false,
+            }
+        }
+    }
+}
+
+assert_component!(FightIcon);

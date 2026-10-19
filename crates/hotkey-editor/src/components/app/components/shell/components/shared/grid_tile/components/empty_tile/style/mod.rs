@@ -1,0 +1,35 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "relative",
+        "w-full",
+        "aspect-square",
+        "@container",
+        "overflow-hidden",
+        "border-(length:--tile-border-width,2px)",
+        "rounded-(--tile-corner-radius,var(--radius-tile))",
+        "bg-panel-dark",
+        "border-warcraft-blue-deep",
+        "shadow-bevel",
+        "touch-pan-y",
+        "outline-none",
+        "[body:has(.dragging-source-ghost)_&]:transition-none",
+        "has-[.drop-target-overlay]:border-dashed",
+        "has-[.drop-target-overlay]:cursor-pointer",
+        "[&:has(.drop-target-overlay):has(.drag-over-ring)]:border-warcraft-gold",
+        "has-[.blocked-drop-target-overlay]:border-warcraft-danger/55",
+        "has-[.blocked-drop-target-overlay]:border-dashed",
+        "has-[.blocked-drop-target-overlay]:cursor-not-allowed",
+        "has-[.highlight-overlay]:border-warcraft-gold",
+        "has-[.highlight-overlay]:[box-shadow:0_0_7cqi_color-mix(in_oklab,var(--color-warcraft-gold)_50%,transparent)]",
+    ],
+    mobile: tw![
+        "mobile:touch-pan-x",
+    ],
+    tablet: tw![
+        "tablet:touch-pan-x",
+    ],
+    laptop: tw![
+        "laptop:touch-pan-x",
+    ],
+}

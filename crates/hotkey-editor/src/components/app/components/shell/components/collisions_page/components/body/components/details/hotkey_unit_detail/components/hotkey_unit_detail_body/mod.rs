@@ -1,0 +1,33 @@
+pub mod components;
+mod model;
+mod presentation;
+mod view;
+
+pub use view::HotkeyUnitDetailBodyView;
+
+use crate::services::collision_selection::context::use_collision_selection;
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::empty_detail::EmptyDetail;
+use components::filled_hotkey_unit_detail::FilledHotkeyUnitDetail;
+use dioxus::prelude::*;
+use model::HotkeyUnitDetailBodyModel;
+use tw_macro::assert_component;
+
+#[component]
+pub fn HotkeyUnitDetailBody(props: HotkeyUnitDetailBodyModel) -> Element {
+    let selected_unit = use_collision_selection().selected_hotkey_unit();
+    if let Some(unit_view) = presentation::selected(&props, selected_unit) {
+        rsx! {
+            FilledHotkeyUnitDetail {
+                unit_view,
+            }
+        }
+    } else {
+        rsx! {
+            EmptyDetail {
+                prompt: presentation::EMPTY_PROMPT,
+            }
+        }
+    }
+}
+
+assert_component!(HotkeyUnitDetailBody);

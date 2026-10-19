@@ -1,0 +1,34 @@
+pub mod components;
+mod model;
+mod view;
+
+pub use view::ClosedHeroLevelTriggerView;
+mod style;
+
+use super::hero_level_trigger_number::HeroLevelTriggerNumber;
+use super::shared::hero_level_trigger_label::HeroLevelTriggerLabel;
+use components::closed_hero_level_trigger_chevron::ClosedHeroLevelTriggerChevron;
+use dioxus::prelude::*;
+use model::ClosedHeroLevelTriggerModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn ClosedHeroLevelTrigger(props: ClosedHeroLevelTriggerModel) -> Element {
+    let number = props.number;
+    let onclick = props.onclick;
+    rsx! {
+        button {
+            class: CLASS,
+            r#type: "button",
+            onclick,
+            HeroLevelTriggerLabel {}
+            HeroLevelTriggerNumber {
+                number,
+            }
+            ClosedHeroLevelTriggerChevron {}
+        }
+    }
+}
+
+assert_component!(ClosedHeroLevelTrigger);

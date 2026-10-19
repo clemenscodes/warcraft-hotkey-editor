@@ -1,0 +1,20 @@
+[application]
+name = "hotkey-editor"
+public_dir = "public"
+
+[web.app]
+title = "Warcraft III Hotkey Editor"
+# Deployed at https://clemenscodes.github.io/warcraft-hotkey-editor/, so every
+# asset URL the bundler generates needs the repo name as a base.
+base_path = "warcraft-hotkey-editor"
+
+[web.watcher]
+reload_html = true
+watch_path = ["src", "public"]
+
+# Crunch the release wasm as small as possible with binaryen (installed in the
+# Dockerfile). `dx` runs wasm-opt on release builds already; pinning the level to
+# "z" makes the size target explicit rather than relying on the default.
+[web.wasm_opt]
+level = "z"
+debug = false

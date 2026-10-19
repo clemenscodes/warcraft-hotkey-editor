@@ -1,0 +1,75 @@
+use tw_macro::tw;
+
+// One button whether it is pressed or not, so its look moves between the two on
+// a transition instead of the button being rebuilt. The pressed gradient sits
+// on a layer behind the label that fades, since a gradient cannot transition.
+classes! {
+    base: tw![
+        "relative",
+        "isolate",
+        "px-2",
+        "border",
+        "rounded-panel",
+        "text-sm",
+        "whitespace-nowrap",
+        "min-h-11",
+        "flex",
+        "items-center",
+        "justify-center",
+        "text-shadow-drop",
+        "cursor-pointer",
+        "transition-[border-color,color,box-shadow]",
+        "duration-base",
+        "bg-panel-gold-resting",
+        "border-(--race-color,var(--color-warcraft-gold-border))/70",
+        "text-warcraft-text-secondary",
+        "before:content-['']",
+        "before:absolute",
+        "before:inset-0",
+        "before:-z-1",
+        "before:rounded-[inherit]",
+        "before:bg-panel-gold-active",
+        "before:opacity-0",
+        "before:transition-opacity",
+        "before:duration-base",
+        "before:pointer-events-none",
+        "aria-pressed:border-(--race-color,var(--color-warcraft-gold))",
+        "aria-pressed:text-(--race-color,var(--color-warcraft-gold))",
+        "aria-pressed:[--glow-color:var(--race-color,var(--color-warcraft-gold))]",
+        "aria-pressed:shadow-glow",
+        "aria-pressed:before:opacity-100",
+        "aria-[pressed=false]:hover:border-(--race-color,var(--color-warcraft-gold))",
+        "aria-[pressed=false]:hover:text-(--race-color,var(--color-warcraft-gold))",
+        "focus:outline-none",
+        "kb-focus:border-white",
+        "kb-focus:text-white",
+        "kb-focus:shadow-focus",
+    ],
+    mobile: tw![
+        "mobile:text-sm",
+        "mobile:px-2",
+    ],
+    tablet: tw![
+        "tablet:text-sm",
+        "tablet:px-2",
+    ],
+    laptop: tw![
+        "laptop:text-sm",
+        "laptop:px-2",
+    ],
+    desktop: tw![
+        "desktop:min-h-13.25",
+        "desktop:text-lg",
+        "desktop:px-4.75",
+    ],
+    qhd: tw![
+        "qhd:min-h-19",
+        "qhd:text-xl",
+        "qhd:px-7",
+    ],
+    uhd: tw![
+        "uhd:min-h-20.5",
+        "uhd:text-xl",
+        "uhd:px-7.5",
+    ],
+}

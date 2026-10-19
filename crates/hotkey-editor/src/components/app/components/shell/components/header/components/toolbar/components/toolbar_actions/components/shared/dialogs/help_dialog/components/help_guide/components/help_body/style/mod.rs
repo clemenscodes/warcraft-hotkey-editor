@@ -1,0 +1,81 @@
+use tw_macro::tw;
+// From a desktop up the body's type is a share of the guide's width and every
+// length inside it is in em, so the cards scale as one piece and fit the
+// dialog without scrolling: the workflow and the legend share the top two
+// thirds half and half, the glossary spans the bottom third. A portrait window
+// has height to spare, so there the three cards stack in larger type.
+classes! {
+    base: tw![
+        "flex",
+        "flex-col",
+        "gap-10",
+        "text-left",
+    ],
+    mobile: tw![
+        "mobile:grid",
+        "mobile:gap-[1.5em]",
+        "mobile:items-stretch",
+        "mobile:text-sm",
+        "mobile:grid-cols-1",
+    ],
+    tablet: tw![
+        "tablet:text-[0.85cqi]",
+        "tablet:grid",
+        "tablet:grid-cols-2",
+        "tablet:grid-rows-[minmax(0,2fr)_minmax(0,1fr)]",
+        "tablet:gap-[1.5em]",
+        "tablet:h-full",
+        "tablet:items-stretch",
+        "tablet:portrait:text-[1.55cqi]",
+        "tablet:portrait:grid-cols-1",
+        "tablet:portrait:grid-rows-[auto_auto_minmax(0,1fr)]",
+    ],
+    laptop: tw![
+        "laptop:text-[0.85cqi]",
+        "laptop:grid",
+        "laptop:grid-cols-2",
+        "laptop:grid-rows-[minmax(0,2fr)_minmax(0,1fr)]",
+        "laptop:gap-[1.5em]",
+        "laptop:h-full",
+        "laptop:items-stretch",
+        "laptop:portrait:text-[1.55cqi]",
+        "laptop:portrait:grid-cols-1",
+        "laptop:portrait:grid-rows-[auto_auto_minmax(0,1fr)]",
+    ],
+    desktop: tw![
+        "desktop:text-[0.85cqi]",
+        "desktop:grid",
+        "desktop:grid-cols-2",
+        "desktop:grid-rows-[minmax(0,2fr)_minmax(0,1fr)]",
+        "desktop:gap-[1.5em]",
+        "desktop:h-full",
+        "desktop:items-stretch",
+        "desktop:portrait:text-[1.55cqi]",
+        "desktop:portrait:grid-cols-1",
+        "desktop:portrait:grid-rows-[auto_auto_minmax(0,1fr)]",
+    ],
+    qhd: tw![
+        "qhd:text-[0.85cqi]",
+        "qhd:grid",
+        "qhd:grid-cols-2",
+        "qhd:grid-rows-[minmax(0,2fr)_minmax(0,1fr)]",
+        "qhd:gap-[1.5em]",
+        "qhd:h-full",
+        "qhd:items-stretch",
+        "qhd:portrait:text-[1.55cqi]",
+        "qhd:portrait:grid-cols-1",
+        "qhd:portrait:grid-rows-[auto_auto_minmax(0,1fr)]",
+    ],
+    uhd: tw![
+        "uhd:text-[0.85cqi]",
+        "uhd:grid",
+        "uhd:grid-cols-2",
+        "uhd:grid-rows-[minmax(0,2fr)_minmax(0,1fr)]",
+        "uhd:gap-[1.5em]",
+        "uhd:h-full",
+        "uhd:items-stretch",
+        "uhd:portrait:text-[1.55cqi]",
+        "uhd:portrait:grid-cols-1",
+        "uhd:portrait:grid-rows-[auto_auto_minmax(0,1fr)]",
+    ],
+}

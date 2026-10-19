@@ -1,0 +1,41 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "box-border",
+        "min-w-15",
+        "h-15",
+        "px-3",
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "text-2xl",
+        "leading-none",
+        "text-warcraft-gold",
+        "bg-warcraft-gold/12",
+        "border-2",
+        "border-warcraft-gold",
+        "rounded-tile",
+        "text-shadow-drop",
+    ],
+    mobile: tw![
+        "mobile:w-[19cqi]",
+        "mobile:min-w-0",
+        "mobile:h-[19cqi]",
+        "mobile:p-0",
+        "mobile:text-[1.6em]",
+    ],
+    tablet: tw![
+        "tablet:w-[19cqi]",
+        "tablet:min-w-0",
+        "tablet:h-[19cqi]",
+        "tablet:p-0",
+        "tablet:text-[1.6em]",
+    ],
+    laptop: tw![
+        "laptop:w-[19cqi]",
+        "laptop:min-w-0",
+        "laptop:h-[19cqi]",
+        "laptop:p-0",
+        "laptop:text-[1.6em]",
+    ],
+}

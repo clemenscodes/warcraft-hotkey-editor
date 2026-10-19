@@ -1,0 +1,42 @@
+pub mod components;
+mod model;
+mod presentation;
+mod view;
+
+use components::active_hit_points_regen_gain::ActiveHitPointsRegenGain;
+use components::muted_hit_points_regen_gain::MutedHitPointsRegenGain;
+use crate::components::app::components::shell::components::editor_page::components::shared::unit_detail_trigger::components::unit_detail_dialog::components::unit_detail_dialog_body::components::unit_stats_panel::components::shared::stat_figure::StatFigure;
+use dioxus::prelude::*;
+use tw_macro::assert_component;
+use model::HitPointsRegenGainModel;
+use presentation::HitPointsRegenGainPresentation;
+
+#[component]
+pub fn HitPointsRegenGain(props: HitPointsRegenGainModel) -> Element {
+    let value = props.value;
+    let is_muted = value.is_muted();
+    let HitPointsRegenGainPresentation {
+        text,
+        mark,
+        condition,
+    } = HitPointsRegenGainPresentation::from(value);
+    if is_muted {
+        rsx! {
+            MutedHitPointsRegenGain {
+                text,
+                mark,
+                condition,
+            }
+        }
+    } else {
+        rsx! {
+            ActiveHitPointsRegenGain {
+                text,
+                mark,
+                condition,
+            }
+        }
+    }
+}
+
+assert_component!(HitPointsRegenGain);

@@ -1,0 +1,12 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "inline-flex",
+        "[&_svg]:size-[1em]",
+        "text-md",
+        "leading-none",
+        "shrink-0",
+        "transition-[transform]",
+        "duration-slow",
+    ],
+}

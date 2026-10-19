@@ -1,0 +1,23 @@
+use super::view::SystemHotkeysSectionIntroView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct SystemHotkeysSectionIntroModel {
+    #[props(into)]
+    pub text: String,
+}
+
+impl From<&SystemHotkeysSectionIntroView> for SystemHotkeysSectionIntroModel {
+    fn from(view: &SystemHotkeysSectionIntroView) -> Self {
+        let SystemHotkeysSectionIntroView { text } = view.clone();
+        Self { text }
+    }
+}
+
+impl ddd::Layered for SystemHotkeysSectionIntroModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for SystemHotkeysSectionIntroModel {
+    type View = SystemHotkeysSectionIntroView;
+}

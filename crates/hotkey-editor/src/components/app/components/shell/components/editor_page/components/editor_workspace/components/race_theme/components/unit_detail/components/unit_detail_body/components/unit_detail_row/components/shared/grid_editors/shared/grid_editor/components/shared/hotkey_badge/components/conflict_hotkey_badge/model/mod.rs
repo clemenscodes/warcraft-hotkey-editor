@@ -1,0 +1,23 @@
+use super::view::ConflictHotkeyBadgeView;
+use dioxus::prelude::*;
+use warcraft_keybinds::HotkeyToken;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct ConflictHotkeyBadgeModel {
+    pub letter: HotkeyToken,
+}
+
+impl From<&ConflictHotkeyBadgeView> for ConflictHotkeyBadgeModel {
+    fn from(view: &ConflictHotkeyBadgeView) -> Self {
+        let ConflictHotkeyBadgeView { letter } = view.clone();
+        Self { letter }
+    }
+}
+
+impl ddd::Layered for ConflictHotkeyBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for ConflictHotkeyBadgeModel {
+    type View = ConflictHotkeyBadgeView;
+}

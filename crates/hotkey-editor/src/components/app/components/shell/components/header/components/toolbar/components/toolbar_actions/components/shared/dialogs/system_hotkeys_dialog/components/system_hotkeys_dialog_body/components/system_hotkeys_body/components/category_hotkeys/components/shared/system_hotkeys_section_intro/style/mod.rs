@@ -1,0 +1,55 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "max-w-360",
+        "text-center",
+        "uppercase",
+        "tracking-heading",
+        "text-2xl",
+        "leading-body",
+        "text-warcraft-gold/75",
+        "text-shadow-drop",
+    ],
+    mobile: tw![
+        "mobile:max-w-full",
+        "mobile:px-1",
+        "mobile:text-sm",
+        "mobile:tracking-label",
+        "mobile:leading-heading",
+    ],
+    tablet: tw![
+        "tablet:max-w-full",
+        "tablet:px-1",
+        "tablet:text-base",
+        "tablet:tracking-label",
+        "tablet:leading-heading",
+    ],
+    laptop: tw![
+        "laptop:max-w-full",
+        "laptop:px-1",
+        "laptop:text-md",
+        "laptop:tracking-label",
+        "laptop:leading-heading",
+    ],
+    desktop: tw![
+        "desktop:max-w-full",
+        "desktop:px-1",
+        "desktop:text-md",
+        "desktop:tracking-label",
+        "desktop:leading-heading",
+    ],
+    qhd: tw![
+        "qhd:max-w-full",
+        "qhd:px-1.5",
+        "qhd:text-xl",
+        "qhd:tracking-label",
+        "qhd:leading-heading",
+    ],
+    uhd: tw![
+        "uhd:max-w-full",
+        "uhd:px-1.75",
+        "uhd:text-2xl",
+        "uhd:tracking-label",
+        "uhd:leading-heading",
+    ],
+}

@@ -1,0 +1,158 @@
+---
+name: Deploy to GitHub Pages
+
+"on":
+  push:
+    branches: [main]
+    tags: [v*]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Nix-based Rust checks — fmt, clippy (native), tests.
+  # Runs on the self-hosted NixOS runner (amaru); Nix is already present.
+  nix-checks:
+    runs-on: self-hosted
+    environment: self-hosted
+    steps:
+      - name: Fix stale workspace permissions
+        run: chmod -R u+w . || true
+      - uses: actions/checkout@v7
+
+      - name: Use Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: clemenscodes
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          useDaemon: true
+          pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
+
+      - name: Build native cargo artifacts
+        run: >
+          nix build .#cargoArtifactsNative
+          --accept-flake-config
+          --print-build-logs
+
+      - name: Format, lint and test
+        run: >
+          nix build
+          .#cargoFmt
+          .#cargoClippyNative
+          .#cargoTestNative
+          --accept-flake-config
+          --print-build-logs
+
+  # Nix-based build: produces the static bundle then runs playwright e2e
+  # tests against it. Runs in parallel with nix-checks.
+  # Runs on the self-hosted NixOS runner (amaru); Nix is already present.
+  build:
+    runs-on: self-hosted
+    environment: self-hosted
+    steps:
+      - name: Fix stale workspace permissions
+        run: chmod -R u+w . || true
+      - uses: actions/checkout@v7
+
+      - name: Prepare Moon git refs
+        # On pull_request the checkout is a detached merge ref, so the
+        # branches Moon reads from GITHUB_BASE_REF / GITHUB_HEAD_REF have
+        # no local ref and Moon's touched-files diff dies with
+        # "ambiguous argument 'develop'". Materialize them here. On a push
+        # the branch is already checked out, so skip it — git refuses to
+        # force-update the branch in use. -f keeps the others correct
+        # across the reused self-hosted workspace.
+        run: |
+          base_ref="${GITHUB_BASE_REF:-main}"
+          current="$(git branch --show-current)"
+          git fetch origin "$base_ref"
+          if [ "$base_ref" != "$current" ]; then
+            git branch -f "$base_ref" FETCH_HEAD
+          fi
+          if [ -n "$GITHUB_HEAD_REF" ] && [ "$GITHUB_HEAD_REF" != "$current" ]; then
+            git branch -f "$GITHUB_HEAD_REF" HEAD
+          fi
+
+      - name: Use Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: clemenscodes
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          useDaemon: true
+          pushFilter: '(-source$|nixpkgs\.tar\.gz$)'
+
+      - name: Build WASM cargo artifacts and CI tools
+        run: >
+          nix build
+          .#ci-cache-tools
+          .#cargoArtifacts
+          --accept-flake-config
+          --print-build-logs
+
+      - name: Lint WASM and build static bundle
+        run: |
+          nix build .#cargoClippyWasm --no-link --accept-flake-config --print-build-logs
+          nix build .#warcraft-hotkey-editor --accept-flake-config --print-build-logs
+
+      - name: Verify result symlink
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "PWD=$(pwd)"
+          ls -la result || echo "result symlink missing"
+          ls result/index.html 2>/dev/null && echo "index.html present" || echo "index.html missing"
+
+      - name: Run e2e tests
+        run: >
+          nix shell .#ci-cache-tools
+          --accept-flake-config
+          --command moon run e2e:playwright/ci
+
+      - name: Stage Pages artifact
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p ./pages-out
+          cp -RL ./result/. ./pages-out/
+          chmod -R u+w ./pages-out/
+          # SPA fallback: the app now has real path routes (/collisions,
+          # /resolve). GitHub Pages has no try_files, so a hard refresh or
+          # shared deep-link to a sub-path 404s unless a 404.html serves the
+          # SPA shell. Copy the built index.html (with its hashed asset URLs)
+          # verbatim so the client router resolves the path on load.
+          cp ./pages-out/index.html ./pages-out/404.html
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./pages-out
+
+      - name: Package release pages
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tar -czf "./warcraft-hotkey-editor-${{ github.ref_name }}-pages.tar.gz" -C ./pages-out .
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          generate_release_notes: true
+          files: ./warcraft-hotkey-editor-${{ github.ref_name }}-pages.tar.gz
+
+  deploy:
+    needs: [nix-checks, build]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

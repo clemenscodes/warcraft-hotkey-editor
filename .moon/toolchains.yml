@@ -1,0 +1,16 @@
+$schema: "./cache/schemas/toolchain.json"
+
+node:
+  version: "24.21.0"
+
+pnpm:
+  version: "12.9.0"
+
+javascript:
+  packageManager: "pnpm"
+  dedupeOnLockfileChange: true
+  syncPackageManagerField: true
+  syncProjectWorkspaceDependencies: false
+
+rust:
+  syncToolchainConfig: true

@@ -1,0 +1,12 @@
+use crate::components::app::components::shell::components::collisions_page::components::body::components::details::shared::conflict_card_model::ConflictCardModel;
+
+#[derive(Clone, PartialEq)]
+pub struct ConflictPanelView {
+    pub(crate) model: ConflictCardModel,
+}
+
+impl ddd::Layered for ConflictPanelView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for ConflictPanelView {}

@@ -1,0 +1,47 @@
+use super::data::{INTRO, PRIMARY_LABEL, TITLE};
+use super::model::UploadInfoDialogModel;
+use crate::services::files::upload;
+use dioxus::prelude::*;
+
+pub(super) struct UploadInfoDialogPresentation {
+    pub(super) open: bool,
+    pub(super) on_open_change: Callback<bool>,
+    pub(super) title: &'static str,
+    pub(super) intro: &'static str,
+    pub(super) warning: Option<&'static str>,
+    pub(super) primary_label: &'static str,
+    pub(super) on_primary: EventHandler<MouseEvent>,
+}
+
+impl From<&UploadInfoDialogModel> for UploadInfoDialogPresentation {
+    fn from(props: &UploadInfoDialogModel) -> Self {
+        let open = props.open;
+        let on_open_change = props.on_open_change;
+        let primary_change = on_open_change;
+        let on_primary = EventHandler::new(move |_event: MouseEvent| {
+            primary_change.call(false);
+            upload::trigger();
+        });
+        let title = TITLE;
+        let intro = INTRO;
+        let warning = None;
+        let primary_label = PRIMARY_LABEL;
+        Self {
+            open,
+            on_open_change,
+            title,
+            intro,
+            warning,
+            primary_label,
+            on_primary,
+        }
+    }
+}
+
+impl ddd::Layered for UploadInfoDialogPresentation {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Presentation for UploadInfoDialogPresentation {
+    type Model = UploadInfoDialogModel;
+}

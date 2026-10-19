@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1f3d"/>
+      <stop offset="100%" stop-color="#060c1f"/>
+    </linearGradient>
+    <linearGradient id="key" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe28a"/>
+      <stop offset="55%" stop-color="#ffce63"/>
+      <stop offset="100%" stop-color="#a87f25"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="10" ry="10" fill="url(#bg)" stroke="#1f3d63" stroke-width="2"/>
+  <text x="32" y="46"
+        text-anchor="middle"
+        font-family="'Friz Quadrata', 'Trajan Pro', 'Cinzel', Georgia, serif"
+        font-size="44"
+        font-weight="700"
+        fill="url(#key)"
+        stroke="#000"
+        stroke-width="0.6"
+        paint-order="stroke">K</text>
+</svg>

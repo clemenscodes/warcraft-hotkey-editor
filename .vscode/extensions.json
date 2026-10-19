@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "moonrepo.moon-console",
+    "tamasfe.even-better-toml",
+    "exiasr.hadolint",
+    "arrterian.nix-env-selector",
+    "bradlc.vscode-tailwindcss",
+    "redhat.vscode-yaml",
+    "ms-playwright.playwright",
+    "fill-labs.dependi",
+    "jnoortheen.nix-ide",
+    "mkhl.direnv",
+    "DioxusLabs.dioxus",
+    "vadimcn.vscode-lldb"
+  ]
+}

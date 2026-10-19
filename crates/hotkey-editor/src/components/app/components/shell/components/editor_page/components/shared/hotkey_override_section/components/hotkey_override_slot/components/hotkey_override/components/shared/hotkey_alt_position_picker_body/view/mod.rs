@@ -1,0 +1,13 @@
+use crate::components::app::components::shell::components::editor_page::components::editor_workspace::components::race_theme::components::unit_detail::components::unit_detail_body::components::unit_detail_row::components::shared::grid_editors::shared::grid_editor::GridEditorView;
+
+#[derive(Clone, PartialEq)]
+pub struct HotkeyAltPositionPickerBodyView {
+    pub explainer_text: String,
+    pub grid_config: GridEditorView,
+}
+
+impl ddd::Layered for HotkeyAltPositionPickerBodyView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for HotkeyAltPositionPickerBodyView {}

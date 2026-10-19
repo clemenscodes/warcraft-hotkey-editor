@@ -1,0 +1,58 @@
+use tw_macro::tw;
+classes! {
+    base: tw![
+        "@container",
+        "grid",
+        "grid-cols-[repeat(2,28rem)]",
+        "auto-rows-80",
+        "gap-6",
+    ],
+    mobile: tw![
+        "mobile:grid-cols-2",
+        "mobile:auto-rows-[minmax(86px,auto)]",
+        "mobile:gap-2.5",
+        "mobile:w-full",
+        "mobile:[--slot-key-size:22cqi]",
+        "mobile:max-w-104",
+    ],
+    tablet: tw![
+        "tablet:grid-cols-2",
+        "tablet:auto-rows-[minmax(86px,auto)]",
+        "tablet:gap-2.5",
+        "tablet:w-full",
+        "tablet:[--slot-key-size:22cqi]",
+        "tablet:max-w-104",
+    ],
+    laptop: tw![
+        "laptop:grid-cols-2",
+        "laptop:auto-rows-[minmax(86px,auto)]",
+        "laptop:gap-2.5",
+        "laptop:w-full",
+        "laptop:[--slot-key-size:22cqi]",
+        "laptop:max-w-104",
+    ],
+    desktop: tw![
+        "desktop:grid-cols-2",
+        "desktop:auto-rows-[minmax(86px,auto)]",
+        "desktop:gap-2.5",
+        "desktop:w-full",
+        "desktop:[--slot-key-size:22cqi]",
+        "desktop:max-w-104",
+    ],
+    qhd: tw![
+        "qhd:grid-cols-2",
+        "qhd:auto-rows-[minmax(120px,auto)]",
+        "qhd:gap-3.5",
+        "qhd:w-full",
+        "qhd:[--slot-key-size:22cqi]",
+        "qhd:max-w-145.5",
+    ],
+    uhd: tw![
+        "uhd:grid-cols-2",
+        "uhd:auto-rows-[minmax(146px,auto)]",
+        "uhd:gap-4.25",
+        "uhd:w-full",
+        "uhd:[--slot-key-size:22cqi]",
+        "uhd:max-w-176.75",
+    ],
+}

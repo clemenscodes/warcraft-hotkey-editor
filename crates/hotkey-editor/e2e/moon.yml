@@ -1,0 +1,82 @@
+id: e2e
+stack: frontend
+layer: automation
+language: typescript
+
+dependsOn:
+  - hotkey-editor
+
+# The inherited task set (.moon/tasks/all.yml) is cargo-shaped — rust/fmt,
+# rust/lint, rust/test and a ci aggregate over them. None of it applies to a
+# TypeScript playwright project, so opt out entirely and define everything
+# locally.
+workspace:
+  inheritedTasks:
+    include: []
+
+tasks:
+  playwright/test:
+    toolchain: system
+    command: playwright test
+    deps:
+      - hotkey-editor:rust/fmt
+      - hotkey-editor:rust/lint
+      - hotkey-editor:rust/build
+      - hotkey-editor:rust/test
+      - hotkey-editor:dx/build
+    env:
+      STATIC_DIR: "$workspaceRoot/target/dx/hotkey-editor/release/web/public"
+      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
+      NODE_NO_WARNINGS: "1"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "tests/**/*.ts"
+      - "global-setup.ts"
+      - "server.mjs"
+      - "playwright.config.ts"
+      - "tsconfig.json"
+    outputs:
+      - "test-results"
+      - "playwright-report"
+
+  # CI-only variant: runs the Nix build first, then tests against the
+  # resulting bundle at the workspace-root `result` symlink. In CI the Nix
+  # store is already warm so nix/bundle is a fast no-op; locally it builds
+  # from scratch.
+  playwright/ci:
+    toolchain: system
+    command: playwright test
+    deps:
+      - hotkey-editor:nix/bundle
+    env:
+      STATIC_DIR: "$workspaceRoot/result"
+      STATIC_BASE_PATH: "/warcraft-hotkey-editor"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+      cache: false
+    inputs:
+      - "tests/**/*.ts"
+      - "global-setup.ts"
+      - "server.mjs"
+      - "playwright.config.ts"
+      - "tsconfig.json"
+
+  docker/e2e:
+    toolchain: system
+    script: >
+      docker build --target e2e --progress plain -t warcraft-hotkey-editor-e2e . &&
+      docker run --rm warcraft-hotkey-editor-e2e
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  ci:
+    options:
+      outputStyle: stream
+      runInCI: true
+    deps:
+      - playwright/test

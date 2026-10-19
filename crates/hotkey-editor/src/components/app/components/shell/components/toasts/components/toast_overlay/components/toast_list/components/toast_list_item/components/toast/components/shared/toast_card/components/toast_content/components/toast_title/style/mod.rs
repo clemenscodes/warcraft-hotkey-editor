@@ -1,0 +1,21 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "text-2xl",
+        "leading-title",
+        "uppercase",
+        "tracking-heading",
+        "text-shadow-drop",
+        "text-(--toast-title)",
+    ],
+    mobile: tw![
+        "mobile:text-lg",
+    ],
+    tablet: tw![
+        "tablet:text-lg",
+    ],
+    laptop: tw![
+        "laptop:text-lg",
+    ],
+}

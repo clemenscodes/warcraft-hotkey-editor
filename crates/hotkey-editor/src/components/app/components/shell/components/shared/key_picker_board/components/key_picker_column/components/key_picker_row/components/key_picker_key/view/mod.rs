@@ -1,0 +1,15 @@
+use crate::components::app::components::shell::components::shared::key_picker_board::KeyCell;
+use dioxus::prelude::*;
+use warcraft_keybinds::KeyCode;
+
+#[derive(Clone, PartialEq)]
+pub struct KeyPickerKeyView {
+    pub cell: KeyCell,
+    pub on_pick: EventHandler<KeyCode>,
+}
+
+impl ddd::Layered for KeyPickerKeyView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for KeyPickerKeyView {}

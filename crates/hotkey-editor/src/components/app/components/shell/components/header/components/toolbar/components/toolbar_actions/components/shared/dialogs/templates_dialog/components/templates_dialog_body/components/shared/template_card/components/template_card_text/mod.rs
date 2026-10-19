@@ -1,0 +1,32 @@
+pub mod components;
+mod model;
+mod view;
+
+pub use view::TemplateCardTextView;
+mod style;
+
+use components::template_card_description::TemplateCardDescription;
+use components::template_card_name::TemplateCardName;
+use dioxus::prelude::*;
+use model::TemplateCardTextModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn TemplateCardText(props: TemplateCardTextModel) -> Element {
+    let name = props.name.clone();
+    let description = props.description.clone();
+    rsx! {
+        div {
+            class: CLASS,
+            TemplateCardName {
+                name,
+            }
+            TemplateCardDescription {
+                description,
+            }
+        }
+    }
+}
+
+assert_component!(TemplateCardText);

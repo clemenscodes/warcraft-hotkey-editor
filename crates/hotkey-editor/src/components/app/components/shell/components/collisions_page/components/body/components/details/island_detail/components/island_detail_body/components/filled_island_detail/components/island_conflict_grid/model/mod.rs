@@ -1,0 +1,23 @@
+use super::view::IslandConflictGridView;
+use crate::components::app::components::shell::components::collisions_page::presentation::ConflictView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct IslandConflictGridModel {
+    pub conflicts: Vec<ConflictView>,
+}
+
+impl From<&IslandConflictGridView> for IslandConflictGridModel {
+    fn from(view: &IslandConflictGridView) -> Self {
+        let IslandConflictGridView { conflicts } = view.clone();
+        Self { conflicts }
+    }
+}
+
+impl ddd::Layered for IslandConflictGridModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for IslandConflictGridModel {
+    type View = IslandConflictGridView;
+}

@@ -1,0 +1,16 @@
+use warcraft_api::DefenseType;
+use warcraft_api::{ArmorFigure as Armor, EffectiveHitPoints, Evasion};
+
+#[derive(Clone, PartialEq)]
+pub struct DefenseStatsView {
+    pub armor: Armor,
+    pub defense_type: DefenseType,
+    pub effective_hit_points: EffectiveHitPoints,
+    pub evasion: Evasion,
+}
+
+impl ddd::Layered for DefenseStatsView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for DefenseStatsView {}

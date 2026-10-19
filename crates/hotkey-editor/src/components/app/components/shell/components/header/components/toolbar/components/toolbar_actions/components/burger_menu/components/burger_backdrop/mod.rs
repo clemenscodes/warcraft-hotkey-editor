@@ -1,0 +1,26 @@
+mod model;
+mod view;
+
+pub use view::BurgerBackdropView;
+mod style;
+
+use dioxus::prelude::*;
+use model::BurgerBackdropModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn BurgerBackdrop(props: BurgerBackdropModel) -> Element {
+    let onclick = props.onclick;
+    rsx! {
+        div {
+            class: CLASS,
+            role: "button",
+            aria_label: "Close menu",
+            tabindex: "-1",
+            onclick,
+        }
+    }
+}
+
+assert_component!(BurgerBackdrop);

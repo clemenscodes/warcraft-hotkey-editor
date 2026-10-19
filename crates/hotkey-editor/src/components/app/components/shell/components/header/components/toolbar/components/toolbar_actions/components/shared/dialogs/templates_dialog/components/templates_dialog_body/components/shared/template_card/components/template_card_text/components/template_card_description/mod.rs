@@ -1,0 +1,23 @@
+mod model;
+mod view;
+
+pub use view::TemplateCardDescriptionView;
+mod style;
+
+use dioxus::prelude::*;
+use model::TemplateCardDescriptionModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn TemplateCardDescription(props: TemplateCardDescriptionModel) -> Element {
+    let description = props.description.clone();
+    rsx! {
+        p {
+            class: CLASS,
+            {description}
+        }
+    }
+}
+
+assert_component!(TemplateCardDescription);

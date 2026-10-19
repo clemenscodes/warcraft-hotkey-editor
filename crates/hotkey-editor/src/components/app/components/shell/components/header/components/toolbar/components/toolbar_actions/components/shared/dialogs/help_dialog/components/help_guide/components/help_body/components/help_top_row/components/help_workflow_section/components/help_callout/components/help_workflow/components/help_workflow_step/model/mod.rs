@@ -1,0 +1,23 @@
+use super::view::HelpWorkflowStepView;
+use crate::components::app::components::shell::components::header::components::toolbar::components::toolbar_actions::components::shared::dialogs::help_dialog::components::help_guide::data::HelpSegment;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct HelpWorkflowStepModel {
+    pub segments: &'static [HelpSegment],
+}
+
+impl From<&HelpWorkflowStepView> for HelpWorkflowStepModel {
+    fn from(view: &HelpWorkflowStepView) -> Self {
+        let HelpWorkflowStepView { segments } = view.clone();
+        Self { segments }
+    }
+}
+
+impl ddd::Layered for HelpWorkflowStepModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for HelpWorkflowStepModel {
+    type View = HelpWorkflowStepView;
+}

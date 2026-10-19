@@ -1,0 +1,23 @@
+use super::view::MutedStatGainView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct MutedStatGainModel {
+    #[props(into)]
+    pub text: String,
+}
+
+impl From<&MutedStatGainView> for MutedStatGainModel {
+    fn from(view: &MutedStatGainView) -> Self {
+        let MutedStatGainView { text } = view.clone();
+        Self { text }
+    }
+}
+
+impl ddd::Layered for MutedStatGainModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for MutedStatGainModel {
+    type View = MutedStatGainView;
+}

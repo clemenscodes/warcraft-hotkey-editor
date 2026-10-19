@@ -1,0 +1,60 @@
+use tw_macro::tw;
+
+classes! {
+    base: tw![
+        "absolute",
+        "left-0",
+        "right-0",
+        "top-full",
+        "translate-y-2",
+        "z-60",
+        "py-2.5",
+        "px-3",
+        "bg-warcraft-bg-base",
+        "border",
+        "border-warcraft-gold/42",
+        "rounded-card",
+        "shadow-overlay",
+        "text-warcraft-text-secondary",
+        "text-xs",
+        "leading-normal",
+        "text-left",
+        "font-normal",
+        "normal-case",
+        "tracking-normal",
+        "origin-top",
+        "motion-safe:animate-dialog-in",
+        "motion-safe:aria-hidden:animate-dialog-out",
+        "aria-hidden:pointer-events-none",
+    ],
+    mobile: tw![
+        "mobile:text-sm",
+    ],
+    tablet: tw![
+        "tablet:text-base",
+    ],
+    laptop: tw![
+        "laptop:text-md",
+    ],
+    desktop: tw![
+        "desktop:top-full",
+        "desktop:translate-y-2.5",
+        "desktop:py-3",
+        "desktop:px-3.5",
+        "desktop:text-base",
+    ],
+    qhd: tw![
+        "qhd:top-full",
+        "qhd:translate-y-3.5",
+        "qhd:py-4.25",
+        "qhd:px-5.25",
+        "qhd:text-md",
+    ],
+    uhd: tw![
+        "uhd:top-full",
+        "uhd:translate-y-3.75",
+        "uhd:py-4.75",
+        "uhd:px-5.5",
+        "uhd:text-lg",
+    ],
+}

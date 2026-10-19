@@ -1,0 +1,9 @@
+{
+  "name": "@warcraft-hotkey-editor/e2e",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,23 @@
+use super::view::SystemHotkeysBreadcrumbsView;
+use dioxus::prelude::*;
+use warcraft_api::SystemHotkeysCategory;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct SystemHotkeysBreadcrumbsModel {
+    pub active_category: Signal<SystemHotkeysCategory>,
+}
+
+impl From<&SystemHotkeysBreadcrumbsView> for SystemHotkeysBreadcrumbsModel {
+    fn from(view: &SystemHotkeysBreadcrumbsView) -> Self {
+        let SystemHotkeysBreadcrumbsView { active_category } = view.clone();
+        Self { active_category }
+    }
+}
+
+impl ddd::Layered for SystemHotkeysBreadcrumbsModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for SystemHotkeysBreadcrumbsModel {
+    type View = SystemHotkeysBreadcrumbsView;
+}

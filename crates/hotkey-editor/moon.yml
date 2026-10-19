@@ -1,0 +1,187 @@
+id: hotkey-editor
+stack: frontend
+layer: library
+tags:
+  - rust
+  - app
+  - wasm
+language: rust
+
+tasks:
+  rust/build:
+    toolchain: rust
+    command: cargo build --target wasm32-unknown-unknown
+    options:
+      mergeArgs: replace
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/lint:
+    toolchain: rust
+    command: cargo clippy --all-targets --target wasm32-unknown-unknown -- -D warnings
+    options:
+      mergeArgs: replace
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  rust/check:
+    toolchain: rust
+    command: cargo check --all-targets --target wasm32-unknown-unknown
+    options:
+      mergeArgs: replace
+      outputStyle: stream
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+
+  tailwind/build:
+    toolchain: system
+    command: tailwindcss -i tailwind.css -o assets/tailwind.css --minify
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    inputs:
+      - "tailwind.css"
+      - "src/**/*.rs"
+
+  # Fail if any Tailwind class in a `tw![…]` macro is non-canonical or
+  # conflicting, per the real language server (tw-lint drives it). The
+  # container regex scopes extraction to `tw![…]` blocks — bracket-aware so it
+  # spans arbitrary values like `w-[26cqi]` — so prose strings are never linted.
+  tailwind/lint:
+    toolchain: system
+    # `script` (not command+args): moon runs system tasks through a shell, so
+    # the regex metacharacters must stay single-quoted or the shell mangles
+    # them. Single quotes also stop `crates/**/*.rs` from glob-expanding —
+    # tw-lint does its own globbing relative to --root.
+    script: >
+      tw-lint --root . --css crates/hotkey-editor/tailwind.css
+      --source 'crates/**/*.rs' --include-lang rust=html
+      --class-container 'tw!\s*\['
+      --class-regex '"([^"]*)"'
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+    inputs:
+      - "/crates/**/*.rs"
+      - "tailwind.css"
+
+  # Auto-fix every deterministic class issue: rewrites non-canonical classes to
+  # canonical form and drops exact duplicates, in place, then reformats (tw-lint
+  # collapses each block to one line). Semantic conflicts between two different
+  # classes have no safe auto-fix and still need manual resolution.
+  tailwind/lint/fix:
+    toolchain: system
+    script: >
+      tw-lint --root . --css crates/hotkey-editor/tailwind.css
+      --source 'crates/**/*.rs' --include-lang rust=html
+      --class-container 'tw!\s*\['
+      --class-regex '"([^"]*)"' --fix && cargo fmt --all
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  # Interactively resolve conflicts: for each conflict tw-lint shows the file and
+  # the two clashing classes and asks which to keep. You decide; it applies your
+  # choice. Run `cargo fmt --all` after (tw-lint reformats the blocks it touches).
+  tailwind/resolve:
+    toolchain: system
+    script: >
+      tw-lint --root . --css crates/hotkey-editor/tailwind.css
+      --source 'crates/**/*.rs' --include-lang rust=html
+      --class-container 'tw!\s*\['
+      --class-regex '"([^"]*)"' --resolve && cargo fmt --all
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      interactive: true
+      cache: false
+
+  ci:
+    deps:
+      - tailwind/lint
+
+  tailwind/watch:
+    toolchain: system
+    command: tailwindcss -i tailwind.css -o assets/tailwind.css --watch
+    options:
+      outputStyle: stream
+      persistent: true
+      runFromWorkspaceRoot: false
+      cache: false
+
+  dx/serve:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web --port 8123
+    options:
+      outputStyle: stream
+      interactive: true
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+
+  dx/serve-container:
+    toolchain: system
+    command: dx serve --package hotkey-editor --platform web --addr 0.0.0.0 --port 8123
+    options:
+      outputStyle: stream
+      interactive: false
+      runFromWorkspaceRoot: false
+      cache: false
+    deps:
+      - tailwind/build
+
+  dx/build:
+    toolchain: system
+    command: dx build --package hotkey-editor --release --platform web
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: false
+    deps:
+      - tailwind/build
+    inputs:
+      - "@group(sources)"
+      - "@group(configs)"
+      - "@group(static-assets)"
+      - "Dioxus.toml"
+
+  nix/bundle:
+    toolchain: system
+    command: nix build .#warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  dev:
+    extends: dx/serve
+
+  bundle:
+    deps:
+      - dx/build
+
+  docker/serve:
+    toolchain: system
+    script: >
+      docker build --target production --progress plain -t warcraft-hotkey-editor . &&
+      docker run --rm --name warcraft-hotkey-editor -p 8123:80 warcraft-hotkey-editor
+    env:
+      FORCE_COLOR: "1"
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false
+
+  docker/down:
+    toolchain: system
+    command: docker stop warcraft-hotkey-editor
+    options:
+      outputStyle: stream
+      runFromWorkspaceRoot: true
+      cache: false

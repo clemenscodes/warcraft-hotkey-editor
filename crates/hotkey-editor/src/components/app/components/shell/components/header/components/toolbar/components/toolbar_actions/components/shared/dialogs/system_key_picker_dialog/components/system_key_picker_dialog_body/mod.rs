@@ -1,0 +1,30 @@
+mod model;
+mod view;
+
+pub use view::SystemKeyPickerDialogBodyView;
+mod style;
+
+use crate::components::app::components::shell::components::shared::key_picker_board_host::KeyPickerBoardHost;
+use dioxus::prelude::*;
+use model::SystemKeyPickerDialogBodyModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn SystemKeyPickerDialogBody(props: SystemKeyPickerDialogBodyModel) -> Element {
+    let columns = props.columns;
+    let on_pick = props.on_pick;
+    let on_close = props.on_close;
+    rsx! {
+        div {
+            class: CLASS,
+            KeyPickerBoardHost {
+                columns,
+                on_pick,
+                on_close,
+            }
+        }
+    }
+}
+
+assert_component!(SystemKeyPickerDialogBody);

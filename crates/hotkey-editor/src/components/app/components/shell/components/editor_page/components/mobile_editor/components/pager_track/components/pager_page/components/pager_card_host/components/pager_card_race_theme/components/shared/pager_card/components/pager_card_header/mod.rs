@@ -1,0 +1,35 @@
+pub mod components;
+mod model;
+mod view;
+
+pub use view::PagerCardHeaderView;
+mod style;
+
+use crate::components::app::components::shell::components::editor_page::components::shared::unit_detail_trigger::UnitDetailTrigger;
+use components::pager_card_title::PagerCardTitle;
+use dioxus::prelude::*;
+use model::PagerCardHeaderModel;
+use style::CLASS;
+use tw_macro::assert_component;
+
+#[component]
+pub fn PagerCardHeader(props: PagerCardHeaderModel) -> Element {
+    let icon_url = props.icon_url;
+    let name = props.name;
+    let unit_id = props.unit_id;
+    rsx! {
+        div {
+            class: CLASS,
+            UnitDetailTrigger {
+                icon_url,
+                unit_id,
+            }
+            PagerCardTitle {
+                name,
+                unit_id,
+            }
+        }
+    }
+}
+
+assert_component!(PagerCardHeader);

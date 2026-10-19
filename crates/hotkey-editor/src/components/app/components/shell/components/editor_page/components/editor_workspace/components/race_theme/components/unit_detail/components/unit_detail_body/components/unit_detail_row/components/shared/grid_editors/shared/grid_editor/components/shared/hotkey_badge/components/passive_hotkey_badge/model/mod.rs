@@ -1,0 +1,23 @@
+use super::view::PassiveHotkeyBadgeView;
+use dioxus::prelude::*;
+use warcraft_keybinds::HotkeyToken;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct PassiveHotkeyBadgeModel {
+    pub letter: HotkeyToken,
+}
+
+impl From<&PassiveHotkeyBadgeView> for PassiveHotkeyBadgeModel {
+    fn from(view: &PassiveHotkeyBadgeView) -> Self {
+        let PassiveHotkeyBadgeView { letter } = view.clone();
+        Self { letter }
+    }
+}
+
+impl ddd::Layered for PassiveHotkeyBadgeModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for PassiveHotkeyBadgeModel {
+    type View = PassiveHotkeyBadgeView;
+}

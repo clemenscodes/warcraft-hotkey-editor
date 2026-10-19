@@ -1,0 +1,16 @@
+use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
+use dioxus::prelude::*;
+
+#[derive(Clone, PartialEq)]
+pub struct NormalKeyChipView {
+    pub label: String,
+    pub onclick: EventHandler<MouseEvent>,
+    pub tooltip_text: String,
+    pub tooltip_placement: TooltipPlacement,
+}
+
+impl ddd::Layered for NormalKeyChipView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for NormalKeyChipView {}

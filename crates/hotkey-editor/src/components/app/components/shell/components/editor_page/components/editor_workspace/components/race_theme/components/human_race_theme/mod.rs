@@ -1,0 +1,20 @@
+mod style;
+
+use dioxus::prelude::*;
+use style::CLASS;
+use tw_macro::assert_component;
+
+/// An invisible marker the race theme mounts while Human is the active race. It
+/// renders nothing the user sees; it carries the `.human-race-theme` identity so the
+/// theme's own style can publish the race colour with `has-[.human-race-theme]`.
+#[component]
+pub fn HumanRaceTheme() -> Element {
+    rsx! {
+        span {
+            class: CLASS,
+            aria_hidden: "true",
+        }
+    }
+}
+
+assert_component!(HumanRaceTheme);

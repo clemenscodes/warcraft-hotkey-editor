@@ -1,0 +1,23 @@
+use super::view::MoveHotkeyCheckboxView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct MoveHotkeyCheckboxModel {
+    pub checked: bool,
+    pub on_toggle: EventHandler<FormEvent>,
+}
+
+impl From<&MoveHotkeyCheckboxView> for MoveHotkeyCheckboxModel {
+    fn from(view: &MoveHotkeyCheckboxView) -> Self {
+        let MoveHotkeyCheckboxView { checked, on_toggle } = view.clone();
+        Self { checked, on_toggle }
+    }
+}
+
+impl ddd::Layered for MoveHotkeyCheckboxModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for MoveHotkeyCheckboxModel {
+    type View = MoveHotkeyCheckboxView;
+}

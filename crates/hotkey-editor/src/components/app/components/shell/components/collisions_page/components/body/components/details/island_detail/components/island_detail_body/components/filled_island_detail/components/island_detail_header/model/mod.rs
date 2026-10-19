@@ -1,0 +1,24 @@
+use super::view::IslandDetailHeaderView;
+use dioxus::prelude::*;
+use warcraft_keybinds::GridCoordinate;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct IslandDetailHeaderModel {
+    pub coordinate: GridCoordinate,
+    pub count: usize,
+}
+
+impl From<&IslandDetailHeaderView> for IslandDetailHeaderModel {
+    fn from(view: &IslandDetailHeaderView) -> Self {
+        let IslandDetailHeaderView { coordinate, count } = view.clone();
+        Self { coordinate, count }
+    }
+}
+
+impl ddd::Layered for IslandDetailHeaderModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for IslandDetailHeaderModel {
+    type View = IslandDetailHeaderView;
+}

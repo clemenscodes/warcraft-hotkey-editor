@@ -1,0 +1,23 @@
+use super::view::FightColumnView;
+use crate::components::app::components::shell::components::resolve_page::presentation::MoveView;
+use dioxus::prelude::*;
+
+#[derive(Props, Clone, PartialEq)]
+pub struct FightColumnModel {
+    pub move_view: MoveView,
+}
+
+impl From<&FightColumnView> for FightColumnModel {
+    fn from(view: &FightColumnView) -> Self {
+        let FightColumnView { move_view } = view.clone();
+        Self { move_view }
+    }
+}
+
+impl ddd::Layered for FightColumnModel {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::Model for FightColumnModel {
+    type View = FightColumnView;
+}

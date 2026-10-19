@@ -1,0 +1,17 @@
+use crate::components::app::components::shell::components::shared::tooltip::TooltipPlacement;
+
+#[derive(Clone, PartialEq)]
+pub struct HighlightedSlotView {
+    pub slot_label: String,
+    pub key_label: String,
+    pub conflict: bool,
+    pub tooltip_text: String,
+    pub tooltip_placement: TooltipPlacement,
+    pub dragging: bool,
+}
+
+impl ddd::Layered for HighlightedSlotView {
+    type Layer = ddd::PresentationLayer;
+}
+
+impl ddd::View for HighlightedSlotView {}
