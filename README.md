@@ -105,7 +105,7 @@ The image pins the same tool versions as the Nix dev shell:
 | `dioxus-cli`       | 0.7.10           |
 | `wasm-bindgen-cli` | 0.2.129          |
 | Tailwind CSS       | v4.3.3           |
-| Node.js / pnpm     | 24.21.0 / 12.9.0 |
+| Node.js / pnpm     | 24.21.0 / 11.13.1 |
 
 #### Production image
 
@@ -132,7 +132,7 @@ matching local versions of:
 - `wasm-bindgen-cli` 0.2.129
 - Tailwind CSS v4
 - binaryen / `wasm-opt`
-- Node.js 24.21.0 and pnpm 12.9.0
+- Node.js 24.21.0 and pnpm 11.13.1
 
 Version mismatches can fail late in the WASM build, so prefer Nix or
 Docker unless you are deliberately debugging the toolchain.

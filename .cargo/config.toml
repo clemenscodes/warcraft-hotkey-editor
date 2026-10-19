@@ -11,4 +11,4 @@ CARGO_WORKSPACE_DIR = { value = "", relative = true }
 # The last Warcraft III patch this workspace has been validated against.
 # Bumped here when a new patch lands; downstream tools and tests pick it up
 # via `env!("WARCRAFT_SUPPORTED_VERSION")`.
-WARCRAFT_SUPPORTED_VERSION = "3.0.1.24370"
+WARCRAFT_SUPPORTED_VERSION = "3.0.1.24371"

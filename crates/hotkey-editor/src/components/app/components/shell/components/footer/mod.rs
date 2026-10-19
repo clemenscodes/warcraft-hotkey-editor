@@ -8,6 +8,7 @@ use components::footer_disclaimer::FooterDisclaimer;
 use components::footer_link::FooterLink;
 use components::footer_scroll_tuck::FooterScrollTuck;
 use components::footer_separator::FooterSeparator;
+use components::supported_warcraft_version::SupportedWarcraftVersion;
 use dioxus::prelude::*;
 use presentation::use_footer_scrolled_away;
 use style::CLASS;
@@ -24,6 +25,9 @@ pub fn Footer() -> Element {
     let lead = credit.lead;
     let tail = credit.tail;
     let heart = credit.heart;
+    let supported_warcraft_version = data::SUPPORTED_WARCRAFT_VERSION;
+    let version_label = supported_warcraft_version.label;
+    let version = supported_warcraft_version.version;
     rsx! {
         footer {
             class: CLASS,
@@ -41,6 +45,11 @@ pub fn Footer() -> Element {
                     href: link.href,
                     icon: link.icon,
                 }
+            }
+            FooterSeparator {}
+            SupportedWarcraftVersion {
+                label: version_label,
+                version,
             }
             FooterDisclaimer {
                 text: data::DISCLAIMER,

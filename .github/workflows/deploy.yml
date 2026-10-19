@@ -115,6 +115,17 @@ jobs:
           --accept-flake-config
           --command moon run e2e:playwright/ci
 
+      # A failed spec leaves its error-context.md (the page's ARIA snapshot at
+      # the moment of failure) in test-results; without it a one-off failure
+      # can only be guessed at.
+      - name: Upload e2e failure context
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-test-results
+          path: crates/hotkey-editor/e2e/test-results
+          retention-days: 14
+
       - name: Stage Pages artifact
         if: github.event_name != 'pull_request'
         run: |

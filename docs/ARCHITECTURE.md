@@ -217,7 +217,7 @@ frontend.
 `warcraft-keybinds` builds and tests as a plain native Rust crate. No
 `wasm-bindgen`, no `web-sys`, no `dioxus`, no `gloo`. Its game data comes
 from `warcraft-api` and `warcraft-database`, consumed as a git-pinned
-external dependency (`github.com/clemenscodes/warcraft-data`, tag `v0.11.1`)
+external dependency (`github.com/clemenscodes/warcraft-data`, tag `v0.11.2`)
 and regenerated in that repo, not here; otherwise `serde` is the only
 dependency it may add — nothing else.
 
@@ -343,7 +343,7 @@ All asset URLs the bundler generates include that prefix.
 
 All Docker paths use `ubuntu:24.04` as the base and pin the same tool
 versions as the Nix dev shell: Rust 1.99.1, dioxus-cli 0.7.10,
-wasm-bindgen-cli 0.2.129, Node.js 24.21.0, pnpm 12.9.0, moon 2.6.1,
+wasm-bindgen-cli 0.2.129, Node.js 24.21.0, pnpm 11.13.1, moon 2.6.1,
 tailwindcss 4.3.3. `git` is installed in the image because moon requires
 it to detect the workspace root and changed files.
 

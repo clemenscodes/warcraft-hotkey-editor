@@ -54,7 +54,7 @@ RUN set -eux; \
     cp /usr/local/bin/wasm-bindgen "${DX_HOME}/bin/wasm-bindgen"
 
 # pnpm + moon + tailwindcss (v4, pinned to match Nix devshell) + playwright (matches flake)
-RUN corepack enable && corepack prepare pnpm@12.9.0 --activate
+RUN corepack enable && corepack prepare pnpm@11.13.1 --activate
 RUN pnpm add -g @moonrepo/cli@2.6.1 @tailwindcss/cli@4.3.3 @playwright/test@1.61.1
 
 RUN git config --global --add safe.directory '*'
