@@ -61,8 +61,8 @@ pub(super) fn use_resolve_pager(props: &ResolvePagerModel) -> ResolvePagerPresen
         }
     }));
 
-    // Scrolling on to later cards tucks the footer away, scrolling back brings
-    // it up again.
+    // Scrolling on to later cards tucks the footer away for good; scrolling
+    // back leaves it tucked away.
     let footer_hidden = use_editor_state().footer_hidden();
     let footer_intent = use_hook(|| Rc::new(Cell::new(FooterIntent::default())));
     let onmounted = EventHandler::new(move |event: MountedEvent| {

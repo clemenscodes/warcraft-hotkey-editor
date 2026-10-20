@@ -16,10 +16,10 @@ use tw_macro::assert_component;
 
 #[component]
 pub fn Footer() -> Element {
-    // On mobile the footer tucks away while the cards are scrolled down and comes
-    // back on scroll up. Mounting FooterScrollTuck flips the `has-[.footer-scroll-tuck]`
-    // collapse in this component's own style, so the footer element stays mounted and
-    // its height transition runs. Desktop never mounts it.
+    // On mobile the footer tucks away for good once the cards are scrolled down;
+    // scrolling back up leaves it tucked. Mounting FooterScrollTuck flips the
+    // `has-[.footer-scroll-tuck]` collapse in this component's own style, so the footer element stays mounted and
+    // its opacity transition runs. Desktop never mounts it.
     let scrolled_away = use_footer_scrolled_away();
     let credit = data::CREDIT;
     let lead = credit.lead;

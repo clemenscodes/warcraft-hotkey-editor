@@ -1,14 +1,13 @@
 use tw_macro::tw;
 
-// The level row: a step button either side of the level it shows, as tall as
-// the card's other control rows so the buttons match the position button.
+// The room left under the card's other rows, so the level row it holds sits on
+// the card's bottom edge whichever of those rows are shown.
 classes! {
     base: tw![
         "flex",
-        "flex-none",
-        "items-center",
-        "justify-center",
-        "gap-[0.6em]",
-        "h-[2.4em]",
+        "flex-1",
+        "flex-col",
+        "justify-end",
+        "min-h-0",
     ],
 }

@@ -5,11 +5,7 @@ mod view;
 
 pub use view::TierSelectorView;
 
-use crate::components::app::components::shell::components::editor_page::components::shared::hotkey_override_section::components::hotkey_override_slot::components::hotkey_override::components::hotkey_override_card::components::shared::card_icon_button_host::CardIconButtonHost;
-use crate::components::app::components::shell::components::shared::icons::{
-    ICON_CHEVRON_LEFT, ICON_CHEVRON_RIGHT,
-};
-use components::tier_label::TierLabel;
+use components::tier_stepper::TierStepper;
 use dioxus::prelude::*;
 use model::TierSelectorModel;
 use style::CLASS;
@@ -26,20 +22,10 @@ pub fn TierSelector(props: TierSelectorModel) -> Element {
     rsx! {
         div {
             class: CLASS,
-            CardIconButtonHost {
-                icon: ICON_CHEVRON_LEFT,
-                title: "Previous level",
-                aria_label: "Previous level",
-                on_click: on_previous,
-            }
-            TierLabel {
-                text: label,
-            }
-            CardIconButtonHost {
-                icon: ICON_CHEVRON_RIGHT,
-                title: "Next level",
-                aria_label: "Next level",
-                on_click: on_next,
+            TierStepper {
+                label,
+                on_previous,
+                on_next,
             }
         }
     }

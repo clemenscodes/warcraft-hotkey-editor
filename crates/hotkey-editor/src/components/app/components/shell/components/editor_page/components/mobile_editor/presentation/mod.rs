@@ -308,8 +308,8 @@ pub(super) fn use_mobile_editor() -> MobileEditorPresentation {
         window_signal.set(extended);
     };
 
-    // Scrolling on to later pages tucks the footer away, scrolling back brings
-    // it up again.
+    // Scrolling on to later pages tucks the footer away for good; scrolling
+    // back leaves it tucked away.
     let footer_intent = use_hook(|| Rc::new(Cell::new(FooterIntent::default())));
     let mut mounted_pager = pager_mounted;
     let onmounted = EventHandler::new(move |event: MountedEvent| {

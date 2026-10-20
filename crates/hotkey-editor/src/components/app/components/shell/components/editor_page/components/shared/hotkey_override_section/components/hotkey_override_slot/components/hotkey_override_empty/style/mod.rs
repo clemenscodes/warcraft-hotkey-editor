@@ -7,6 +7,7 @@ classes! {
         "items-center",
         "justify-center",
         "flex-none",
+        "h-[16em]",
         "overflow-hidden",
         "py-8",
         "px-9",
@@ -24,8 +25,7 @@ classes! {
     mobile: tw![
         "mobile:w-full",
         "mobile:box-border",
-        "mobile:p-[0.8em]",
-        "mobile:h-[10.5em]",
+        "mobile:p-[1.2em]",
         "mobile:text-center",
         "mobile:text-[3.8cqi]",
         "mobile:leading-heading",
@@ -33,8 +33,7 @@ classes! {
     tablet: tw![
         "tablet:w-full",
         "tablet:box-border",
-        "tablet:p-[0.8em]",
-        "tablet:h-[10.5em]",
+        "tablet:p-[1.2em]",
         "tablet:text-center",
         "tablet:text-[2.25cqi]",
         "tablet:leading-heading",
@@ -42,8 +41,7 @@ classes! {
     laptop: tw![
         "laptop:w-full",
         "laptop:box-border",
-        "laptop:p-[0.8em]",
-        "laptop:h-[10.5em]",
+        "laptop:p-[1.2em]",
         "laptop:text-center",
         "laptop:text-[2.25cqi]",
         "laptop:leading-heading",
@@ -51,8 +49,7 @@ classes! {
     desktop: tw![
         "desktop:w-full",
         "desktop:box-border",
-        "desktop:p-[0.8em]",
-        "desktop:h-[13em]",
+        "desktop:p-[1.2em]",
         "desktop:text-center",
         "desktop:text-sm",
         "desktop:leading-heading",
@@ -61,8 +58,7 @@ classes! {
     qhd: tw![
         "qhd:w-full",
         "qhd:box-border",
-        "qhd:p-[0.8em]",
-        "qhd:h-[13em]",
+        "qhd:p-[1.2em]",
         "qhd:text-center",
         "qhd:text-md",
         "qhd:leading-heading",
@@ -71,8 +67,7 @@ classes! {
     uhd: tw![
         "uhd:w-full",
         "uhd:box-border",
-        "uhd:p-[0.8em]",
-        "uhd:h-[13em]",
+        "uhd:p-[1.2em]",
         "uhd:text-center",
         "uhd:text-lg",
         "uhd:leading-heading",
